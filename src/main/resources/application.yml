@@ -8,7 +8,8 @@ logging:
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/coviditaly
-    username: REPLACE_ME
-    password: REPLACE_ME
+    username: postgres
+    password: postgres
 
 
+server:  servlet:    context-path: /Covid19Italy
