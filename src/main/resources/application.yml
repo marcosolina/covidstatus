@@ -1,0 +1,14 @@
+logging:
+  level:
+    root: INFO
+    com: 
+      marco:
+        javacovidstatus: DEBUG
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/coviditaly
+    username: REPLACE_ME
+    password: REPLACE_ME
+
+

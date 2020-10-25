@@ -1,0 +1,21 @@
+
+/*
+ * Create the database
+ */
+CREATE DATABASE COVIDITALY;
+
+/*
+ * Select the Schema
+ */
+\c coviditaly;
+
+/*
+ * Table that contains the list of natial data
+ */
+CREATE TABLE NATIONAL_DATA (
+	DATE_DATA		DATE					NOT NULL PRIMARY KEY,
+	NEW_INFECTIONS	INTEGER 	DEFAULT 0	NOT NULL,
+	NEW_TESTS		INTEGER		DEFAULT 0	NOT NULL,
+	NEW_CASUALTIES	INTEGER		DEFAULT 0	NOT NULL,
+	INFECTION_PERC	REAL		DEFAULT 0	NOT NULL
+);
