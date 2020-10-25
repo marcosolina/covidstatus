@@ -1,5 +1,7 @@
 package com.marco.javacovidstatus.services.implementations;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
@@ -47,12 +49,15 @@ public class CronServiceGit implements CronServiceInterface{
 		logger.info(String.format("%d nuovi tamponi", deltaTamponi));
 		
 		LocalDate start = LocalDate.of(2020, 2, 24);
-		LocalDate end = oggi.plusDays(1);
+		LocalDate end = oggi;
 		while(start.isBefore(end)) {
 			start = start.plusDays(1);
 			DatiNazionali precedente = getDatiAllaData(start.minusDays(1));
 			DatiNazionali corrente = getDatiAllaData(start);
-			logger.info(String.format("Percentuale degli infetti alla data: %s e' di: %f", start.toString(), percentualeInfetti(corrente, precedente)));
+			
+			BigDecimal result = new BigDecimal(percentualeInfetti(corrente, precedente)).setScale(2, RoundingMode.DOWN);
+			
+			logger.info(String.format("Percentuale degli infetti alla data: %s e' di: %.2f%%", start.toString(), result.floatValue()));
 		}
 	}
 	
