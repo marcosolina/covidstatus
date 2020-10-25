@@ -1,31 +1,20 @@
-package com.marco.javacovidstatus.repositories.model;
+package com.marco.javacovidstatus.model;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
 /**
- * This entity is used to store the data retrieved from the national institution
+ * This class represents the data provided by the national institution
  * 
  * @author Marco
  *
  */
-@Entity
-@Table(name = "NATIONAL_DATA")
-public class EntityNationalData {
-    @Id
-    @Column(name = "DATE_DATA")
+public class DailyData implements Serializable {
+    private static final long serialVersionUID = 1L;
     private LocalDate date;
-    @Column(name = "NEW_INFECTIONS")
     private int newInfections;
-    @Column(name = "NEW_TESTS")
     private int newTests;
-    @Column(name = "NEW_CASUALTIES")
     private int newCasualties;
-    @Column(name = "INFECTION_PERC")
     private float infectionPercentage;
 
     public LocalDate getDate() {
@@ -66,6 +55,35 @@ public class EntityNationalData {
 
     public void setInfectionPercentage(float infectionPercentage) {
         this.infectionPercentage = infectionPercentage;
+    }
+
+    public static long getSerialversionuid() {
+        return serialVersionUID;
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((date == null) ? 0 : date.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        DailyData other = (DailyData) obj;
+        if (date == null) {
+            if (other.date != null)
+                return false;
+        } else if (!date.equals(other.date))
+            return false;
+        return true;
     }
 
 }

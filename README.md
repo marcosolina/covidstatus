@@ -10,6 +10,6 @@ All the "number" are retrieved from the [Ministero della Salute](https://www.sal
 ## TODO:
 * Retrieve the data from the public repo **(Done)**
 * Store the data in the DB **(Done)**
-* Create a simple UI to display the raw data
+* Create a simple UI to display the raw data **(Done)**
 * Improve the UI
 * Anything else that cames up in my mind

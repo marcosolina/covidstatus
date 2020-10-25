@@ -16,7 +16,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import com.marco.javacovidstatus.repositories.model.EntityNationalData;
 import com.marco.javacovidstatus.repositories.sql.NationallDataSqlRepository;
-import com.marco.javacovidstatus.services.interfaces.NationalDataServiceInterface;
+import com.marco.javacovidstatus.services.interfaces.GovermentDataRetrieverScheduler;
 
 /**
  * This implementations uses the Italian national data
@@ -25,8 +25,8 @@ import com.marco.javacovidstatus.services.interfaces.NationalDataServiceInterfac
  */
 @Configuration
 @EnableScheduling
-public class ItalianNationalDataService implements NationalDataServiceInterface{
-	private static final Logger logger = LoggerFactory.getLogger(ItalianNationalDataService.class);	
+public class ItalianNationalDataScheduler implements GovermentDataRetrieverScheduler{
+	private static final Logger logger = LoggerFactory.getLogger(ItalianNationalDataScheduler.class);	
 	
 	@Autowired
 	private WebClient webClient;
@@ -36,7 +36,7 @@ public class ItalianNationalDataService implements NationalDataServiceInterface{
 	private String url = "https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-andamento-nazionale/dpc-covid19-ita-andamento-nazionale-%s.csv";
 	
 	
-	@Scheduled(cron = "0 * * * * *")
+	@Scheduled(cron = "0 10 18 * * *")
 	@Override
 	public void updateNationalData() {
 		
