@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,22 +47,31 @@ public class ItalianNationalDataScheduler implements GovermentDataRetrieverSched
 		
 		LocalDate start = LocalDate.of(2020, 2, 24);
 		LocalDate end = LocalDate.now();
+		List<Integer> lastWeeknNewInfection = new ArrayList<Integer>(); 
 		while(start.isBefore(end)) {
 			start = start.plusDays(1);
 			ItalianNationalData precedente = getDatiAllaData(start.minusDays(1));
 			ItalianNationalData corrente = getDatiAllaData(start);
 			
-			BigDecimal result = BigDecimal.valueOf(percentualeInfetti(corrente, precedente)).setScale(2, RoundingMode.DOWN);
+			BigDecimal infectionPercentage = BigDecimal.valueOf(percentualeInfetti(corrente, precedente)).setScale(2, RoundingMode.DOWN);
 			
 			EntityNationalData dto = new EntityNationalData();
 			dto.setDate(start);
-			dto.setInfectionPercentage(result.floatValue());
+			dto.setInfectionPercentage(infectionPercentage);
 			dto.setNewCasualties(corrente.newCasualties - precedente.newCasualties);
 			dto.setNewInfections(corrente.newInfections - precedente.newInfections);
 			dto.setNewTests(corrente.newTests - precedente.newTests);
 			
-			repository.save(dto);
+			lastWeeknNewInfection.add(dto.getNewInfections());
 			
+			BigDecimal casualtiesPercentage = BigDecimal.valueOf(percentualeMorti(dto.getNewCasualties(), lastWeeknNewInfection.get(0))).setScale(2, RoundingMode.DOWN);
+			dto.setCasualtiesPercentage(casualtiesPercentage);
+			
+			if(lastWeeknNewInfection.size() > 7) {
+			    lastWeeknNewInfection.remove(0);
+			}
+			
+			repository.save(dto);
 			logger.debug(String.format("Inserted data for date: %s", start.toString()));
 		}
 	}
@@ -92,6 +103,16 @@ public class ItalianNationalDataScheduler implements GovermentDataRetrieverSched
 		int deltaTests = corrente.newTests - precedente.newTests;
 		int deltaInfections = corrente.newInfections - precedente.newInfections;
 		return ((float)deltaInfections / deltaTests) * 100;
+	}
+
+	/**
+	 * @see <a href="https://www.focus.it/scienza/salute/tasso-di-mortalita-covid-19">Algorithm</a>
+	 * @param newCasualties
+	 * @param newCasesFrom7DaysAgo
+	 * @return
+	 */
+	private float percentualeMorti(int newCasualties, int newCasesFrom7DaysAgo){
+	    return ((float)newCasualties / newCasesFrom7DaysAgo) * 100;
 	}
 	
 	private class ItalianNationalData {

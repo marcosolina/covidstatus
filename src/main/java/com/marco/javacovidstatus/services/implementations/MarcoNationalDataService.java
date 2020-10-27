@@ -32,6 +32,7 @@ public class MarcoNationalDataService implements NationalDataService {
         dailyData.setNewCasualties(entity.getNewCasualties());
         dailyData.setNewInfections(entity.getNewInfections());
         dailyData.setNewTests(entity.getNewTests());
+        dailyData.setCaualtiesPercentage(entity.getCaualtiesPercentage());
         return dailyData;
     }
 

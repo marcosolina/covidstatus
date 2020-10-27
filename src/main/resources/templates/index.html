@@ -14,6 +14,7 @@
 				<th>New Tests</th>
 				<th>New Casualties</th>
 				<th>Percentage of Infections</th>
+				<th>Percentage of Casualties</th>
 			</tr>
 			<tr th:each="day : ${data}">
 				<td th:text="${day.date}"></td>
@@ -21,6 +22,7 @@
 				<td th:text="${day.newTests}"></td>
 				<td th:text="${day.newCasualties}"></td>
 				<td th:text="${day.infectionPercentage}"></td>
+				<td th:text="${day.caualtiesPercentage}"></td>
 			</tr>
 		</thead>
 	</table>

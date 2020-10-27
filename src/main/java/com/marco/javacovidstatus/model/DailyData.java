@@ -1,6 +1,7 @@
 package com.marco.javacovidstatus.model;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 /**
@@ -15,7 +16,8 @@ public class DailyData implements Serializable {
     private int newInfections;
     private int newTests;
     private int newCasualties;
-    private float infectionPercentage;
+    private BigDecimal infectionPercentage;
+    private BigDecimal caualtiesPercentage;
 
     public LocalDate getDate() {
         return date;
@@ -49,12 +51,20 @@ public class DailyData implements Serializable {
         this.newCasualties = newCasualties;
     }
 
-    public float getInfectionPercentage() {
+    public BigDecimal getInfectionPercentage() {
         return infectionPercentage;
     }
 
-    public void setInfectionPercentage(float infectionPercentage) {
+    public void setInfectionPercentage(BigDecimal infectionPercentage) {
         this.infectionPercentage = infectionPercentage;
+    }
+
+    public BigDecimal getCaualtiesPercentage() {
+        return caualtiesPercentage;
+    }
+
+    public void setCaualtiesPercentage(BigDecimal caualtiesPercentage) {
+        this.caualtiesPercentage = caualtiesPercentage;
     }
 
     public static long getSerialversionuid() {

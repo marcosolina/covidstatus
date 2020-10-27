@@ -1,5 +1,6 @@
 package com.marco.javacovidstatus.repositories.model;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import javax.persistence.Column;
@@ -26,7 +27,9 @@ public class EntityNationalData {
     @Column(name = "NEW_CASUALTIES")
     private int newCasualties;
     @Column(name = "INFECTION_PERC")
-    private float infectionPercentage;
+    private BigDecimal infectionPercentage;
+    @Column(name = "CASUALTIES_PERC")
+    private BigDecimal caualtiesPercentage;
 
     public LocalDate getDate() {
         return date;
@@ -60,12 +63,20 @@ public class EntityNationalData {
         this.newCasualties = newCasualties;
     }
 
-    public float getInfectionPercentage() {
+    public BigDecimal getInfectionPercentage() {
         return infectionPercentage;
     }
 
-    public void setInfectionPercentage(float infectionPercentage) {
+    public void setInfectionPercentage(BigDecimal infectionPercentage) {
         this.infectionPercentage = infectionPercentage;
+    }
+
+    public BigDecimal getCaualtiesPercentage() {
+        return caualtiesPercentage;
+    }
+
+    public void setCasualtiesPercentage(BigDecimal casualtiesPercentage) {
+        this.caualtiesPercentage = casualtiesPercentage;
     }
 
 }
