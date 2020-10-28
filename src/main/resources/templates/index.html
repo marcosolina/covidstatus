@@ -3,28 +3,52 @@
 <head>
 	<meta charset="UTF-8">
 	<title>COVID-19 ITALY</title>
+	<script 
+		src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js" 
+		integrity="sha512-d9xgZrVZpmmQlfonhQUvTR7lMPtO7NkZMkA0ABN3PHCbKA5nqylQ/yWlFAyY6hYgdF1Qh6nYiuADWwKB4C2WSw==" 
+		crossorigin="anonymous"></script>
+	
+	
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+	    var data = /*[[${data}]]*/ [];
+	
+		var arrLabel = [];
+		var arrPerc = [];
+		data.forEach(element => {
+			arrLabel.push(element.date);
+			arrPerc.push(element.infectionPercentage);
+		});
+	
+		window.onload = function(){
+			var ctx = document.getElementById('myChart');
+			var myChart = new Chart(ctx, {
+			    type: 'bar',
+			    data: {
+			        labels: arrLabel,
+			        datasets: [{
+			            label: '# Perc Infetti',
+			            data: arrPerc,
+			            borderWidth: 1
+			        }]
+			    },
+			    options: {
+			        scales: {
+			            yAxes: [{
+			                ticks: {
+			                    beginAtZero: true
+			                }
+			            }]
+			        }
+			    }
+			});
+		}
+	/*]]>*/
+	</script>
+	
 </head>
 <body>
 	<h1>Italian COVID-19 Situation</h1>
-	<table border="1">
-		<thead>
-			<tr>
-				<th>Day</th>
-				<th>New Infections</th>
-				<th>New Tests</th>
-				<th>New Casualties</th>
-				<th>Percentage of Infections</th>
-				<th>Percentage of Casualties</th>
-			</tr>
-			<tr th:each="day : ${data}">
-				<td th:text="${day.date}"></td>
-				<td th:text="${day.newInfections}"></td>
-				<td th:text="${day.newTests}"></td>
-				<td th:text="${day.newCasualties}"></td>
-				<td th:text="${day.infectionPercentage}"></td>
-				<td th:text="${day.caualtiesPercentage}"></td>
-			</tr>
-		</thead>
-	</table>
+	<canvas id="myChart" width="400" height="150"></canvas>
 </body>
 </html>

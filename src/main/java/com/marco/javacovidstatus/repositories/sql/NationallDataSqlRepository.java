@@ -17,4 +17,6 @@ import com.marco.javacovidstatus.repositories.model.EntityNationalData;
 public interface NationallDataSqlRepository extends CrudRepository<EntityNationalData, LocalDate> {
 
     public List<EntityNationalData> findAllByOrderByDateDesc();
+    
+    public List<EntityNationalData> findAllByOrderByDateAsc();
 }

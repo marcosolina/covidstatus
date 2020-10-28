@@ -18,4 +18,10 @@ public interface NationalDataService {
      * @return
      */
     public List<DailyData> getAllDataDescending();
+    
+    /**
+     * It returns the list of the national data in an ascending order
+     * @return
+     */
+    public List<DailyData> getAllDataAscending();
 }

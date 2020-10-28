@@ -23,5 +23,4 @@ public class JavaCovidStatusApplication {
     public CommandLineRunner commandLineRunner(ApplicationContext ctx) {
         return args -> scheduler.updateNationalData();
     }
-
 }
