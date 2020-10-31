@@ -25,6 +25,25 @@ public class MarcoNationalDataService implements NationalDataService {
         return listEntity.stream().map(this::fromEntityNationalDataToDailyData).collect(Collectors.toList());
     }
 
+    @Override
+    public List<DailyData> getAllDataAscending() {
+        LOGGER.debug("Reading data from the repository");
+        List<EntityNationalData> listEntity = repo.findAllByOrderByDateAsc();
+        return listEntity.stream().map(this::fromEntityNationalDataToDailyData).collect(Collectors.toList());
+    }
+
+    @Override
+    public boolean storeData(DailyData dto) {
+        repo.save(fromDailyData(dto));
+        return true;
+    }
+
+    @Override
+    public boolean deleteAllData() {
+        repo.deleteAll();
+        return true;
+    }
+
     private DailyData fromEntityNationalDataToDailyData(EntityNationalData entity) {
         DailyData dailyData = new DailyData();
         dailyData.setDate(entity.getDate());
@@ -34,6 +53,17 @@ public class MarcoNationalDataService implements NationalDataService {
         dailyData.setNewTests(entity.getNewTests());
         dailyData.setCaualtiesPercentage(entity.getCaualtiesPercentage());
         return dailyData;
+    }
+    
+    private EntityNationalData fromDailyData(DailyData data) {
+        EntityNationalData entity = new EntityNationalData();
+        entity.setDate(data.getDate());
+        entity.setInfectionPercentage(data.getInfectionPercentage());
+        entity.setNewCasualties(data.getNewCasualties());
+        entity.setNewInfections(data.getNewInfections());
+        entity.setNewTests(data.getNewTests());
+        entity.setCasualtiesPercentage(data.getCasualtiesPercentage());
+        return entity;
     }
 
 }

@@ -11,17 +11,17 @@ import com.marco.javacovidstatus.services.interfaces.NationalDataService;
 
 @Controller
 public class MainController {
-    private static final Logger LOGGER = LoggerFactory.getLogger(MainController.class);   
-    
-    
+    private static final Logger LOGGER = LoggerFactory.getLogger(MainController.class);
+
     @Autowired
     private NationalDataService service;
-    
+
     @GetMapping(value = "/")
     public String homePage(Model model) {
         LOGGER.trace("Inside MainController.homePage");
+
+        model.addAttribute("data", service.getAllDataAscending());
         
-        model.addAttribute("data", service.getAllDataDescending());
         return "index";
     }
 }
