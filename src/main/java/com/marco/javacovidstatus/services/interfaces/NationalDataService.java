@@ -24,4 +24,17 @@ public interface NationalDataService {
      * @return
      */
     public List<DailyData> getAllDataAscending();
+
+    /**
+     * Store the data
+     * @param dto
+     * @return
+     */
+    public boolean storeData(DailyData dto);
+    
+    /**
+     * It deletes all the data
+     * @return
+     */
+    public boolean deleteAllData();
 }

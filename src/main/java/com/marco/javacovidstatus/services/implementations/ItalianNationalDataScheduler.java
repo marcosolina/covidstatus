@@ -16,9 +16,9 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import com.marco.javacovidstatus.repositories.model.EntityNationalData;
-import com.marco.javacovidstatus.repositories.sql.NationallDataSqlRepository;
+import com.marco.javacovidstatus.model.DailyData;
 import com.marco.javacovidstatus.services.interfaces.GovermentDataRetrieverScheduler;
+import com.marco.javacovidstatus.services.interfaces.NationalDataService;
 
 /**
  * This implementations uses the Italian national data
@@ -33,29 +33,38 @@ public class ItalianNationalDataScheduler implements GovermentDataRetrieverSched
 	@Autowired
 	private WebClient webClient;
 	@Autowired
-	private NationallDataSqlRepository repository;
+	private NationalDataService dataService;
 	
 	private String url = "https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-andamento-nazionale/dpc-covid19-ita-andamento-nazionale-%s.csv";
 	
 	
-	@Scheduled(cron = "0 10 18 * * *")
+	@Scheduled(cron = "0 40 18 * * *")
 	@Override
 	public void updateNationalData() {
 		
 		logger.debug("Clear the DB");
-		repository.deleteAll();
+		dataService.deleteAllData();//TODO optimise
 		
 		LocalDate start = LocalDate.of(2020, 2, 24);
 		LocalDate end = LocalDate.now();
-		List<Integer> lastWeeknNewInfection = new ArrayList<Integer>(); 
+		List<Integer> lastWeeknNewInfection = new ArrayList<>(); 
 		while(start.isBefore(end)) {
 			start = start.plusDays(1);
+			/*
+			 * Retrieve the data of today and yesterday
+			 */
 			ItalianNationalData precedente = getDatiAllaData(start.minusDays(1));
 			ItalianNationalData corrente = getDatiAllaData(start);
 			
+			/*
+			 * Do some math
+			 */
 			BigDecimal infectionPercentage = BigDecimal.valueOf(percentualeInfetti(corrente, precedente)).setScale(2, RoundingMode.DOWN);
 			
-			EntityNationalData dto = new EntityNationalData();
+			/*
+			 * Store the data
+			 */
+			DailyData dto = new DailyData();
 			dto.setDate(start);
 			dto.setInfectionPercentage(infectionPercentage);
 			dto.setNewCasualties(corrente.newCasualties - precedente.newCasualties);
@@ -64,14 +73,20 @@ public class ItalianNationalDataScheduler implements GovermentDataRetrieverSched
 			
 			lastWeeknNewInfection.add(dto.getNewInfections());
 			
+			/*
+			 * Do some math
+			 */
 			BigDecimal casualtiesPercentage = BigDecimal.valueOf(percentualeMorti(dto.getNewCasualties(), lastWeeknNewInfection.get(0))).setScale(2, RoundingMode.DOWN);
-			dto.setCasualtiesPercentage(casualtiesPercentage);
+			dto.setCaualtiesPercentage(casualtiesPercentage);
 			
 			if(lastWeeknNewInfection.size() > 7) {
 			    lastWeeknNewInfection.remove(0);
 			}
 			
-			repository.save(dto);
+			/*
+			 * Store the info
+			 */
+			dataService.storeData(dto);
 			logger.debug(String.format("Inserted data for date: %s", start.toString()));
 		}
 	}
@@ -82,10 +97,24 @@ public class ItalianNationalDataScheduler implements GovermentDataRetrieverSched
 	private ItalianNationalData getDatiAllaData(LocalDate data) {
 		logger.trace("Inside CronServiceGit.getDatiAllaData");
 		
+		/*
+		 * Inserting the date into the URL
+		 */
 		String uriFile = String.format(url, data.format(DateTimeFormatter.ofPattern("yyyyMMdd")));
+		
+		/*
+		 * Get the CSV file using an GET HTTP call
+		 */
 		ClientResponse response = webClient.get().uri(uriFile).exchange().block();
 		
+		/*
+		 * Read the response as a string 
+		 */
 		String csv = response.bodyToMono(String.class).block();
+		
+		/*
+		 * Parsing the string
+		 */
 		String [] tmp = csv.split("\\n");
 		String [] values = tmp[1].split(",");
 		

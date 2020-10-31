@@ -10,14 +10,14 @@ import com.marco.javacovidstatus.services.interfaces.NationalDataService;
 @Configuration
 public class Beans {
 
-	@Bean
-	public WebClient getWebClient() {
-		return WebClient.builder().build();
-	}
-	
-	@Bean
-	public NationalDataService getNationalDataService() {
-	    return new MarcoNationalDataService()
-;	}
-	
+    @Bean
+    public WebClient getWebClient() {
+        return WebClient.builder().build();
+    }
+
+    @Bean
+    public NationalDataService getNationalDataService() {
+        return new MarcoNationalDataService();
+    }
+
 }

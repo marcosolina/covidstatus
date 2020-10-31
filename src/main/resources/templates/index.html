@@ -15,32 +15,74 @@
 	
 		var arrLabel = [];
 		var arrPerc = [];
+		var arrTest = [];
+		var arrNewPositive = [];
 		data.forEach(element => {
 			arrLabel.push(element.date);
 			arrPerc.push(element.infectionPercentage);
+			arrTest.push(element.newTests);
+			arrNewPositive.push(element.newInfections);
 		});
 	
 		window.onload = function(){
+			testsChart();
+			percInfections();
+		}
+		
+		function testsChart(){
 			var ctx = document.getElementById('myChart');
 			var myChart = new Chart(ctx, {
-			    type: 'bar',
+			    type: 'line',
+			    data: {
+			        labels: arrLabel,
+			        datasets: [{
+			            label: '# New Infections',
+			            data: arrNewPositive,
+			            stack: "Stack 0",
+			            borderColor: "rgb(219, 53, 53, 1)",
+			            fill: false,
+			            pointRadius: 0
+			        },{
+			            label: '# Test',
+			            data: arrTest,
+			            stack: "Stack 0",
+			            borderColor: "rgb(53, 219, 108, 1)",
+			            fill: false,
+			            pointRadius: 0
+			        }]
+			    },
+			    options: {
+			    	scales: {
+			            xAxes: [{
+			                stacked: true
+			            }],
+			            yAxes: [{
+			                stacked: true
+			            }]
+			        },
+			        tooltips: {
+						mode: 'index',
+						intersect: false
+					},
+			    }
+			});
+		}
+		
+		function percInfections(){
+			var ctx = document.getElementById('percInfezioni');
+			var myChart = new Chart(ctx, {
+			    type: 'line',
 			    data: {
 			        labels: arrLabel,
 			        datasets: [{
 			            label: '# Perc Infetti',
 			            data: arrPerc,
-			            borderWidth: 1
+			            borderColor: "rgb(25, 194, 255, 1)",
+			            fill: false,
+			            pointRadius: 0
 			        }]
 			    },
-			    options: {
-			        scales: {
-			            yAxes: [{
-			                ticks: {
-			                    beginAtZero: true
-			                }
-			            }]
-			        }
-			    }
+			    
 			});
 		}
 	/*]]>*/
@@ -50,5 +92,6 @@
 <body>
 	<h1>Italian COVID-19 Situation</h1>
 	<canvas id="myChart" width="400" height="150"></canvas>
+	<canvas id="percInfezioni" width="400" height="150"></canvas>
 </body>
 </html>
