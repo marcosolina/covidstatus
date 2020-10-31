@@ -13,5 +13,6 @@ All the "number" are retrieved from the [Ministero della Salute](https://www.sal
 * Create a simple UI to display the raw data **(Done)**
 * Improve the UI **(done)**
 * Fix for my Rasp **(done)**
+* Refactor the UI Code
 * Select the range of dates
 * Anything else that cames up in my mind
