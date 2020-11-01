@@ -1,5 +1,6 @@
 package com.marco.javacovidstatus.services.implementations;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,14 +21,14 @@ public class MarcoNationalDataService implements NationalDataService {
 
     @Override
     public List<DailyData> getAllDataDescending() {
-        LOGGER.debug("Reading data from the repository");
+        LOGGER.trace("Reading data from the repository");
         List<EntityNationalData> listEntity = repo.findAllByOrderByDateDesc();
         return listEntity.stream().map(this::fromEntityNationalDataToDailyData).collect(Collectors.toList());
     }
 
     @Override
     public List<DailyData> getAllDataAscending() {
-        LOGGER.debug("Reading data from the repository");
+        LOGGER.trace("Reading data from the repository");
         List<EntityNationalData> listEntity = repo.findAllByOrderByDateAsc();
         return listEntity.stream().map(this::fromEntityNationalDataToDailyData).collect(Collectors.toList());
     }
@@ -64,6 +65,12 @@ public class MarcoNationalDataService implements NationalDataService {
         entity.setNewTests(data.getNewTests());
         entity.setCasualtiesPercentage(data.getCasualtiesPercentage());
         return entity;
+    }
+
+    @Override
+    public List<DailyData> getDatesInRangeAscending(LocalDate from, LocalDate to) {
+        List<EntityNationalData> listEntity = repo.findByDateBetweenOrderByDateAsc(from, to);
+        return listEntity.stream().map(this::fromEntityNationalDataToDailyData).collect(Collectors.toList());
     }
 
 }

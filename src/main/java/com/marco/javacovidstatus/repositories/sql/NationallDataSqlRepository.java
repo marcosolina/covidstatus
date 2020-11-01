@@ -19,4 +19,13 @@ public interface NationallDataSqlRepository extends CrudRepository<EntityNationa
     public List<EntityNationalData> findAllByOrderByDateDesc();
     
     public List<EntityNationalData> findAllByOrderByDateAsc();
+    
+    /**
+     * It returns the data in between the range
+     * @see <a href="https://docs.spring.io/spring-data/jpa/docs/current/reference/html/#jpa.query-methods.query-creation">Spring Documentation</a>
+     * @param start
+     * @param end
+     * @return
+     */
+    public List<EntityNationalData> findByDateBetweenOrderByDateAsc(LocalDate start, LocalDate end);
 }
