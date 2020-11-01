@@ -70,8 +70,21 @@ public class ItalianNationalDataScheduler implements GovermentDataRetrieverSched
                 dto.setDate(start);
                 dto.setInfectionPercentage(infectionPercentage);
                 dto.setNewCasualties(corrente.newCasualties - precedente.newCasualties);
-                dto.setNewInfections(corrente.newInfections - precedente.newInfections);
+                dto.setNewInfections(corrente.newInfections);
                 dto.setNewTests(corrente.newTests - precedente.newTests);
+                dto.setNewHospitalized(corrente.newHospitalized - precedente.newHospitalized);
+                dto.setNewIntensiveTherapy(corrente.newIntensiveTherapy - precedente.newIntensiveTherapy);
+                dto.setNewRecovered(corrente.newRecovered - precedente.newRecovered);
+                
+                if(dto.getNewIntensiveTherapy() < 0 ) {
+                    dto.setNewIntensiveTherapy(0); 
+                }
+                if(dto.getNewHospitalized() < 0 ) {
+                    dto.setNewHospitalized(0); 
+                }
+                if(dto.getNewRecovered() < 0 ) {
+                    dto.setNewRecovered(0); 
+                }
 
                 lastWeeknNewInfection.add(dto.getNewInfections());
 
@@ -81,7 +94,7 @@ public class ItalianNationalDataScheduler implements GovermentDataRetrieverSched
                 BigDecimal casualtiesPercentage = BigDecimal
                         .valueOf(percentualeMorti(dto.getNewCasualties(), lastWeeknNewInfection.get(0)))
                         .setScale(2, RoundingMode.DOWN);
-                dto.setCaualtiesPercentage(casualtiesPercentage);
+                dto.setCasualtiesPercentage(casualtiesPercentage);
 
                 if (lastWeeknNewInfection.size() > 7) {
                     lastWeeknNewInfection.remove(0);
@@ -125,14 +138,17 @@ public class ItalianNationalDataScheduler implements GovermentDataRetrieverSched
         ItalianNationalData dati = new ItalianNationalData();
         dati.newCasualties = Integer.parseInt(values[10]);
         dati.newTests = Integer.parseInt(values[14]);
-        dati.newInfections = Integer.parseInt(values[13]);
+        dati.newInfections = Integer.parseInt(values[8]);
+        dati.newHospitalized = Integer.parseInt(values[4]);
+        dati.newIntensiveTherapy = Integer.parseInt(values[3]);
+        dati.newRecovered = Integer.parseInt(values[9]);
 
         return dati;
     }
 
     private float percentualeInfetti(ItalianNationalData corrente, ItalianNationalData precedente) {
         int deltaTests = corrente.newTests - precedente.newTests;
-        int deltaInfections = corrente.newInfections - precedente.newInfections;
+        int deltaInfections = corrente.newInfections;
         return ((float) deltaInfections / deltaTests) * 100;
     }
 
@@ -151,6 +167,9 @@ public class ItalianNationalDataScheduler implements GovermentDataRetrieverSched
         int newInfections;
         int newTests;
         int newCasualties;
+        int newHospitalized;
+        int newIntensiveTherapy;
+        int newRecovered;
     }
 
 }

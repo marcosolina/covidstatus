@@ -26,10 +26,16 @@ public class EntityNationalData {
     private int newTests;
     @Column(name = "NEW_CASUALTIES")
     private int newCasualties;
+    @Column(name = "NEW_HOSPITALIZED")
+    private int newHospitalized;
+    @Column(name = "NEW_INTENSIVE_THERAPY")
+    private int newIntensiveTherapy;
+    @Column(name = "NEW_RECOVERED")
+    private int newRecovered;
     @Column(name = "INFECTION_PERC")
     private BigDecimal infectionPercentage;
     @Column(name = "CASUALTIES_PERC")
-    private BigDecimal caualtiesPercentage;
+    private BigDecimal casualtiesPercentage;
 
     public LocalDate getDate() {
         return date;
@@ -71,12 +77,36 @@ public class EntityNationalData {
         this.infectionPercentage = infectionPercentage;
     }
 
-    public BigDecimal getCaualtiesPercentage() {
-        return caualtiesPercentage;
+    public int getNewHospitalized() {
+        return newHospitalized;
+    }
+
+    public void setNewHospitalized(int newHospitalized) {
+        this.newHospitalized = newHospitalized;
+    }
+
+    public int getNewIntensiveTherapy() {
+        return newIntensiveTherapy;
+    }
+
+    public void setNewIntensiveTherapy(int newIntensiveTherapy) {
+        this.newIntensiveTherapy = newIntensiveTherapy;
+    }
+
+    public int getNewRecovered() {
+        return newRecovered;
+    }
+
+    public void setNewRecovered(int newRecovered) {
+        this.newRecovered = newRecovered;
+    }
+
+    public BigDecimal getCasualtiesPercentage() {
+        return casualtiesPercentage;
     }
 
     public void setCasualtiesPercentage(BigDecimal casualtiesPercentage) {
-        this.caualtiesPercentage = casualtiesPercentage;
+        this.casualtiesPercentage = casualtiesPercentage;
     }
 
 }

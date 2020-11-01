@@ -16,6 +16,9 @@ public class DailyData implements Serializable {
     private int newInfections;
     private int newTests;
     private int newCasualties;
+    private int newHospitalized;
+    private int newIntensiveTherapy;
+    private int newRecovered;
     private BigDecimal infectionPercentage;
     private BigDecimal casualtiesPercentage;
 
@@ -63,12 +66,36 @@ public class DailyData implements Serializable {
         return casualtiesPercentage;
     }
 
-    public void setCaualtiesPercentage(BigDecimal casualtiesPercentage) {
-        this.casualtiesPercentage = casualtiesPercentage;
-    }
-
     public static long getSerialversionuid() {
         return serialVersionUID;
+    }
+
+    public int getNewHospitalized() {
+        return newHospitalized;
+    }
+
+    public void setNewHospitalized(int newHospitalized) {
+        this.newHospitalized = newHospitalized;
+    }
+
+    public int getNewIntensiveTherapy() {
+        return newIntensiveTherapy;
+    }
+
+    public void setNewIntensiveTherapy(int newIntensiveTherapy) {
+        this.newIntensiveTherapy = newIntensiveTherapy;
+    }
+
+    public int getNewRecovered() {
+        return newRecovered;
+    }
+
+    public void setNewRecovered(int newRecovered) {
+        this.newRecovered = newRecovered;
+    }
+
+    public void setCasualtiesPercentage(BigDecimal casualtiesPercentage) {
+        this.casualtiesPercentage = casualtiesPercentage;
     }
 
     @Override
