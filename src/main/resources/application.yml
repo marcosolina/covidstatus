@@ -15,5 +15,5 @@ spring:
 
 server:  servlet:    context-path: /Covid19Italy
     
-#covidstatus:
-#  serviceimpl: rasp
+covidstatus:
+  serviceimpl: def #rasp
