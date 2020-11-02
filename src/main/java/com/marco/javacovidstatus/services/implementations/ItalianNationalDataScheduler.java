@@ -75,15 +75,18 @@ public class ItalianNationalDataScheduler implements GovermentDataRetrieverSched
                 dto.setNewHospitalized(corrente.newHospitalized - precedente.newHospitalized);
                 dto.setNewIntensiveTherapy(corrente.newIntensiveTherapy - precedente.newIntensiveTherapy);
                 dto.setNewRecovered(corrente.newRecovered - precedente.newRecovered);
-                
-                if(dto.getNewIntensiveTherapy() < 0 ) {
-                    dto.setNewIntensiveTherapy(0); 
+
+                if (dto.getNewIntensiveTherapy() < 0) {
+                    dto.setNewIntensiveTherapy(0);
                 }
-                if(dto.getNewHospitalized() < 0 ) {
-                    dto.setNewHospitalized(0); 
+                if (dto.getNewHospitalized() < 0) {
+                    dto.setNewHospitalized(0);
                 }
-                if(dto.getNewRecovered() < 0 ) {
-                    dto.setNewRecovered(0); 
+                if (dto.getNewRecovered() < 0) {
+                    dto.setNewRecovered(0);
+                }
+                if (dto.getNewCasualties() < 0) {
+                    dto.setNewCasualties(0);
                 }
 
                 lastWeeknNewInfection.add(dto.getNewInfections());
@@ -95,6 +98,10 @@ public class ItalianNationalDataScheduler implements GovermentDataRetrieverSched
                         .valueOf(percentualeMorti(dto.getNewCasualties(), lastWeeknNewInfection.get(0)))
                         .setScale(2, RoundingMode.DOWN);
                 dto.setCasualtiesPercentage(casualtiesPercentage);
+
+                if (dto.getCasualtiesPercentage().compareTo(BigDecimal.ZERO) < 0) {
+                    dto.setCasualtiesPercentage(BigDecimal.ZERO);
+                }
 
                 if (lastWeeknNewInfection.size() > 7) {
                     lastWeeknNewInfection.remove(0);
