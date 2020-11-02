@@ -52,7 +52,10 @@ public class MarcoNationalDataService implements NationalDataService {
         dailyData.setNewCasualties(entity.getNewCasualties());
         dailyData.setNewInfections(entity.getNewInfections());
         dailyData.setNewTests(entity.getNewTests());
-        dailyData.setCaualtiesPercentage(entity.getCaualtiesPercentage());
+        dailyData.setCasualtiesPercentage(entity.getCasualtiesPercentage());
+        dailyData.setNewHospitalized(entity.getNewHospitalized());
+        dailyData.setNewIntensiveTherapy(entity.getNewIntensiveTherapy());
+        dailyData.setNewRecovered(entity.getNewRecovered());
         return dailyData;
     }
     
@@ -64,6 +67,9 @@ public class MarcoNationalDataService implements NationalDataService {
         entity.setNewInfections(data.getNewInfections());
         entity.setNewTests(data.getNewTests());
         entity.setCasualtiesPercentage(data.getCasualtiesPercentage());
+        entity.setNewHospitalized(data.getNewHospitalized());
+        entity.setNewIntensiveTherapy(data.getNewIntensiveTherapy());
+        entity.setNewRecovered(data.getNewRecovered());
         return entity;
     }
 

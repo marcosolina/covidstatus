@@ -16,7 +16,7 @@
 	<meta name="description" content="Marco Solina : Every day the news provides the updated numbers with respect the Covid Situation in Italy. I don't think that the way that the news gives us the number is appropriate, hence I create this simple page, which retrieves the numbers from the Goverment Website, and it shows the same number but using charts">
 	<meta property="og:description" content="Marco Solina : Every day the news provides the updated numbers with respect the Covid Situation in Italy. I don't think that the way that the news gives us the number is appropriate, hence I create this simple page, which retrieves the numbers from the Goverment Website, and it shows the same number but using charts">
 	<meta property="og:type" content="website">
-	<meta property="og:url" content="http://marco.selfip.net/Covid19Italy">
+	<meta property="og:url" content="https://marco.selfip.net/Covid19Italy">
 	<meta property="og:image" content="/Covid19Italy/pictures/covid-coronavirus.jpg">
 	
 	<script 
@@ -56,6 +56,9 @@
 		var arrNewPositive = [];
 		var arrCasualties = [];
 		var arrPercCasualties = [];
+		var arrNewHospitalized = [];
+		var arrNewIntensiveTherapy = [];
+		var arrNewRecovered = [];
 		data.forEach(element => {
 			arrLabel.push(element.date);
 			arrPerc.push(element.infectionPercentage);
@@ -63,6 +66,9 @@
 			arrNewPositive.push(element.newInfections);
 			arrCasualties.push(element.newCasualties);
 			arrPercCasualties.push(element.casualtiesPercentage);
+			arrNewHospitalized.push(element.newHospitalized);
+			arrNewIntensiveTherapy.push(element.newIntensiveTherapy);
+			arrNewRecovered.push(element.newRecovered);
 		});
 	
 		window.onload = function(){
@@ -71,6 +77,7 @@
 			casualties();
 			percCasualties();
 			setDate();
+			hospitalStatus();
 		}
 		
 		function testsChart(){
@@ -90,7 +97,7 @@
 			        },{
 			            label: 'Test Eseguiti',
 			            data: arrTest,
-			            stack: "Stack 0",
+			            stack: "Stack 1",
 			            borderColor: "rgb(53, 219, 108, 1)",
 			            backgroundColor: "rgb(53, 219, 108, 1)",
 			            fill: false,
@@ -98,17 +105,6 @@
 			        }]
 			    },
 			    options: {
-			    	scales: {
-			    		gridLines: {
-			    			
-			    		},
-			            xAxes: [{
-			                stacked: true,
-			            }],
-			            yAxes: [{
-			                stacked: true,
-			            }]
-			        },
 			        tooltips: {
 						mode: 'index',
 						intersect: false
@@ -195,6 +191,52 @@
 			});
 		}
 		
+		function hospitalStatus(){
+			var ctx = document.getElementById('chartHospitalStatus');
+			var myChart = new Chart(ctx, {
+			    type: 'line',
+			    data: {
+			        labels: arrLabel,
+			        datasets: [{
+			            label: 'Nuove infezioni',
+			            data: arrNewPositive,
+			            borderColor: "rgb(237, 78, 237, 1)",
+			            backgroundColor: "rgb(237, 78, 237, 1)",
+			            fill: false,
+			            pointRadius: 0
+			        },{
+			            label: 'Nuovi Ricoveri',
+			            data: arrNewHospitalized,
+			            borderColor: "rgb(230, 218, 0, 1)",
+			            backgroundColor: "rgb(230, 218, 0, 1)",
+			            fill: false,
+			            pointRadius: 0
+			        },{
+			            label: 'Di cui in Terapia intensiva',
+			            data: arrNewIntensiveTherapy,
+			            borderColor: "rgb(235, 52, 52, 1)",
+			            backgroundColor: "rgb(235, 52, 52, 1)",
+			            fill: false,
+			            pointRadius: 0
+			        },{
+			            label: 'Nuovi Dismessi/Guariti',
+			            data: arrNewRecovered,
+			            borderColor: "rgb(52, 235, 76, 1)",
+			            backgroundColor: "rgb(52, 235, 76, 1)",
+			            fill: false,
+			            pointRadius: 0
+			        }]
+			    },
+			    options: {
+			        tooltips: {
+						mode: 'index',
+						intersect: false
+					},
+					responsive: true
+			    }
+			});
+		}
+		
 		var dateFormat = "dd/mm/yy";
 		function setDate(){
 			var dateFrom = $( "#dateFrom" ).datepicker({
@@ -266,6 +308,9 @@
 			</div>
 			<div class="col-12 col-lg-6">
 				<canvas id="chartPercCasualties"></canvas>
+			</div>
+			<div class="col-12 col-lg-6">
+				<canvas id="chartHospitalStatus"></canvas>
 			</div>
 		</div>		
 	</div>
