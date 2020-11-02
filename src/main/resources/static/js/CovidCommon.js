@@ -1,3 +1,6 @@
+/**
+	Simple object to provid simple set of functions
+ */
 var CovidCommon = (function(CovidCommon){
 	"use strict";
 	
@@ -8,6 +11,9 @@ var CovidCommon = (function(CovidCommon){
 	var dateFormat = "dd/mm/yy";
 	var data = undefined;
 	
+	/**
+		Initialise the UI
+	 */
 	CovidCommon.init = function(dataMap){
 		data = dataMap;
 		var dateFrom = $( "#dateFrom" ).datepicker({
@@ -32,7 +38,10 @@ var CovidCommon = (function(CovidCommon){
 	        CovidCommon.updateDates();
 		});
 	}
-		
+	
+	/**
+		It loads the data between the specified range
+	 */
 	CovidCommon.updateDates = function(){
 		var from = $.datepicker.formatDate('yymmdd', CovidCommon.getDate(document.getElementById("dateFrom")));
 		var to = $.datepicker.formatDate('yymmdd', CovidCommon.getDate(document.getElementById("dateTo")));
@@ -41,7 +50,10 @@ var CovidCommon = (function(CovidCommon){
 			window.open(url, "_self");
 		}
 	}
-		
+	
+	/**
+		IT gets the Date value of the element
+	 */	
 	CovidCommon.getDate = function(element) {
 		var date;
 		try {
@@ -53,8 +65,11 @@ var CovidCommon = (function(CovidCommon){
 		return date;
     }
 
+	/**
+		It draws the charts
+	 */
 	CovidCommon.drawTheCharts = function(){
-		/*
+			/*
 			* Preparing the datasets
 			*/
 			const dsNewInfections = new CovidChartDataset("Nuove Infezioni");
