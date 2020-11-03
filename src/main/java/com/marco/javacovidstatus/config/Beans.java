@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import com.marco.javacovidstatus.services.implementations.MarcoNationalDataService;
@@ -31,6 +32,13 @@ public class Beans {
         }
         LOGGER.info("Uso implementazione di default");
         return new MarcoNationalDataService();
+    }
+
+    @Bean()
+    public ThreadPoolTaskScheduler taskScheduler() {
+        ThreadPoolTaskScheduler taskScheduler = new ThreadPoolTaskScheduler();
+        taskScheduler.setPoolSize(20);
+        return taskScheduler;
     }
 
 }

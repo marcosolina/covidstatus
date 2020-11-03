@@ -10,9 +10,9 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -26,7 +26,7 @@ import com.marco.javacovidstatus.services.interfaces.NationalDataService;
  * @author Marco
  *
  */
-@Configuration
+@Component
 @EnableScheduling
 public class ItalianNationalDataScheduler implements GovermentDataRetrieverScheduler {
     private static final Logger logger = LoggerFactory.getLogger(ItalianNationalDataScheduler.class);
@@ -42,7 +42,7 @@ public class ItalianNationalDataScheduler implements GovermentDataRetrieverSched
     @Override
     public void updateNationalData() {
 
-        logger.debug("Clear the DB");
+        logger.info("Updating Data");
         dataService.deleteAllData();// TODO optimise
 
         LocalDate start = LocalDate.of(2020, 2, 24);
@@ -111,7 +111,7 @@ public class ItalianNationalDataScheduler implements GovermentDataRetrieverSched
                  * Store the info
                  */
                 dataService.storeData(dto);
-                logger.debug(String.format("Inserted data for date: %s", start.toString()));
+                logger.trace(String.format("Inserted data for date: %s", start.toString()));
             }
         } catch (Exception e) {
             logger.error(e.getMessage());

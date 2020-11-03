@@ -13,11 +13,14 @@ All the "number" are retrieved from the [Ministero della Salute](https://www.sal
 * Retrieve the data from the public repo **(Done)**
 * Store the data in the DB **(Done)**
 * Create a simple UI to display the raw data **(Done)**
-* Improve the UI **(done)**
-* Fix for my Rasp **(done)**
-* Select the range of dates **(done)**
-* Refactor the UI Code **(done)**
-* UI Restile
+* Improve the UI **(Done)**
+* Fix for my Rasp **(Done)**
+* Select the range of dates **(Done)**
+* Refactor the UI Code **(Done)**
+* UI Restyle
 * Schedule service improvements
 * CI / CD Pipeline
+* Unit testing
+* Integration testing
+* Notification (Probably email)
 * Anything else that cames up in my mind
