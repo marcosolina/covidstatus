@@ -5,6 +5,8 @@ All the "number" are retrieved from the [Ministero della Salute](https://www.sal
 
 ## Requirements:
 * JVM 11
+
+## Optional:
 * Docker
 
 ## TODO:
@@ -14,6 +16,8 @@ All the "number" are retrieved from the [Ministero della Salute](https://www.sal
 * Improve the UI **(done)**
 * Fix for my Rasp **(done)**
 * Select the range of dates **(done)**
+* Refactor the UI Code **(done)**
 * UI Restile
-* Refactor the UI Code
+* Schedule service improvements
+* CI / CD Pipeline
 * Anything else that cames up in my mind
