@@ -12,6 +12,15 @@ spring:
     password: postgres
   autoconfigure:
     exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration, org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
+  mail:    host: smtp.gmail.com
+    port: 587
+    username: XXXX
+    password: XXXX
+    properties:      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 
 server:  servlet:    context-path: /Covid19Italy
     
