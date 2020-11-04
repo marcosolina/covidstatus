@@ -19,6 +19,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import com.marco.javacovidstatus.model.DailyData;
 import com.marco.javacovidstatus.services.interfaces.GovermentDataRetrieverScheduler;
 import com.marco.javacovidstatus.services.interfaces.NationalDataService;
+import com.marco.javacovidstatus.services.interfaces.NotificationSenderInterface;
 
 /**
  * This implementations uses the Italian national data
@@ -35,6 +36,8 @@ public class ItalianNationalDataScheduler implements GovermentDataRetrieverSched
     private WebClient webClient;
     @Autowired
     private NationalDataService dataService;
+    @Autowired
+    private NotificationSenderInterface notificationService;
 
     private String url = "https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-andamento-nazionale/dpc-covid19-ita-andamento-nazionale-%s.csv";
 
@@ -44,6 +47,8 @@ public class ItalianNationalDataScheduler implements GovermentDataRetrieverSched
 
         logger.info("Updating Data");
         dataService.deleteAllData();// TODO optimise
+        
+        //notificationService.sendMessage("symphonkongolo@hotmail.com", "Ciao", "Ciao");
 
         LocalDate start = LocalDate.of(2020, 2, 24);
         LocalDate end = LocalDate.now();
