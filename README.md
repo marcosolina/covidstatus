@@ -19,7 +19,7 @@ All the "number" are retrieved from the [Ministero della Salute](https://www.sal
 * Refactor the UI Code **(Done)**
 * Unit testing **(done)**
 * Notification (Probably email) **(done)**
-* CI / CD Pipeline
+* CI / CD Pipeline (Working on this)
 * UI Restyle
 * Schedule service improvements
 * Integration testing
