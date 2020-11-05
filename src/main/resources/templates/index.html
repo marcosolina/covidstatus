@@ -46,7 +46,8 @@
 		crossorigin="anonymous">
 	<script th:src="@{/js/CovidChart.js}"></script>	
 	<script th:src="@{/js/CovidChartDataset.js}"></script>
-	<script th:src="@{/js/CovidCommon.js}"></script>	
+	<script th:src="@{/js/CovidCommon.js}"></script>
+	<link rel="stylesheet" th:href="@{/css/style.css}">	
 	
 	
 	<script th:inline="javascript">
@@ -65,30 +66,97 @@
 <body>
 	<div class="container-fluid">
 		<div class="row">
-			<div class="col-12 col-sm-4">
-				<label for="dateFrom">Data Da</label>
-				<input type="text" id="dateFrom" class="form-control" th:value="${from}">
-			</div>
-			<div class="col-12 col-sm-4">
-				<label for="dateTo">Data A</label>
-				<input type="text" id="dateTo" class="form-control" th:value="${to}">
+			<div class="col">&nbsp;</div>
+		</div>
+		<div class="row">
+			<div class="col-12">
+				<button class="btn btn-info btn-sm btn-block" type="button" data-toggle="collapse" data-target="#infoCard" aria-expanded="false" aria-controls="infoCard">
+					Informazioni
+				</button>
+				<br>
+				<div class="card card-body collapse" id="infoCard">
+					<p>Ho creato questa pagina web per poter visualizzare la sistuazione del COVID-19 in Italia.
+					I numeri che vengono comunicati dai notiziari non mi permetto di visualizzare la situazione,
+					 e cos&igrave; ho deciso di creare dei grafici. I dati li recupero dal sito del ministero della 
+					 salute, quindi sono gli stessi che i notiziari ci comunicano ogni giorno. Questo sito aggiorna 
+					 i dati ogni ora, il codice sorgente &egrave; disponibile su 
+					 <a href="https://github.com/marcosolina/covidstatus" style="" target="_blank">questo</a> 
+					 repository, mentre i dati del Ministero della Salute sono disponibile nel 
+					 <a href="https://github.com/pcm-dpc/COVID-19" target="_blank">repository ufficiale</a> 
+					 del ministero.
+					 </p> 
+				</div>
 			</div>
 		</div>
 		<div class="row">
-			<div class="col-12 col-lg-6">
-				<canvas id="chartTests" ></canvas>
+			<div class="col">&nbsp;</div>
+		</div>
+		<div class="row">
+			<div class="col-12 col-sm-4">
+				<label for="dateFrom">Data Da</label>
+				<input type="text" id="dateFrom" class="form-control form-control-sm" th:value="${from}">
 			</div>
-			<div class="col-12 col-lg-6">
-				<canvas id="chartInfected"></canvas>
+			<div class="col-12 col-sm-4">
+				<label for="dateTo">Data A</label>
+				<input type="text" id="dateTo" class="form-control form-control-sm" th:value="${to}">
 			</div>
-			<div class="col-12 col-lg-6">
-				<canvas id="chartCasualties"></canvas>
+		</div>
+		<div class="row">
+			<div class="col">&nbsp;</div>
+		</div>
+		<div class="row">
+			<div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2">
+				<div class="custom-control custom-switch">
+					<input type="checkbox" class="custom-control-input" id="arrNewInfections">
+					<label class="custom-control-label switch-label color-new-infections" for="arrNewInfections">Nuove Infezioni</label>
+				</div>
 			</div>
-			<div class="col-12 col-lg-6">
-				<canvas id="chartPercCasualties"></canvas>
+			<div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2">
+				<div class="custom-control custom-switch">
+					<input type="checkbox" class="custom-control-input" id="arrNewTests">
+					<label class="custom-control-label switch-label color-new-tests" for="arrNewTests">Test Eseguiti</label>
+				</div>
 			</div>
-			<div class="col-12 col-lg-6">
-				<canvas id="chartHospitalStatus"></canvas>
+			<div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2">
+				<div class="custom-control custom-switch">
+					<input type="checkbox" class="custom-control-input" id="arrPercInfections">
+					<label class="custom-control-label switch-label color-perc-infections" for="arrPercInfections">% Infetti su tamponi eseguiti</label>
+				</div>
+			</div>
+			<div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2">
+				<div class="custom-control custom-switch">
+					<input type="checkbox" class="custom-control-input" id="arrNewCasualties">
+					<label class="custom-control-label switch-label color-new-casualties" for="arrNewCasualties">Decessi</label>
+				</div>
+			</div>
+			<div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2">
+				<div class="custom-control custom-switch">
+					<input type="checkbox" class="custom-control-input" id="arrPercCasualties">
+					<label class="custom-control-label switch-label color-perc-casualties" for="arrPercCasualties">% Decessi su infetti</label>
+				</div>
+			</div>
+			<div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2">
+				<div class="custom-control custom-switch">
+					<input type="checkbox" class="custom-control-input" id="arrNewHospitalized">
+					<label class="custom-control-label switch-label color-new-hospitalized" for="arrNewHospitalized">Nuovi Ricoveri</label>
+				</div>
+			</div>
+			<div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2">
+				<div class="custom-control custom-switch">
+					<input type="checkbox" class="custom-control-input" id="arrNewIntensiveTherapy">
+					<label class="custom-control-label switch-label color-new-intensive-therapy" for="arrNewIntensiveTherapy">Ricoveri Terapia intensiva (Di Cui)</label>
+				</div>
+			</div>
+			<div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2">
+				<div class="custom-control custom-switch">
+					<input type="checkbox" class="custom-control-input" id="arrNewRecovered">
+					<label class="custom-control-label switch-label color-new-recovered" for="arrNewRecovered">Nuovi Dismessi/Guariti</label>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-lg-12 col-xl-9">
+				<canvas id="chartPeople"></canvas>
 			</div>
 		</div>		
 	</div>

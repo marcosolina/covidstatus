@@ -10,6 +10,8 @@ var CovidCommon = (function(CovidCommon){
 	
 	var dateFormat = "dd/mm/yy";
 	var data = undefined;
+	var dataOnTheChart = {};
+	var chartPeople;
 	
 	/**
 		Initialise the UI
@@ -37,6 +39,22 @@ var CovidCommon = (function(CovidCommon){
 	        dateFrom.datepicker( "option", "maxDate", CovidCommon.getDate( this ) );
 	        CovidCommon.updateDates();
 		});
+		$("[type=checkbox]").change(CovidCommon.chartDataSwitchChanged);
+		
+		chartPeople = new CovidChart(document.getElementById('chartPeople'));
+		chartPeople.setLabels(data.arrDates);
+	}
+	
+	CovidCommon.chartDataSwitchChanged = function(){
+		var jElement = $(this);
+		var id = jElement.prop("id");
+		
+		if(dataOnTheChart[id] == undefined){
+			dataOnTheChart[id] = {};
+		}
+		
+		dataOnTheChart[id].active = jElement.prop("checked");
+		CovidCommon.drawTheCharts();
 	}
 	
 	/**
@@ -74,71 +92,67 @@ var CovidCommon = (function(CovidCommon){
 			*/
 			const dsNewInfections = new CovidChartDataset("Nuove Infezioni");
 			dsNewInfections.setData(data.arrNewInfections);
-			dsNewInfections.setColor("rgb(219, 53, 53, 1)");
+			dsNewInfections.setColor("rgb(255, 99, 99, 1)");
 			
 			const dsTestExecuted = new CovidChartDataset("Test Eseguiti");
 			dsTestExecuted.setData(data.arrNewTests);
-			dsTestExecuted.setColor("rgb(53, 219, 108, 1)");
+			dsTestExecuted.setColor("rgb(255, 175, 79, 1)");
 			
 			const dsPercInfections = new CovidChartDataset("% Infetti su tamponi eseguiti");
 			dsPercInfections.setData(data.arrPercInfections);
-			dsPercInfections.setColor("rgb(25, 194, 255, 1)");
+			dsPercInfections.setColor("rgb(242, 17, 224, 1)");
 			
 			const dsCasualties = new CovidChartDataset("Decessi");
 			dsCasualties.setData(data.arrNewCasualties);
-			dsCasualties.setColor("rgb(245, 152, 66, 1)");
+			dsCasualties.setColor("rgb(31, 235, 255, 1)");
 			
 			const dsPercCasualties = new CovidChartDataset("% Decessi su infetti");
 			dsPercCasualties.setData(data.arrPercCasualties);
-			dsPercCasualties.setColor("rgb(237, 78, 237, 1)");
+			dsPercCasualties.setColor("rgb(84, 149, 255, 1)");
 			
 			const dsNewHospitalised = new CovidChartDataset("Nuovi Ricoveri");
 			dsNewHospitalised.setData(data.arrNewHospitalized);
-			dsNewHospitalised.setColor("rgb(230, 218, 0, 1)");
+			dsNewHospitalised.setColor("rgb(157, 140, 255, 1)");
 			
 			const dsNewIntensiveTherapy = new CovidChartDataset("Di cui in Terapia intensiva");
 			dsNewIntensiveTherapy.setData(data.arrNewIntensiveTherapy);
-			dsNewIntensiveTherapy.setColor("rgb(245, 161, 66, 1)");
+			dsNewIntensiveTherapy.setColor("rgb(46, 22, 181, 1)");
 			
 			const dsNewRecovered = new CovidChartDataset("Nuovi Dismessi/Guariti");
 			dsNewRecovered.setData(data.arrNewRecovered);
-			dsNewRecovered.setColor("rgb(52, 235, 76, 1)");
+			dsNewRecovered.setColor("rgb(75, 199, 50, 1)");
 			
-			/*
-				Prepare the charts
-			*/
-			const cTests = new CovidChart(document.getElementById('chartTests'));
-			cTests.setLabels(data.arrDates);
-			cTests.addCovidChartDataset(dsNewInfections);
-			cTests.addCovidChartDataset(dsTestExecuted);
 			
-			const cInfections = new CovidChart(document.getElementById('chartInfected'));
-			cInfections.setLabels(data.arrDates);
-			cInfections.addCovidChartDataset(dsPercInfections);
-
-			const cCasualties = new CovidChart(document.getElementById('chartCasualties'));
-			cCasualties.setLabels(data.arrDates);
-			cCasualties.addCovidChartDataset(dsCasualties);
+			chartPeople.clear();
 			
-			const cPercCasualties = new CovidChart(document.getElementById('chartPercCasualties'));
-			cPercCasualties.setLabels(data.arrDates);
-			cPercCasualties.addCovidChartDataset(dsPercCasualties);
 			
-			const cHospitalStatus = new CovidChart(document.getElementById('chartHospitalStatus'));
-			cHospitalStatus.setLabels(data.arrDates);
-			cHospitalStatus.addCovidChartDataset(dsNewInfections);
-			cHospitalStatus.addCovidChartDataset(dsNewHospitalised);
-			cHospitalStatus.addCovidChartDataset(dsNewIntensiveTherapy);
-			cHospitalStatus.addCovidChartDataset(dsNewRecovered);
+			if(dataOnTheChart.arrNewInfections && dataOnTheChart.arrNewInfections.active == true){
+				chartPeople.addCovidChartDataset(dsNewInfections);	
+			}
+			if(dataOnTheChart.arrNewTests && dataOnTheChart.arrNewTests.active == true){
+				chartPeople.addCovidChartDataset(dsTestExecuted);	
+			}
+			if(dataOnTheChart.arrPercInfections && dataOnTheChart.arrPercInfections.active == true){
+				chartPeople.addCovidChartDataset(dsPercInfections);	
+			}
+			if(dataOnTheChart.arrNewCasualties && dataOnTheChart.arrNewCasualties.active == true){
+				chartPeople.addCovidChartDataset(dsCasualties);	
+			}
+			if(dataOnTheChart.arrPercCasualties && dataOnTheChart.arrPercCasualties.active == true){
+				chartPeople.addCovidChartDataset(dsPercCasualties);	
+			}
+			if(dataOnTheChart.arrNewHospitalized && dataOnTheChart.arrNewHospitalized.active == true){
+				chartPeople.addCovidChartDataset(dsNewHospitalised);	
+			}
+			if(dataOnTheChart.arrNewIntensiveTherapy && dataOnTheChart.arrNewIntensiveTherapy.active == true){
+				chartPeople.addCovidChartDataset(dsNewIntensiveTherapy);	
+			}
+			if(dataOnTheChart.arrNewRecovered && dataOnTheChart.arrNewRecovered.active == true){
+				chartPeople.addCovidChartDataset(dsNewRecovered);	
+			}
 			
-			/*
-				Draw the charts
-			*/
-			cTests.drawChart();
-			cInfections.drawChart();
-			cCasualties.drawChart();
-			cPercCasualties.drawChart();
-			cHospitalStatus.drawChart();
+			chartPeople.drawChart();
+			
 	}
 	
 	return CovidCommon;

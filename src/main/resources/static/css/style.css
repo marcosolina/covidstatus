@@ -1,0 +1,28 @@
+.switch-label{
+	font-weight: bold;
+}
+
+.color-new-infections{
+	color: rgb(255, 99, 99, 1);
+}
+.color-new-tests{
+	color: rgb(255, 175, 79, 1);
+}
+.color-perc-infections{
+	color: rgb(242, 17, 224, 1);
+}
+.color-new-casualties{
+	color: rgb(31, 235, 255, 1);
+}
+.color-perc-casualties{
+	color: rgb(84, 149, 255, 1);
+}
+.color-new-hospitalized{
+	color: rgb(157, 140, 255, 1);
+}
+.color-new-intensive-therapy{
+	color: rgb(46, 22, 181, 1);
+}
+.color-new-recovered{
+	color: rgb(75, 199, 50, 1);
+}
