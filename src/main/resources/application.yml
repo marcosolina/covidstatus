@@ -26,3 +26,5 @@ server:  servlet:    context-path: /Covid19Italy
     
 covidstatus:
   serviceimpl: rasp #rasp
+  notification:
+    enabled: false
