@@ -17,10 +17,11 @@ All the "number" are retrieved from the [Ministero della Salute](https://www.sal
 * Fix for my Rasp **(Done)**
 * Select the range of dates **(Done)**
 * Refactor the UI Code **(Done)**
-* Unit testing **(done)**
-* Notification (Probably email) **(done)**
-* CI / CD Pipeline (Working on this)
-* UI Restyle
+* Unit testing **(Done)**
+* Notification (Probably email) **(Done)**
+* CI / CD Pipeline **(Done)**
+* UI Restyle **(Done)**
+* Add Province chart
 * Schedule service improvements
 * Integration testing
 * Anything else that cames up in my mind

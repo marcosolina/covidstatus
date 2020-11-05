@@ -24,6 +24,13 @@ class CovidChart {
 		this.arrDataSets.push(covidChartDataset.getDataSet());
 	}
 	
+	clear(){
+		if(this.chart != undefined){
+			this.arrDataSets = [];
+			this.chart.destroy();
+		}
+	}
+	
 	/**
 		It draws the chart
 	 */
@@ -35,6 +42,9 @@ class CovidChart {
 		        datasets: this.arrDataSets
 		    },
 		    options:{
+				legend:{
+					display: false
+				},
 		    	responsive: true,
 		    	tooltips: {
 					mode: 'index',
