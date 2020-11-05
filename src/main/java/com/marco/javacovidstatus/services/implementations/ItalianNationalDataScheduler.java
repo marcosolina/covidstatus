@@ -41,14 +41,12 @@ public class ItalianNationalDataScheduler implements GovermentDataRetrieverSched
 
     private String url = "https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-andamento-nazionale/dpc-covid19-ita-andamento-nazionale-%s.csv";
 
-    @Scheduled(cron = "0 40 18 * * *")
+    @Scheduled(cron = "0 0 * * * *")
     @Override
     public void updateNationalData() {
 
         logger.info("Updating Data");
         dataService.deleteAllData();// TODO optimise
-        
-        //notificationService.sendMessage("symphonkongolo@hotmail.com", "Ciao", "Ciao");
 
         LocalDate start = LocalDate.of(2020, 2, 24);
         LocalDate end = LocalDate.now();
@@ -118,6 +116,8 @@ public class ItalianNationalDataScheduler implements GovermentDataRetrieverSched
                 dataService.storeData(dto);
                 logger.trace(String.format("Inserted data for date: %s", start.toString()));
             }
+            
+            notificationService.sendMessage("marcosolina@gmail.com", "Marco Solina - Covid Status", "Dati aggiornati");
         } catch (Exception e) {
             logger.error(e.getMessage());
         }
