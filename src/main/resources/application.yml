@@ -11,7 +11,7 @@ spring:
     username: postgres
     password: postgres
   autoconfigure:
-    exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration, org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
+    #exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration, org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
   mail:    host: smtp.gmail.com
     port: 587
     username: XXXX
@@ -25,6 +25,6 @@ spring:
 server:  servlet:    context-path: /Covid19Italy
     
 covidstatus:
-  serviceimpl: rasp #rasp
+  datastore: db #rasp
   notification:
     enabled: false

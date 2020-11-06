@@ -9,7 +9,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.marco.javacovidstatus.model.DailyData;
+import com.marco.javacovidstatus.model.ProvinceDailyData;
 import com.marco.javacovidstatus.repositories.model.EntityNationalData;
+import com.marco.javacovidstatus.repositories.model.EntityProvinceData;
+import com.marco.javacovidstatus.repositories.model.EntityProvinceDataPk;
+import com.marco.javacovidstatus.repositories.sql.EntityProvinceDataRepo;
 import com.marco.javacovidstatus.repositories.sql.NationallDataSqlRepository;
 import com.marco.javacovidstatus.services.interfaces.NationalDataService;
 
@@ -18,6 +22,8 @@ public class MarcoNationalDataService implements NationalDataService {
 
     @Autowired
     private NationallDataSqlRepository repo;
+    @Autowired
+    private EntityProvinceDataRepo repoProvince;
 
     @Override
     public List<DailyData> getAllDataDescending() {
@@ -42,6 +48,7 @@ public class MarcoNationalDataService implements NationalDataService {
     @Override
     public boolean deleteAllData() {
         repo.deleteAll();
+        repoProvince.deleteAll();
         return true;
     }
 
@@ -77,6 +84,27 @@ public class MarcoNationalDataService implements NationalDataService {
     public List<DailyData> getDatesInRangeAscending(LocalDate from, LocalDate to) {
         List<EntityNationalData> listEntity = repo.findByDateBetweenOrderByDateAsc(from, to);
         return listEntity.stream().map(this::fromEntityNationalDataToDailyData).collect(Collectors.toList());
+    }
+
+    @Override
+    public boolean storeProvinceDailyData(ProvinceDailyData data) {
+        repoProvince.save(fromProvinceDailyDataToEntityProvinceData(data));
+        return true;
+    }
+    
+    private EntityProvinceData fromProvinceDailyDataToEntityProvinceData(ProvinceDailyData data) {
+        EntityProvinceDataPk pk = new EntityProvinceDataPk();
+        pk.setDate(data.getDate());
+        pk.setProvinceCode(data.getProvinceCode());
+        pk.setRegionCode(data.getRegionCode());
+        
+        EntityProvinceData e = new EntityProvinceData();
+        e.setId(pk);
+        e.setDescription(data.getDescription());
+        e.setNewInfections(data.getNewInfections());
+        e.setShortName(data.getShortName());
+        
+        return e;
     }
 
 }

@@ -22,7 +22,7 @@ import com.marco.javacovidstatus.services.interfaces.NotificationSenderInterface
 public class Beans {
     private static final Logger LOGGER = LoggerFactory.getLogger(Beans.class);
 
-    @Value("${covidstatus.serviceimpl}")
+    @Value("${covidstatus.datastore}")
     private String serviceImp;
 
     @Bean

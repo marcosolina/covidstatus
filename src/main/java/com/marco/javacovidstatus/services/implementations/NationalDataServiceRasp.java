@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.marco.javacovidstatus.model.DailyData;
+import com.marco.javacovidstatus.model.ProvinceDailyData;
 import com.marco.javacovidstatus.services.interfaces.NationalDataService;
 
 /**
@@ -65,6 +66,12 @@ public class NationalDataServiceRasp implements NationalDataService {
 
         filteredData.sort((o1, o2) -> o1.getDate().compareTo(o2.getDate()));
         return filteredData;
+    }
+
+    @Override
+    public boolean storeProvinceDailyData(ProvinceDailyData data) {
+        // TODO Auto-generated method stub
+        return false;
     }
 
 }
