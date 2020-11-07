@@ -12,10 +12,12 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import com.marco.javacovidstatus.repositories.sql.CovidRepository;
+import com.marco.javacovidstatus.repositories.sql.MarcoCovidRepository;
 import com.marco.javacovidstatus.services.implementations.EmailNotificationSender;
 import com.marco.javacovidstatus.services.implementations.MarcoNationalDataService;
 import com.marco.javacovidstatus.services.implementations.NationalDataServiceRasp;
-import com.marco.javacovidstatus.services.interfaces.NationalDataService;
+import com.marco.javacovidstatus.services.interfaces.CovidDataService;
 import com.marco.javacovidstatus.services.interfaces.NotificationSenderInterface;
 
 @Configuration
@@ -31,7 +33,7 @@ public class Beans {
     }
 
     @Bean
-    public NationalDataService getNationalDataService() {
+    public CovidDataService getNationalDataService() {
         if ("rasp".equals(serviceImp)) {
             LOGGER.info("Uso implementazione per il RASP");
             return new NationalDataServiceRasp();
@@ -45,6 +47,11 @@ public class Beans {
         ThreadPoolTaskScheduler taskScheduler = new ThreadPoolTaskScheduler();
         taskScheduler.setPoolSize(20);
         return taskScheduler;
+    }
+    
+    @Bean
+    public CovidRepository getCovidRepository() {
+        return new MarcoCovidRepository();
     }
     
     @Bean

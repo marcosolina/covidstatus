@@ -2,15 +2,13 @@ package com.marco.javacovidstatus.model.rest;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.List;
 
-import com.marco.utils.http.MarcoResponse;
+import com.marco.javacovidstatus.model.CharDataType;
 
-public class RespGetNationalData extends MarcoResponse implements Serializable {
+public class RespGetNationalData extends RespDataSets implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    private List<LocalDate> arrDates;
     private List<BigDecimal> arrPercInfections;
     private List<BigDecimal> arrPercCasualties;
     private List<Integer> arrNewTests;
@@ -20,12 +18,8 @@ public class RespGetNationalData extends MarcoResponse implements Serializable {
     private List<Integer> arrNewIntensiveTherapy;
     private List<Integer> arrNewRecovered;
 
-    public List<LocalDate> getArrDates() {
-        return arrDates;
-    }
-
-    public void setArrDates(List<LocalDate> arrDates) {
-        this.arrDates = arrDates;
+    public RespGetNationalData() {
+        super(CharDataType.NATIONAL);
     }
 
     public List<BigDecimal> getArrPercInfections() {

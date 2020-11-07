@@ -9,6 +9,7 @@ public class ProvinceDailyData implements Serializable {
     private LocalDate date;
     private String regionCode;
     private String provinceCode;
+    private String regionDesc;
     private String description;
     private String shortName;
     private int newInfections;
@@ -63,6 +64,14 @@ public class ProvinceDailyData implements Serializable {
 
     public static long getSerialversionuid() {
         return serialVersionUID;
+    }
+
+    public String getRegionDesc() {
+        return regionDesc;
+    }
+
+    public void setRegionDesc(String regionDesc) {
+        this.regionDesc = regionDesc;
     }
 
 }

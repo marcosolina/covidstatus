@@ -10,7 +10,8 @@ import org.slf4j.LoggerFactory;
 
 import com.marco.javacovidstatus.model.DailyData;
 import com.marco.javacovidstatus.model.ProvinceDailyData;
-import com.marco.javacovidstatus.services.interfaces.NationalDataService;
+import com.marco.javacovidstatus.model.Region;
+import com.marco.javacovidstatus.services.interfaces.CovidDataService;
 
 /**
  * This implementation will store the data in the memory. This is a workaround
@@ -19,7 +20,7 @@ import com.marco.javacovidstatus.services.interfaces.NationalDataService;
  * @author Marco
  *
  */
-public class NationalDataServiceRasp implements NationalDataService {
+public class NationalDataServiceRasp implements CovidDataService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(NationalDataServiceRasp.class);
 
@@ -72,6 +73,12 @@ public class NationalDataServiceRasp implements NationalDataService {
     public boolean storeProvinceDailyData(ProvinceDailyData data) {
         // TODO Auto-generated method stub
         return false;
+    }
+
+    @Override
+    public List<Region> getRegionsList() {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }

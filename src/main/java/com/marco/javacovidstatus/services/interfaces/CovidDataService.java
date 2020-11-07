@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.marco.javacovidstatus.model.DailyData;
 import com.marco.javacovidstatus.model.ProvinceDailyData;
+import com.marco.javacovidstatus.model.Region;
 
 /**
  * This interfaces provides a list of functionalities that you can use to
@@ -13,7 +14,7 @@ import com.marco.javacovidstatus.model.ProvinceDailyData;
  * @author Marco
  *
  */
-public interface NationalDataService {
+public interface CovidDataService {
 
     /**
      * It returns the list of the national data in a descending order
@@ -21,6 +22,12 @@ public interface NationalDataService {
      * @return
      */
     public List<DailyData> getAllDataDescending();
+    
+    /**
+     * It returns a list of regions
+     * @return
+     */
+    public List<Region> getRegionsList();
 
     /**
      * It returns the list of the national data in an ascending order
