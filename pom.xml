@@ -63,7 +63,12 @@
 		<dependency>
 			<groupId>com.marco</groupId>
 			<artifactId>WebJar</artifactId>
-			<version>0.0.2</version>
+			<version>0.0.3</version>
+		</dependency>
+		<dependency>
+			<groupId>com.marco</groupId>
+			<artifactId>Utils</artifactId>
+			<version>0.0.1</version>
 		</dependency>
 	</dependencies>
 
