@@ -60,6 +60,11 @@
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>com.marco</groupId>
+			<artifactId>WebJar</artifactId>
+			<version>0.0.2</version>
+		</dependency>
 	</dependencies>
 
 	<build>

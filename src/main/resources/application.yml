@@ -10,7 +10,7 @@ spring:
     url: jdbc:postgresql://localhost:5432/coviditaly
     username: postgres
     password: postgres
-  autoconfigure:
+  #autoconfigure:
     #exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration, org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
   mail:    host: smtp.gmail.com
     port: 587
