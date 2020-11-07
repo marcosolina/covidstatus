@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import com.marco.javacovidstatus.model.DailyData;
+import com.marco.javacovidstatus.model.ProvinceDailyData;
 
 /**
  * This interfaces provides a list of functionalities that you can use to
@@ -52,4 +53,11 @@ public interface NationalDataService {
      * @return
      */
     public boolean deleteAllData();
+    
+    /**
+     * It stores the {@link ProvinceDailyData} 
+     * @param data
+     * @return
+     */
+    public boolean storeProvinceDailyData(ProvinceDailyData data);
 }
