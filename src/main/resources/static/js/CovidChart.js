@@ -24,7 +24,7 @@ class CovidChart {
 		this.arrDataSets.push(covidChartDataset.getDataSet());
 	}
 	
-	clear(){
+	clearDataSets(){
 		if(this.chart != undefined){
 			this.arrDataSets = [];
 			this.chart.destroy();

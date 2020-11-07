@@ -2,20 +2,22 @@ package com.marco.javacovidstatus.controllers;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.marco.javacovidstatus.model.DailyData;
+import com.marco.javacovidstatus.model.rest.ReqGetNationalData;
+import com.marco.javacovidstatus.model.rest.RespGetNationalData;
 import com.marco.javacovidstatus.services.interfaces.NationalDataService;
 
 @Controller
@@ -26,39 +28,31 @@ public class MainController {
     private NationalDataService service;
 
     @GetMapping(value = "/")
-    public String homePage(Model model, @Param("from") String from, @Param("to") String to) {
+    public String homePage(Model model) {
         LOGGER.trace("Inside MainController.homePage");
-        
-        
-        
-        List<DailyData> listData = null;
-        
-        if(from != null && to != null) {
-            LocalDate start = LocalDate.parse(from, DateTimeFormatter.ofPattern("yyyyMMdd"));
-            LocalDate end = LocalDate.parse(to, DateTimeFormatter.ofPattern("yyyyMMdd"));
-            listData = service.getDatesInRangeAscending(start, end);
-            model.addAttribute("from", start.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
-            model.addAttribute("to", end.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
-        }else {
-            listData = service.getAllDataAscending();
-            model.addAttribute("from", "");
-            model.addAttribute("to", "");
-        }
-        
-        
-        Map<String, Object> dataMap = new HashMap<>();
-        dataMap.put("arrDates",                 listData.stream().map(DailyData::getDate).collect(Collectors.toList()));
-        dataMap.put("arrPercInfections",        listData.stream().map(DailyData::getInfectionPercentage).collect(Collectors.toList()));
-        dataMap.put("arrNewTests",              listData.stream().map(DailyData::getNewTests).collect(Collectors.toList()));
-        dataMap.put("arrNewInfections",         listData.stream().map(DailyData::getNewInfections).collect(Collectors.toList()));
-        dataMap.put("arrNewCasualties",         listData.stream().map(DailyData::getNewCasualties).collect(Collectors.toList()));
-        dataMap.put("arrPercCasualties",        listData.stream().map(DailyData::getCasualtiesPercentage).collect(Collectors.toList()));
-        dataMap.put("arrNewHospitalized",       listData.stream().map(DailyData::getNewHospitalized).collect(Collectors.toList()));
-        dataMap.put("arrNewIntensiveTherapy",   listData.stream().map(DailyData::getNewIntensiveTherapy).collect(Collectors.toList()));
-        dataMap.put("arrNewRecovered",          listData.stream().map(DailyData::getNewRecovered).collect(Collectors.toList()));
-        
-        model.addAttribute("data", dataMap);
-        
+        LocalDate today = LocalDate.now();
+        model.addAttribute("from", today.minusMonths(1).format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+        model.addAttribute("to", today.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
         return "index";
+    }
+    
+    @PostMapping("/getNationalData")
+    @ResponseBody
+    public RespGetNationalData getNationalData(@RequestBody ReqGetNationalData request) {
+        RespGetNationalData resp = new RespGetNationalData();
+
+        List<DailyData> listData = service.getDatesInRangeAscending(request.getFrom(), request.getTo());
+        resp.setArrDates(listData.stream().map(DailyData::getDate).collect(Collectors.toList()));
+        resp.setArrNewCasualties(listData.stream().map(DailyData::getNewCasualties).collect(Collectors.toList()));
+        resp.setArrNewHospitalized(listData.stream().map(DailyData::getNewHospitalized).collect(Collectors.toList()));
+        resp.setArrNewInfections(listData.stream().map(DailyData::getNewInfections).collect(Collectors.toList()));
+        resp.setArrNewIntensiveTherapy(listData.stream().map(DailyData::getNewIntensiveTherapy).collect(Collectors.toList()));
+        resp.setArrNewRecovered(listData.stream().map(DailyData::getNewRecovered).collect(Collectors.toList()));
+        resp.setArrNewTests(listData.stream().map(DailyData::getNewTests).collect(Collectors.toList()));
+        resp.setArrPercCasualties(listData.stream().map(DailyData::getCasualtiesPercentage).collect(Collectors.toList()));
+        resp.setArrPercInfections(listData.stream().map(DailyData::getInfectionPercentage).collect(Collectors.toList()));
+        
+        resp.setStatus(true);
+        return resp;
     }
 }
