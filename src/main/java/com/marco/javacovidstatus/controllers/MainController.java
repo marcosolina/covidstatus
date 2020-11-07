@@ -18,14 +18,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.marco.javacovidstatus.model.DailyData;
 import com.marco.javacovidstatus.model.rest.ReqGetNationalData;
 import com.marco.javacovidstatus.model.rest.RespGetNationalData;
-import com.marco.javacovidstatus.services.interfaces.NationalDataService;
+import com.marco.javacovidstatus.services.interfaces.CovidDataService;
 
 @Controller
 public class MainController {
     private static final Logger LOGGER = LoggerFactory.getLogger(MainController.class);
 
     @Autowired
-    private NationalDataService service;
+    private CovidDataService service;
 
     @GetMapping(value = "/")
     public String homePage(Model model) {
@@ -33,6 +33,7 @@ public class MainController {
         LocalDate today = LocalDate.now();
         model.addAttribute("from", today.minusMonths(1).format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
         model.addAttribute("to", today.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+        model.addAttribute("regions", service.getRegionsList());
         return "index";
     }
     

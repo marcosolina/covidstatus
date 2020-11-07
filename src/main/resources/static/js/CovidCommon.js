@@ -8,6 +8,31 @@ var CovidCommon = (function(CovidCommon){
 		CovidCommon = {};
 	}
 	
+	/*
+		Data Sets Objects
+	*/
+	
+	const dsNewInfections = new CovidChartDataset("Nuove Infezioni");
+	const dsTestExecuted = new CovidChartDataset("Test Eseguiti");
+	const dsPercInfections = new CovidChartDataset("% Infetti su tamponi eseguiti");
+	const dsCasualties = new CovidChartDataset("Decessi");
+	const dsPercCasualties = new CovidChartDataset("% Decessi su infetti");
+	const dsNewHospitalised = new CovidChartDataset("Nuovi Ricoveri");
+	const dsNewIntensiveTherapy = new CovidChartDataset("Di cui in Terapia intensiva");
+	const dsNewRecovered = new CovidChartDataset("Nuovi Dismessi/Guariti");
+			
+	/*
+		Setting the color of the data sets
+	*/
+	dsNewInfections.setColor("rgb(255, 99, 99, 1)");
+	dsTestExecuted.setColor("rgb(255, 175, 79, 1)");
+	dsPercInfections.setColor("rgb(242, 17, 224, 1)");
+	dsCasualties.setColor("rgb(31, 235, 255, 1)");
+	dsPercCasualties.setColor("rgb(84, 149, 255, 1)");
+	dsNewHospitalised.setColor("rgb(157, 140, 255, 1)");
+	dsNewIntensiveTherapy.setColor("rgb(46, 22, 181, 1)");
+	dsNewRecovered.setColor("rgb(75, 199, 50, 1)");
+	
 	var dateFormat = "dd/mm/yy";
 	
 	var dataNationalChart = {
@@ -21,6 +46,7 @@ var CovidCommon = (function(CovidCommon){
 		arrNewRecovered: {active: false,},
 	};
 	var chartNational;
+	var chartProvince;
 	
 	/**
 		Initialise the UI
@@ -99,16 +125,26 @@ var CovidCommon = (function(CovidCommon){
 			if(chartNational == undefined){
 				chartNational = new CovidChart(document.getElementById('chartNational'));
 			}
+			if(chartProvince == undefined){
+				chartProvince = new CovidChart(document.getElementById('chartProvince'));
+			}
 			chartNational.setLabels(response.arrDates);
-			dataNationalChart.arrNewInfections.data = response.arrNewInfections;
-			dataNationalChart.arrNewTests.data = response.arrNewTests;
-			dataNationalChart.arrPercInfections.data = response.arrPercInfections;
-			dataNationalChart.arrNewCasualties.data = response.arrNewCasualties;
-			dataNationalChart.arrPercCasualties.data = response.arrPercCasualties;
-			dataNationalChart.arrNewHospitalized.data = response.arrNewHospitalized;
-			dataNationalChart.arrNewIntensiveTherapy.data = response.arrNewIntensiveTherapy;
-			dataNationalChart.arrNewRecovered.data = response.arrNewRecovered;
-			CovidCommon.drawNationalChart();
+			chartProvince.setLabels(response.arrDates);
+			switch(response.dataType){
+				case "NATIONAL":
+					dataNationalChart.arrNewInfections.data = response.arrNewInfections;
+					dataNationalChart.arrNewTests.data = response.arrNewTests;
+					dataNationalChart.arrPercInfections.data = response.arrPercInfections;
+					dataNationalChart.arrNewCasualties.data = response.arrNewCasualties;
+					dataNationalChart.arrPercCasualties.data = response.arrPercCasualties;
+					dataNationalChart.arrNewHospitalized.data = response.arrNewHospitalized;
+					dataNationalChart.arrNewIntensiveTherapy.data = response.arrNewIntensiveTherapy;
+					dataNationalChart.arrNewRecovered.data = response.arrNewRecovered;
+					CovidCommon.drawNationalChart();
+					break;
+				default:
+					break;
+			}
 		}
 	}
 	
@@ -136,37 +172,14 @@ var CovidCommon = (function(CovidCommon){
 			/*
 			* Preparing the datasets
 			*/
-			const dsNewInfections = new CovidChartDataset("Nuove Infezioni");
 			dsNewInfections.setData(dataNationalChart.arrNewInfections.data);
-			dsNewInfections.setColor("rgb(255, 99, 99, 1)");
-			
-			const dsTestExecuted = new CovidChartDataset("Test Eseguiti");
 			dsTestExecuted.setData(dataNationalChart.arrNewTests.data);
-			dsTestExecuted.setColor("rgb(255, 175, 79, 1)");
-			
-			const dsPercInfections = new CovidChartDataset("% Infetti su tamponi eseguiti");
 			dsPercInfections.setData(dataNationalChart.arrPercInfections.data);
-			dsPercInfections.setColor("rgb(242, 17, 224, 1)");
-			
-			const dsCasualties = new CovidChartDataset("Decessi");
 			dsCasualties.setData(dataNationalChart.arrNewCasualties.data);
-			dsCasualties.setColor("rgb(31, 235, 255, 1)");
-			
-			const dsPercCasualties = new CovidChartDataset("% Decessi su infetti");
 			dsPercCasualties.setData(dataNationalChart.arrPercCasualties.data);
-			dsPercCasualties.setColor("rgb(84, 149, 255, 1)");
-			
-			const dsNewHospitalised = new CovidChartDataset("Nuovi Ricoveri");
 			dsNewHospitalised.setData(dataNationalChart.arrNewHospitalized.data);
-			dsNewHospitalised.setColor("rgb(157, 140, 255, 1)");
-			
-			const dsNewIntensiveTherapy = new CovidChartDataset("Di cui in Terapia intensiva");
-			dsNewIntensiveTherapy.setData(dataNationalChart.arrNewIntensiveTherapy);
-			dsNewIntensiveTherapy.setColor("rgb(46, 22, 181, 1)");
-			
-			const dsNewRecovered = new CovidChartDataset("Nuovi Dismessi/Guariti");
+			dsNewIntensiveTherapy.setData(dataNationalChart.arrNewIntensiveTherapy.data);
 			dsNewRecovered.setData(dataNationalChart.arrNewRecovered.data);
-			dsNewRecovered.setColor("rgb(75, 199, 50, 1)");
 			
 			chartNational.clearDataSets();
 			

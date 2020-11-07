@@ -22,7 +22,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import com.marco.javacovidstatus.model.DailyData;
 import com.marco.javacovidstatus.model.ProvinceDailyData;
 import com.marco.javacovidstatus.services.interfaces.GovermentDataRetrieverScheduler;
-import com.marco.javacovidstatus.services.interfaces.NationalDataService;
+import com.marco.javacovidstatus.services.interfaces.CovidDataService;
 import com.marco.javacovidstatus.services.interfaces.NotificationSenderInterface;
 
 /**
@@ -39,7 +39,7 @@ public class ItalianNationalDataScheduler implements GovermentDataRetrieverSched
     @Autowired
     private WebClient webClient;
     @Autowired
-    private NationalDataService dataService;
+    private CovidDataService dataService;
     @Autowired
     private NotificationSenderInterface notificationService;
 
@@ -190,6 +190,7 @@ public class ItalianNationalDataScheduler implements GovermentDataRetrieverSched
             data.setProvinceCode(columns.get(4));
             data.setRegionCode(columns.get(2));
             
+            data.setRegionDesc(columns.get(3));
             data.setDescription(columns.get(5));
             data.setNewInfections(Integer.parseInt(columns.get(9)));
             data.setShortName(columns.get(6));
