@@ -21,7 +21,7 @@ All the "number" are retrieved from the [Ministero della Salute](https://www.sal
 * Notification (Probably email) **(Done)**
 * CI / CD Pipeline **(Done)**
 * UI Restyle **(Done)**
-* Add Province chart
+* Add Province chart **(Done)**
 * Schedule service improvements
 * Integration testing
 * Anything else that cames up in my mind
