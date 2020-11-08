@@ -49,7 +49,7 @@ public class ItalianNationalDataScheduler implements GovermentDataRetrieverSched
 
     @Scheduled(cron = "0 0 * * * *")
     @Override
-    public void updateNationalData() {
+    public synchronized void updateNationalData() {
 
         logger.info("Updating Data");
         
