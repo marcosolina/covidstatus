@@ -167,6 +167,7 @@ var CovidCommon = (function(CovidCommon){
 			}
 			if(chartProvince == undefined){
 				chartProvince = new CovidChart(document.getElementById('chartProvince'));
+				chartProvince.setTitle("Nuove infezioni nelle province di:");
 			}
 			chartNational.setLabels(response.arrDates);
 			chartProvince.setLabels(response.arrDates);
@@ -184,6 +185,7 @@ var CovidCommon = (function(CovidCommon){
 					break;
 				case "PROVINCE":
 					dataProvinceChart = response.provinceData;
+					CovidCommon.createProvinceCheckboxes();
 					CovidCommon.drawProvinceChart();
 					break;
 				default:
@@ -205,6 +207,40 @@ var CovidCommon = (function(CovidCommon){
  
 		return date;
     }
+	
+	CovidCommon.changeProvinceCheckboxes = function (){
+		var jElement = $(this);
+		var id = jElement.prop("id");
+		
+		dataProvinceChart[id].active = jElement.prop("checked");
+		CovidCommon.drawProvinceChart();
+	}
+
+	CovidCommon.createProvinceCheckboxes = function(){
+		var jRow = $("#rowProvince");
+		jRow.empty();
+		
+		var strTmpl = '<div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2">' + 
+						'<div class="custom-control custom-switch">' +
+							'<input type="checkbox" class="custom-control-input" id="%provId%">' +
+							'<label class="custom-control-label switch-label" style="color: %color%" for="%provId%">%label%</label>' + 
+						'</div>' +
+					  '</div>';	
+		var i = 0;
+		for(var provinceCode in dataProvinceChart){
+			var provinceDetails = dataProvinceChart[provinceCode];
+			provinceDetails.active = false;
+			var data = {
+				provId: provinceCode,
+				color: provinceColorPalette[i],
+				label: provinceDetails.label
+			}
+			jRow.append(MarcoUtils.template(strTmpl, data));
+			i++;
+		}
+		
+		jRow.find("input").change(CovidCommon.changeProvinceCheckboxes);
+	}
 
 	CovidCommon.drawProvinceChart = function(){
 		if(chartProvince == undefined){
@@ -221,7 +257,9 @@ var CovidCommon = (function(CovidCommon){
 			dsProvince.setData(provinceDetails.newInfections);
 			dsProvince.setColor(provinceColorPalette[i]);
 			
-			chartProvince.addCovidChartDataset(dsProvince);
+			if(provinceDetails.active == true){
+				chartProvince.addCovidChartDataset(dsProvince);
+			}
 			i++;
 		}
 		
