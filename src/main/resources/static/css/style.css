@@ -2,13 +2,6 @@
 	font-weight: bold;
 }
 
-.btn-covid-info {
-	position: absolute;
-    right: 10px;
-    top: 10px;
-    z-index: 10;
-}
-
 .color-new-infections {
 	color: rgb(255, 99, 99, 1);
 }
