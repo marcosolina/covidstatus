@@ -14,5 +14,5 @@ I am providing a **docker file** that you can use to run and initialise the data
 * Schedule service improvements
 * Integration testing
 * Improve the UI
-* Add regional dhar
+* Add region chart
 * Anything else that cames up in my mind
