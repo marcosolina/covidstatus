@@ -31,6 +31,10 @@ class CovidChart {
 		}
 	}
 	
+	setTitle(stringTitle){
+		this.title = stringTitle;
+	}
+	
 	/**
 		It draws the chart
 	 */
@@ -42,6 +46,10 @@ class CovidChart {
 		        datasets: this.arrDataSets
 		    },
 		    options:{
+				title: {
+					display: this.title != undefined ? true : false,
+					text: this.title || ''
+				},
 				legend:{
 					display: false
 				},

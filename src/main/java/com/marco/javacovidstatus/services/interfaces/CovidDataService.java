@@ -22,9 +22,10 @@ public interface CovidDataService {
      * @return
      */
     public List<DailyData> getAllDataDescending();
-    
+
     /**
      * It returns a list of regions
+     * 
      * @return
      */
     public List<Region> getRegionsList();
@@ -37,14 +38,31 @@ public interface CovidDataService {
     public List<DailyData> getAllDataAscending();
 
     /**
-     * It returns the list of the national data of the specific range in a
-     * ascending order
+     * It returns the list of the national data of the specific range in a ascending
+     * order
      * 
      * @param from
      * @param to
      * @return
      */
     public List<DailyData> getDatesInRangeAscending(LocalDate from, LocalDate to);
+
+    /**
+     * It returns the data of the provinces for the selected region
+     * 
+     * @param from
+     * @param to
+     * @return
+     */
+    public List<ProvinceDailyData> getProvinceDataInRangeAscending(LocalDate from, LocalDate to, String regionCode);
+
+    /**
+     * Retrieves the list of provinces for the specific region
+     * 
+     * @param region
+     * @return
+     */
+    public List<String> getProfinceListForRegion(String region);
 
     /**
      * Store the data
@@ -60,11 +78,18 @@ public interface CovidDataService {
      * @return
      */
     public boolean deleteAllData();
-    
+
     /**
-     * It stores the {@link ProvinceDailyData} 
+     * It stores the {@link ProvinceDailyData}
+     * 
      * @param data
      * @return
      */
     public boolean storeProvinceDailyData(ProvinceDailyData data);
+    
+    /**
+     * It returns the max date available in the data store
+     * @return
+     */
+    public LocalDate getMaxDate();
 }

@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,8 +22,8 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import com.marco.javacovidstatus.model.DailyData;
 import com.marco.javacovidstatus.model.ProvinceDailyData;
-import com.marco.javacovidstatus.services.interfaces.GovermentDataRetrieverScheduler;
 import com.marco.javacovidstatus.services.interfaces.CovidDataService;
+import com.marco.javacovidstatus.services.interfaces.GovermentDataRetrieverScheduler;
 import com.marco.javacovidstatus.services.interfaces.NotificationSenderInterface;
 
 /**
@@ -51,21 +52,27 @@ public class ItalianNationalDataScheduler implements GovermentDataRetrieverSched
     public void updateNationalData() {
 
         logger.info("Updating Data");
-        dataService.deleteAllData();// TODO optimise
+        
+        LocalDate end = LocalDate.now();
+        LocalDate start = dataService.getMaxDate();
+        if(start == null) {
+            start = LocalDate.of(2020, 2, 24);
+        }
+        
 
-        //loadProvinceData();
-        loadNationalData();
+        loadNationalData(start, end);
+        loadProvinceData(start, end);
         notificationService.sendMessage("marcosolina@gmail.com", "Marco Solina - Covid Status", "Dati aggiornati");
     }
 
-    private void loadNationalData() {
-        LocalDate start = LocalDate.of(2020, 2, 24);
-        LocalDate end = LocalDate.now();
-        List<Integer> lastWeeknNewInfection = new ArrayList<>();
-
+    private void loadNationalData(LocalDate start, LocalDate end) {
+        List<Integer> lastWeeknNewInfection = getLastWeeknNewInfection(end);
+        logger.info("Updating natial data");
         try {
             while (start.isBefore(end)) {
                 start = start.plusDays(1);
+                logger.debug(String.format("Looking for national data at date: %s", start.toString()));
+                
                 /*
                  * Retrieve the data of today and yesterday
                  */
@@ -126,28 +133,46 @@ public class ItalianNationalDataScheduler implements GovermentDataRetrieverSched
                  * Store the info
                  */
                 dataService.storeData(dto);
-                logger.debug(String.format("Inserted data for date: %s", start.toString()));
             }
         } catch (Exception e) {
             logger.error(e.getMessage());
         }
     }
+    
+    private List<Integer> getLastWeeknNewInfection(LocalDate end){
+        List<DailyData> list = dataService.getDatesInRangeAscending(end.minusDays(7), end);
+        return list.stream().map(DailyData::getNewInfections).collect(Collectors.toList());
+    }
 
-    private void loadProvinceData() {
-        LocalDate start = LocalDate.of(2020, 2, 24);
-        LocalDate end = LocalDate.now();
+    private void loadProvinceData(LocalDate start, LocalDate end) {
         try {
             while (start.isBefore(end)) {
                 start = start.plusDays(1);
 
+                logger.debug(String.format("Looking for province data at date: %s", start.toString()));
+                
                 Map<String, ProvinceDailyData> precedente = parseData(start.minusDays(1));
                 Map<String, ProvinceDailyData> corrente = parseData(start);
 
                 List<ProvinceDailyData> dataToStore = new ArrayList<>();
 
                 corrente.forEach((k, v) -> dataToStore.add(getDelta(v, precedente.get(k))));
-                dataToStore.parallelStream().forEach(dataService::storeProvinceDailyData);
-                logger.debug(String.format("Inserted Province data for date: %s", start.toString()));
+                // @formatter:off
+                dataToStore.parallelStream().map(d -> {
+                    /*
+                     * I had to fix an issue caused by data inconsistency.
+                     * From Feb to Jun these to province were in the same region,
+                     * but in July they were  assigned to two separate regions.
+                     * I force the separate assignment from the beginning so it is consistent
+                     */
+                    if (d.getRegionDesc().equals("P.A. Bolzano")) {
+                        d.setRegionCode("21");
+                    } else if (d.getRegionDesc().equals("P.A. Trento")) {
+                        d.setRegionCode("22");
+                    }
+                    return d;
+                }).forEach(dataService::storeProvinceDailyData);
+                // @formatter:on
             }
         } catch (Exception e) {
             logger.error(e.getMessage());
