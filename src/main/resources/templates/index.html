@@ -47,6 +47,7 @@
 		window.onload = function(){
 			CovidCommon.init(regions);
 			CovidCommon.updateDates();
+			$("#region").change();
 		}
 		
 	/*]]>*/
@@ -79,13 +80,24 @@
 			</div>
 		</div>
 		<div class="row">
-			<div class="col-12 col-sm-4">
-				<label for="dateFrom">Data Da</label>
-				<input type="text" id="dateFrom" class="form-control form-control-sm" th:value="${from}">
+			<div class="col-12 col-sm-4 col-md-3 col-lg-3 col-xl-2">
+				<div class="input-group input-group-sm">
+					<div class="input-group-prepend">
+						<span class="input-group-text">Data Da</span>
+					</div>
+					<input type="text" id="dateFrom" class="form-control" th:value="${from}">
+				</div>
 			</div>
-			<div class="col-12 col-sm-4">
-				<label for="dateTo">Data A</label>
-				<input type="text" id="dateTo" class="form-control form-control-sm" th:value="${to}">
+			<div class="col-12 col-sm-1">
+				&nbsp;
+			</div>
+			<div class="col-12 col-sm-4 col-md-3 col-lg-3 col-xl-2">
+				<div class="input-group input-group-sm">
+					<div class="input-group-prepend">
+						<span class="input-group-text">Data A</span>
+					</div>
+					<input type="text" id="dateTo" class="form-control" th:value="${to}">
+				</div>
 			</div>
 		</div>
 		<div class="row">
@@ -177,13 +189,27 @@
 		<div class="tab-pane fade" id="nav-province" role="tabpanel" aria-labelledby="nav-contact-tab">
 			<div class="container-fluid">
 				<div class="row">
-					<div class="col-lg-12 col-xl-8">
-						<label for="region">Province della regione:</label>
-						<select class="form-control" id="region" >
-							<option th:each="region : ${regions}" th:value="${region.code}" th:text="${region.desc}"></option>
-						</select>
+					<div class="col-12">
+						&nbsp;
 					</div>
-				</div>	
+				</div>
+				<div class="row">
+					<div class="col-lg-12 col-xl-8">
+						<div class="input-group input-group-sm">
+							<div class="input-group-prepend">
+								<span class="input-group-text">Province Regione</span>
+							</div>
+							<select class="form-control" id="region" >
+								<option th:each="region : ${regions}" th:value="${region.code}" th:text="${region.desc}"></option>
+							</select>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-12">
+						&nbsp;
+					</div>
+				</div>
 				<div class="row">
 					<div class="col-lg-12 col-xl-8">
 						<canvas id="chartProvince"></canvas>

@@ -48,6 +48,8 @@ var CovidCommon = (function(CovidCommon){
 	
 	var dataProvinceChart = {};
 	
+	var provinceColorPalette = [];
+	
 	var chartNational;
 	var chartProvince;
 	
@@ -89,6 +91,24 @@ var CovidCommon = (function(CovidCommon){
 			    $("#" + prop).prop("checked", dataNationalChart[prop].active);
 			}
 		}
+		
+		provinceColorPalette.push("rgb( 64, 145, 108, 1)");
+		provinceColorPalette.push("rgb( 157, 2, 8, 1)");
+		provinceColorPalette.push("rgb( 232, 93, 4, 1)");
+		provinceColorPalette.push("rgb( 255, 186, 8, 1)");
+		provinceColorPalette.push("rgb( 247, 37, 133, 1)");
+		provinceColorPalette.push("rgb( 114, 9, 183, 1)");
+		provinceColorPalette.push("rgb( 52, 12, 163, 1)");
+		provinceColorPalette.push("rgb( 67, 97, 238, 1)");
+		provinceColorPalette.push("rgb( 76, 201, 240, 1)");
+		provinceColorPalette.push("rgb( 239, 71, 111, 1)");
+		provinceColorPalette.push("rgb( 255, 209, 102, 1)");
+		provinceColorPalette.push("rgb( 6, 214, 160, 1)");
+		provinceColorPalette.push("rgb( 17, 138, 178, 1)");
+		provinceColorPalette.push("rgb( 7, 59, 76, 1)");
+		provinceColorPalette.push("rgb( 112, 141, 129, 1)");
+		provinceColorPalette.push("rgb( 73, 80, 87, 1)");
+		
 	}
 	
 	CovidCommon.loadProvinceData = function(){
@@ -193,14 +213,16 @@ var CovidCommon = (function(CovidCommon){
 		
 		chartProvince.clearDataSets();
 		
+		var i = 0;
 		for(var provinceCode in dataProvinceChart){
 			var provinceDetails = dataProvinceChart[provinceCode];
 			
 			const dsProvince = new CovidChartDataset(provinceDetails.label);
 			dsProvince.setData(provinceDetails.newInfections);
-			dsProvince.setColor("rgb(0, 0, 0, 1)");
+			dsProvince.setColor(provinceColorPalette[i]);
 			
 			chartProvince.addCovidChartDataset(dsProvince);
+			i++;
 		}
 		
 		chartProvince.drawChart();

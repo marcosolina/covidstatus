@@ -146,7 +146,22 @@ public class ItalianNationalDataScheduler implements GovermentDataRetrieverSched
                 List<ProvinceDailyData> dataToStore = new ArrayList<>();
 
                 corrente.forEach((k, v) -> dataToStore.add(getDelta(v, precedente.get(k))));
-                dataToStore.parallelStream().forEach(dataService::storeProvinceDailyData);
+                // @formatter:off
+                dataToStore.parallelStream().map(d -> {
+                    /*
+                     * I had to fix an issue caused by data inconsistency.
+                     * From Feb to Jun these to province were in the same region,
+                     * but in July they were  assigned to two separate regions.
+                     * I force the separate assignment from the beginning so it is consistent
+                     */
+                    if (d.getRegionDesc().equals("P.A. Bolzano")) {
+                        d.setRegionCode("21");
+                    } else if (d.getRegionDesc().equals("P.A. Trento")) {
+                        d.setRegionCode("22");
+                    }
+                    return d;
+                }).forEach(dataService::storeProvinceDailyData);
+                // @formatter:on
                 logger.debug(String.format("Inserted Province data for date: %s", start.toString()));
             }
         } catch (Exception e) {
