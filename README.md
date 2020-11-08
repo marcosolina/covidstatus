@@ -5,23 +5,14 @@ All the "number" are retrieved from the [Ministero della Salute](https://www.sal
 
 ## Requirements:
 * JVM 11
+* Database (PostgreSQL)
 
-## Optional:
-* Docker
+## Info
+I am providing a **docker file** that you can use to run and initialise the database.
 
 ## TODO:
-* Retrieve the data from the public repo **(Done)**
-* Store the data in the DB **(Done)**
-* Create a simple UI to display the raw data **(Done)**
-* Improve the UI **(Done)**
-* Fix for my Rasp **(Done)**
-* Select the range of dates **(Done)**
-* Refactor the UI Code **(Done)**
-* Unit testing **(Done)**
-* Notification (Probably email) **(Done)**
-* CI / CD Pipeline **(Done)**
-* UI Restyle **(Done)**
-* Add Province chart **(Done)**
 * Schedule service improvements
 * Integration testing
+* Improve the UI
+* Add regional dhar
 * Anything else that cames up in my mind
