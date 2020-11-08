@@ -143,4 +143,9 @@ public class MarcoNationalDataService implements CovidDataService {
         return entity;
     }
 
+    @Override
+    public LocalDate getMaxDate() {
+        return repoCovidCustom.getMaxDate();
+    }
+
 }

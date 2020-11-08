@@ -52,26 +52,27 @@ public class MainController {
          * Get all the data for the provinces of the specific region
          */
         List<ProvinceDailyData> listData = service.getProvinceDataInRangeAscending(request.getFrom(), request.getTo(), request.getRegionCode());
-        
         List<String> provinces = service.getProfinceListForRegion(request.getRegionCode());
-
         Map<String, RespProvinceChartData> map = new HashMap<>();
         
-        // @formatter:off
-        
-        provinces.stream().forEach(codiceProvincia -> {
-            /*
-             * Get the data for the specific province
-             */
-            List<ProvinceDailyData> provinceData = listData.stream().filter(data -> data.getProvinceCode().equals(codiceProvincia)).collect(Collectors.toList());
+        if(listData.size() > 0) {
+            // @formatter:off
             
-            RespProvinceChartData data = new RespProvinceChartData();
-            data.setLabel(provinceData.get(0).getDescription());
-            data.setNewInfections(provinceData.stream().map(ProvinceDailyData::getNewInfections).collect(Collectors.toList()));
-            
-            map.put(codiceProvincia, data);
-        });
-        // @formatter:on
+            provinces.stream().forEach(codiceProvincia -> {
+                /*
+                 * Get the data for the specific province
+                 */
+                List<ProvinceDailyData> provinceData = listData.stream().filter(data -> data.getProvinceCode().equals(codiceProvincia)).collect(Collectors.toList());
+                
+                RespProvinceChartData data = new RespProvinceChartData();
+                data.setLabel(provinceData.get(0).getDescription());
+                data.setNewInfections(provinceData.stream().map(ProvinceDailyData::getNewInfections).collect(Collectors.toList()));
+                
+                map.put(codiceProvincia, data);
+            });
+            // @formatter:on
+        }
+
         
         String province = provinces.get(0);
         resp.setArrDates(listData.stream().filter(p -> p.getProvinceCode().equals(province)).map(ProvinceDailyData::getDate).collect(Collectors.toList()));

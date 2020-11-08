@@ -86,4 +86,10 @@ public interface CovidDataService {
      * @return
      */
     public boolean storeProvinceDailyData(ProvinceDailyData data);
+    
+    /**
+     * It returns the max date available in the data store
+     * @return
+     */
+    public LocalDate getMaxDate();
 }

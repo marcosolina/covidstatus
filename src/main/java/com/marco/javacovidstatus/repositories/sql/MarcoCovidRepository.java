@@ -89,4 +89,18 @@ public class MarcoCovidRepository implements CovidRepository {
         return em.createQuery(cq).getResultList();
     }
 
+    @Override
+    public LocalDate getMaxDate() {
+        StringBuilder sql = new StringBuilder();
+        sql.append("SELECT ");
+        sql.append(" MAX(p.date) ");
+        sql.append(" FROM EntityNationalData p ");
+        
+        Object obj =  em.createQuery(sql.toString()).getSingleResult();
+        if(obj != null) {
+            return LocalDate.class.cast(obj);
+        }
+        return null;
+    }
+
 }
