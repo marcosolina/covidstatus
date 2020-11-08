@@ -52,6 +52,7 @@ var CovidCommon = (function(CovidCommon){
 	
 	var chartNational;
 	var chartProvince;
+	var regionDropDownLastValue;
 	
 	/**
 		Initialise the UI
@@ -186,13 +187,32 @@ var CovidCommon = (function(CovidCommon){
 					CovidCommon.drawNationalChart();
 					break;
 				case "PROVINCE":
+					var tmpClone;
+					var regionForProvinceVal = $("#region").val();
+					if(regionDropDownLastValue == regionForProvinceVal){
+						tmpClone = {...dataProvinceChart};//cloning the old data
+					}
+					regionDropDownLastValue = regionForProvinceVal;
+					
 					dataProvinceChart = response.provinceData;
 					CovidCommon.createProvinceCheckboxes();
+					
+					if(tmpClone != undefined){
+						setProvinceCheckboxesStatus(tmpClone);
+					}
+					
 					CovidCommon.drawProvinceChart();
 					break;
 				default:
 					break;
 			}
+		}
+	}
+	
+	function setProvinceCheckboxesStatus(dataProvinceStatus){
+		for(var idCheckbox in dataProvinceStatus){
+			$("#" + idCheckbox).prop("checked", dataProvinceStatus[idCheckbox].active);
+			dataProvinceChart[idCheckbox].active = dataProvinceStatus[idCheckbox].active;
 		}
 	}
 	
