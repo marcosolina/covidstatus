@@ -71,12 +71,10 @@ public class MainController {
                 map.put(codiceProvincia, data);
             });
             // @formatter:on
+            String province = provinces.get(0);
+            resp.setArrDates(listData.stream().filter(p -> p.getProvinceCode().equals(province)).map(ProvinceDailyData::getDate).collect(Collectors.toList()));
+            resp.setProvinceData(map);
         }
-
-        
-        String province = provinces.get(0);
-        resp.setArrDates(listData.stream().filter(p -> p.getProvinceCode().equals(province)).map(ProvinceDailyData::getDate).collect(Collectors.toList()));
-        resp.setProvinceData(map);
         resp.setStatus(true);
         return resp;
     }
