@@ -71,13 +71,15 @@ var CovidCommon = (function(CovidCommon){
 				          });
 			
 		dateFrom.on( "change", function() {
-	          dateTo.datepicker( "option", "minDate", CovidCommon.getDate( this ) );
-	          CovidCommon.updateDates();
+			dateTo.datepicker( "option", "minDate", CovidCommon.getDate( this ) );
+			CovidCommon.updateNationalData();
+			CovidCommon.loadProvinceData();
         });
 
 		dateTo.on( "change", function() {
 	        dateFrom.datepicker( "option", "maxDate", CovidCommon.getDate( this ) );
-	        CovidCommon.updateDates();
+			CovidCommon.updateNationalData();
+			CovidCommon.loadProvinceData();
 		});
 		
 		$("[type=checkbox]").change(CovidCommon.chartDataSwitchChanged);
@@ -114,7 +116,7 @@ var CovidCommon = (function(CovidCommon){
 	CovidCommon.loadProvinceData = function(){
 		var from = $.datepicker.formatDate('yy-mm-dd', CovidCommon.getDate(document.getElementById("dateFrom")));
 		var to = $.datepicker.formatDate('yy-mm-dd', CovidCommon.getDate(document.getElementById("dateTo")));
-		var regionCode = $(this).val();
+		var regionCode = $("#region").val();
 		if(from != "" && to != ""){
 			MarcoUtils.executeAjax({
 				dataToPost: {
@@ -142,7 +144,7 @@ var CovidCommon = (function(CovidCommon){
 	/**
 		It loads the data between the specified range
 	 */
-	CovidCommon.updateDates = function(){
+	CovidCommon.updateNationalData = function(){
 		var from = $.datepicker.formatDate('yy-mm-dd', CovidCommon.getDate(document.getElementById("dateFrom")));
 		var to = $.datepicker.formatDate('yy-mm-dd', CovidCommon.getDate(document.getElementById("dateTo")));
 		if(from != "" && to != ""){
