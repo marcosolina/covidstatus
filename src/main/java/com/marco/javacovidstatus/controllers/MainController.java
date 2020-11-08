@@ -2,7 +2,9 @@ package com.marco.javacovidstatus.controllers;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -16,8 +18,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.marco.javacovidstatus.model.DailyData;
+import com.marco.javacovidstatus.model.ProvinceDailyData;
 import com.marco.javacovidstatus.model.rest.ReqGetNationalData;
+import com.marco.javacovidstatus.model.rest.ReqGetProvinceData;
 import com.marco.javacovidstatus.model.rest.RespGetNationalData;
+import com.marco.javacovidstatus.model.rest.RespGetProvinceData;
+import com.marco.javacovidstatus.model.rest.RespProvinceChartData;
 import com.marco.javacovidstatus.services.interfaces.CovidDataService;
 
 @Controller
@@ -35,6 +41,43 @@ public class MainController {
         model.addAttribute("to", today.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
         model.addAttribute("regions", service.getRegionsList());
         return "index";
+    }
+    
+    @PostMapping("/getProvinceData")
+    @ResponseBody
+    public RespGetProvinceData getNationalData(@RequestBody ReqGetProvinceData request) {
+        RespGetProvinceData resp = new RespGetProvinceData();
+        
+        /*
+         * Get all the data for the provinces of the specific region
+         */
+        List<ProvinceDailyData> listData = service.getProvinceDataInRangeAscending(request.getFrom(), request.getTo(), request.getRegionCode());
+        
+        List<String> provinces = service.getProfinceListForRegion(request.getRegionCode());
+
+        Map<String, RespProvinceChartData> map = new HashMap<>();
+        
+        // @formatter:off
+        
+        provinces.stream().forEach(codiceProvincia -> {
+            /*
+             * Get the data for the specific province
+             */
+            List<ProvinceDailyData> provinceData = listData.stream().filter(data -> data.getProvinceCode().equals(codiceProvincia)).collect(Collectors.toList());
+            
+            RespProvinceChartData data = new RespProvinceChartData();
+            data.setLabel(provinceData.get(0).getDescription());
+            data.setNewInfections(provinceData.stream().map(ProvinceDailyData::getNewInfections).collect(Collectors.toList()));
+            
+            map.put(codiceProvincia, data);
+        });
+        // @formatter:on
+        
+        String province = provinces.get(0);
+        resp.setArrDates(listData.stream().filter(p -> p.getProvinceCode().equals(province)).map(ProvinceDailyData::getDate).collect(Collectors.toList()));
+        resp.setProvinceData(map);
+        resp.setStatus(true);
+        return resp;
     }
     
     @PostMapping("/getNationalData")

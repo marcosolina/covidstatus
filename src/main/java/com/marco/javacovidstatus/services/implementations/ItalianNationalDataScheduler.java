@@ -53,7 +53,7 @@ public class ItalianNationalDataScheduler implements GovermentDataRetrieverSched
         logger.info("Updating Data");
         dataService.deleteAllData();// TODO optimise
 
-        //loadProvinceData();
+        loadProvinceData();
         loadNationalData();
         notificationService.sendMessage("marcosolina@gmail.com", "Marco Solina - Covid Status", "Dati aggiornati");
     }

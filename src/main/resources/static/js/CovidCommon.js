@@ -45,6 +45,9 @@ var CovidCommon = (function(CovidCommon){
 		arrNewIntensiveTherapy: {active: false,},
 		arrNewRecovered: {active: false,},
 	};
+	
+	var dataProvinceChart = {};
+	
 	var chartNational;
 	var chartProvince;
 	
@@ -76,6 +79,7 @@ var CovidCommon = (function(CovidCommon){
 		});
 		
 		$("[type=checkbox]").change(CovidCommon.chartDataSwitchChanged);
+		$("#region").change(CovidCommon.loadProvinceData);
 		
 		/*
 		 Activated the default checkboxes in the UI
@@ -84,6 +88,23 @@ var CovidCommon = (function(CovidCommon){
 			if (dataNationalChart.hasOwnProperty(prop)) {
 			    $("#" + prop).prop("checked", dataNationalChart[prop].active);
 			}
+		}
+	}
+	
+	CovidCommon.loadProvinceData = function(){
+		var from = $.datepicker.formatDate('yy-mm-dd', CovidCommon.getDate(document.getElementById("dateFrom")));
+		var to = $.datepicker.formatDate('yy-mm-dd', CovidCommon.getDate(document.getElementById("dateTo")));
+		var regionCode = $(this).val();
+		if(from != "" && to != ""){
+			MarcoUtils.executeAjax({
+				dataToPost: {
+				    from: from,
+				    to: to,
+					regionCode: regionCode,
+				},
+				showLoading: true,
+				url: "/Covid19Italy/getProvinceData"
+			}).then(CovidCommon.dataRetrieved);
 		}
 	}
 	
@@ -105,7 +126,6 @@ var CovidCommon = (function(CovidCommon){
 		var from = $.datepicker.formatDate('yy-mm-dd', CovidCommon.getDate(document.getElementById("dateFrom")));
 		var to = $.datepicker.formatDate('yy-mm-dd', CovidCommon.getDate(document.getElementById("dateTo")));
 		if(from != "" && to != ""){
-			
 			MarcoUtils.executeAjax({
 				dataToPost: {
 				    from: from,
@@ -142,6 +162,10 @@ var CovidCommon = (function(CovidCommon){
 					dataNationalChart.arrNewRecovered.data = response.arrNewRecovered;
 					CovidCommon.drawNationalChart();
 					break;
+				case "PROVINCE":
+					dataProvinceChart = response.provinceData;
+					CovidCommon.drawProvinceChart();
+					break;
 				default:
 					break;
 			}
@@ -161,6 +185,26 @@ var CovidCommon = (function(CovidCommon){
  
 		return date;
     }
+
+	CovidCommon.drawProvinceChart = function(){
+		if(chartProvince == undefined){
+			return;
+		}
+		
+		chartProvince.clearDataSets();
+		
+		for(var provinceCode in dataProvinceChart){
+			var provinceDetails = dataProvinceChart[provinceCode];
+			
+			const dsProvince = new CovidChartDataset(provinceDetails.label);
+			dsProvince.setData(provinceDetails.newInfections);
+			dsProvince.setColor("rgb(0, 0, 0, 1)");
+			
+			chartProvince.addCovidChartDataset(dsProvince);
+		}
+		
+		chartProvince.drawChart();
+	}
 
 	/**
 		It draws the charts

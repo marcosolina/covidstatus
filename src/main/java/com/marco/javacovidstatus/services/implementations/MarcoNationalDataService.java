@@ -56,6 +56,65 @@ public class MarcoNationalDataService implements CovidDataService {
         return true;
     }
 
+    @Override
+    public List<DailyData> getDatesInRangeAscending(LocalDate from, LocalDate to) {
+        List<EntityNationalData> listEntity = repoNationalData.findByDateBetweenOrderByDateAsc(from, to);
+        return listEntity.stream().map(this::fromEntityNationalDataToDailyData).collect(Collectors.toList());
+    }
+
+    @Override
+    public boolean storeProvinceDailyData(ProvinceDailyData data) {
+        repoProvince.save(fromProvinceDailyDataToEntityProvinceData(data));
+        return true;
+    }
+
+    @Override
+    public List<Region> getRegionsList() {
+        return repoCovidCustom.getRegionList();
+    }
+
+    @Override
+    public List<ProvinceDailyData> getProvinceDataInRangeAscending(LocalDate from, LocalDate to, String regionCode) {
+        List<EntityProvinceData> list = repoCovidCustom.getProvinceDataBetweenDatesOrderByDateAscending(from, to, regionCode);
+        return list.stream().map(this::fromEntityProvinceDataToProvinceDailyData).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<String> getProfinceListForRegion(String region) {
+        return repoCovidCustom.getProvincesForRegion(region);
+    }
+
+    /*#######################################################
+     * UTILS METHODS 
+     #######################################################*/
+    private EntityProvinceData fromProvinceDailyDataToEntityProvinceData(ProvinceDailyData data) {
+        EntityProvinceDataPk pk = new EntityProvinceDataPk();
+        pk.setDate(data.getDate());
+        pk.setProvinceCode(data.getProvinceCode());
+        pk.setRegionCode(data.getRegionCode());
+
+        EntityProvinceData e = new EntityProvinceData();
+        e.setId(pk);
+        e.setRegionDesc(data.getRegionDesc());
+        e.setDescription(data.getDescription());
+        e.setNewInfections(data.getNewInfections());
+        e.setShortName(data.getShortName());
+
+        return e;
+    }
+
+    private ProvinceDailyData fromEntityProvinceDataToProvinceDailyData(EntityProvinceData entity) {
+        ProvinceDailyData p = new ProvinceDailyData();
+        p.setRegionDesc(entity.getRegionDesc());
+        p.setDescription(entity.getDescription());
+        p.setNewInfections(entity.getNewInfections());
+        p.setShortName(entity.getShortName());
+        p.setDate(entity.getId().getDate());
+        p.setProvinceCode(entity.getId().getProvinceCode());
+        p.setRegionCode(entity.getId().getRegionCode());
+        return p;
+    }
+
     private DailyData fromEntityNationalDataToDailyData(EntityNationalData entity) {
         DailyData dailyData = new DailyData();
         dailyData.setDate(entity.getDate());
@@ -69,7 +128,7 @@ public class MarcoNationalDataService implements CovidDataService {
         dailyData.setNewRecovered(entity.getNewRecovered());
         return dailyData;
     }
-    
+
     private EntityNationalData fromDailyData(DailyData data) {
         EntityNationalData entity = new EntityNationalData();
         entity.setDate(data.getDate());
@@ -82,39 +141,6 @@ public class MarcoNationalDataService implements CovidDataService {
         entity.setNewIntensiveTherapy(data.getNewIntensiveTherapy());
         entity.setNewRecovered(data.getNewRecovered());
         return entity;
-    }
-
-    @Override
-    public List<DailyData> getDatesInRangeAscending(LocalDate from, LocalDate to) {
-        List<EntityNationalData> listEntity = repoNationalData.findByDateBetweenOrderByDateAsc(from, to);
-        return listEntity.stream().map(this::fromEntityNationalDataToDailyData).collect(Collectors.toList());
-    }
-
-    @Override
-    public boolean storeProvinceDailyData(ProvinceDailyData data) {
-        repoProvince.save(fromProvinceDailyDataToEntityProvinceData(data));
-        return true;
-    }
-    
-    private EntityProvinceData fromProvinceDailyDataToEntityProvinceData(ProvinceDailyData data) {
-        EntityProvinceDataPk pk = new EntityProvinceDataPk();
-        pk.setDate(data.getDate());
-        pk.setProvinceCode(data.getProvinceCode());
-        pk.setRegionCode(data.getRegionCode());
-        
-        EntityProvinceData e = new EntityProvinceData();
-        e.setId(pk);
-        e.setRegionDesc(data.getRegionDesc());
-        e.setDescription(data.getDescription());
-        e.setNewInfections(data.getNewInfections());
-        e.setShortName(data.getShortName());
-        
-        return e;
-    }
-
-    @Override
-    public List<Region> getRegionsList() {
-        return repoCovidCustom.getRegionList();
     }
 
 }
