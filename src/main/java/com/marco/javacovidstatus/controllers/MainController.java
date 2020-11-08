@@ -35,7 +35,7 @@ public class MainController {
 
     @GetMapping(value = "/")
     public String homePage(Model model) {
-        LOGGER.trace("Inside MainController.homePage");
+        LOGGER.info("Inside MainController.homePage");
         LocalDate today = LocalDate.now();
         model.addAttribute("from", today.minusMonths(1).format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
         model.addAttribute("to", today.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
