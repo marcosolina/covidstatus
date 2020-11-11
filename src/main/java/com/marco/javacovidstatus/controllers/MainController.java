@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.marco.javacovidstatus.model.DailyData;
+import com.marco.javacovidstatus.model.NationalDailyData;
 import com.marco.javacovidstatus.model.ProvinceDailyData;
 import com.marco.javacovidstatus.model.rest.ReqGetNationalData;
 import com.marco.javacovidstatus.model.rest.ReqGetProvinceData;
@@ -84,16 +84,16 @@ public class MainController {
     public RespGetNationalData getNationalData(@RequestBody ReqGetNationalData request) {
         RespGetNationalData resp = new RespGetNationalData();
 
-        List<DailyData> listData = service.getDatesInRangeAscending(request.getFrom(), request.getTo());
-        resp.setArrDates(listData.stream().map(DailyData::getDate).collect(Collectors.toList()));
-        resp.setArrNewCasualties(listData.stream().map(DailyData::getNewCasualties).collect(Collectors.toList()));
-        resp.setArrNewHospitalized(listData.stream().map(DailyData::getNewHospitalized).collect(Collectors.toList()));
-        resp.setArrNewInfections(listData.stream().map(DailyData::getNewInfections).collect(Collectors.toList()));
-        resp.setArrNewIntensiveTherapy(listData.stream().map(DailyData::getNewIntensiveTherapy).collect(Collectors.toList()));
-        resp.setArrNewRecovered(listData.stream().map(DailyData::getNewRecovered).collect(Collectors.toList()));
-        resp.setArrNewTests(listData.stream().map(DailyData::getNewTests).collect(Collectors.toList()));
-        resp.setArrPercCasualties(listData.stream().map(DailyData::getCasualtiesPercentage).collect(Collectors.toList()));
-        resp.setArrPercInfections(listData.stream().map(DailyData::getInfectionPercentage).collect(Collectors.toList()));
+        List<NationalDailyData> listData = service.getDatesInRangeAscending(request.getFrom(), request.getTo());
+        resp.setArrDates(listData.stream().map(NationalDailyData::getDate).collect(Collectors.toList()));
+        resp.setArrNewCasualties(listData.stream().map(NationalDailyData::getNewCasualties).collect(Collectors.toList()));
+        resp.setArrNewHospitalized(listData.stream().map(NationalDailyData::getNewHospitalized).collect(Collectors.toList()));
+        resp.setArrNewInfections(listData.stream().map(NationalDailyData::getNewInfections).collect(Collectors.toList()));
+        resp.setArrNewIntensiveTherapy(listData.stream().map(NationalDailyData::getNewIntensiveTherapy).collect(Collectors.toList()));
+        resp.setArrNewRecovered(listData.stream().map(NationalDailyData::getNewRecovered).collect(Collectors.toList()));
+        resp.setArrNewTests(listData.stream().map(NationalDailyData::getNewTests).collect(Collectors.toList()));
+        resp.setArrPercCasualties(listData.stream().map(NationalDailyData::getCasualtiesPercentage).collect(Collectors.toList()));
+        resp.setArrPercInfections(listData.stream().map(NationalDailyData::getInfectionPercentage).collect(Collectors.toList()));
         
         resp.setStatus(true);
         return resp;

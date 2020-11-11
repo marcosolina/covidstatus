@@ -20,8 +20,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import com.marco.javacovidstatus.model.DailyData;
+import com.marco.javacovidstatus.model.NationalDailyData;
 import com.marco.javacovidstatus.model.ProvinceDailyData;
+import com.marco.javacovidstatus.model.RegionalDailyData;
 import com.marco.javacovidstatus.services.interfaces.CovidDataService;
 import com.marco.javacovidstatus.services.interfaces.GovermentDataRetrieverScheduler;
 import com.marco.javacovidstatus.services.interfaces.NotificationSenderInterface;
@@ -46,6 +47,7 @@ public class ItalianNationalDataScheduler implements GovermentDataRetrieverSched
 
     private String url = "https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-andamento-nazionale/dpc-covid19-ita-andamento-nazionale-%s.csv";
     private String urlProvince = "https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-province/dpc-covid19-ita-province-%s.csv";
+    private String urlRegions = "https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-regioni/dpc-covid19-ita-regioni-%s.csv";
 
     @Scheduled(cron = "0 0 * * * *")
     @Override
@@ -59,15 +61,70 @@ public class ItalianNationalDataScheduler implements GovermentDataRetrieverSched
             start = LocalDate.of(2020, 2, 24);
         }
         
-
+        loadRegionalData(start, end);
         loadNationalData(start, end);
         loadProvinceData(start, end);
         notificationService.sendMessage("marcosolina@gmail.com", "Marco Solina - Covid Status", "Dati aggiornati");
     }
+    
+    private void loadRegionalData(LocalDate start, LocalDate end) {
+        logger.info("Updating regional data");
+        try {
+            while (start.isBefore(end)) {
+                start = start.plusDays(1);
+                logger.debug(String.format("Looking for regional data at date: %s", start.toString()));
+                
+                /*
+                 * Retrieve the data from the repository
+                 */
+                Map<String, RegionalDailyData> precedente = parseRegionData(start.minusDays(1));
+                Map<String, RegionalDailyData> corrente = parseRegionData(start);
+                
+                corrente.forEach((k, v) -> {
+                    RegionalDailyData regioneCorrente = v;
+                    RegionalDailyData regionePrecedente = precedente.get(k);
+                    logger.debug(String.format("REgion: %s", k));    
+                    float percTmp = percentualeInfetti(regioneCorrente.getNewTests(), regionePrecedente.getNewTests(), regioneCorrente.getNewInfections());
+                    BigDecimal infectionPercentage = Float.isInfinite(percTmp) ? BigDecimal.ZERO : BigDecimal.valueOf(percTmp).setScale(2, RoundingMode.DOWN);
+                    
+                    regioneCorrente.setInfectionPercentage(infectionPercentage);
+                    regioneCorrente.setNewCasualties(regioneCorrente.getNewCasualties() - regionePrecedente.getNewCasualties());
+                    regioneCorrente.setNewTests(regioneCorrente.getNewTests() - regionePrecedente.getNewTests());
+                    regioneCorrente.setNewHospitalized(regioneCorrente.getNewHospitalized() - regionePrecedente.getNewHospitalized());
+                    regioneCorrente.setNewIntensiveTherapy(regioneCorrente.getNewIntensiveTherapy() - regionePrecedente.getNewIntensiveTherapy());
+                    regioneCorrente.setNewRecovered(regioneCorrente.getNewRecovered() - regionePrecedente.getNewRecovered());
+                    
+                    if (regioneCorrente.getNewIntensiveTherapy() < 0) {
+                        regioneCorrente.setNewIntensiveTherapy(0);
+                    }
+                    if (regioneCorrente.getNewHospitalized() < 0) {
+                        regioneCorrente.setNewHospitalized(0);
+                    }
+                    if (regioneCorrente.getNewRecovered() < 0) {
+                        regioneCorrente.setNewRecovered(0);
+                    }
+                    if (regioneCorrente.getNewCasualties() < 0) {
+                        regioneCorrente.setNewCasualties(0);
+                    }
+                    
+                    if (regioneCorrente.getCasualtiesPercentage().compareTo(BigDecimal.ZERO) < 0) {
+                        regioneCorrente.setCasualtiesPercentage(BigDecimal.ZERO);
+                    }
+                    //TODO calcolare la % dei decessi
+                    
+                    
+                    dataService.saveRegionalDailyData(regioneCorrente);
+                });
+                
+            }
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        }
+    }
 
     private void loadNationalData(LocalDate start, LocalDate end) {
         List<Integer> lastWeeknNewInfection = getLastWeeknNewInfection(end);
-        logger.info("Updating natial data");
+        logger.info("Updating national data");
         try {
             while (start.isBefore(end)) {
                 start = start.plusDays(1);
@@ -76,19 +133,19 @@ public class ItalianNationalDataScheduler implements GovermentDataRetrieverSched
                 /*
                  * Retrieve the data of today and yesterday
                  */
-                ItalianNationalData precedente = getDatiAllaData(start.minusDays(1));
-                ItalianNationalData corrente = getDatiAllaData(start);
+                ItalianNationalData precedente = getNationalDataAtDate(start.minusDays(1));
+                ItalianNationalData corrente = getNationalDataAtDate(start);
 
                 /*
                  * Do some math
                  */
-                BigDecimal infectionPercentage = BigDecimal.valueOf(percentualeInfetti(corrente, precedente))
+                BigDecimal infectionPercentage = BigDecimal.valueOf(percentualeInfetti(corrente.newTests, precedente.newTests, corrente.newInfections))
                         .setScale(2, RoundingMode.DOWN);
 
                 /*
                  * Store the data
                  */
-                DailyData dto = new DailyData();
+                NationalDailyData dto = new NationalDailyData();
                 dto.setDate(start);
                 dto.setInfectionPercentage(infectionPercentage);
                 dto.setNewCasualties(corrente.newCasualties - precedente.newCasualties);
@@ -140,19 +197,20 @@ public class ItalianNationalDataScheduler implements GovermentDataRetrieverSched
     }
     
     private List<Integer> getLastWeeknNewInfection(LocalDate end){
-        List<DailyData> list = dataService.getDatesInRangeAscending(end.minusDays(7), end);
-        return list.stream().map(DailyData::getNewInfections).collect(Collectors.toList());
+        List<NationalDailyData> list = dataService.getDatesInRangeAscending(end.minusDays(7), end);
+        return list.stream().map(NationalDailyData::getNewInfections).collect(Collectors.toList());
     }
 
     private void loadProvinceData(LocalDate start, LocalDate end) {
+        logger.info("Updating province data");
         try {
             while (start.isBefore(end)) {
                 start = start.plusDays(1);
 
                 logger.debug(String.format("Looking for province data at date: %s", start.toString()));
                 
-                Map<String, ProvinceDailyData> precedente = parseData(start.minusDays(1));
-                Map<String, ProvinceDailyData> corrente = parseData(start);
+                Map<String, ProvinceDailyData> precedente = parseProvinceData(start.minusDays(1));
+                Map<String, ProvinceDailyData> corrente = parseProvinceData(start);
 
                 List<ProvinceDailyData> dataToStore = new ArrayList<>();
 
@@ -186,8 +244,54 @@ public class ItalianNationalDataScheduler implements GovermentDataRetrieverSched
         }
         return current;
     }
+    
+    private Map<String, RegionalDailyData> parseRegionData(LocalDate date) {
+        Map<String, RegionalDailyData> dataMap = new HashMap<String, RegionalDailyData>();
 
-    private Map<String, ProvinceDailyData> parseData(LocalDate date) {
+        /*
+         * Inserting the date into the URL
+         */
+        String uriFile = String.format(urlRegions, date.format(DateTimeFormatter.ofPattern("yyyyMMdd")));
+
+        /*
+         * Get the CSV file using an GET HTTP call
+         */
+        ClientResponse response = webClient.get().uri(uriFile).exchange().block();
+
+        /*
+         * Read the response as a string
+         */
+        String csv = response.bodyToMono(String.class).block();
+        List<String> listRows = new ArrayList<>(Arrays.asList(csv.split("\\n")));
+        listRows.remove(0);// remove column names
+
+        // @formatter:off
+        listRows.stream().map(s -> {
+            List<String> columns = Arrays.asList(s.split(","));
+            RegionalDailyData data = new RegionalDailyData();
+            
+            if(columns.size() < 2) {
+                return data;
+            }
+            
+            data.setDate(date);
+            data.setRegionCode(columns.get(2));
+            data.setNewCasualties(Integer.parseInt(columns.get(14)));
+            data.setNewTests(Integer.parseInt(columns.get(18)));
+            data.setNewInfections(Integer.parseInt(columns.get(12)));
+            data.setNewHospitalized(Integer.parseInt(columns.get(8)));
+            data.setNewIntensiveTherapy(Integer.parseInt(columns.get(7)));
+            data.setNewRecovered(Integer.parseInt(columns.get(13)));
+            return data;
+            })
+            .filter(d -> d.getDate() != null)
+            .forEach(e -> dataMap.put(e.getRegionCode() , e));
+        // @formatter:on
+
+        return dataMap;
+    }
+
+    private Map<String, ProvinceDailyData> parseProvinceData(LocalDate date) {
         Map<String, ProvinceDailyData> dataMap = new HashMap<String, ProvinceDailyData>();
 
         /*
@@ -228,8 +332,8 @@ public class ItalianNationalDataScheduler implements GovermentDataRetrieverSched
         return dataMap;
     }
 
-    private ItalianNationalData getDatiAllaData(LocalDate date) {
-        logger.trace("Inside CronServiceGit.getDatiAllaData");
+    private ItalianNationalData getNationalDataAtDate(LocalDate date) {
+        logger.trace("Inside CronServiceGit.getNationalDataAtDate");
 
         /*
          * Inserting the date into the URL
@@ -263,9 +367,12 @@ public class ItalianNationalDataScheduler implements GovermentDataRetrieverSched
         return dati;
     }
 
-    private float percentualeInfetti(ItalianNationalData corrente, ItalianNationalData precedente) {
-        int deltaTests = corrente.newTests - precedente.newTests;
-        int deltaInfections = corrente.newInfections;
+    private float percentualeInfetti(int newTestsCorrente, int newTestsPrecedente, int newInfectionsCorrent) {
+        if(newInfectionsCorrent == 0) {
+            return 0;
+        }
+        int deltaTests = newTestsCorrente - newTestsPrecedente;
+        int deltaInfections = newInfectionsCorrent;
         return ((float) deltaInfections / deltaTests) * 100;
     }
 

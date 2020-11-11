@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.marco.javacovidstatus.model.Region;
 import com.marco.javacovidstatus.repositories.model.EntityProvinceData;
+import com.marco.javacovidstatus.repositories.model.EntityRegionalData;
 
 @Transactional
 public class MarcoCovidRepository implements CovidRepository {
@@ -101,6 +102,25 @@ public class MarcoCovidRepository implements CovidRepository {
             return LocalDate.class.cast(obj);
         }
         return null;
+    }
+
+    @Override
+    public List<EntityRegionalData> getRegionalDataAscending(LocalDate from, LocalDate to) {
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+
+        CriteriaQuery<EntityRegionalData> cq = cb.createQuery(EntityRegionalData.class);
+        Root<EntityRegionalData> root = cq.from(EntityRegionalData.class);
+        // @formatter:off
+        //SELECT * FROM .....
+        cq.select(root).where(
+            cb.between(root.get("id").get("date"), from, to)
+            ).orderBy(
+                cb.asc(root.get("id").get("date"))
+            );
+        // @formatter:on
+
+        TypedQuery<EntityRegionalData> tq = em.createQuery(cq);
+        return tq.getResultList();
     }
 
 }
