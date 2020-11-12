@@ -61,9 +61,9 @@ public class ItalianNationalDataScheduler implements GovermentDataRetrieverSched
             start = LocalDate.of(2020, 2, 24);
         }
 
-        loadRegionalData(start, end);
         loadNationalData(start, end);
         loadProvinceData(start, end);
+        loadRegionalData(start, end);
         notificationService.sendMessage("marcosolina@gmail.com", "Marco Solina - Covid Status", "Dati aggiornati");
     }
 
@@ -75,6 +75,9 @@ public class ItalianNationalDataScheduler implements GovermentDataRetrieverSched
      */
     private void loadRegionalData(LocalDate start, LocalDate end) {
         logger.info("Updating regional data");
+        
+        Map<String, List<Integer>> mapInfectionLastWeek = getRegionalLastWeeknNewInfection(end);
+        
         try {
             while (start.isBefore(end)) {
                 start = start.plusDays(1);
@@ -89,8 +92,18 @@ public class ItalianNationalDataScheduler implements GovermentDataRetrieverSched
                 corrente.forEach((k, v) -> {
                     RegionalDailyData regioneCorrente = v;
                     RegionalDailyData regionePrecedente = precedente.get(k);
-                    dataService
-                            .saveRegionalDailyData(calculateRegionalDailyDataDelta(regioneCorrente, regionePrecedente));
+                    
+                    List<Integer> listInfectionLastWeek = mapInfectionLastWeek.computeIfAbsent(k, key -> new ArrayList<>());
+                    
+                    listInfectionLastWeek.add(regioneCorrente.getNewInfections());
+                    
+                    RegionalDailyData dataToStore = calculateRegionalDailyDataDelta(regioneCorrente, regionePrecedente, listInfectionLastWeek.get(0));
+                    
+                    if (listInfectionLastWeek.size() > 7) {
+                        listInfectionLastWeek.remove(0);
+                    }
+                    
+                    dataService.saveRegionalDailyData(dataToStore);
                 });
 
             }
@@ -106,7 +119,7 @@ public class ItalianNationalDataScheduler implements GovermentDataRetrieverSched
      * @param end
      */
     private void loadNationalData(LocalDate start, LocalDate end) {
-        List<Integer> lastWeeknNewInfection = getLastWeeknNewInfection(end);
+        List<Integer> lastWeeknNewInfection = getNationalLastWeeknNewInfection(end);
         logger.info("Updating national data");
         try {
             while (start.isBefore(end)) {
@@ -144,9 +157,18 @@ public class ItalianNationalDataScheduler implements GovermentDataRetrieverSched
      * @param end
      * @return
      */
-    private List<Integer> getLastWeeknNewInfection(LocalDate end) {
+    private List<Integer> getNationalLastWeeknNewInfection(LocalDate end) {
         List<NationalDailyData> list = dataService.getDatesInRangeAscending(end.minusDays(7), end);
         return list.stream().map(NationalDailyData::getNewInfections).collect(Collectors.toList());
+    }
+    
+    private Map<String, List<Integer>> getRegionalLastWeeknNewInfection(LocalDate end) {
+        List<RegionalDailyData> list = dataService.getRegionalDatesInRangeAscending(end.minusDays(7), end);
+        Map<String, List<Integer>> mapInfectionLastWeek = new HashMap<>();
+        
+        list.stream().forEach(rdd -> mapInfectionLastWeek.computeIfAbsent(rdd.getRegionCode(), k -> new ArrayList<>()).add(rdd.getNewInfections()));
+        
+        return mapInfectionLastWeek;
     }
 
     /**
@@ -271,7 +293,7 @@ public class ItalianNationalDataScheduler implements GovermentDataRetrieverSched
      * @param previous
      * @return
      */
-    private RegionalDailyData calculateRegionalDailyDataDelta(RegionalDailyData current, RegionalDailyData previous) {
+    private RegionalDailyData calculateRegionalDailyDataDelta(RegionalDailyData current, RegionalDailyData previous, int newInfectionOneWeekAgo) {
         RegionalDailyData newDailyData = new RegionalDailyData();
         newDailyData.setDate(current.getDate());
         newDailyData.setRegionCode(current.getRegionCode());
@@ -305,7 +327,16 @@ public class ItalianNationalDataScheduler implements GovermentDataRetrieverSched
             newDailyData.setCasualtiesPercentage(BigDecimal.ZERO);
         }
 
-        // TODO calcolare la % dei decessi
+        /*
+         * Do some math
+         */
+        percTmp = percentualeMorti(newDailyData.getNewCasualties(), newInfectionOneWeekAgo);
+        BigDecimal casualtiesPercentage = Float.isInfinite(percTmp) ? BigDecimal.ZERO : BigDecimal.valueOf(percTmp).setScale(2, RoundingMode.DOWN);
+        newDailyData.setCasualtiesPercentage(casualtiesPercentage);
+
+        if (newDailyData.getCasualtiesPercentage().compareTo(BigDecimal.ZERO) < 0) {
+            newDailyData.setCasualtiesPercentage(BigDecimal.ZERO);
+        }
 
         return newDailyData;
     }
@@ -423,6 +454,7 @@ public class ItalianNationalDataScheduler implements GovermentDataRetrieverSched
         List<String> columns = Arrays.asList(listRows.get(0).split(","));
 
         NationalDailyData data = new NationalDailyData();
+        data.setDate(date);
         data.setNewCasualties(Integer.parseInt(columns.get(10)));
         data.setNewTests(Integer.parseInt(columns.get(14)));
         data.setNewInfections(Integer.parseInt(columns.get(8)));
@@ -458,6 +490,9 @@ public class ItalianNationalDataScheduler implements GovermentDataRetrieverSched
      * @return
      */
     private float percentualeMorti(int newCasualties, int newCasesFrom7DaysAgo) {
+        if(newCasesFrom7DaysAgo == 0) {
+            return 0;
+        }
         return ((float) newCasualties / newCasesFrom7DaysAgo) * 100;
     }
 
