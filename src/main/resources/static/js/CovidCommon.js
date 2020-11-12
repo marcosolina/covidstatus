@@ -47,11 +47,12 @@ var CovidCommon = (function(CovidCommon){
 	};
 	
 	var dataProvinceChart = {};
-	
+	var dataRegionChart = {};
 	var provinceColorPalette = [];
 	
 	var chartNational;
 	var chartProvince;
+	var chartRegion;
 	var regionDropDownLastValue;
 	
 	/**
@@ -85,6 +86,7 @@ var CovidCommon = (function(CovidCommon){
 		
 		$("[type=checkbox]").change(CovidCommon.chartDataSwitchChanged);
 		$("#region").change(CovidCommon.loadProvinceData);
+		$("#covidData").change(CovidCommon.loadRegionData);
 		
 		/*
 		 Activated the default checkboxes in the UI
@@ -111,6 +113,26 @@ var CovidCommon = (function(CovidCommon){
 		provinceColorPalette.push("rgb( 7, 59, 76, 1)");
 		provinceColorPalette.push("rgb( 112, 141, 129, 1)");
 		provinceColorPalette.push("rgb( 73, 80, 87, 1)");
+		provinceColorPalette.push("rgb( 73, 80, 87, 1)");
+		provinceColorPalette.push("rgb( 73, 80, 87, 1)");
+		provinceColorPalette.push("rgb( 73, 80, 87, 1)");
+		provinceColorPalette.push("rgb( 73, 80, 87, 1)");
+		provinceColorPalette.push("rgb( 73, 80, 87, 1)");
+		provinceColorPalette.push("rgb( 73, 80, 87, 1)");
+		provinceColorPalette.push("rgb( 73, 80, 87, 1)");
+		provinceColorPalette.push("rgb( 73, 80, 87, 1)");
+		provinceColorPalette.push("rgb( 73, 80, 87, 1)");
+		provinceColorPalette.push("rgb( 73, 80, 87, 1)");
+		provinceColorPalette.push("rgb( 73, 80, 87, 1)");
+		provinceColorPalette.push("rgb( 73, 80, 87, 1)");
+		provinceColorPalette.push("rgb( 73, 80, 87, 1)");
+		provinceColorPalette.push("rgb( 73, 80, 87, 1)");
+		provinceColorPalette.push("rgb( 73, 80, 87, 1)");
+		provinceColorPalette.push("rgb( 73, 80, 87, 1)");
+		provinceColorPalette.push("rgb( 73, 80, 87, 1)");
+		provinceColorPalette.push("rgb( 73, 80, 87, 1)");
+		provinceColorPalette.push("rgb( 73, 80, 87, 1)");
+		provinceColorPalette.push("rgb( 73, 80, 87, 1)");
 		
 	}
 	
@@ -127,6 +149,23 @@ var CovidCommon = (function(CovidCommon){
 				},
 				showLoading: true,
 				url: "/Covid19Italy/getProvinceData"
+			}).then(CovidCommon.dataRetrieved);
+		}
+	}
+	
+	CovidCommon.loadRegionData = function(){
+		var from = $.datepicker.formatDate('yy-mm-dd', CovidCommon.getDate(document.getElementById("dateFrom")));
+		var to = $.datepicker.formatDate('yy-mm-dd', CovidCommon.getDate(document.getElementById("dateTo")));
+		var covidData = $("#covidData").val();
+		if(from != "" && to != ""){
+			MarcoUtils.executeAjax({
+				dataToPost: {
+				    from: from,
+				    to: to,
+					covidData: covidData,
+				},
+				showLoading: true,
+				url: "/Covid19Italy/getRegionData"
 			}).then(CovidCommon.dataRetrieved);
 		}
 	}
@@ -172,8 +211,13 @@ var CovidCommon = (function(CovidCommon){
 				chartProvince = new CovidChart(document.getElementById('chartProvince'));
 				chartProvince.setTitle("Nuove infezioni nelle province di:");
 			}
+			if(chartRegion == undefined){
+				chartRegion = new CovidChart(document.getElementById('chartRegions'));
+			}
+			
 			chartNational.setLabels(response.arrDates);
 			chartProvince.setLabels(response.arrDates);
+			chartRegion.setLabels(response.arrDates);
 			switch(response.dataType){
 				case "NATIONAL":
 					dataNationalChart.arrNewInfections.data = response.arrNewInfections;
@@ -202,6 +246,11 @@ var CovidCommon = (function(CovidCommon){
 					}
 					
 					CovidCommon.drawProvinceChart();
+					break;
+				case "REGIONAL":
+					dataRegionChart = response.regionData;
+					
+					CovidCommon.drawRegionChart();
 					break;
 				default:
 					break;
@@ -286,6 +335,30 @@ var CovidCommon = (function(CovidCommon){
 		}
 		
 		chartProvince.drawChart();
+	}
+	
+	CovidCommon.drawRegionChart = function(){
+		if(chartRegion == undefined){
+			return;
+		}
+		
+		chartRegion.clearDataSets();
+		
+		var i = 0;
+		for(var regionCode in dataRegionChart){
+			var regionDetails = dataRegionChart[regionCode];
+			
+			const dsRegion = new CovidChartDataset(regionDetails.label);
+			dsRegion.setData(regionDetails.data);
+			dsRegion.setColor(provinceColorPalette[i]);
+			
+			//if(regionDetails.active == true){
+				chartRegion.addCovidChartDataset(dsRegion);
+			//}
+			i++;
+		}
+		
+		chartRegion.drawChart();
 	}
 
 	/**
