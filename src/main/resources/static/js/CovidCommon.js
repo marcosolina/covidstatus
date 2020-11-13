@@ -47,7 +47,7 @@ var CovidCommon = (function(CovidCommon){
 	};
 	
 	var dataProvinceChart = {};
-	var dataRegionChart = {};
+	var dataRegionChart;
 	var provinceColorPalette = [];
 	
 	var chartNational;
@@ -76,17 +76,20 @@ var CovidCommon = (function(CovidCommon){
 			dateTo.datepicker( "option", "minDate", CovidCommon.getDate( this ) );
 			CovidCommon.updateNationalData();
 			CovidCommon.loadProvinceData();
+			CovidCommon.loadRegionData();
         });
 
 		dateTo.on( "change", function() {
 	        dateFrom.datepicker( "option", "maxDate", CovidCommon.getDate( this ) );
 			CovidCommon.updateNationalData();
 			CovidCommon.loadProvinceData();
+			CovidCommon.loadRegionData();
 		});
 		
 		$("[type=checkbox]").change(CovidCommon.chartDataSwitchChanged);
 		$("#region").change(CovidCommon.loadProvinceData);
 		$("#covidData").change(CovidCommon.loadRegionData);
+		
 		
 		/*
 		 Activated the default checkboxes in the UI
@@ -248,7 +251,16 @@ var CovidCommon = (function(CovidCommon){
 					CovidCommon.drawProvinceChart();
 					break;
 				case "REGIONAL":
+					var createCheckboxes = dataRegionChart == undefined;
+									
+					for(var regionCode in dataRegionChart){
+						response.regionData[regionCode].active = dataRegionChart[regionCode].active;
+					}
+					
 					dataRegionChart = response.regionData;
+					if(createCheckboxes){
+						CovidCommon.createRegionCheckboxes();
+					}
 					
 					CovidCommon.drawRegionChart();
 					break;
@@ -285,6 +297,40 @@ var CovidCommon = (function(CovidCommon){
 		
 		dataProvinceChart[id].active = jElement.prop("checked");
 		CovidCommon.drawProvinceChart();
+	}
+	
+	CovidCommon.changeRegionCheckboxes = function (){
+		var jElement = $(this);
+		var id = jElement.prop("id");
+		
+		dataRegionChart[id].active = jElement.prop("checked");
+		CovidCommon.drawRegionChart();
+	}
+	
+	CovidCommon.createRegionCheckboxes = function(){
+		var jRow = $("#rowRegion");
+		jRow.empty();
+		
+		var strTmpl = '<div class="col-6 col-sm-4 col-md-3 col-lg-2 col-xl-2">' + 
+						'<div class="custom-control custom-switch">' +
+							'<input type="checkbox" class="custom-control-input" id="%regionId%">' +
+							'<label class="custom-control-label switch-label" style="color: %color%" for="%regionId%">%label%</label>' + 
+						'</div>' +
+					  '</div>';	
+		var i = 0;
+		for(var regionCode in dataRegionChart){
+			var regionDetails = dataRegionChart[regionCode];
+			regionDetails.active = false;
+			var data = {
+				regionId: regionCode,
+				color: provinceColorPalette[i],
+				label: regionDetails.label
+			}
+			jRow.append(MarcoUtils.template(strTmpl, data));
+			i++;
+		}
+		
+		jRow.find("input").change(CovidCommon.changeRegionCheckboxes);
 	}
 
 	CovidCommon.createProvinceCheckboxes = function(){
@@ -352,9 +398,9 @@ var CovidCommon = (function(CovidCommon){
 			dsRegion.setData(regionDetails.data);
 			dsRegion.setColor(provinceColorPalette[i]);
 			
-			//if(regionDetails.active == true){
+			if(regionDetails.active == true){
 				chartRegion.addCovidChartDataset(dsRegion);
-			//}
+			}
 			i++;
 		}
 		
