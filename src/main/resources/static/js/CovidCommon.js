@@ -99,44 +99,28 @@ var CovidCommon = (function(CovidCommon){
 			    $("#" + prop).prop("checked", dataNationalChart[prop].active);
 			}
 		}
-		
-		provinceColorPalette.push("rgb( 64, 145, 108, 1)");
-		provinceColorPalette.push("rgb( 157, 2, 8, 1)");
-		provinceColorPalette.push("rgb( 232, 93, 4, 1)");
-		provinceColorPalette.push("rgb( 255, 186, 8, 1)");
-		provinceColorPalette.push("rgb( 247, 37, 133, 1)");
-		provinceColorPalette.push("rgb( 114, 9, 183, 1)");
-		provinceColorPalette.push("rgb( 52, 12, 163, 1)");
-		provinceColorPalette.push("rgb( 67, 97, 238, 1)");
-		provinceColorPalette.push("rgb( 76, 201, 240, 1)");
-		provinceColorPalette.push("rgb( 239, 71, 111, 1)");
-		provinceColorPalette.push("rgb( 255, 209, 102, 1)");
-		provinceColorPalette.push("rgb( 6, 214, 160, 1)");
-		provinceColorPalette.push("rgb( 17, 138, 178, 1)");
-		provinceColorPalette.push("rgb( 7, 59, 76, 1)");
-		provinceColorPalette.push("rgb( 112, 141, 129, 1)");
-		provinceColorPalette.push("rgb( 73, 80, 87, 1)");
-		provinceColorPalette.push("rgb( 73, 80, 87, 1)");
-		provinceColorPalette.push("rgb( 73, 80, 87, 1)");
-		provinceColorPalette.push("rgb( 73, 80, 87, 1)");
-		provinceColorPalette.push("rgb( 73, 80, 87, 1)");
-		provinceColorPalette.push("rgb( 73, 80, 87, 1)");
-		provinceColorPalette.push("rgb( 73, 80, 87, 1)");
-		provinceColorPalette.push("rgb( 73, 80, 87, 1)");
-		provinceColorPalette.push("rgb( 73, 80, 87, 1)");
-		provinceColorPalette.push("rgb( 73, 80, 87, 1)");
-		provinceColorPalette.push("rgb( 73, 80, 87, 1)");
-		provinceColorPalette.push("rgb( 73, 80, 87, 1)");
-		provinceColorPalette.push("rgb( 73, 80, 87, 1)");
-		provinceColorPalette.push("rgb( 73, 80, 87, 1)");
-		provinceColorPalette.push("rgb( 73, 80, 87, 1)");
-		provinceColorPalette.push("rgb( 73, 80, 87, 1)");
-		provinceColorPalette.push("rgb( 73, 80, 87, 1)");
-		provinceColorPalette.push("rgb( 73, 80, 87, 1)");
-		provinceColorPalette.push("rgb( 73, 80, 87, 1)");
-		provinceColorPalette.push("rgb( 73, 80, 87, 1)");
-		provinceColorPalette.push("rgb( 73, 80, 87, 1)");
-		
+
+		provinceColorPalette.push("rgb( 255, 0, 0, 1)");
+		provinceColorPalette.push("rgb( 255, 104, 104, 1)");
+		provinceColorPalette.push("rgb( 174, 67, 67, 1)");
+		provinceColorPalette.push("rgb( 255, 123, 0, 1)");
+		provinceColorPalette.push("rgb( 255, 169, 90, 1)");
+		provinceColorPalette.push("rgb( 186, 124, 66, 1)");
+		provinceColorPalette.push("rgb( 255, 242, 0, 1)");
+		provinceColorPalette.push("rgb( 182, 176, 53, 1)");
+		provinceColorPalette.push("rgb( 79, 255, 0, 1)");
+		provinceColorPalette.push("rgb( 90, 163, 57, 1)");
+		provinceColorPalette.push("rgb( 55, 98, 36, 1)");
+		provinceColorPalette.push("rgb( 0, 255, 229, 1)");
+		provinceColorPalette.push("rgb( 56, 180, 167, 1)");
+		provinceColorPalette.push("rgb( 67, 141, 133 , 1)");
+		provinceColorPalette.push("rgb( 0, 54, 255 , 1)");
+		provinceColorPalette.push("rgb( 119, 148, 255 , 1)");
+		provinceColorPalette.push("rgb( 48, 68, 144 , 1)");
+		provinceColorPalette.push("rgb( 183, 0, 255 , 1)");
+		provinceColorPalette.push("rgb( 101, 46, 122 , 1)");
+		provinceColorPalette.push("rgb( 255, 0, 223 , 1)");
+		provinceColorPalette.push("rgb( 0, 0, 0, 1)");
 	}
 	
 	CovidCommon.loadProvinceData = function(){
@@ -318,6 +302,8 @@ var CovidCommon = (function(CovidCommon){
 						'</div>' +
 					  '</div>';	
 		var i = 0;
+		var arr = [];	
+	
 		for(var regionCode in dataRegionChart){
 			var regionDetails = dataRegionChart[regionCode];
 			regionDetails.active = false;
@@ -326,10 +312,19 @@ var CovidCommon = (function(CovidCommon){
 				color: provinceColorPalette[i],
 				label: regionDetails.label
 			}
-			jRow.append(MarcoUtils.template(strTmpl, data));
+			arr.push(data);
 			i++;
 		}
 		
+		arr.sort((a, b) => {
+			if(a.label < b.label){
+				return -1
+			} 
+			return 1;
+		});
+		
+		arr.forEach(el => {jRow.append(MarcoUtils.template(strTmpl, el));});
+			
 		jRow.find("input").change(CovidCommon.changeRegionCheckboxes);
 	}
 
@@ -344,6 +339,8 @@ var CovidCommon = (function(CovidCommon){
 						'</div>' +
 					  '</div>';	
 		var i = 0;
+		var arr = [];	
+		
 		for(var provinceCode in dataProvinceChart){
 			var provinceDetails = dataProvinceChart[provinceCode];
 			provinceDetails.active = false;
@@ -352,9 +349,18 @@ var CovidCommon = (function(CovidCommon){
 				color: provinceColorPalette[i],
 				label: provinceDetails.label
 			}
-			jRow.append(MarcoUtils.template(strTmpl, data));
+			arr.push(data);
 			i++;
 		}
+
+		arr.sort((a, b) => {
+			if(a.label < b.label){
+				return -1
+			} 
+			return 1;
+		});
+		
+		arr.forEach(el => {jRow.append(MarcoUtils.template(strTmpl, el));});
 		
 		jRow.find("input").change(CovidCommon.changeProvinceCheckboxes);
 	}
