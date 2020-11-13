@@ -47,11 +47,12 @@ var CovidCommon = (function(CovidCommon){
 	};
 	
 	var dataProvinceChart = {};
-	
+	var dataRegionChart;
 	var provinceColorPalette = [];
 	
 	var chartNational;
 	var chartProvince;
+	var chartRegion;
 	var regionDropDownLastValue;
 	
 	/**
@@ -75,16 +76,20 @@ var CovidCommon = (function(CovidCommon){
 			dateTo.datepicker( "option", "minDate", CovidCommon.getDate( this ) );
 			CovidCommon.updateNationalData();
 			CovidCommon.loadProvinceData();
+			CovidCommon.loadRegionData();
         });
 
 		dateTo.on( "change", function() {
 	        dateFrom.datepicker( "option", "maxDate", CovidCommon.getDate( this ) );
 			CovidCommon.updateNationalData();
 			CovidCommon.loadProvinceData();
+			CovidCommon.loadRegionData();
 		});
 		
 		$("[type=checkbox]").change(CovidCommon.chartDataSwitchChanged);
 		$("#region").change(CovidCommon.loadProvinceData);
+		$("#covidData").change(CovidCommon.loadRegionData);
+		
 		
 		/*
 		 Activated the default checkboxes in the UI
@@ -94,24 +99,28 @@ var CovidCommon = (function(CovidCommon){
 			    $("#" + prop).prop("checked", dataNationalChart[prop].active);
 			}
 		}
-		
-		provinceColorPalette.push("rgb( 64, 145, 108, 1)");
-		provinceColorPalette.push("rgb( 157, 2, 8, 1)");
-		provinceColorPalette.push("rgb( 232, 93, 4, 1)");
-		provinceColorPalette.push("rgb( 255, 186, 8, 1)");
-		provinceColorPalette.push("rgb( 247, 37, 133, 1)");
-		provinceColorPalette.push("rgb( 114, 9, 183, 1)");
-		provinceColorPalette.push("rgb( 52, 12, 163, 1)");
-		provinceColorPalette.push("rgb( 67, 97, 238, 1)");
-		provinceColorPalette.push("rgb( 76, 201, 240, 1)");
-		provinceColorPalette.push("rgb( 239, 71, 111, 1)");
-		provinceColorPalette.push("rgb( 255, 209, 102, 1)");
-		provinceColorPalette.push("rgb( 6, 214, 160, 1)");
-		provinceColorPalette.push("rgb( 17, 138, 178, 1)");
-		provinceColorPalette.push("rgb( 7, 59, 76, 1)");
-		provinceColorPalette.push("rgb( 112, 141, 129, 1)");
-		provinceColorPalette.push("rgb( 73, 80, 87, 1)");
-		
+
+		provinceColorPalette.push("rgb( 255, 0, 0, 1)");
+		provinceColorPalette.push("rgb( 255, 104, 104, 1)");
+		provinceColorPalette.push("rgb( 174, 67, 67, 1)");
+		provinceColorPalette.push("rgb( 255, 123, 0, 1)");
+		provinceColorPalette.push("rgb( 255, 169, 90, 1)");
+		provinceColorPalette.push("rgb( 186, 124, 66, 1)");
+		provinceColorPalette.push("rgb( 255, 242, 0, 1)");
+		provinceColorPalette.push("rgb( 182, 176, 53, 1)");
+		provinceColorPalette.push("rgb( 79, 255, 0, 1)");
+		provinceColorPalette.push("rgb( 90, 163, 57, 1)");
+		provinceColorPalette.push("rgb( 55, 98, 36, 1)");
+		provinceColorPalette.push("rgb( 0, 255, 229, 1)");
+		provinceColorPalette.push("rgb( 56, 180, 167, 1)");
+		provinceColorPalette.push("rgb( 67, 141, 133 , 1)");
+		provinceColorPalette.push("rgb( 0, 54, 255 , 1)");
+		provinceColorPalette.push("rgb( 119, 148, 255 , 1)");
+		provinceColorPalette.push("rgb( 48, 68, 144 , 1)");
+		provinceColorPalette.push("rgb( 183, 0, 255 , 1)");
+		provinceColorPalette.push("rgb( 101, 46, 122 , 1)");
+		provinceColorPalette.push("rgb( 255, 0, 223 , 1)");
+		provinceColorPalette.push("rgb( 0, 0, 0, 1)");
 	}
 	
 	CovidCommon.loadProvinceData = function(){
@@ -127,6 +136,23 @@ var CovidCommon = (function(CovidCommon){
 				},
 				showLoading: true,
 				url: "/Covid19Italy/getProvinceData"
+			}).then(CovidCommon.dataRetrieved);
+		}
+	}
+	
+	CovidCommon.loadRegionData = function(){
+		var from = $.datepicker.formatDate('yy-mm-dd', CovidCommon.getDate(document.getElementById("dateFrom")));
+		var to = $.datepicker.formatDate('yy-mm-dd', CovidCommon.getDate(document.getElementById("dateTo")));
+		var covidData = $("#covidData").val();
+		if(from != "" && to != ""){
+			MarcoUtils.executeAjax({
+				dataToPost: {
+				    from: from,
+				    to: to,
+					covidData: covidData,
+				},
+				showLoading: true,
+				url: "/Covid19Italy/getRegionData"
 			}).then(CovidCommon.dataRetrieved);
 		}
 	}
@@ -172,8 +198,13 @@ var CovidCommon = (function(CovidCommon){
 				chartProvince = new CovidChart(document.getElementById('chartProvince'));
 				chartProvince.setTitle("Nuove infezioni nelle province di:");
 			}
+			if(chartRegion == undefined){
+				chartRegion = new CovidChart(document.getElementById('chartRegions'));
+			}
+			
 			chartNational.setLabels(response.arrDates);
 			chartProvince.setLabels(response.arrDates);
+			chartRegion.setLabels(response.arrDates);
 			switch(response.dataType){
 				case "NATIONAL":
 					dataNationalChart.arrNewInfections.data = response.arrNewInfections;
@@ -202,6 +233,20 @@ var CovidCommon = (function(CovidCommon){
 					}
 					
 					CovidCommon.drawProvinceChart();
+					break;
+				case "REGIONAL":
+					var createCheckboxes = dataRegionChart == undefined;
+									
+					for(var regionCode in dataRegionChart){
+						response.regionData[regionCode].active = dataRegionChart[regionCode].active;
+					}
+					
+					dataRegionChart = response.regionData;
+					if(createCheckboxes){
+						CovidCommon.createRegionCheckboxes();
+					}
+					
+					CovidCommon.drawRegionChart();
 					break;
 				default:
 					break;
@@ -237,18 +282,67 @@ var CovidCommon = (function(CovidCommon){
 		dataProvinceChart[id].active = jElement.prop("checked");
 		CovidCommon.drawProvinceChart();
 	}
+	
+	CovidCommon.changeRegionCheckboxes = function (){
+		var jElement = $(this);
+		var id = jElement.prop("id");
+		
+		dataRegionChart[id].active = jElement.prop("checked");
+		CovidCommon.drawRegionChart();
+	}
+	
+	CovidCommon.createRegionCheckboxes = function(){
+		var jRow = $("#rowRegion");
+		jRow.empty();
+		
+		var strTmpl = '<div class="col-6 col-sm-4 col-md-3 col-lg-2 col-xl-2">' + 
+						'<div class="custom-control custom-switch">' +
+							'<input type="checkbox" class="custom-control-input" id="%regionId%">' +
+							'<label class="custom-control-label switch-label" style="color: %color%" for="%regionId%">%label%</label>' + 
+						'</div>' +
+					  '</div>';	
+		var i = 0;
+		var arr = [];	
+	
+		for(var regionCode in dataRegionChart){
+			var regionDetails = dataRegionChart[regionCode];
+			regionDetails.active = false;
+			var data = {
+				regionId: regionCode,
+				color: provinceColorPalette[i],
+				label: regionDetails.label
+			}
+			arr.push(data);
+			i++;
+		}
+		
+		arr.sort((a, b) => {
+			if(a.label < b.label){
+				return -1
+			} 
+			return 1;
+		});
+		
+		arr.forEach(el => {jRow.append(MarcoUtils.template(strTmpl, el));});
+			
+		jRow.find("input").change(CovidCommon.changeRegionCheckboxes);
+		$(jRow.find("input").get(0)).prop("checked", true);
+		$(jRow.find("input").get(0)).change();
+	}
 
 	CovidCommon.createProvinceCheckboxes = function(){
 		var jRow = $("#rowProvince");
 		jRow.empty();
 		
-		var strTmpl = '<div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2">' + 
+		var strTmpl = '<div class="col-6 col-sm-4 col-md-3 col-lg-2 col-xl-2">' + 
 						'<div class="custom-control custom-switch">' +
 							'<input type="checkbox" class="custom-control-input" id="%provId%">' +
 							'<label class="custom-control-label switch-label" style="color: %color%" for="%provId%">%label%</label>' + 
 						'</div>' +
 					  '</div>';	
 		var i = 0;
+		var arr = [];	
+		
 		for(var provinceCode in dataProvinceChart){
 			var provinceDetails = dataProvinceChart[provinceCode];
 			provinceDetails.active = false;
@@ -257,11 +351,22 @@ var CovidCommon = (function(CovidCommon){
 				color: provinceColorPalette[i],
 				label: provinceDetails.label
 			}
-			jRow.append(MarcoUtils.template(strTmpl, data));
+			arr.push(data);
 			i++;
 		}
+
+		arr.sort((a, b) => {
+			if(a.label < b.label){
+				return -1
+			} 
+			return 1;
+		});
+		
+		arr.forEach(el => {jRow.append(MarcoUtils.template(strTmpl, el));});
 		
 		jRow.find("input").change(CovidCommon.changeProvinceCheckboxes);
+		$(jRow.find("input").get(0)).prop("checked", true);
+		$(jRow.find("input").get(0)).change();
 	}
 
 	CovidCommon.drawProvinceChart = function(){
@@ -286,6 +391,30 @@ var CovidCommon = (function(CovidCommon){
 		}
 		
 		chartProvince.drawChart();
+	}
+	
+	CovidCommon.drawRegionChart = function(){
+		if(chartRegion == undefined){
+			return;
+		}
+		
+		chartRegion.clearDataSets();
+		
+		var i = 0;
+		for(var regionCode in dataRegionChart){
+			var regionDetails = dataRegionChart[regionCode];
+			
+			const dsRegion = new CovidChartDataset(regionDetails.label);
+			dsRegion.setData(regionDetails.data);
+			dsRegion.setColor(provinceColorPalette[i]);
+			
+			if(regionDetails.active == true){
+				chartRegion.addCovidChartDataset(dsRegion);
+			}
+			i++;
+		}
+		
+		chartRegion.drawChart();
 	}
 
 	/**

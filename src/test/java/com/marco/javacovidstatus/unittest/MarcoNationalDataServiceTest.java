@@ -14,7 +14,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.marco.javacovidstatus.model.DailyData;
+import com.marco.javacovidstatus.model.NationalDailyData;
 import com.marco.javacovidstatus.repositories.model.EntityNationalData;
 import com.marco.javacovidstatus.repositories.sql.EntityProvinceDataRepo;
 import com.marco.javacovidstatus.repositories.sql.NationallDataSqlRepository;
@@ -48,7 +48,7 @@ class MarcoNationalDataServiceTest {
 
         when(mockRepo.findAllByOrderByDateDesc()).thenReturn(list);
 
-        List<DailyData> respList = service.getAllDataDescending();
+        List<NationalDailyData> respList = service.getAllDataDescending();
         assertEquals(10, respList.size());
         assertEquals(LocalDate.now(), respList.get(0).getDate());
         assertEquals(LocalDate.now().minusDays(9), respList.get(respList.size() - 1).getDate());
@@ -66,7 +66,7 @@ class MarcoNationalDataServiceTest {
 
         when(mockRepo.findAllByOrderByDateAsc()).thenReturn(list);
 
-        List<DailyData> respList = service.getAllDataAscending();
+        List<NationalDailyData> respList = service.getAllDataAscending();
         assertEquals(11, respList.size());
         assertEquals(LocalDate.now().minusDays(10), respList.get(0).getDate());
         assertEquals(LocalDate.now(), respList.get(respList.size() - 1).getDate());
@@ -74,7 +74,7 @@ class MarcoNationalDataServiceTest {
     
     @Test
     void storeDataTest() {
-        boolean result = service.storeData(new DailyData());
+        boolean result = service.storeData(new NationalDailyData());
         assertTrue(result);
     }
     
@@ -91,7 +91,7 @@ class MarcoNationalDataServiceTest {
         LocalDate end = LocalDate.now();
         when(mockRepo.findByDateBetweenOrderByDateAsc(start, end)).thenReturn(list);
         
-        List<DailyData> respList = service.getDatesInRangeAscending(start, end);
+        List<NationalDailyData> respList = service.getDatesInRangeAscending(start, end);
         assertEquals(11, respList.size());
         assertEquals(start, respList.get(0).getDate());
         assertEquals(end, respList.get(respList.size() - 1).getDate());

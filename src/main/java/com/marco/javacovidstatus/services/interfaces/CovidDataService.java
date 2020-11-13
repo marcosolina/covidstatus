@@ -3,9 +3,10 @@ package com.marco.javacovidstatus.services.interfaces;
 import java.time.LocalDate;
 import java.util.List;
 
-import com.marco.javacovidstatus.model.DailyData;
+import com.marco.javacovidstatus.model.NationalDailyData;
 import com.marco.javacovidstatus.model.ProvinceDailyData;
 import com.marco.javacovidstatus.model.Region;
+import com.marco.javacovidstatus.model.RegionalDailyData;
 
 /**
  * This interfaces provides a list of functionalities that you can use to
@@ -21,7 +22,7 @@ public interface CovidDataService {
      * 
      * @return
      */
-    public List<DailyData> getAllDataDescending();
+    public List<NationalDailyData> getAllDataDescending();
 
     /**
      * It returns a list of regions
@@ -35,7 +36,7 @@ public interface CovidDataService {
      * 
      * @return
      */
-    public List<DailyData> getAllDataAscending();
+    public List<NationalDailyData> getAllDataAscending();
 
     /**
      * It returns the list of the national data of the specific range in a ascending
@@ -45,7 +46,24 @@ public interface CovidDataService {
      * @param to
      * @return
      */
-    public List<DailyData> getDatesInRangeAscending(LocalDate from, LocalDate to);
+    public List<NationalDailyData> getDatesInRangeAscending(LocalDate from, LocalDate to);
+
+    /**
+     * It returns the regional data between the provided dates in ascending order
+     * 
+     * @param from
+     * @param to
+     * @return
+     */
+    public List<RegionalDailyData> getRegionalDatesInRangeAscending(LocalDate from, LocalDate to);
+
+    /**
+     * It stores the {@link RegionalDailyData}
+     * 
+     * @param data
+     * @return
+     */
+    public boolean saveRegionalDailyData(RegionalDailyData data);
 
     /**
      * It returns the data of the provinces for the selected region
@@ -70,7 +88,7 @@ public interface CovidDataService {
      * @param dto
      * @return
      */
-    public boolean storeData(DailyData dto);
+    public boolean storeData(NationalDailyData dto);
 
     /**
      * It deletes all the data
@@ -86,9 +104,10 @@ public interface CovidDataService {
      * @return
      */
     public boolean storeProvinceDailyData(ProvinceDailyData data);
-    
+
     /**
      * It returns the max date available in the data store
+     * 
      * @return
      */
     public LocalDate getMaxDate();

@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.marco.javacovidstatus.model.Region;
 import com.marco.javacovidstatus.repositories.model.EntityProvinceData;
+import com.marco.javacovidstatus.repositories.model.EntityRegionalData;
 
 public interface CovidRepository {
 
@@ -35,4 +36,12 @@ public interface CovidRepository {
      * @return
      */
     public LocalDate getMaxDate();
+    
+    /**
+     * Returns the Regional data between the from date and to data
+     * @param from
+     * @param to
+     * @return
+     */
+    public List<EntityRegionalData> getRegionalDataAscending(LocalDate from, LocalDate to);
 }
