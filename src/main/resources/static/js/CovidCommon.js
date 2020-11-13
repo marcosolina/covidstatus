@@ -326,6 +326,8 @@ var CovidCommon = (function(CovidCommon){
 		arr.forEach(el => {jRow.append(MarcoUtils.template(strTmpl, el));});
 			
 		jRow.find("input").change(CovidCommon.changeRegionCheckboxes);
+		$(jRow.find("input").get(0)).prop("checked", true);
+		$(jRow.find("input").get(0)).change();
 	}
 
 	CovidCommon.createProvinceCheckboxes = function(){
@@ -363,6 +365,8 @@ var CovidCommon = (function(CovidCommon){
 		arr.forEach(el => {jRow.append(MarcoUtils.template(strTmpl, el));});
 		
 		jRow.find("input").change(CovidCommon.changeProvinceCheckboxes);
+		$(jRow.find("input").get(0)).prop("checked", true);
+		$(jRow.find("input").get(0)).change();
 	}
 
 	CovidCommon.drawProvinceChart = function(){
