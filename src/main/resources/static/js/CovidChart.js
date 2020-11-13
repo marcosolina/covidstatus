@@ -56,10 +56,21 @@ class CovidChart {
 		    	responsive: true,
 		    	tooltips: {
 					mode: 'index',
-					intersect: false
+					intersect: false,
+					itemSort: this.sortTooltip
 				},
+
 		    }
 		    
 		});
+	}
+	
+	sortTooltip(a, b, data){
+		var labelA = data.datasets[a.datasetIndex].label;
+		var labelB = data.datasets[b.datasetIndex].label;
+		if(labelA < labelB){
+			return -1;
+		}
+		return 1;
 	}
 }
