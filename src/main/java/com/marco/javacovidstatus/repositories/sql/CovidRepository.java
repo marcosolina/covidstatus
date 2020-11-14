@@ -32,10 +32,24 @@ public interface CovidRepository {
     public List<String> getProvincesForRegion(String regionCode);
     
     /**
-     * Returns the last date of the avilable data
+     * Returns the last available date of the download data
      * @return
      */
-    public LocalDate getMaxDate();
+    public LocalDate getNationalMaxDateAvailable();
+    
+    /**
+     * It returns the last date for the available regions data
+     * 
+     * @return
+     */
+    public LocalDate getRegionMaxDateAvailable();
+    
+    /**
+     * It returns the last date for the available provinces data
+     * 
+     * @return
+     */
+    public LocalDate getProvinceMaxDateAvailable();
     
     /**
      * Returns the Regional data between the from date and to data

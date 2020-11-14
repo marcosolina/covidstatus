@@ -34,11 +34,10 @@ public class MarcoCovidRepository implements CovidRepository {
         sql.append("p.regionDesc ");
         sql.append(" ORDER BY ");
         sql.append("p.regionDesc ");
-        
-        
+
         @SuppressWarnings("unchecked")
         List<Object[]> results = em.createQuery(sql.toString()).getResultList();
-        
+
         // @formatter:off
         return results.stream()//Stream the array of objects
                 .map(arr -> new Region(String.class.cast(arr[0]), String.class.cast(arr[1])))//convert the object[] into a Region object
@@ -47,7 +46,8 @@ public class MarcoCovidRepository implements CovidRepository {
     }
 
     @Override
-    public List<EntityProvinceData> getProvinceDataBetweenDatesOrderByDateAscending(LocalDate from, LocalDate to, String regionCode) {
+    public List<EntityProvinceData> getProvinceDataBetweenDatesOrderByDateAscending(LocalDate from, LocalDate to,
+            String regionCode) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
 
         CriteriaQuery<EntityProvinceData> cq = cb.createQuery(EntityProvinceData.class);
@@ -71,7 +71,7 @@ public class MarcoCovidRepository implements CovidRepository {
 
     @Override
     public List<String> getProvincesForRegion(String regionCode) {
-        
+
         CriteriaBuilder cb = em.getCriteriaBuilder();
 
         CriteriaQuery<String> cq = cb.createQuery(String.class);
@@ -86,19 +86,47 @@ public class MarcoCovidRepository implements CovidRepository {
                 )
             .groupBy(root.get("id").get("provinceCode"));
         // @formatter:on
-        
+
         return em.createQuery(cq).getResultList();
     }
 
     @Override
-    public LocalDate getMaxDate() {
+    public LocalDate getNationalMaxDateAvailable() {
         StringBuilder sql = new StringBuilder();
         sql.append("SELECT ");
         sql.append(" MAX(p.date) ");
         sql.append(" FROM EntityNationalData p ");
-        
-        Object obj =  em.createQuery(sql.toString()).getSingleResult();
-        if(obj != null) {
+
+        Object obj = em.createQuery(sql.toString()).getSingleResult();
+        if (obj != null) {
+            return LocalDate.class.cast(obj);
+        }
+        return null;
+    }
+
+    @Override
+    public LocalDate getRegionMaxDateAvailable() {
+        StringBuilder sql = new StringBuilder();
+        sql.append("SELECT ");
+        sql.append(" MAX(p.id.date) ");
+        sql.append(" FROM EntityRegionalData p ");
+
+        Object obj = em.createQuery(sql.toString()).getSingleResult();
+        if (obj != null) {
+            return LocalDate.class.cast(obj);
+        }
+        return null;
+    }
+
+    @Override
+    public LocalDate getProvinceMaxDateAvailable() {
+        StringBuilder sql = new StringBuilder();
+        sql.append("SELECT ");
+        sql.append(" MAX(p.id.date) ");
+        sql.append(" FROM EntityProvinceData p ");
+
+        Object obj = em.createQuery(sql.toString()).getSingleResult();
+        if (obj != null) {
             return LocalDate.class.cast(obj);
         }
         return null;

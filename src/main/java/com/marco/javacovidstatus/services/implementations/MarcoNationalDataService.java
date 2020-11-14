@@ -91,8 +91,18 @@ public class MarcoNationalDataService implements CovidDataService {
     }
     
     @Override
-    public LocalDate getMaxDate() {
-        return repoCovidCustom.getMaxDate();
+    public LocalDate getNationalMaxDateAvailable() {
+        return repoCovidCustom.getNationalMaxDateAvailable();
+    }
+    
+    @Override
+    public LocalDate getRegionMaxDateAvailable() {
+        return repoCovidCustom.getRegionMaxDateAvailable();
+    }
+
+    @Override
+    public LocalDate getProvinceMaxDateAvailable() {
+        return repoCovidCustom.getProvinceMaxDateAvailable();
     }
 
     @Override

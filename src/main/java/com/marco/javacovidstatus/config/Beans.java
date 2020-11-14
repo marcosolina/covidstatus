@@ -13,6 +13,10 @@ import com.marco.javacovidstatus.repositories.sql.CovidRepository;
 import com.marco.javacovidstatus.repositories.sql.MarcoCovidRepository;
 import com.marco.javacovidstatus.services.implementations.EmailNotificationSender;
 import com.marco.javacovidstatus.services.implementations.MarcoNationalDataService;
+import com.marco.javacovidstatus.services.implementations.NationalCovidDataDownloader;
+import com.marco.javacovidstatus.services.implementations.ProvinceCoviddataDownloader;
+import com.marco.javacovidstatus.services.implementations.RegionCovidDataDownloader;
+import com.marco.javacovidstatus.services.interfaces.CovidDataDownloader;
 import com.marco.javacovidstatus.services.interfaces.CovidDataService;
 import com.marco.javacovidstatus.services.interfaces.NotificationSenderInterface;
 
@@ -35,33 +39,48 @@ public class Beans {
         taskScheduler.setPoolSize(20);
         return taskScheduler;
     }
-    
+
     @Bean
     public CovidRepository getCovidRepository() {
         return new MarcoCovidRepository();
     }
-    
+
     @Bean
     public JavaMailSender getJavaMailSender() {
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
         mailSender.setHost("smtp.gmail.com");
         mailSender.setPort(587);
-        
+
         mailSender.setUsername("XXXX");
         mailSender.setPassword("XXXX");
-        
+
         Properties props = mailSender.getJavaMailProperties();
         props.put("mail.transport.protocol", "smtp");
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.starttls.enable", "true");
         props.put("mail.debug", "true");
-        
+
         return mailSender;
     }
-    
+
     @Bean
     public NotificationSenderInterface getNotificationSenderInterface() {
         return new EmailNotificationSender();
+    }
+
+    @Bean(name = "National")
+    public CovidDataDownloader getNationalCovidDataDownloader() {
+        return new NationalCovidDataDownloader(getWebClient());
+    }
+
+    @Bean(name = "Province")
+    public CovidDataDownloader getProvinceCoviddataDownloader() {
+        return new ProvinceCoviddataDownloader(getWebClient());
+    }
+
+    @Bean(name = "Region")
+    public CovidDataDownloader getRegionCovidDataDownloader() {
+        return new RegionCovidDataDownloader(getWebClient());
     }
 
 }
