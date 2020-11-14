@@ -7,10 +7,10 @@ package com.marco.javacovidstatus.services.interfaces;
  * @author Marco
  *
  */
-public interface GovermentDataRetrieverScheduler {
+public interface CovidScheduler {
 
     /**
-     * It updates the national data
+     * It downloads new data
      */
-    public void updateNationalData();
+    public void downloadNewData();
 }

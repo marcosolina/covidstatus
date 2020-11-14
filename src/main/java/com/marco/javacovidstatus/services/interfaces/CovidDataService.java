@@ -106,9 +106,23 @@ public interface CovidDataService {
     public boolean storeProvinceDailyData(ProvinceDailyData data);
 
     /**
-     * It returns the max date available in the data store
+     * It returns the last date for the available national data
      * 
      * @return
      */
-    public LocalDate getMaxDate();
+    public LocalDate getNationalMaxDateAvailable();
+
+    /**
+     * It returns the last date for the available regions data
+     * 
+     * @return
+     */
+    public LocalDate getRegionMaxDateAvailable();
+    
+    /**
+     * It returns the last date for the available provinces data
+     * 
+     * @return
+     */
+    public LocalDate getProvinceMaxDateAvailable();
 }

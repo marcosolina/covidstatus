@@ -47,6 +47,7 @@
 		window.onload = function(){
 			CovidCommon.init(regions);
 			$("#dateFrom").change();
+			$("#infoModal").modal("show");
 		}
 		
 	/*]]>*/
@@ -237,16 +238,26 @@
 					</button>
 				</div>
 				<div class="modal-body">
-					<p>Ho creato questa pagina web per poter visualizzare la sistuazione del COVID-19 in Italia.
-					I numeri che vengono comunicati dai notiziari non mi permetto di visualizzare la situazione,
-					 e cos&igrave; ho deciso di creare dei grafici. I dati li recupero dal sito del ministero della 
-					 salute, quindi sono gli stessi che i notiziari ci comunicano ogni giorno. Questo sito aggiorna 
-					 i dati ogni ora, il codice sorgente &egrave; disponibile su 
-					 <a href="https://github.com/marcosolina/covidstatus" style="" target="_blank">questo</a> 
-					 repository, mentre i dati del Ministero della Salute sono disponibile nel 
-					 <a href="https://github.com/pcm-dpc/COVID-19" target="_blank">repository ufficiale</a> 
-					 del ministero.
-					 </p>
+					<p>
+						Ho deciso di creare questo sito per visualizzare i dati del COVID-19 in Italia con l'aiuto di alcuni grafici.
+					</p>
+					<p>
+						I dati li recupero direttametne dal sito del Ministero della Salute e vengono aggiornati automaticamente
+						non appena il Ministero rilascia i "nuovi numeri", di solito verso le 18:00 di ogni giorno.
+					</p>
+					<ul>
+						<li>
+							<a href="https://github.com/marcosolina/covidstatus" style="" target="_blank">Codice sorgente del mio progetto</a>
+					 	</li>
+						<li>
+							<a href="https://github.com/pcm-dpc/COVID-19" target="_blank">Dati del Ministero della Salute</a> 
+						</li>
+					</ul>
+				</div>
+				<div class="modal-footer">
+					<a target="_blank" href="https://it.linkedin.com/in/marco-solina-1bb561104" class="fa fa-linkedin modal-link-color"></a>
+					<a href="mailto:marcosolina@gmail.com" class="fa fa-envelope modal-link-color"></a>
+					<a href="https://github.com/marcosolina" target="_blank" class="fa fa-github modal-link-color"></a>
 				</div>
 			</div>
 		</div>

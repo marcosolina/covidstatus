@@ -2,6 +2,10 @@
 	font-weight: bold;
 }
 
+.modal-link-color {
+	color: #212529;
+}
+
 .color-new-infections {
 	color: rgb(255, 99, 99, 1);
 }
