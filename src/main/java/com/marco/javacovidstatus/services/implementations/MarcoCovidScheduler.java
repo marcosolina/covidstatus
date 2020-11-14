@@ -46,13 +46,14 @@ public class MarcoCovidScheduler implements CovidScheduler {
     public synchronized void downloadNewData() {
 
         logger.info("Updating Data");
+        
         List<CovidDataDownloader> downloaders = new ArrayList<>();
         downloaders.add(nationalDownloader);
         downloaders.add(regionDownloader);
         downloaders.add(provinceDownloader);
-        
         downloaders.parallelStream().forEach(CovidDataDownloader::downloadData);
-
+        
+        logger.info("Update complete");
         notificationService.sendMessage("marcosolina@gmail.com", "Marco Solina - Covid Status", "Dati aggiornati");
     }
 
