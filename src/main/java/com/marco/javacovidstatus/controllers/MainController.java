@@ -20,11 +20,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.marco.javacovidstatus.model.CovidDataType;
-import com.marco.javacovidstatus.model.NationalDailyData;
-import com.marco.javacovidstatus.model.ProvinceDailyData;
-import com.marco.javacovidstatus.model.Region;
-import com.marco.javacovidstatus.model.RegionalDailyData;
+import com.marco.javacovidstatus.model.dto.CovidDataType;
+import com.marco.javacovidstatus.model.dto.NationalDailyData;
+import com.marco.javacovidstatus.model.dto.ProvinceDailyData;
+import com.marco.javacovidstatus.model.dto.Region;
+import com.marco.javacovidstatus.model.dto.RegionalDailyData;
 import com.marco.javacovidstatus.model.rest.ReqGetNationalData;
 import com.marco.javacovidstatus.model.rest.ReqGetProvinceData;
 import com.marco.javacovidstatus.model.rest.ReqGetRegionData;
@@ -35,6 +35,12 @@ import com.marco.javacovidstatus.model.rest.RespProvinceChartData;
 import com.marco.javacovidstatus.model.rest.RespRegionChartData;
 import com.marco.javacovidstatus.services.interfaces.CovidDataService;
 
+/**
+ * This is a standard Spring controller
+ * 
+ * @author Marco
+ *
+ */
 @Controller
 public class MainController {
     private static final Logger LOGGER = LoggerFactory.getLogger(MainController.class);
@@ -45,35 +51,41 @@ public class MainController {
     @GetMapping(value = "/")
     public String homePage(Model model) {
         LOGGER.info("Inside MainController.homePage");
+        
+        /*
+         * By default I will show the data of the last month to the user
+         */
         LocalDate today = LocalDate.now();
         model.addAttribute("from", today.minusMonths(1).format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
         model.addAttribute("to", today.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
-        model.addAttribute("regions", service.getRegionsList());
-        
+
+        /*
+         * Preparing the data for the 2 drop down
+         */
         EnumMap<CovidDataType, String> mapCovidDataType = new EnumMap<>(CovidDataType.class);
         Arrays.asList(CovidDataType.values()).stream().forEach(c -> mapCovidDataType.put(c, c.getDescription()));
         model.addAttribute("covidDataType", mapCovidDataType);
-        
+        model.addAttribute("regions", service.getRegionsList());
+
         return "index";
     }
-    
-    
+
     @PostMapping("/getRegionData")
     @ResponseBody
     public RespGetRegionData getRegionalData(@RequestBody ReqGetRegionData request) {
         RespGetRegionData resp = new RespGetRegionData();
-        
+
         List<RegionalDailyData> listData = service.getRegionalDatesInRangeAscending(request.getFrom(), request.getTo());
         List<Region> listRegions = service.getRegionsList();
-        
-        if(!listData.isEmpty()) {
+
+        if (!listData.isEmpty()) {
             listRegions.stream().forEach(r -> {
                 RespRegionChartData chartData = new RespRegionChartData();
                 chartData.setLabel(r.getDesc());
-                
+
                 Function<RegionalDailyData, Object> mapper = null;
-                
-                switch(request.getCovidData()) {
+
+                switch (request.getCovidData()) {
                 case NEW_TESTS:
                     mapper = RegionalDailyData::getNewTests;
                     break;
@@ -99,32 +111,35 @@ public class MainController {
                     mapper = RegionalDailyData::getInfectionPercentage;
                     break;
                 }
-                
-                chartData.setData(listData.stream().filter(data -> data.getRegionCode().equals(r.getCode())).map(mapper).collect(Collectors.toList()));
+
+                chartData.setData(listData.stream().filter(data -> data.getRegionCode().equals(r.getCode())).map(mapper)
+                        .collect(Collectors.toList()));
                 resp.getRegionData().put(r.getCode(), chartData);
             });
-            
+
             Region region = listRegions.get(0);
-            resp.setArrDates(listData.stream().filter(r -> r.getRegionCode().equals(region.getCode())).map(RegionalDailyData::getDate).collect(Collectors.toList()));
+            resp.setArrDates(listData.stream().filter(r -> r.getRegionCode().equals(region.getCode()))
+                    .map(RegionalDailyData::getDate).collect(Collectors.toList()));
         }
-        
+
         resp.setStatus(true);
         return resp;
     }
-    
+
     @PostMapping("/getProvinceData")
     @ResponseBody
     public RespGetProvinceData getNationalData(@RequestBody ReqGetProvinceData request) {
         RespGetProvinceData resp = new RespGetProvinceData();
-        
+
         /*
          * Get all the data for the provinces of the specific region
          */
-        List<ProvinceDailyData> listData = service.getProvinceDataInRangeAscending(request.getFrom(), request.getTo(), request.getRegionCode());
+        List<ProvinceDailyData> listData = service.getProvinceDataInRangeAscending(request.getFrom(), request.getTo(),
+                request.getRegionCode());
         List<String> provinces = service.getProfinceListForRegion(request.getRegionCode());
-        Map<String, RespProvinceChartData> map = new HashMap<>();
         
-        if(!listData.isEmpty()) {
+        Map<String, RespProvinceChartData> map = new HashMap<>();
+        if (!listData.isEmpty()) {
             // @formatter:off
             
             provinces.stream().forEach(codiceProvincia -> {
@@ -141,13 +156,14 @@ public class MainController {
             });
             // @formatter:on
             String province = provinces.get(0);
-            resp.setArrDates(listData.stream().filter(p -> p.getProvinceCode().equals(province)).map(ProvinceDailyData::getDate).collect(Collectors.toList()));
+            resp.setArrDates(listData.stream().filter(p -> p.getProvinceCode().equals(province))
+                    .map(ProvinceDailyData::getDate).collect(Collectors.toList()));
             resp.setProvinceData(map);
         }
         resp.setStatus(true);
         return resp;
     }
-    
+
     @PostMapping("/getNationalData")
     @ResponseBody
     public RespGetNationalData getNationalData(@RequestBody ReqGetNationalData request) {
@@ -163,7 +179,7 @@ public class MainController {
         resp.setArrNewTests(listData.stream().map(NationalDailyData::getNewTests).collect(Collectors.toList()));
         resp.setArrPercCasualties(listData.stream().map(NationalDailyData::getCasualtiesPercentage).collect(Collectors.toList()));
         resp.setArrPercInfections(listData.stream().map(NationalDailyData::getInfectionPercentage).collect(Collectors.toList()));
-        
+
         resp.setStatus(true);
         return resp;
     }

@@ -31,6 +31,9 @@ class CovidChart {
 		}
 	}
 	
+	/**
+		Sets the title of the chart
+	 */
 	setTitle(stringTitle){
 		this.title = stringTitle;
 	}
@@ -65,6 +68,9 @@ class CovidChart {
 		});
 	}
 	
+	/**
+		Function used to sort the info insed the tooltip
+	 */
 	sortTooltip(a, b, data){
 		var labelA = data.datasets[a.datasetIndex].label;
 		var labelB = data.datasets[b.datasetIndex].label;

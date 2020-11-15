@@ -1,25 +1,40 @@
-package com.marco.javacovidstatus.model;
+package com.marco.javacovidstatus.model.entitites;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
 /**
- * This class represents the data provided by the national institution
+ * This entity represents the data at national level
  * 
  * @author Marco
  *
  */
-public class NationalDailyData implements Serializable {
-    private static final long serialVersionUID = 1L;
+@Entity
+@Table(name = "NATIONAL_DATA")
+public class EntityNationalData {
+    @Id
+    @Column(name = "DATE_DATA")
     private LocalDate date;
+    @Column(name = "NEW_INFECTIONS")
     private int newInfections;
+    @Column(name = "NEW_TESTS")
     private int newTests;
+    @Column(name = "NEW_CASUALTIES")
     private int newCasualties;
+    @Column(name = "NEW_HOSPITALIZED")
     private int newHospitalized;
+    @Column(name = "NEW_INTENSIVE_THERAPY")
     private int newIntensiveTherapy;
+    @Column(name = "NEW_RECOVERED")
     private int newRecovered;
+    @Column(name = "INFECTION_PERC")
     private BigDecimal infectionPercentage;
+    @Column(name = "CASUALTIES_PERC")
     private BigDecimal casualtiesPercentage;
 
     public LocalDate getDate() {
@@ -62,14 +77,6 @@ public class NationalDailyData implements Serializable {
         this.infectionPercentage = infectionPercentage;
     }
 
-    public BigDecimal getCasualtiesPercentage() {
-        return casualtiesPercentage;
-    }
-
-    public static long getSerialversionuid() {
-        return serialVersionUID;
-    }
-
     public int getNewHospitalized() {
         return newHospitalized;
     }
@@ -94,33 +101,12 @@ public class NationalDailyData implements Serializable {
         this.newRecovered = newRecovered;
     }
 
+    public BigDecimal getCasualtiesPercentage() {
+        return casualtiesPercentage;
+    }
+
     public void setCasualtiesPercentage(BigDecimal casualtiesPercentage) {
         this.casualtiesPercentage = casualtiesPercentage;
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((date == null) ? 0 : date.hashCode());
-        return result;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        NationalDailyData other = (NationalDailyData) obj;
-        if (date == null) {
-            if (other.date != null)
-                return false;
-        } else if (!date.equals(other.date))
-            return false;
-        return true;
     }
 
 }

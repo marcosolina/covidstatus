@@ -1,6 +1,12 @@
 package com.marco.javacovidstatus.services.interfaces;
 
+/**
+ * This interface defines what type of notification you can perform
+ * 
+ * @author Marco
+ *
+ */
 public interface NotificationSenderInterface {
 
-    public void sendMessage(String to, String title, String message);
+    public void sendEmailMessage(String to, String title, String message);
 }

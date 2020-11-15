@@ -1,8 +1,14 @@
-package com.marco.javacovidstatus.model;
+package com.marco.javacovidstatus.model.dto;
 
 import java.io.Serializable;
 import java.time.LocalDate;
 
+/**
+ * This class represents the data at the province level
+ * 
+ * @author Marco
+ *
+ */
 public class ProvinceDailyData implements Serializable {
 
     private static final long serialVersionUID = 1L;

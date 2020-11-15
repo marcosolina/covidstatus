@@ -9,8 +9,8 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import com.marco.javacovidstatus.repositories.sql.CovidRepository;
-import com.marco.javacovidstatus.repositories.sql.MarcoCovidRepository;
+import com.marco.javacovidstatus.repositories.implementations.MarcoCovidRepository;
+import com.marco.javacovidstatus.repositories.interfaces.CovidRepository;
 import com.marco.javacovidstatus.services.implementations.EmailNotificationSender;
 import com.marco.javacovidstatus.services.implementations.MarcoNationalDataService;
 import com.marco.javacovidstatus.services.implementations.NationalCovidDataDownloader;
@@ -20,6 +20,12 @@ import com.marco.javacovidstatus.services.interfaces.CovidDataDownloader;
 import com.marco.javacovidstatus.services.interfaces.CovidDataService;
 import com.marco.javacovidstatus.services.interfaces.NotificationSenderInterface;
 
+/**
+ * Standard Springboot configuration class
+ * 
+ * @author Marco
+ *
+ */
 @Configuration
 public class Beans {
 
@@ -35,6 +41,9 @@ public class Beans {
 
     @Bean()
     public ThreadPoolTaskScheduler taskScheduler() {
+        /*
+         * Setting a thread pool, so the scheduler can run in a different thread
+         */
         ThreadPoolTaskScheduler taskScheduler = new ThreadPoolTaskScheduler();
         taskScheduler.setPoolSize(20);
         return taskScheduler;
@@ -47,6 +56,9 @@ public class Beans {
 
     @Bean
     public JavaMailSender getJavaMailSender() {
+        /*
+         * Send email using your GMAIL account
+         */
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
         mailSender.setHost("smtp.gmail.com");
         mailSender.setPort(587);

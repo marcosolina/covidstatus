@@ -42,12 +42,10 @@
 	
 	<script th:inline="javascript">
 	/*<![CDATA[*/
-	    var regions = /*[[${regions}]]*/ [];
-	
 		window.onload = function(){
-			CovidCommon.init(regions);
-			$("#dateFrom").change();
-			$("#infoModal").modal("show");
+			CovidCommon.init(); // Initialise the app
+			$("#dateFrom").change(); // Load the first set of data
+			$("#infoModal").modal("show"); // Show the info modal
 		}
 		
 	/*]]>*/

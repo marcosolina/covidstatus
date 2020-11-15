@@ -1,11 +1,11 @@
-package com.marco.javacovidstatus.model;
+package com.marco.javacovidstatus.model.dto;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
 /**
- * This class represents the data provided by the national institution
+ * This class represents the data at the region level
  * 
  * @author Marco
  *

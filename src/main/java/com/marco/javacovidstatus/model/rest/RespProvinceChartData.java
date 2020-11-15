@@ -2,12 +2,20 @@ package com.marco.javacovidstatus.model.rest;
 
 import java.util.List;
 
+/**
+ * This represents the list of data to return when an HTTP request is performed
+ * to retrieve the province data
+ * 
+ * @author Marco
+ *
+ */
 public class RespProvinceChartData {
     private String label;
     private List<Integer> newInfections;
 
-    public RespProvinceChartData() {}
-    
+    public RespProvinceChartData() {
+    }
+
     public RespProvinceChartData(String label, List<Integer> newInfections) {
         super();
         this.label = label;

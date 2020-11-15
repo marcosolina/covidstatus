@@ -1,4 +1,4 @@
-package com.marco.javacovidstatus.repositories.model;
+package com.marco.javacovidstatus.model.entitites;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -6,6 +6,12 @@ import java.time.LocalDate;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
+/**
+ * This is the primary key of the Province data
+ * 
+ * @author Marco
+ *
+ */
 @Embeddable
 public class EntityProvinceDataPk implements Serializable {
 

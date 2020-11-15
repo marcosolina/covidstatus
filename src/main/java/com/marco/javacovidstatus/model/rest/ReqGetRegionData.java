@@ -3,8 +3,14 @@ package com.marco.javacovidstatus.model.rest;
 import java.io.Serializable;
 import java.time.LocalDate;
 
-import com.marco.javacovidstatus.model.CovidDataType;
+import com.marco.javacovidstatus.model.dto.CovidDataType;
 
+/**
+ * This represents the HTTP request to retrieve the data at Region level
+ * 
+ * @author Marco
+ *
+ */
 public class ReqGetRegionData implements Serializable {
     private static final long serialVersionUID = 1L;
     private LocalDate from;

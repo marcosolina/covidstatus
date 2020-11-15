@@ -1,8 +1,7 @@
 package com.marco.javacovidstatus.services.interfaces;
 
 /**
- * This interface defines the required functionalities to retrieve the national
- * data from the Government
+ * This interface defines some actions than needs to be scheduled
  * 
  * @author Marco
  *

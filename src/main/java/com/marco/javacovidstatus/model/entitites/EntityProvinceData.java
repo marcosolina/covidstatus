@@ -1,4 +1,4 @@
-package com.marco.javacovidstatus.repositories.model;
+package com.marco.javacovidstatus.model.entitites;
 
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
@@ -6,7 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 /**
- * This entity is used to store the data retrieved from the national institution
+ * This entity represents the data at the province level
  * 
  * @author Marco
  *
