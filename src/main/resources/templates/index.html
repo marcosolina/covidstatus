@@ -42,6 +42,9 @@
 	
 	<script th:inline="javascript">
 	/*<![CDATA[*/
+		
+	    var __URLS = /*[[${urls}]]*/ {};
+		
 		window.onload = function(){
 			CovidCommon.init(); // Initialise the app
 			$("#dateFrom").change(); // Load the first set of data
