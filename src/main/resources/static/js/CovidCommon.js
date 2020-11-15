@@ -181,7 +181,7 @@ var CovidCommon = (function(CovidCommon){
 					regionCode: regionCode,
 				},
 				showLoading: true,
-				url: "/Covid19Italy/getProvinceData"
+				url: __URLS.URL_PROVINCE_DATA
 			}).then(CovidCommon.dataRetrieved);
 		}
 	}
@@ -201,7 +201,7 @@ var CovidCommon = (function(CovidCommon){
 					covidData: covidData,
 				},
 				showLoading: true,
-				url: "/Covid19Italy/getRegionData"
+				url: __URLS.URL_REGION_DATA
 			}).then(CovidCommon.dataRetrieved);
 		}
 	}
@@ -219,7 +219,7 @@ var CovidCommon = (function(CovidCommon){
 				    to: to
 				},
 				showLoading: true,
-				url: "/Covid19Italy/getNationalData"
+				url: __URLS.URL_NATIONAL_DATA
 			}).then(CovidCommon.dataRetrieved);
 		}
 	}

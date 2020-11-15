@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -44,11 +45,18 @@ import com.marco.javacovidstatus.services.interfaces.CovidDataService;
 @Controller
 public class MainController {
     private static final Logger LOGGER = LoggerFactory.getLogger(MainController.class);
-
+    
+    @Value("${server.servlet.context-path}")
+    private String contextPath;
+    public static final String MAPPING_HOME = "/";
+    public static final String MAPPING_REGION_DATA = "/regiondata";
+    public static final String MAPPING_NATIONAL_DATA = "/nationaldata";
+    public static final String MAPPING_PROVINCE_DATA = "/provincedata";
+    
     @Autowired
     private CovidDataService service;
 
-    @GetMapping(value = "/")
+    @GetMapping(value = MAPPING_HOME)
     public String homePage(Model model) {
         LOGGER.info("Inside MainController.homePage");
         
@@ -66,11 +74,20 @@ public class MainController {
         Arrays.asList(CovidDataType.values()).stream().forEach(c -> mapCovidDataType.put(c, c.getDescription()));
         model.addAttribute("covidDataType", mapCovidDataType);
         model.addAttribute("regions", service.getRegionsList());
-
+        
+        /*
+         * Passing to the front end the map of available end points
+         */
+        Map<String, String> mapUrls = new HashMap<>();
+        mapUrls.put("URL_REGION_DATA", contextPath + MAPPING_REGION_DATA);
+        mapUrls.put("URL_NATIONAL_DATA", contextPath + MAPPING_NATIONAL_DATA);
+        mapUrls.put("URL_PROVINCE_DATA", contextPath + MAPPING_PROVINCE_DATA);
+        model.addAttribute("urls", mapUrls);
+        
         return "index";
     }
 
-    @PostMapping("/getRegionData")
+    @PostMapping(value = MAPPING_REGION_DATA)
     @ResponseBody
     public RespGetRegionData getRegionalData(@RequestBody ReqGetRegionData request) {
         RespGetRegionData resp = new RespGetRegionData();
@@ -126,7 +143,7 @@ public class MainController {
         return resp;
     }
 
-    @PostMapping("/getProvinceData")
+    @PostMapping(value = MAPPING_PROVINCE_DATA)
     @ResponseBody
     public RespGetProvinceData getNationalData(@RequestBody ReqGetProvinceData request) {
         RespGetProvinceData resp = new RespGetProvinceData();
@@ -164,7 +181,7 @@ public class MainController {
         return resp;
     }
 
-    @PostMapping("/getNationalData")
+    @PostMapping(value = MAPPING_NATIONAL_DATA)
     @ResponseBody
     public RespGetNationalData getNationalData(@RequestBody ReqGetNationalData request) {
         RespGetNationalData resp = new RespGetNationalData();
