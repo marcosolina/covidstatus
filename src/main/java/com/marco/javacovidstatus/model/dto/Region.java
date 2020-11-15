@@ -1,13 +1,20 @@
 package com.marco.javacovidstatus.model.dto;
 
+/**
+ * This class represents the Region definition
+ * 
+ * @author Marco
+ *
+ */
 public class Region {
 
     private String code;
     private String desc;
-    
+
     public Region() {
-        
+
     }
+
     public Region(String code, String desc) {
         this.code = code;
         this.desc = desc;

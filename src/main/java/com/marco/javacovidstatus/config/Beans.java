@@ -20,6 +20,12 @@ import com.marco.javacovidstatus.services.interfaces.CovidDataDownloader;
 import com.marco.javacovidstatus.services.interfaces.CovidDataService;
 import com.marco.javacovidstatus.services.interfaces.NotificationSenderInterface;
 
+/**
+ * Standard Springboot configuration class
+ * 
+ * @author Marco
+ *
+ */
 @Configuration
 public class Beans {
 
@@ -35,6 +41,9 @@ public class Beans {
 
     @Bean()
     public ThreadPoolTaskScheduler taskScheduler() {
+        /*
+         * Setting a thread pool, so the scheduler can run in a different thread
+         */
         ThreadPoolTaskScheduler taskScheduler = new ThreadPoolTaskScheduler();
         taskScheduler.setPoolSize(20);
         return taskScheduler;
@@ -47,6 +56,9 @@ public class Beans {
 
     @Bean
     public JavaMailSender getJavaMailSender() {
+        /*
+         * Send email using your GMAIL account
+         */
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
         mailSender.setHost("smtp.gmail.com");
         mailSender.setPort(587);

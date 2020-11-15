@@ -9,16 +9,22 @@ import org.springframework.mail.javamail.JavaMailSender;
 
 import com.marco.javacovidstatus.services.interfaces.NotificationSenderInterface;
 
+/**
+ * My implementation for the {@link NotificationSenderInterface}
+ * 
+ * @author Marco
+ *
+ */
 public class EmailNotificationSender implements NotificationSenderInterface {
     private static final Logger logger = LoggerFactory.getLogger(EmailNotificationSender.class);
-    
+
     @Value("${covidstatus.notification.enabled}")
     private boolean notificationEnabled;
     @Autowired
     private JavaMailSender emailSender;
 
     @Override
-    public void sendMessage(String to, String title, String message) {
+    public void sendEmailMessage(String to, String title, String message) {
         if (!notificationEnabled) {
             logger.info("Notification not enabled");
             return;

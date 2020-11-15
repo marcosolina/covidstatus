@@ -19,6 +19,11 @@ public class JavaCovidStatusApplication {
 		SpringApplication.run(JavaCovidStatusApplication.class, args);
 	}
 	
+	/**
+	 * Execute some tasks at startup
+	 * @param ctx
+	 * @return
+	 */
 	@Bean
     public CommandLineRunner commandLineRunner(ApplicationContext ctx) {
         return args -> scheduler.downloadNewData();

@@ -18,6 +18,13 @@ import com.marco.javacovidstatus.model.entitites.EntityProvinceData;
 import com.marco.javacovidstatus.model.entitites.EntityRegionalData;
 import com.marco.javacovidstatus.repositories.interfaces.CovidRepository;
 
+/**
+ * With this implementation I wanted to provide different examples of how to use
+ * JPA
+ * 
+ * @author Marco
+ *
+ */
 @Transactional
 public class MarcoCovidRepository implements CovidRepository {
     @PersistenceContext

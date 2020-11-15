@@ -6,6 +6,12 @@ import java.time.LocalDate;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
+/**
+ * This is the primary key of the region data
+ * 
+ * @author Marco
+ *
+ */
 @Embeddable
 public class EntityRegionalDataPk implements Serializable {
     private static final long serialVersionUID = 1L;

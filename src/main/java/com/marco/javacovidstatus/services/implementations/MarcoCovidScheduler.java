@@ -16,7 +16,7 @@ import com.marco.javacovidstatus.services.interfaces.CovidScheduler;
 import com.marco.javacovidstatus.services.interfaces.NotificationSenderInterface;
 
 /**
- * This is my implementation of the Covid Scheduler
+ * This is my implementation of the {@link CovidScheduler}
  * 
  * @author Marco
  *
@@ -54,7 +54,7 @@ public class MarcoCovidScheduler implements CovidScheduler {
         downloaders.parallelStream().forEach(CovidDataDownloader::downloadData);
         
         logger.info("Update complete");
-        notificationService.sendMessage("marcosolina@gmail.com", "Marco Solina - Covid Status", "Dati aggiornati");
+        notificationService.sendEmailMessage("marcosolina@gmail.com", "Marco Solina - Covid Status", "Dati aggiornati");
     }
 
 }

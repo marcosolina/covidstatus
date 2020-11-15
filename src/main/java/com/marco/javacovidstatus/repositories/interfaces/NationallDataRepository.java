@@ -8,13 +8,12 @@ import org.springframework.data.repository.CrudRepository;
 import com.marco.javacovidstatus.model.entitites.EntityNationalData;
 
 /**
- * This interface provides the functionalities required to store the national
- * data into a relational database
- * 
+ * Standard Spring interface to perform CRUD operation on the
+ * {@link EntityNationalData} entity
  * @author Marco
  *
  */
-public interface NationallDataSqlRepository extends CrudRepository<EntityNationalData, LocalDate> {
+public interface NationallDataRepository extends CrudRepository<EntityNationalData, LocalDate> {
 
     public List<EntityNationalData> findAllByOrderByDateDesc();
     

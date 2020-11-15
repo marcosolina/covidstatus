@@ -6,6 +6,12 @@ import java.util.List;
 
 import com.marco.javacovidstatus.model.dto.CharDataType;
 
+/**
+ * This represents the HTTP response when you try to retrieve the national data
+ * 
+ * @author Marco
+ *
+ */
 public class RespGetNationalData extends RespDataSets implements Serializable {
     private static final long serialVersionUID = 1L;
 

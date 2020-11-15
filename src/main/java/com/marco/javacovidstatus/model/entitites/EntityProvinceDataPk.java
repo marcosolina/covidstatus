@@ -6,6 +6,12 @@ import java.time.LocalDate;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
+/**
+ * This is the primary key of the Province data
+ * 
+ * @author Marco
+ *
+ */
 @Embeddable
 public class EntityProvinceDataPk implements Serializable {
 

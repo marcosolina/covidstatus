@@ -18,20 +18,26 @@ import com.marco.javacovidstatus.model.entitites.EntityProvinceDataPk;
 import com.marco.javacovidstatus.model.entitites.EntityRegionalData;
 import com.marco.javacovidstatus.model.entitites.EntityRegionalDataPk;
 import com.marco.javacovidstatus.repositories.interfaces.CovidRepository;
-import com.marco.javacovidstatus.repositories.interfaces.EntityProvinceDataRepo;
-import com.marco.javacovidstatus.repositories.interfaces.NationallDataSqlRepository;
-import com.marco.javacovidstatus.repositories.interfaces.RegionalDataSqlRepository;
+import com.marco.javacovidstatus.repositories.interfaces.ProvinceDataRepo;
+import com.marco.javacovidstatus.repositories.interfaces.NationallDataRepository;
+import com.marco.javacovidstatus.repositories.interfaces.RegionalDataRepository;
 import com.marco.javacovidstatus.services.interfaces.CovidDataService;
 
+/**
+ * My implementation of the {@link CovidDataService}
+ * 
+ * @author Marco
+ *
+ */
 public class MarcoNationalDataService implements CovidDataService {
     private static final Logger LOGGER = LoggerFactory.getLogger(MarcoNationalDataService.class);
 
     @Autowired
-    private NationallDataSqlRepository repoNationalData;
+    private NationallDataRepository repoNationalData;
     @Autowired
-    private RegionalDataSqlRepository repoRegionalData;
+    private RegionalDataRepository repoRegionalData;
     @Autowired
-    private EntityProvinceDataRepo repoProvince;
+    private ProvinceDataRepo repoProvince;
     @Autowired
     private CovidRepository repoCovidCustom;
 
@@ -81,7 +87,8 @@ public class MarcoNationalDataService implements CovidDataService {
 
     @Override
     public List<ProvinceDailyData> getProvinceDataInRangeAscending(LocalDate from, LocalDate to, String regionCode) {
-        List<EntityProvinceData> list = repoCovidCustom.getProvinceDataBetweenDatesOrderByDateAscending(from, to, regionCode);
+        List<EntityProvinceData> list = repoCovidCustom.getProvinceDataBetweenDatesOrderByDateAscending(from, to,
+                regionCode);
         return list.stream().map(this::fromEntityProvinceDataToProvinceDailyData).collect(Collectors.toList());
     }
 
@@ -89,12 +96,12 @@ public class MarcoNationalDataService implements CovidDataService {
     public List<String> getProfinceListForRegion(String region) {
         return repoCovidCustom.getProvincesForRegion(region);
     }
-    
+
     @Override
     public LocalDate getNationalMaxDateAvailable() {
         return repoCovidCustom.getNationalMaxDateAvailable();
     }
-    
+
     @Override
     public LocalDate getRegionMaxDateAvailable() {
         return repoCovidCustom.getRegionMaxDateAvailable();
@@ -110,17 +117,18 @@ public class MarcoNationalDataService implements CovidDataService {
         List<EntityRegionalData> regianlData = repoCovidCustom.getRegionalDataAscending(from, to);
         return regianlData.stream().map(this::fromEntityRegionalDataToRegionalDailyData).collect(Collectors.toList());
     }
-    
+
     @Override
     public boolean saveRegionalDailyData(RegionalDailyData data) {
         repoRegionalData.save(this.fromRegionalDailyDataToEntityRegionalData(data));
         return true;
     }
 
-    /*#######################################################
-     * UTILS METHODS 
-     #######################################################*/
-    
+    /*
+     * ####################################################### UTILS METHODS
+     * #######################################################
+     */
+
     private RegionalDailyData fromEntityRegionalDataToRegionalDailyData(EntityRegionalData entity) {
         RegionalDailyData data = new RegionalDailyData();
         data.setDate(entity.getId().getDate());
@@ -135,15 +143,15 @@ public class MarcoNationalDataService implements CovidDataService {
         data.setNewRecovered(entity.getNewRecovered());
         return data;
     }
-    
+
     private EntityRegionalData fromRegionalDailyDataToEntityRegionalData(RegionalDailyData data) {
         EntityRegionalData entity = new EntityRegionalData();
         EntityRegionalDataPk pk = new EntityRegionalDataPk();
         pk.setDate(data.getDate());
         pk.setRegionCode(data.getRegionCode());
-        
+
         entity.setId(pk);
-        
+
         entity.setInfectionPercentage(data.getInfectionPercentage());
         entity.setNewCasualties(data.getNewCasualties());
         entity.setNewInfections(data.getNewInfections());
@@ -154,7 +162,7 @@ public class MarcoNationalDataService implements CovidDataService {
         entity.setNewRecovered(data.getNewRecovered());
         return entity;
     }
-    
+
     private EntityProvinceData fromProvinceDailyDataToEntityProvinceData(ProvinceDailyData data) {
         EntityProvinceDataPk pk = new EntityProvinceDataPk();
         pk.setDate(data.getDate());

@@ -35,6 +35,10 @@ var CovidCommon = (function(CovidCommon){
 	
 	var dateFormat = "dd/mm/yy";
 	
+	/*
+		The following objects are storing the National, Region and Province data
+		retrieved with the different Ajax calls
+	*/
 	var dataNationalChart = {
 		arrPercInfections: {active: true,},
 		arrPercCasualties: {active: true,},
@@ -48,11 +52,22 @@ var CovidCommon = (function(CovidCommon){
 	
 	var dataProvinceChart = {};
 	var dataRegionChart;
+	
+	/*
+		This array stores my color palette
+	*/
 	var provinceColorPalette = [];
 	
+	/*
+		These will store the definition of the three different charts
+	*/
 	var chartNational;
 	var chartProvince;
 	var chartRegion;
+	
+	/*
+		These property will hold the last value selected in the region drop down
+	*/
 	var regionDropDownLastValue;
 	
 	/**
@@ -60,6 +75,9 @@ var CovidCommon = (function(CovidCommon){
 	 */
 	CovidCommon.init = function(){
 		
+		/*
+			Setting up some jQuery elements and registering the event listeners
+		*/
 		var dateFrom = $( "#dateFrom" ).datepicker({
 							minDate: "24/02/2020",
 						    changeMonth: true,
@@ -74,19 +92,19 @@ var CovidCommon = (function(CovidCommon){
 			
 		dateFrom.on( "change", function() {
 			dateTo.datepicker( "option", "minDate", CovidCommon.getDate( this ) );
-			CovidCommon.updateNationalData();
+			CovidCommon.loadNationalData();
 			CovidCommon.loadProvinceData();
 			CovidCommon.loadRegionData();
         });
 
 		dateTo.on( "change", function() {
 	        dateFrom.datepicker( "option", "maxDate", CovidCommon.getDate( this ) );
-			CovidCommon.updateNationalData();
+			CovidCommon.loadNationalData();
 			CovidCommon.loadProvinceData();
 			CovidCommon.loadRegionData();
 		});
 		
-		$("[type=checkbox]").change(CovidCommon.chartDataSwitchChanged);
+		$("[type=checkbox]").change(CovidCommon.updateNationalChart);
 		$("#region").change(CovidCommon.loadProvinceData);
 		$("#covidData").change(CovidCommon.loadRegionData);
 		
@@ -100,6 +118,9 @@ var CovidCommon = (function(CovidCommon){
 			}
 		}
 
+		/*
+			Defining my color palette
+		*/
 		provinceColorPalette.push("rgb( 255, 0, 0, 1)");
 		provinceColorPalette.push("rgb( 255, 104, 104, 1)");
 		provinceColorPalette.push("rgb( 174, 67, 67, 1)");
@@ -121,8 +142,33 @@ var CovidCommon = (function(CovidCommon){
 		provinceColorPalette.push("rgb( 101, 46, 122 , 1)");
 		provinceColorPalette.push("rgb( 255, 0, 223 , 1)");
 		provinceColorPalette.push("rgb( 0, 0, 0, 1)");
+
+		/*
+			Setting up the charts
+		*/		
+		chartNational = new CovidChart(document.getElementById('chartNational'));
+		chartProvince = new CovidChart(document.getElementById('chartProvince'));
+		chartRegion = new CovidChart(document.getElementById('chartRegions'));
+		chartProvince.setTitle("Nuove infezioni nelle province di:");
 	}
 	
+	/**
+		It gets the Date() value of the element
+	 */	
+	CovidCommon.getDate = function(element) {
+		var date;
+		try {
+			date = $.datepicker.parseDate( dateFormat, element.value );
+		} catch( error ) {
+			date = null;
+		}
+ 
+		return date;
+    }
+	
+	/**
+		It will load the new set of the Province data
+	 */	
 	CovidCommon.loadProvinceData = function(){
 		var from = $.datepicker.formatDate('yy-mm-dd', CovidCommon.getDate(document.getElementById("dateFrom")));
 		var to = $.datepicker.formatDate('yy-mm-dd', CovidCommon.getDate(document.getElementById("dateTo")));
@@ -140,6 +186,9 @@ var CovidCommon = (function(CovidCommon){
 		}
 	}
 	
+	/**
+		It will load the new set of the Region data
+	 */	
 	CovidCommon.loadRegionData = function(){
 		var from = $.datepicker.formatDate('yy-mm-dd', CovidCommon.getDate(document.getElementById("dateFrom")));
 		var to = $.datepicker.formatDate('yy-mm-dd', CovidCommon.getDate(document.getElementById("dateTo")));
@@ -158,20 +207,9 @@ var CovidCommon = (function(CovidCommon){
 	}
 	
 	/**
-		It manges the onchange event of the switches
+		It will load the new set of the National data
 	 */
-	CovidCommon.chartDataSwitchChanged = function(){
-		var jElement = $(this);
-		var id = jElement.prop("id");
-		
-		dataNationalChart[id].active = jElement.prop("checked");
-		CovidCommon.drawNationalChart();
-	}
-	
-	/**
-		It loads the data between the specified range
-	 */
-	CovidCommon.updateNationalData = function(){
+	CovidCommon.loadNationalData = function(){
 		var from = $.datepicker.formatDate('yy-mm-dd', CovidCommon.getDate(document.getElementById("dateFrom")));
 		var to = $.datepicker.formatDate('yy-mm-dd', CovidCommon.getDate(document.getElementById("dateTo")));
 		if(from != "" && to != ""){
@@ -187,24 +225,56 @@ var CovidCommon = (function(CovidCommon){
 	}
 	
 	/**
-		It sets the data retireved via the Ajax call
+		It manages the onchange event of the switches available in the National chart tab
+	 */
+	CovidCommon.updateNationalChart = function(){
+		var jElement = $(this);
+		var id = jElement.prop("id");
+		
+		dataNationalChart[id].active = jElement.prop("checked");
+		CovidCommon.drawNationalChart();
+	}
+	
+	/**
+		It manages the onchange event of the switches available in the Province chart tab
+	 */
+	CovidCommon.updateProvinceChart = function (){
+		var jElement = $(this);
+		var id = jElement.prop("id");
+		
+		dataProvinceChart[id].active = jElement.prop("checked");
+		CovidCommon.drawProvinceChart();
+	}
+	
+	/**
+		It manages the onchange event of the switches available in the Region chart tab
+	 */
+	CovidCommon.updateRegionChart = function (){
+		var jElement = $(this);
+		var id = jElement.prop("id");
+		
+		dataRegionChart[id].active = jElement.prop("checked");
+		CovidCommon.drawRegionChart();
+	}
+	
+	
+	
+	/**
+		Call back function of the Ajax calls. It will update the data on the screen
 	 */
 	CovidCommon.dataRetrieved = function(response){
 		if(response.status){
-			if(chartNational == undefined){
-				chartNational = new CovidChart(document.getElementById('chartNational'));
-			}
-			if(chartProvince == undefined){
-				chartProvince = new CovidChart(document.getElementById('chartProvince'));
-				chartProvince.setTitle("Nuove infezioni nelle province di:");
-			}
-			if(chartRegion == undefined){
-				chartRegion = new CovidChart(document.getElementById('chartRegions'));
-			}
 			
+			/*
+				Setting the new set of labels (X axis)
+			*/
 			chartNational.setLabels(response.arrDates);
 			chartProvince.setLabels(response.arrDates);
 			chartRegion.setLabels(response.arrDates);
+			
+			/*
+				Updating the data of the specific data type
+			*/
 			switch(response.dataType){
 				case "NATIONAL":
 					dataNationalChart.arrNewInfections.data = response.arrNewInfections;
@@ -218,6 +288,11 @@ var CovidCommon = (function(CovidCommon){
 					CovidCommon.drawNationalChart();
 					break;
 				case "PROVINCE":
+					/*
+						If the user has just change the dates (same value in the region drop down)
+						I need to store the staus of the checkboxes, update the data, and re-activate
+						the previous selected checkboxes
+					*/
 					var tmpClone;
 					var regionForProvinceVal = $("#region").val();
 					if(regionDropDownLastValue == regionForProvinceVal){
@@ -229,6 +304,7 @@ var CovidCommon = (function(CovidCommon){
 					CovidCommon.createProvinceCheckboxes();
 					
 					if(tmpClone != undefined){
+						// reactivate the checkbox
 						setProvinceCheckboxesStatus(tmpClone);
 					}
 					
@@ -236,7 +312,12 @@ var CovidCommon = (function(CovidCommon){
 					break;
 				case "REGIONAL":
 					var createCheckboxes = dataRegionChart == undefined;
-									
+					
+					/*
+						In this case the number of checboxes for the region will be always the same,
+						so I can directly set the active checkbox status reading it from the 
+						current status 
+					*/
 					for(var regionCode in dataRegionChart){
 						response.regionData[regionCode].active = dataRegionChart[regionCode].active;
 					}
@@ -254,6 +335,9 @@ var CovidCommon = (function(CovidCommon){
 		}
 	}
 	
+	/**
+		Private function to set the status of the checkboxes for the specific province
+	 */	
 	function setProvinceCheckboxesStatus(dataProvinceStatus){
 		for(var idCheckbox in dataProvinceStatus){
 			$("#" + idCheckbox).prop("checked", dataProvinceStatus[idCheckbox].active);
@@ -262,35 +346,8 @@ var CovidCommon = (function(CovidCommon){
 	}
 	
 	/**
-		IT gets the Date value of the element
-	 */	
-	CovidCommon.getDate = function(element) {
-		var date;
-		try {
-			date = $.datepicker.parseDate( dateFormat, element.value );
-		} catch( error ) {
-			date = null;
-		}
- 
-		return date;
-    }
-	
-	CovidCommon.changeProvinceCheckboxes = function (){
-		var jElement = $(this);
-		var id = jElement.prop("id");
-		
-		dataProvinceChart[id].active = jElement.prop("checked");
-		CovidCommon.drawProvinceChart();
-	}
-	
-	CovidCommon.changeRegionCheckboxes = function (){
-		var jElement = $(this);
-		var id = jElement.prop("id");
-		
-		dataRegionChart[id].active = jElement.prop("checked");
-		CovidCommon.drawRegionChart();
-	}
-	
+		This function will dynamically create the required checkboxes for the Region chart
+	 */
 	CovidCommon.createRegionCheckboxes = function(){
 		var jRow = $("#rowRegion");
 		jRow.empty();
@@ -303,7 +360,10 @@ var CovidCommon = (function(CovidCommon){
 					  '</div>';	
 		var i = 0;
 		var arr = [];	
-	
+		
+		/*
+			Preparing the data objects to use with the html template
+		*/
 		for(var regionCode in dataRegionChart){
 			var regionDetails = dataRegionChart[regionCode];
 			regionDetails.active = false;
@@ -316,6 +376,9 @@ var CovidCommon = (function(CovidCommon){
 			i++;
 		}
 		
+		/*
+			Sorting the checkboxes
+		*/
 		arr.sort((a, b) => {
 			if(a.label < b.label){
 				return -1
@@ -323,13 +386,20 @@ var CovidCommon = (function(CovidCommon){
 			return 1;
 		});
 		
+		/*
+			Adding the sorted checkbox, setting the status and attaching the even listener.
+			By default I will active the first checkbox so the user can automatically see
+			some data
+		*/
 		arr.forEach(el => {jRow.append(MarcoUtils.template(strTmpl, el));});
-			
-		jRow.find("input").change(CovidCommon.changeRegionCheckboxes);
+		jRow.find("input").change(CovidCommon.updateRegionChart);
 		$(jRow.find("input").get(0)).prop("checked", true);
 		$(jRow.find("input").get(0)).change();
 	}
 
+	/**
+		This function will dynamically create the required checkboxes for the Province chart
+	 */
 	CovidCommon.createProvinceCheckboxes = function(){
 		var jRow = $("#rowProvince");
 		jRow.empty();
@@ -343,6 +413,9 @@ var CovidCommon = (function(CovidCommon){
 		var i = 0;
 		var arr = [];	
 		
+		/*
+			Preparing the data objects to use with the html template
+		*/
 		for(var provinceCode in dataProvinceChart){
 			var provinceDetails = dataProvinceChart[provinceCode];
 			provinceDetails.active = false;
@@ -355,6 +428,9 @@ var CovidCommon = (function(CovidCommon){
 			i++;
 		}
 
+		/*
+			Sorting the checkboxes
+		*/
 		arr.sort((a, b) => {
 			if(a.label < b.label){
 				return -1
@@ -362,13 +438,20 @@ var CovidCommon = (function(CovidCommon){
 			return 1;
 		});
 		
+		/*
+			Adding the sorted checkbox, setting the status and attaching the even listener.
+			By default I will active the first checkbox so the user can automatically see
+			some data
+		*/
 		arr.forEach(el => {jRow.append(MarcoUtils.template(strTmpl, el));});
-		
-		jRow.find("input").change(CovidCommon.changeProvinceCheckboxes);
+		jRow.find("input").change(CovidCommon.updateProvinceChart);
 		$(jRow.find("input").get(0)).prop("checked", true);
 		$(jRow.find("input").get(0)).change();
 	}
 
+	/**
+		This function will draw the Province chart on the screen
+	 */
 	CovidCommon.drawProvinceChart = function(){
 		if(chartProvince == undefined){
 			return;
@@ -376,15 +459,21 @@ var CovidCommon = (function(CovidCommon){
 		
 		chartProvince.clearDataSets();
 		
+		/*
+			Checking which data the user has selected to be drawn
+		*/
 		var i = 0;
 		for(var provinceCode in dataProvinceChart){
 			var provinceDetails = dataProvinceChart[provinceCode];
 			
-			const dsProvince = new CovidChartDataset(provinceDetails.label);
-			dsProvince.setData(provinceDetails.newInfections);
-			dsProvince.setColor(provinceColorPalette[i]);
-			
 			if(provinceDetails.active == true){
+				/*
+					If the user has selected data, I will create a ChartDataset and
+					add it to the chart
+				*/
+				const dsProvince = new CovidChartDataset(provinceDetails.label);
+				dsProvince.setData(provinceDetails.newInfections);
+				dsProvince.setColor(provinceColorPalette[i]);
 				chartProvince.addCovidChartDataset(dsProvince);
 			}
 			i++;
@@ -393,6 +482,9 @@ var CovidCommon = (function(CovidCommon){
 		chartProvince.drawChart();
 	}
 	
+	/**
+		This function will draw the Region chart on the screen
+	 */
 	CovidCommon.drawRegionChart = function(){
 		if(chartRegion == undefined){
 			return;
@@ -400,15 +492,21 @@ var CovidCommon = (function(CovidCommon){
 		
 		chartRegion.clearDataSets();
 		
+		/*
+			Checking which data the user has selected to be drawn
+		*/
 		var i = 0;
 		for(var regionCode in dataRegionChart){
 			var regionDetails = dataRegionChart[regionCode];
 			
-			const dsRegion = new CovidChartDataset(regionDetails.label);
-			dsRegion.setData(regionDetails.data);
-			dsRegion.setColor(provinceColorPalette[i]);
-			
 			if(regionDetails.active == true){
+				/*
+					If the user has selected data, I will create a ChartDataset and
+					add it to the chart
+				*/
+				const dsRegion = new CovidChartDataset(regionDetails.label);
+				dsRegion.setData(regionDetails.data);
+				dsRegion.setColor(provinceColorPalette[i]);
 				chartRegion.addCovidChartDataset(dsRegion);
 			}
 			i++;
@@ -418,12 +516,13 @@ var CovidCommon = (function(CovidCommon){
 	}
 
 	/**
-		It draws the charts
+		This function will draw the Region chart on the screen
 	 */
 	CovidCommon.drawNationalChart = function(){
 			if(chartNational == undefined){
 				return;
 			}
+			
 			/*
 			* Preparing the datasets
 			*/

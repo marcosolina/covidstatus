@@ -5,7 +5,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 /**
- * This class represents the data provided by the national institution
+ * This class represents the data at the region level
  * 
  * @author Marco
  *

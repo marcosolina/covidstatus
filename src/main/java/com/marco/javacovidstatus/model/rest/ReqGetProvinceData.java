@@ -3,6 +3,12 @@ package com.marco.javacovidstatus.model.rest;
 import java.io.Serializable;
 import java.time.LocalDate;
 
+/**
+ * This represents the HTTP request to retrieve the data at Province level
+ * 
+ * @author Marco
+ *
+ */
 public class ReqGetProvinceData implements Serializable {
     private static final long serialVersionUID = 1L;
     private LocalDate from;

@@ -5,6 +5,13 @@ import org.springframework.data.repository.CrudRepository;
 import com.marco.javacovidstatus.model.entitites.EntityProvinceData;
 import com.marco.javacovidstatus.model.entitites.EntityProvinceDataPk;
 
-public interface EntityProvinceDataRepo extends CrudRepository<EntityProvinceData, EntityProvinceDataPk>{
+/**
+ * Standard Spring interface to perform CRUD operation on the
+ * {@link EntityProvinceData} entity
+ * 
+ * @author Marco
+ *
+ */
+public interface ProvinceDataRepo extends CrudRepository<EntityProvinceData, EntityProvinceDataPk> {
 
 }

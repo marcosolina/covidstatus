@@ -3,6 +3,12 @@ package com.marco.javacovidstatus.model.rest;
 import java.io.Serializable;
 import java.time.LocalDate;
 
+/**
+ * This represents the HTTP request to retrieve the data at National level
+ * 
+ * @author Marco
+ *
+ */
 public class ReqGetNationalData implements Serializable {
     private static final long serialVersionUID = 1L;
     private LocalDate from;

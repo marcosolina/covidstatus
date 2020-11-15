@@ -9,7 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 /**
- * This entity is used to store the data retrieved from the national institution
+ * This entity represents the data at national level
  * 
  * @author Marco
  *

@@ -17,5 +17,5 @@ All the "number" are retrieved from the [Ministero della Salute](https://www.sal
 ![Provinces Data](Misc/Pictures/3.png)
 
 ## TODO:
-* Refactoring the code
+* Refactoring the code (When I have some extra time)
 * Anything else that cames up in my mind
