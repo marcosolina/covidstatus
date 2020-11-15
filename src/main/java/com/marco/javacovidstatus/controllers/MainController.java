@@ -20,11 +20,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.marco.javacovidstatus.model.CovidDataType;
-import com.marco.javacovidstatus.model.NationalDailyData;
-import com.marco.javacovidstatus.model.ProvinceDailyData;
-import com.marco.javacovidstatus.model.Region;
-import com.marco.javacovidstatus.model.RegionalDailyData;
+import com.marco.javacovidstatus.model.dto.CovidDataType;
+import com.marco.javacovidstatus.model.dto.NationalDailyData;
+import com.marco.javacovidstatus.model.dto.ProvinceDailyData;
+import com.marco.javacovidstatus.model.dto.Region;
+import com.marco.javacovidstatus.model.dto.RegionalDailyData;
 import com.marco.javacovidstatus.model.rest.ReqGetNationalData;
 import com.marco.javacovidstatus.model.rest.ReqGetProvinceData;
 import com.marco.javacovidstatus.model.rest.ReqGetRegionData;

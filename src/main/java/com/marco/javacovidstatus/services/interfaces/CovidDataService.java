@@ -3,10 +3,10 @@ package com.marco.javacovidstatus.services.interfaces;
 import java.time.LocalDate;
 import java.util.List;
 
-import com.marco.javacovidstatus.model.NationalDailyData;
-import com.marco.javacovidstatus.model.ProvinceDailyData;
-import com.marco.javacovidstatus.model.Region;
-import com.marco.javacovidstatus.model.RegionalDailyData;
+import com.marco.javacovidstatus.model.dto.NationalDailyData;
+import com.marco.javacovidstatus.model.dto.ProvinceDailyData;
+import com.marco.javacovidstatus.model.dto.Region;
+import com.marco.javacovidstatus.model.dto.RegionalDailyData;
 
 /**
  * This interfaces provides a list of functionalities that you can use to

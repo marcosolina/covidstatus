@@ -1,4 +1,4 @@
-package com.marco.javacovidstatus.model;
+package com.marco.javacovidstatus.model.dto;
 
 import java.io.Serializable;
 import java.time.LocalDate;

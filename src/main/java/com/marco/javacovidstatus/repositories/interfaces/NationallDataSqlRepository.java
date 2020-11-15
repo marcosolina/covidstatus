@@ -1,11 +1,11 @@
-package com.marco.javacovidstatus.repositories.sql;
+package com.marco.javacovidstatus.repositories.interfaces;
 
 import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.data.repository.CrudRepository;
 
-import com.marco.javacovidstatus.repositories.model.EntityNationalData;
+import com.marco.javacovidstatus.model.entitites.EntityNationalData;
 
 /**
  * This interface provides the functionalities required to store the national

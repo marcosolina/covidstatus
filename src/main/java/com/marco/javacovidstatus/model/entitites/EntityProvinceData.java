@@ -1,4 +1,4 @@
-package com.marco.javacovidstatus.repositories.model;
+package com.marco.javacovidstatus.model.entitites;
 
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;

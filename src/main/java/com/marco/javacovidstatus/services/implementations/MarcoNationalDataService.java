@@ -8,19 +8,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.marco.javacovidstatus.model.NationalDailyData;
-import com.marco.javacovidstatus.model.ProvinceDailyData;
-import com.marco.javacovidstatus.model.Region;
-import com.marco.javacovidstatus.model.RegionalDailyData;
-import com.marco.javacovidstatus.repositories.model.EntityNationalData;
-import com.marco.javacovidstatus.repositories.model.EntityProvinceData;
-import com.marco.javacovidstatus.repositories.model.EntityProvinceDataPk;
-import com.marco.javacovidstatus.repositories.model.EntityRegionalData;
-import com.marco.javacovidstatus.repositories.model.EntityRegionalDataPk;
-import com.marco.javacovidstatus.repositories.sql.CovidRepository;
-import com.marco.javacovidstatus.repositories.sql.EntityProvinceDataRepo;
-import com.marco.javacovidstatus.repositories.sql.NationallDataSqlRepository;
-import com.marco.javacovidstatus.repositories.sql.RegionalDataSqlRepository;
+import com.marco.javacovidstatus.model.dto.NationalDailyData;
+import com.marco.javacovidstatus.model.dto.ProvinceDailyData;
+import com.marco.javacovidstatus.model.dto.Region;
+import com.marco.javacovidstatus.model.dto.RegionalDailyData;
+import com.marco.javacovidstatus.model.entitites.EntityNationalData;
+import com.marco.javacovidstatus.model.entitites.EntityProvinceData;
+import com.marco.javacovidstatus.model.entitites.EntityProvinceDataPk;
+import com.marco.javacovidstatus.model.entitites.EntityRegionalData;
+import com.marco.javacovidstatus.model.entitites.EntityRegionalDataPk;
+import com.marco.javacovidstatus.repositories.interfaces.CovidRepository;
+import com.marco.javacovidstatus.repositories.interfaces.EntityProvinceDataRepo;
+import com.marco.javacovidstatus.repositories.interfaces.NationallDataSqlRepository;
+import com.marco.javacovidstatus.repositories.interfaces.RegionalDataSqlRepository;
 import com.marco.javacovidstatus.services.interfaces.CovidDataService;
 
 public class MarcoNationalDataService implements CovidDataService {

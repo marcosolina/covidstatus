@@ -1,4 +1,4 @@
-package com.marco.javacovidstatus.model;
+package com.marco.javacovidstatus.model.dto;
 
 public class Region {
 

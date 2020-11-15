@@ -1,4 +1,4 @@
-package com.marco.javacovidstatus.model;
+package com.marco.javacovidstatus.model.dto;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -10,17 +10,26 @@ import java.time.LocalDate;
  * @author Marco
  *
  */
-public class NationalDailyData implements Serializable {
+public class RegionalDailyData implements Serializable {
     private static final long serialVersionUID = 1L;
     private LocalDate date;
+    private String regionCode;
     private int newInfections;
     private int newTests;
     private int newCasualties;
     private int newHospitalized;
     private int newIntensiveTherapy;
     private int newRecovered;
-    private BigDecimal infectionPercentage;
-    private BigDecimal casualtiesPercentage;
+    private BigDecimal infectionPercentage = BigDecimal.ZERO;
+    private BigDecimal casualtiesPercentage = BigDecimal.ZERO;
+
+    public String getRegionCode() {
+        return regionCode;
+    }
+
+    public void setRegionCode(String regionCode) {
+        this.regionCode = regionCode;
+    }
 
     public LocalDate getDate() {
         return date;
@@ -114,7 +123,7 @@ public class NationalDailyData implements Serializable {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        NationalDailyData other = (NationalDailyData) obj;
+        RegionalDailyData other = (RegionalDailyData) obj;
         if (date == null) {
             if (other.date != null)
                 return false;

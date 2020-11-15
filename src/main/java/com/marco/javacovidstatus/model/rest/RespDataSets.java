@@ -3,7 +3,7 @@ package com.marco.javacovidstatus.model.rest;
 import java.time.LocalDate;
 import java.util.List;
 
-import com.marco.javacovidstatus.model.CharDataType;
+import com.marco.javacovidstatus.model.dto.CharDataType;
 import com.marco.utils.http.MarcoResponse;
 
 public abstract class RespDataSets extends MarcoResponse {

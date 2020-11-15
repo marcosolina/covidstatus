@@ -3,7 +3,7 @@ package com.marco.javacovidstatus.model.rest;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.marco.javacovidstatus.model.CharDataType;
+import com.marco.javacovidstatus.model.dto.CharDataType;
 
 public class RespGetProvinceData extends RespDataSets {
 
