@@ -60,7 +60,7 @@ public class MainController {
         model.addAttribute("to", today.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
 
         /*
-         * Preparing the data for the 2 dropdown
+         * Preparing the data for the 2 drop down
          */
         EnumMap<CovidDataType, String> mapCovidDataType = new EnumMap<>(CovidDataType.class);
         Arrays.asList(CovidDataType.values()).stream().forEach(c -> mapCovidDataType.put(c, c.getDescription()));
@@ -137,8 +137,8 @@ public class MainController {
         List<ProvinceDailyData> listData = service.getProvinceDataInRangeAscending(request.getFrom(), request.getTo(),
                 request.getRegionCode());
         List<String> provinces = service.getProfinceListForRegion(request.getRegionCode());
+        
         Map<String, RespProvinceChartData> map = new HashMap<>();
-
         if (!listData.isEmpty()) {
             // @formatter:off
             
