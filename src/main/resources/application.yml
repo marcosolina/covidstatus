@@ -1,7 +1,11 @@
 logging:
+  file:    name: ./logs/covid-status.log
+  pattern:
+    console: "%d %-5level : %msg%n"
+    file: "%d %-5level : %msg%n"
   level:
     root: INFO
-    com: 
+    com:
       marco:
         javacovidstatus: DEBUG
 
@@ -27,3 +31,6 @@ server:  servlet:    context-path: /Covid19Italy
 covidstatus:
   notification:
     enabled: false
+  scheduled:
+    downloadnewdata:
+      cron: "0 0 * * * *" # Every hour
