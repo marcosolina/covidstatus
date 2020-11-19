@@ -123,7 +123,7 @@ public class MarcoCovidRepository implements CovidRepository {
         CriteriaQuery<LocalDate> cq = cb.createQuery(LocalDate.class);
         Root<EntityNationalData> root = cq.from(EntityNationalData.class);
         
-        cq.select(cb.greatest(root.get(EntityNationalData_.DATE)));
+        cq.select(cb.greatest(root.<LocalDate>get(EntityNationalData_.DATE)));
         TypedQuery<LocalDate> tq = em.createQuery(cq);
         return tq.getSingleResult();
     }
@@ -137,7 +137,7 @@ public class MarcoCovidRepository implements CovidRepository {
         CriteriaQuery<LocalDate> cq = cb.createQuery(LocalDate.class);
         Root<EntityRegionalData> root = cq.from(EntityRegionalData.class);
         
-        cq.select(cb.greatest(root.get(EntityRegionalData_.ID).get(EntityRegionalDataPk_.DATE)));
+        cq.select(cb.greatest(root.get(EntityRegionalData_.ID).<LocalDate>get(EntityRegionalDataPk_.DATE)));
         TypedQuery<LocalDate> tq = em.createQuery(cq);
         return tq.getSingleResult();
     }
@@ -151,7 +151,7 @@ public class MarcoCovidRepository implements CovidRepository {
         CriteriaQuery<LocalDate> cq = cb.createQuery(LocalDate.class);
         Root<EntityProvinceData> root = cq.from(EntityProvinceData.class);
         
-        cq.select(cb.greatest(root.get(EntityProvinceData_.ID).get(EntityProvinceDataPk_.DATE)));
+        cq.select(cb.greatest(root.get(EntityProvinceData_.ID).<LocalDate>get(EntityProvinceDataPk_.DATE)));
         TypedQuery<LocalDate> tq = em.createQuery(cq);
         return tq.getSingleResult();
     }
