@@ -2,7 +2,6 @@ package com.marco.javacovidstatus.repositories.implementations;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -13,9 +12,15 @@ import javax.persistence.criteria.Root;
 
 import org.springframework.transaction.annotation.Transactional;
 
-import com.marco.javacovidstatus.model.dto.Region;
+import com.marco.javacovidstatus.model.entitites.EntityNationalData;
+import com.marco.javacovidstatus.model.entitites.EntityNationalData_;
 import com.marco.javacovidstatus.model.entitites.EntityProvinceData;
+import com.marco.javacovidstatus.model.entitites.EntityProvinceDataPk_;
+import com.marco.javacovidstatus.model.entitites.EntityProvinceData_;
 import com.marco.javacovidstatus.model.entitites.EntityRegionalData;
+import com.marco.javacovidstatus.model.entitites.EntityRegionalDataPk_;
+import com.marco.javacovidstatus.model.entitites.EntityRegionalData_;
+import com.marco.javacovidstatus.model.entitites.RegionData;
 import com.marco.javacovidstatus.repositories.interfaces.CovidRepository;
 
 /**
@@ -31,26 +36,29 @@ public class MarcoCovidRepository implements CovidRepository {
     private EntityManager em;
 
     @Override
-    public List<Region> getRegionList() {
-        StringBuilder sql = new StringBuilder();
-        sql.append("SELECT ");
-        sql.append("p.id.regionCode ,");
-        sql.append("p.regionDesc ");
-        sql.append(" FROM EntityProvinceData p ");
-        sql.append(" GROUP BY ");
-        sql.append("p.id.regionCode ,");
-        sql.append("p.regionDesc ");
-        sql.append(" ORDER BY ");
-        sql.append("p.regionDesc ");
-
-        @SuppressWarnings("unchecked")
-        List<Object[]> results = em.createQuery(sql.toString()).getResultList();
-
+    public List<RegionData> getRegionList() {
+        /*
+         * Thanks to: https://wiki.eclipse.org/EclipseLink/UserGuide/JPA/Basic_JPA_Development/Querying/Criteria#Constructors
+         * 
+         * SELECT REGION_CODE, REGION_DESC FROM PROVINCE_DATA GROUP BY REGION_CODE, REGION_DESC ORDER BY REGION_DESC
+         */
+        
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<RegionData> cq = cb.createQuery(RegionData.class);
+        Root<EntityProvinceData> root = cq.from(EntityProvinceData.class);
         // @formatter:off
-        return results.stream()//Stream the array of objects
-                .map(arr -> new Region(String.class.cast(arr[0]), String.class.cast(arr[1])))//convert the object[] into a Region object
-                .collect(Collectors.toList());//put everything into a list
+        cq.multiselect(
+                root.get(EntityProvinceData_.ID).get(EntityProvinceDataPk_.REGION_CODE), root.get(EntityProvinceData_.REGION_DESC)
+            )
+            .groupBy(
+                root.get(EntityProvinceData_.ID).get(EntityProvinceDataPk_.REGION_CODE), root.get(EntityProvinceData_.REGION_DESC)
+            )
+            .orderBy(
+                cb.asc(root.get(EntityProvinceData_.REGION_DESC))
+            );
         // @formatter:on
+        TypedQuery<RegionData> tq = em.createQuery(cq);
+        return tq.getResultList();
     }
 
     @Override
@@ -60,16 +68,21 @@ public class MarcoCovidRepository implements CovidRepository {
 
         CriteriaQuery<EntityProvinceData> cq = cb.createQuery(EntityProvinceData.class);
         Root<EntityProvinceData> root = cq.from(EntityProvinceData.class);
+        
+        
+        /*
+         * SELECT * FROM PROVINCE_DATA WHERE DATE_DATA BETWEEN X AND Y AND REGION_CODE = Z
+         * ORDER BY DATE_DATA
+         */
         // @formatter:off
-        //SELECT * FROM .....
         cq.select(root).where(
                 cb.and(
-                    cb.between(root.get("id").get("date"), from, to),
-                    cb.equal(root.get("id").get("regionCode"), regionCode) 
+                    cb.between(root.get(EntityProvinceData_.ID).get(EntityProvinceDataPk_.DATE), from, to),
+                    cb.equal(root.get(EntityProvinceData_.ID).get(EntityProvinceDataPk_.REGION_CODE), regionCode) 
                     )
                 )
             .orderBy(
-                cb.asc(root.get("id").get("date"))
+                cb.asc(root.get(EntityProvinceData_.ID).get(EntityProvinceDataPk_.DATE))
             );
         // @formatter:on
 
@@ -84,15 +97,18 @@ public class MarcoCovidRepository implements CovidRepository {
 
         CriteriaQuery<String> cq = cb.createQuery(String.class);
         Root<EntityProvinceData> root = cq.from(EntityProvinceData.class);
+        
+        /*
+         * SELECT PROVINCE_CODE FROM PROVINCE_DATA WHERE REGION_CODE = X GROUP BY PROVINCE_CODE
+         */
         // @formatter:off
-        //SELECT proviceCode FROM .....
-        cq.multiselect(root.get("id").get("provinceCode"))
+        cq.multiselect(root.get(EntityProvinceData_.ID).get(EntityProvinceDataPk_.PROVINCE_CODE))
             .where(
                 cb.and(
-                    cb.equal(root.get("id").get("regionCode"), regionCode) 
+                    cb.equal(root.get(EntityProvinceData_.ID).get(EntityProvinceDataPk_.REGION_CODE), regionCode) 
                     )
                 )
-            .groupBy(root.get("id").get("provinceCode"));
+            .groupBy(root.get(EntityProvinceData_.ID).get(EntityProvinceDataPk_.PROVINCE_CODE));
         // @formatter:on
 
         return em.createQuery(cq).getResultList();
@@ -100,44 +116,44 @@ public class MarcoCovidRepository implements CovidRepository {
 
     @Override
     public LocalDate getNationalMaxDateAvailable() {
-        StringBuilder sql = new StringBuilder();
-        sql.append("SELECT ");
-        sql.append(" MAX(p.date) ");
-        sql.append(" FROM EntityNationalData p ");
-
-        Object obj = em.createQuery(sql.toString()).getSingleResult();
-        if (obj != null) {
-            return LocalDate.class.cast(obj);
-        }
-        return null;
+        /*
+         * SELECT MAX(DATE_DATA) AS DATE_DATA FROM NATIONAL_DATA
+         */
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<LocalDate> cq = cb.createQuery(LocalDate.class);
+        Root<EntityNationalData> root = cq.from(EntityNationalData.class);
+        
+        cq.select(cb.greatest(root.get(EntityNationalData_.DATE)));
+        TypedQuery<LocalDate> tq = em.createQuery(cq);
+        return tq.getSingleResult();
     }
 
     @Override
     public LocalDate getRegionMaxDateAvailable() {
-        StringBuilder sql = new StringBuilder();
-        sql.append("SELECT ");
-        sql.append(" MAX(p.id.date) ");
-        sql.append(" FROM EntityRegionalData p ");
-
-        Object obj = em.createQuery(sql.toString()).getSingleResult();
-        if (obj != null) {
-            return LocalDate.class.cast(obj);
-        }
-        return null;
+        /*
+         * SELECT MAX(DATE_DATA) AS DATE_DATA FROM REGIONAL_DATA
+         */
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<LocalDate> cq = cb.createQuery(LocalDate.class);
+        Root<EntityRegionalData> root = cq.from(EntityRegionalData.class);
+        
+        cq.select(cb.greatest(root.get(EntityRegionalData_.ID).get(EntityRegionalDataPk_.DATE)));
+        TypedQuery<LocalDate> tq = em.createQuery(cq);
+        return tq.getSingleResult();
     }
 
     @Override
     public LocalDate getProvinceMaxDateAvailable() {
-        StringBuilder sql = new StringBuilder();
-        sql.append("SELECT ");
-        sql.append(" MAX(p.id.date) ");
-        sql.append(" FROM EntityProvinceData p ");
-
-        Object obj = em.createQuery(sql.toString()).getSingleResult();
-        if (obj != null) {
-            return LocalDate.class.cast(obj);
-        }
-        return null;
+        /*
+         * SELECT MAX(DATE_DATA) AS DATE_DATA FROM PROVINCE_DATA
+         */
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<LocalDate> cq = cb.createQuery(LocalDate.class);
+        Root<EntityProvinceData> root = cq.from(EntityProvinceData.class);
+        
+        cq.select(cb.greatest(root.get(EntityProvinceData_.ID).get(EntityProvinceDataPk_.DATE)));
+        TypedQuery<LocalDate> tq = em.createQuery(cq);
+        return tq.getSingleResult();
     }
 
     @Override
@@ -146,12 +162,15 @@ public class MarcoCovidRepository implements CovidRepository {
 
         CriteriaQuery<EntityRegionalData> cq = cb.createQuery(EntityRegionalData.class);
         Root<EntityRegionalData> root = cq.from(EntityRegionalData.class);
+        
+        /*
+         * SELECT * FROM  REGIONAL_DATA WHERE DATE_DATA BETWEEN X AND Y ORDER BY DATE_DATA
+         */
         // @formatter:off
-        //SELECT * FROM .....
         cq.select(root).where(
-            cb.between(root.get("id").get("date"), from, to)
+            cb.between(root.get(EntityRegionalData_.ID).get(EntityRegionalDataPk_.DATE), from, to)
             ).orderBy(
-                cb.asc(root.get("id").get("date"))
+                cb.asc(root.get(EntityRegionalData_.ID).get(EntityRegionalDataPk_.DATE))
             );
         // @formatter:on
 
