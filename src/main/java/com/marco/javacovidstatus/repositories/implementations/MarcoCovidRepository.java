@@ -12,7 +12,6 @@ import javax.persistence.criteria.Root;
 
 import org.springframework.transaction.annotation.Transactional;
 
-import com.marco.javacovidstatus.model.dto.Region;
 import com.marco.javacovidstatus.model.entitites.EntityNationalData;
 import com.marco.javacovidstatus.model.entitites.EntityNationalData_;
 import com.marco.javacovidstatus.model.entitites.EntityProvinceData;
@@ -21,6 +20,7 @@ import com.marco.javacovidstatus.model.entitites.EntityProvinceData_;
 import com.marco.javacovidstatus.model.entitites.EntityRegionalData;
 import com.marco.javacovidstatus.model.entitites.EntityRegionalDataPk_;
 import com.marco.javacovidstatus.model.entitites.EntityRegionalData_;
+import com.marco.javacovidstatus.model.entitites.RegionData;
 import com.marco.javacovidstatus.repositories.interfaces.CovidRepository;
 
 /**
@@ -36,7 +36,7 @@ public class MarcoCovidRepository implements CovidRepository {
     private EntityManager em;
 
     @Override
-    public List<Region> getRegionList() {
+    public List<RegionData> getRegionList() {
         /*
          * Thanks to: https://wiki.eclipse.org/EclipseLink/UserGuide/JPA/Basic_JPA_Development/Querying/Criteria#Constructors
          * 
@@ -44,7 +44,7 @@ public class MarcoCovidRepository implements CovidRepository {
          */
         
         CriteriaBuilder cb = em.getCriteriaBuilder();
-        CriteriaQuery<Region> cq = cb.createQuery(Region.class);
+        CriteriaQuery<RegionData> cq = cb.createQuery(RegionData.class);
         Root<EntityProvinceData> root = cq.from(EntityProvinceData.class);
         // @formatter:off
         cq.multiselect(
@@ -57,7 +57,7 @@ public class MarcoCovidRepository implements CovidRepository {
                 cb.asc(root.get(EntityProvinceData_.REGION_DESC))
             );
         // @formatter:on
-        TypedQuery<Region> tq = em.createQuery(cq);
+        TypedQuery<RegionData> tq = em.createQuery(cq);
         return tq.getResultList();
     }
 

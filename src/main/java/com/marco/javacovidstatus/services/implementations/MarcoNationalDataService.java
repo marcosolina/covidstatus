@@ -17,9 +17,10 @@ import com.marco.javacovidstatus.model.entitites.EntityProvinceData;
 import com.marco.javacovidstatus.model.entitites.EntityProvinceDataPk;
 import com.marco.javacovidstatus.model.entitites.EntityRegionalData;
 import com.marco.javacovidstatus.model.entitites.EntityRegionalDataPk;
+import com.marco.javacovidstatus.model.entitites.RegionData;
 import com.marco.javacovidstatus.repositories.interfaces.CovidRepository;
-import com.marco.javacovidstatus.repositories.interfaces.ProvinceDataRepo;
 import com.marco.javacovidstatus.repositories.interfaces.NationallDataRepository;
+import com.marco.javacovidstatus.repositories.interfaces.ProvinceDataRepo;
 import com.marco.javacovidstatus.repositories.interfaces.RegionalDataRepository;
 import com.marco.javacovidstatus.services.interfaces.CovidDataService;
 
@@ -82,7 +83,8 @@ public class MarcoNationalDataService implements CovidDataService {
 
     @Override
     public List<Region> getRegionsList() {
-        return repoCovidCustom.getRegionList();
+        List<RegionData> list = repoCovidCustom.getRegionList(); 
+        return list.stream().map(rd -> new Region(rd.getRegionCode(), rd.getRegionDesc())).collect(Collectors.toList());
     }
 
     @Override
@@ -125,7 +127,8 @@ public class MarcoNationalDataService implements CovidDataService {
     }
 
     /*
-     * ####################################################### UTILS METHODS
+     * ####################################################### 
+     * UTILS METHODS
      * #######################################################
      */
 
