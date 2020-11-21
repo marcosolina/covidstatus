@@ -66,6 +66,7 @@ public class MarcoNationalDataService implements CovidDataService {
     public boolean deleteAllData() {
         repoNationalData.deleteAll();
         repoProvince.deleteAll();
+        repoRegionalData.deleteAll();
         return true;
     }
 
