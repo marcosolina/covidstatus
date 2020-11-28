@@ -17,6 +17,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import com.marco.javacovidstatus.model.dto.NationalDailyData;
 import com.marco.javacovidstatus.model.entitites.EntityNationalData;
 import com.marco.javacovidstatus.repositories.interfaces.ProvinceDataRepo;
+import com.marco.javacovidstatus.repositories.interfaces.RegionalDataRepository;
 import com.marco.javacovidstatus.repositories.interfaces.NationallDataRepository;
 import com.marco.javacovidstatus.services.implementations.MarcoNationalDataService;
 
@@ -27,6 +28,8 @@ class MarcoNationalDataServiceTest {
     private NationallDataRepository mockRepo;
     @Mock
     private ProvinceDataRepo mockEntityProvRepo;
+    @Mock
+    private RegionalDataRepository mockRegionalData;
 
     @InjectMocks
     private MarcoNationalDataService service = new MarcoNationalDataService();
