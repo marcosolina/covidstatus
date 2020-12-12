@@ -40,7 +40,7 @@ public class MarcoCovidScheduler implements CovidScheduler {
     @Autowired
     @Qualifier("Province")
     private CovidDataDownloader provinceDownloader;
-
+    
     @Scheduled(cron = "${covidstatus.scheduled.downloadnewdata.cron:0 0 * * * *}") // if not specified it will be every hour
     @Override
     public synchronized void downloadNewData() {

@@ -20,19 +20,19 @@
 	<meta property="og:image" th:content="@{/pictures/covid-coronavirus.jpg}">
 	
 	<script th:src="@{/webjars/js/Chart.min.js}"></script>
-	<script th:src="@{/webjars/js/jquery.min.js}"></script>	
+	<script th:src="@{/webjars/js/popper.min.js}"></script>	
+	<script th:src="@{/webjars/js/jquery.min.js}"></script>
+	<script th:src="@{/webjars/js/jquery-ui.min.js}"></script>
 	<script th:src="@{/webjars/js/bootstrap.bundle.min.js}"></script>
-	<script th:src="@{/webjars/js/jquery-ui.min.js}"></script>
 	<script th:src="@{/webjars/js/pnotify.custom.min.js}"></script>
-	<script th:src="@{/webjars/js/jquery-ui.min.js}"></script>
 	
 	<script th:src="@{/webjars/js/MarcoUtils.js}"></script>
 	<script th:src="@{/js/CovidChart.js?v=0.0.1}"></script>	
 	<script th:src="@{/js/CovidChartDataset.js?v=0.0.1}"></script>
 	<script th:src="@{/js/CovidCommon.js?v=0.0.1}"></script>
 	
-	<link rel="stylesheet" th:href="@{/webjars/css/bootstrap.min.css}">
 	<link rel="stylesheet" th:href="@{/webjars/css/jquery-ui.css}">
+	<link rel="stylesheet" th:href="@{/webjars/css/bootstrap.min.css}">
 	<link rel="stylesheet" th:href="@{/webjars/css/pnotify.custom.min.css}">
 	<link rel="stylesheet" th:href="@{/webjars/css/font-awesome.min.css}">
 	<link rel="stylesheet" th:href="@{/webjars/css/animate.css}">
@@ -93,9 +93,10 @@
 	</div>
 	<nav>
 		<div class="nav nav-tabs" id="nav-tab" role="tablist">
-			<a class="nav-item nav-link active"	id="nav-national-tab"	data-toggle="tab" href="#nav-national"	role="tab" aria-controls="nav-national" aria-selected="true">Dati Nazionali</a>
-			<a class="nav-item nav-link"		id="nav-region-tab"		data-toggle="tab" href="#nav-region"	role="tab" aria-controls="nav-region"	aria-selected="false">Regionali</a>
-			<a class="nav-item nav-link"		id="nav-province-tab"	data-toggle="tab" href="#nav-province"	role="tab" aria-controls="nav-province" aria-selected="false">Provinciali</a>
+			<a class="nav-item nav-link active"	id="nav-national-tab"	data-toggle="tab" href="#nav-national"	role="tab" aria-controls="nav-national" 	aria-selected="true">Dati Nazionali</a>
+			<a class="nav-item nav-link"		id="nav-region-tab"		data-toggle="tab" href="#nav-region"	role="tab" aria-controls="nav-region"		aria-selected="false">Regionali</a>
+			<a class="nav-item nav-link"		id="nav-province-tab"	data-toggle="tab" href="#nav-province"	role="tab" aria-controls="nav-province" 	aria-selected="false">Provinciali</a>
+			<a class="nav-item nav-link"		id="nav-region-map-tab"	data-toggle="tab" href="#nav-region-map"role="tab" aria-controls="nav-region-map" 	aria-selected="false">Mappa Regioni</a>
 		</div>
 	</nav>
 	<div class="tab-content" id="nav-tabContent">
@@ -224,6 +225,24 @@
 				<div class="row">
 					<div class="col-lg-12 col-xl-8">
 						<canvas id="chartProvince"></canvas>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="tab-pane fade" id="nav-region-map" role="tabpanel" aria-labelledby="nav-region-map">
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-lg-12 col-xl-8">
+						<p></p>
+						<p>
+							Il ministero <b>non rilascia uno storico</b> dei dati per questa mappa, quindi qui vedrai sempre la situazzione ad oggi.
+							La mappa la recupero <a href="http://www.governo.it/it/articolo/domande-frequenti-sulle-misure-adottate-dal-governo/15638" target="_blank">da qui.</a>
+						</p>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-lg-12 col-xl-8">
+						<div th:remove="tag" th:utext="${svgmap}"></div>
 					</div>
 				</div>
 			</div>

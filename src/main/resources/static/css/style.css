@@ -37,3 +37,7 @@
 .color-new-recovered {
 	color: rgb(75, 199, 50, 1);
 }
+
+.black-tooltip + .tooltip > .tooltip-inner {
+	background-color: #000000;
+}
