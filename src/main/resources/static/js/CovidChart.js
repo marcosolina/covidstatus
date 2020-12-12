@@ -41,7 +41,7 @@ class CovidChart {
 	/**
 		It draws the chart
 	 */
-	drawChart(){
+	drawChart(darkModeOn){
 		this.chart = new Chart(this.docElement, {
 		    type: 'line',
 		    data: {
@@ -56,6 +56,24 @@ class CovidChart {
 				legend:{
 					display: false
 				},
+				scales: {
+	                yAxes: [{
+	                    ticks: {
+	                        fontColor: darkModeOn ? "#FFFFFF" : "#666666",
+	                    },
+						gridLines: {
+							color: darkModeOn ? "rgba(255, 255, 255, 0.5)" : 'rgba(0, 0, 0, 0.1)',
+						}
+	                }],
+	                xAxes: [{
+	                    ticks: {
+	                        fontColor: darkModeOn ? "#FFFFFF" : "#666666",
+	                    },
+						gridLines: {
+							color: darkModeOn ? "rgba(255, 255, 255, 0.5)" : 'rgba(0, 0, 0, 0.1)',
+						}
+	                }]
+	            },
 		    	responsive: true,
 		    	tooltips: {
 					mode: 'index',

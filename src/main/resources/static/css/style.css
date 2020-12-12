@@ -1,9 +1,56 @@
+/*
+	Dark Mode
+*/
+.dark-background {
+	background-color: #343a40 !important;
+	color: #FFFFFF;
+}
+
+.dark-background.custom-control-label::before {
+	background-color: #616161;
+}
+
+.dark-background.navbar, .dark-background.navbar *{
+	background-color: #2c2f31 !important;
+}
+
+.dark-background.nav-link.active{
+	border-color: #dee2e6 #dee2e6 #343a40 #dee2e6;
+	color: #FFFFFF;
+}
+
+.dark-background.nav-link{
+	border-color: #343a40 #343a40 #dee2e6 #343a40;	
+}
+
+.dark-background.nav-link:hover{
+	background-color: #dee2e6 !important;	
+}
+
+.dark-background.modal-link-color{
+	color: #FFFFFF;
+}
+
+.dark-background.navbar .btn-outline-light:hover, .dark-background.navbar .btn-outline-light:hover i{
+    color: #212529 !important;
+    background-color: #f8f9fa !important;
+    border-color: #f8f9fa !important;
+}
+
+/*
+* End Dark Mode
+*/
+
 .switch-label {
 	font-weight: bold;
 }
 
 .modal-link-color {
 	color: #212529;
+}
+
+.dark-background.modal-link-color{
+	color: #FFFFFF;
 }
 
 .color-new-infections {
@@ -31,13 +78,14 @@
 }
 
 .color-new-intensive-therapy {
-	color: rgb(46, 22, 181, 1);
+	/*color: rgb(46, 22, 181, 1);*/
+	color: rgb( 0, 54, 255 , 1);
 }
 
 .color-new-recovered {
 	color: rgb(75, 199, 50, 1);
 }
 
-.black-tooltip + .tooltip > .tooltip-inner {
+.black-tooltip+.tooltip>.tooltip-inner {
 	background-color: #000000;
 }

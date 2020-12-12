@@ -18,6 +18,7 @@ All the "number" are retrieved from the [Ministero della Salute](https://www.sal
 ![Regions Colors](Misc/Pictures/4.png)
 
 ## History
+* **12/12/2020 v0.0.3**: Added the dark mode
 * **12/12/2020 v0.0.2**: Added the map with the color of the regions
 * **15/11/2020 v0.0.1**: First release
 

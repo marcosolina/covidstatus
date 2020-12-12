@@ -27,9 +27,9 @@
 	<script th:src="@{/webjars/js/pnotify.custom.min.js}"></script>
 	
 	<script th:src="@{/webjars/js/MarcoUtils.js}"></script>
-	<script th:src="@{/js/CovidChart.js?v=0.0.1}"></script>	
-	<script th:src="@{/js/CovidChartDataset.js?v=0.0.1}"></script>
-	<script th:src="@{/js/CovidCommon.js?v=0.0.1}"></script>
+	<script th:src="@{/js/CovidChart.js?v=0.0.3}"></script>	
+	<script th:src="@{/js/CovidChartDataset.js?v=0.0.3}"></script>
+	<script th:src="@{/js/CovidCommon.js?v=0.0.3}"></script>
 	
 	<link rel="stylesheet" th:href="@{/webjars/css/jquery-ui.css}">
 	<link rel="stylesheet" th:href="@{/webjars/css/bootstrap.min.css}">
@@ -47,6 +47,7 @@
 		
 		window.onload = function(){
 			CovidCommon.init(); // Initialise the app
+			$("#btnTheme").click();
 			$("#dateFrom").change(); // Load the first set of data
 			$("#infoModal").modal("show"); // Show the info modal
 		}
@@ -58,30 +59,34 @@
 <body>
 	<nav class="navbar sticky-top navbar-dark bg-dark">
 		<span class="navbar-brand mb-0 h1">Italian Covid Status</span>
-		<button class="btn btn btn-outline-light" type="button" data-toggle="modal" data-target="#infoModal">
-			Info
-		</button>
+		<div>
+			<button class="btn btn-outline-light" type="button" id="btnTheme" data-toggle="tooltip" data-placement="bottom" title="Cambia colori">
+				<i class="fa fa-tint" aria-hidden="true"></i>
+			</button>
+			<span data-toggle="tooltip" data-placement="bottom" title="Leggi le informazioni">
+				<button class="btn btn-outline-light" type="button" data-toggle="modal" data-target="#infoModal">
+					<i class="fa fa-info" aria-hidden="true"></i>
+				</button>
+			</span>
+		</div>
 	</nav>
 	<div class="container-fluid">
 		<div class="row">
 			<div class="col">&nbsp;</div>
 		</div>
 		<div class="row">
-			<div class="col-8 col-sm-4 col-md-3 col-lg-3 col-xl-2">
+			<div class="col-6 col-sm-4 col-md-3 col-lg-3 col-xl-2">
 				<div class="input-group input-group-sm">
 					<div class="input-group-prepend">
-						<span class="input-group-text">Data Da</span>
+						<span class="input-group-text">Dal</span>
 					</div>
 					<input type="text" id="dateFrom" class="form-control" th:value="${from}">
 				</div>
 			</div>
-			<div class="col-8 col-sm-1">
-				&nbsp;
-			</div>
-			<div class="col-8 col-sm-4 col-md-3 col-lg-3 col-xl-2">
+			<div class="col-6 col-sm-4 col-md-3 col-lg-3 col-xl-2">
 				<div class="input-group input-group-sm">
 					<div class="input-group-prepend">
-						<span class="input-group-text">Data A</span>
+						<span class="input-group-text">Al</span>
 					</div>
 					<input type="text" id="dateTo" class="form-control" th:value="${to}">
 				</div>
