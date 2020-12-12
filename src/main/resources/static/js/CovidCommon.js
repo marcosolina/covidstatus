@@ -78,6 +78,8 @@ var CovidCommon = (function(CovidCommon){
 		/*
 			Setting up some jQuery elements and registering the event listeners
 		*/
+		$('[data-toggle="tooltip"]').tooltip();
+		
 		var dateFrom = $( "#dateFrom" ).datepicker({
 							minDate: "24/02/2020",
 						    changeMonth: true,

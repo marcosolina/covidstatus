@@ -35,6 +35,7 @@ import com.marco.javacovidstatus.model.rest.RespGetRegionData;
 import com.marco.javacovidstatus.model.rest.RespProvinceChartData;
 import com.marco.javacovidstatus.model.rest.RespRegionChartData;
 import com.marco.javacovidstatus.services.interfaces.CovidDataService;
+import com.marco.javacovidstatus.services.interfaces.RegionMapDownloader;
 
 /**
  * This is a standard Spring controller
@@ -55,6 +56,9 @@ public class MainController {
     
     @Autowired
     private CovidDataService service;
+    
+    @Autowired
+    private RegionMapDownloader regionMapDownloader;
 
     @GetMapping(value = MAPPING_HOME)
     public String homePage(Model model) {
@@ -74,6 +78,11 @@ public class MainController {
         Arrays.asList(CovidDataType.values()).stream().forEach(c -> mapCovidDataType.put(c, c.getDescription()));
         model.addAttribute("covidDataType", mapCovidDataType);
         model.addAttribute("regions", service.getRegionsList());
+        
+        /*
+         * Adding the SVG map
+         */
+        model.addAttribute("svgmap", regionMapDownloader.createHtmlMap());
         
         /*
          * Passing to the front end the map of available end points

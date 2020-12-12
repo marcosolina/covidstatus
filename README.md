@@ -16,6 +16,10 @@ All the "number" are retrieved from the [Ministero della Salute](https://www.sal
 ![Regions Data](Misc/Pictures/2.png)
 ![Provinces Data](Misc/Pictures/3.png)
 
+## History
+* **12/12/2020 v0.0.2**: Added the map with the color of the regions
+* **15/11/2020 v0.0.1**: First release
+
 ## TODO:
 * Refactoring the code (When I have some extra time)
 * Anything else that cames up in my mind

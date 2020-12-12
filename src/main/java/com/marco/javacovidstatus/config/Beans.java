@@ -16,9 +16,11 @@ import com.marco.javacovidstatus.services.implementations.MarcoNationalDataServi
 import com.marco.javacovidstatus.services.implementations.NationalCovidDataDownloader;
 import com.marco.javacovidstatus.services.implementations.ProvinceCoviddataDownloader;
 import com.marco.javacovidstatus.services.implementations.RegionCovidDataDownloader;
+import com.marco.javacovidstatus.services.implementations.RegionMapDownloaderFromNationalWebSite;
 import com.marco.javacovidstatus.services.interfaces.CovidDataDownloader;
 import com.marco.javacovidstatus.services.interfaces.CovidDataService;
 import com.marco.javacovidstatus.services.interfaces.NotificationSenderInterface;
+import com.marco.javacovidstatus.services.interfaces.RegionMapDownloader;
 
 /**
  * Standard Springboot configuration class
@@ -93,6 +95,11 @@ public class Beans {
     @Bean(name = "Region")
     public CovidDataDownloader getRegionCovidDataDownloader() {
         return new RegionCovidDataDownloader(getWebClient());
+    }
+    
+    @Bean
+    public RegionMapDownloader getRegionMapDownloader() {
+    	return new RegionMapDownloaderFromNationalWebSite();
     }
 
 }
