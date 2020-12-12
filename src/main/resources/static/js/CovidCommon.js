@@ -30,10 +30,11 @@ var CovidCommon = (function(CovidCommon){
 	dsCasualties.setColor("rgb(31, 235, 255, 1)");
 	dsPercCasualties.setColor("rgb(84, 149, 255, 1)");
 	dsNewHospitalised.setColor("rgb(157, 140, 255, 1)");
-	dsNewIntensiveTherapy.setColor("rgb(46, 22, 181, 1)");
+	dsNewIntensiveTherapy.setColor("rgb( 0, 54, 255 , 1)");
 	dsNewRecovered.setColor("rgb(75, 199, 50, 1)");
 	
 	var dateFormat = "dd/mm/yy";
+	var darkModeOn = false;
 	
 	/*
 		The following objects are storing the National, Region and Province data
@@ -109,6 +110,7 @@ var CovidCommon = (function(CovidCommon){
 		$("[type=checkbox]").change(CovidCommon.updateNationalChart);
 		$("#region").change(CovidCommon.loadProvinceData);
 		$("#covidData").change(CovidCommon.loadRegionData);
+		$("#btnTheme").click(CovidCommon.changeTheme);
 		
 		
 		/*
@@ -166,6 +168,24 @@ var CovidCommon = (function(CovidCommon){
 		}
  
 		return date;
+    }
+
+	/**
+		It changes the CSS theme
+	*/
+	CovidCommon.changeTheme = function() {
+		darkModeOn = !darkModeOn;
+		var selector = "select, span, input, body, a, .modal-content, .custom-control-label, .navbar";
+		var className = "dark-background"; 
+		if(darkModeOn){
+			$(selector).addClass(className);
+		}else{
+			$(selector).removeClass(className);
+		}
+		
+		CovidCommon.drawNationalChart();
+		CovidCommon.drawRegionChart();
+		CovidCommon.drawProvinceChart();
     }
 	
 	/**
@@ -481,7 +501,7 @@ var CovidCommon = (function(CovidCommon){
 			i++;
 		}
 		
-		chartProvince.drawChart();
+		chartProvince.drawChart(darkModeOn);
 	}
 	
 	/**
@@ -514,7 +534,7 @@ var CovidCommon = (function(CovidCommon){
 			i++;
 		}
 		
-		chartRegion.drawChart();
+		chartRegion.drawChart(darkModeOn);
 	}
 
 	/**
@@ -567,7 +587,7 @@ var CovidCommon = (function(CovidCommon){
 				chartNational.addCovidChartDataset(dsNewRecovered);	
 			}
 			
-			chartNational.drawChart();
+			chartNational.drawChart(darkModeOn);
 			
 	}
 	
