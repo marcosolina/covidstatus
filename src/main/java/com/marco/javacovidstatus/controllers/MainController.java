@@ -49,6 +49,8 @@ public class MainController {
     
     @Value("${server.servlet.context-path}")
     private String contextPath;
+    @Value("${covidstatus.version}")
+    private String appVersion;
     public static final String MAPPING_HOME = "/";
     public static final String MAPPING_REGION_DATA = "/regiondata";
     public static final String MAPPING_NATIONAL_DATA = "/nationaldata";
@@ -92,6 +94,8 @@ public class MainController {
         mapUrls.put("URL_NATIONAL_DATA", contextPath + MAPPING_NATIONAL_DATA);
         mapUrls.put("URL_PROVINCE_DATA", contextPath + MAPPING_PROVINCE_DATA);
         model.addAttribute("urls", mapUrls);
+        
+        model.addAttribute("appVersion", appVersion);
         
         return "index";
     }

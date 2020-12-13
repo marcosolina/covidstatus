@@ -29,6 +29,7 @@ spring:
 server:  servlet:    context-path: /Covid19Italy
     
 covidstatus:
+  version: ^project.version^
   notification:
     enabled: false
   scheduled:

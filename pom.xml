@@ -11,12 +11,13 @@
 	</parent>
 	<groupId>com.marco</groupId>
 	<artifactId>covidstatus</artifactId>
-	<version>0.0.3</version>
+	<version>0.0.4</version>
 	<name>CovidStatus</name>
 	<description>Demo project for Spring Boot</description>
 
 	<properties>
 		<java.version>11</java.version>
+		<resource.delimiter>^</resource.delimiter>
 	</properties>
 
 	<dependencies>

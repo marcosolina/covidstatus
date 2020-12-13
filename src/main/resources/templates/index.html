@@ -27,9 +27,9 @@
 	<script th:src="@{/webjars/js/pnotify.custom.min.js}"></script>
 	
 	<script th:src="@{/webjars/js/MarcoUtils.js}"></script>
-	<script th:src="@{/js/CovidChart.js?v=0.0.3}"></script>	
-	<script th:src="@{/js/CovidChartDataset.js?v=0.0.3}"></script>
-	<script th:src="@{/js/CovidCommon.js?v=0.0.3}"></script>
+	<script th:src="@{/js/CovidChart.js?v=} + ${appVersion}"></script>	
+	<script th:src="@{/js/CovidChartDataset.js?v=} + ${appVersion}"></script>
+	<script th:src="@{/js/CovidCommon.js?v=} + ${appVersion}"></script>
 	
 	<link rel="stylesheet" th:href="@{/webjars/css/jquery-ui.css}">
 	<link rel="stylesheet" th:href="@{/webjars/css/bootstrap.min.css}">
@@ -37,7 +37,7 @@
 	<link rel="stylesheet" th:href="@{/webjars/css/font-awesome.min.css}">
 	<link rel="stylesheet" th:href="@{/webjars/css/animate.css}">
 	<link rel="stylesheet" th:href="@{/webjars/css/marco.css}">
-	<link rel="stylesheet" th:href="@{/css/style.css?v=0.0.3}">	
+	<link rel="stylesheet" th:href="@{/css/style.css?v=} + ${appVersion}">	
 	
 	
 	<script th:inline="javascript">
@@ -49,7 +49,9 @@
 			CovidCommon.init(); // Initialise the app
 			$("#btnTheme").click();
 			$("#dateFrom").change(); // Load the first set of data
-			$("#infoModal").modal("show"); // Show the info modal
+			//$("#infoModal").modal("show"); // Show the info modal
+			setTimeout(function(){$(".button-notification").fadeIn();}, 1000);
+			setTimeout(function(){$(".button-notification").fadeOut();}, 5000);
 		}
 		
 	/*]]>*/
@@ -97,7 +99,7 @@
 		</div>
 	</div>
 	<nav>
-		<div class="nav nav-tabs" id="nav-tab" role="tablist">
+		<div class="nav nav-tabs flex-column flex-sm-row" id="nav-tab" role="tablist">
 			<a class="nav-item nav-link active"	id="nav-national-tab"	data-toggle="tab" href="#nav-national"	role="tab" aria-controls="nav-national" 	aria-selected="true">Dati Nazionali</a>
 			<a class="nav-item nav-link"		id="nav-region-tab"		data-toggle="tab" href="#nav-region"	role="tab" aria-controls="nav-region"		aria-selected="false">Regionali</a>
 			<a class="nav-item nav-link"		id="nav-province-tab"	data-toggle="tab" href="#nav-province"	role="tab" aria-controls="nav-province" 	aria-selected="false">Provinciali</a>
@@ -257,7 +259,7 @@
 		<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title">Covid Status</h5>
+					<h5 class="modal-title" th:text="'Covid Status v' + ${appVersion}">Title</h5>
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
@@ -287,5 +289,6 @@
 			</div>
 		</div>
 	</div>
+	<div class="button-notification alert-info">Clicca i bottoni qui sopra per cambiare i colori o leggere le informazioni</div>
 </body>
 </html>

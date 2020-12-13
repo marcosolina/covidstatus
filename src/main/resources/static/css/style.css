@@ -10,37 +10,37 @@
 	background-color: #616161;
 }
 
-.dark-background.navbar, .dark-background.navbar *{
+.dark-background.navbar, .dark-background.navbar * {
 	background-color: #2c2f31 !important;
 }
 
-.dark-background.nav-link.active{
+.dark-background.nav-link.active {
 	border-color: #dee2e6 #dee2e6 #343a40 #dee2e6;
 	color: #FFFFFF;
+	background-color: #2c2f31 !important;
 }
 
-.dark-background.nav-link{
-	border-color: #343a40 #343a40 #dee2e6 #343a40;	
+.dark-background.nav-link {
+	border-color: #343a40 #343a40 #dee2e6 #343a40;
 }
 
-.dark-background.nav-link:hover{
-	background-color: #dee2e6 !important;	
+.dark-background.nav-link:hover {
+	background-color: #dee2e6 !important;
 }
 
-.dark-background.modal-link-color{
+.dark-background.modal-link-color {
 	color: #FFFFFF;
 }
 
 .dark-background.navbar .btn-outline-light:hover, .dark-background.navbar .btn-outline-light:hover i{
-    color: #212529 !important;
-    background-color: #f8f9fa !important;
-    border-color: #f8f9fa !important;
+	color: #212529 !important;
+	background-color: #f8f9fa !important;
+	border-color: #f8f9fa !important;
 }
 
 /*
 * End Dark Mode
 */
-
 .switch-label {
 	font-weight: bold;
 }
@@ -49,7 +49,7 @@
 	color: #212529;
 }
 
-.dark-background.modal-link-color{
+.dark-background.modal-link-color {
 	color: #FFFFFF;
 }
 
@@ -79,7 +79,7 @@
 
 .color-new-intensive-therapy {
 	/*color: rgb(46, 22, 181, 1);*/
-	color: rgb( 0, 54, 255 , 1);
+	color: rgb(0, 54, 255, 1);
 }
 
 .color-new-recovered {
@@ -88,4 +88,13 @@
 
 .black-tooltip+.tooltip>.tooltip-inner {
 	background-color: #000000;
+}
+
+.button-notification {
+	position: absolute;
+	display: none;
+	top: 60px;
+	right: 10px;
+	width: 200px;
+	padding: 2px 7px;
 }
