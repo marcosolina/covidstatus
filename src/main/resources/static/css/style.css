@@ -98,3 +98,44 @@
 	width: 200px;
 	padding: 2px 7px;
 }
+
+
+/*
+	START - Style from goverment Web Site
+*/
+
+.cella_rossa {
+  color: #fff;
+  min-width: 110px;
+  float:left;
+  cursor: pointer;
+  background-color: #e2001a;
+  border: 1px solid #ffffff;
+  text-align: center;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-bottom: 10px;
+}
+
+.cella_arancione {
+  color: #fff;
+  min-width: 110px;
+  float:left;
+  cursor: pointer;
+  background-color: #ee7f01;
+  border: 1px solid #ffffff;
+  text-align: center;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-bottom: 10px;
+}
+
+.cella_mese {
+  font-weight: bold;
+  font-size: 3em;
+  line-height: 1em;
+}
+
+/*
+	END - Style from goverment Web Site
+*/
