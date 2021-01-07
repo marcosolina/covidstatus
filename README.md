@@ -5,27 +5,33 @@ All the "number" are retrieved from the [Ministero della Salute](https://www.sal
 
 [Live example](https://marco.selfip.net/Covid19Italy/)
 
-## Requirements:
+## Requirements
+
 * JDK 11
 * Maven 3.x.x
 * Database (PostgreSQL)
 
 ## Info
+
 * I am providing a **docker file** that you can use to run and initialise the database. You will find it insider the folde: Scripts/Docker/PostgreSQL/*
 
 ## Screenshots
+
 ![National Data](Misc/Pictures/1.png)
 ![Regions Data](Misc/Pictures/2.png)
 ![Provinces Data](Misc/Pictures/3.png)
 ![Regions Colors](Misc/Pictures/4.png)
 
 ## History
+
+* **23/12/2020 v0.0.6**: Added Missing CSS styles to manage the Goverment Calendar
 * **23/12/2020 v0.0.5**: Added CSS styles to manage the Goverment Calendar
 * **13/12/2020 v0.0.4**: Making the tabs responsive
 * **12/12/2020 v0.0.3**: Added the dark mode
 * **12/12/2020 v0.0.2**: Added the map with the color of the regions
 * **15/11/2020 v0.0.1**: First release
 
-## TODO:
+## TODO
+
 * Refactoring the code (When I have some extra time)
 * Anything else that cames up in my mind

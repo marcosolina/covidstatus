@@ -176,9 +176,11 @@ var CovidCommon = (function(CovidCommon){
 	CovidCommon.changeTheme = function() {
 		darkModeOn = !darkModeOn;
 		var selector = "select, span, input, body, a, .modal-content, .custom-control-label, .navbar";
+		var govermentCellSelector = ".cella_rossa *, .cella_rossa *, .cella_rossa *";
 		var className = "dark-background"; 
 		if(darkModeOn){
 			$(selector).addClass(className);
+			$(govermentCellSelector).removeClass(className);
 		}else{
 			$(selector).removeClass(className);
 		}
