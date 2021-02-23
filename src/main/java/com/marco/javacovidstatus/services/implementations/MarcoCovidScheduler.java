@@ -41,6 +41,14 @@ public class MarcoCovidScheduler implements CovidScheduler {
     @Qualifier("Province")
     private CovidDataDownloader provinceDownloader;
     
+    @Autowired
+    @Qualifier("GivenVaccines")
+    private CovidDataDownloader givenVaccinesDownloader;
+    
+    @Autowired
+    @Qualifier("DeliveredVaccines")
+    private CovidDataDownloader deliveredVaccinesDownloader;
+    
     @Scheduled(cron = "${covidstatus.scheduled.downloadnewdata.cron:0 0 * * * *}") // if not specified it will be every hour
     @Override
     public synchronized void downloadNewData() {
@@ -51,6 +59,8 @@ public class MarcoCovidScheduler implements CovidScheduler {
         downloaders.add(nationalDownloader);
         downloaders.add(regionDownloader);
         downloaders.add(provinceDownloader);
+        downloaders.add(givenVaccinesDownloader);
+        downloaders.add(deliveredVaccinesDownloader);
         downloaders.parallelStream().forEach(CovidDataDownloader::downloadData);
         
         logger.info("Update complete");
