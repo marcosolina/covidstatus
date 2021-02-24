@@ -93,6 +93,7 @@ public class MainController {
         mapUrls.put("URL_REGION_DATA", contextPath + MAPPING_REGION_DATA);
         mapUrls.put("URL_NATIONAL_DATA", contextPath + MAPPING_NATIONAL_DATA);
         mapUrls.put("URL_PROVINCE_DATA", contextPath + MAPPING_PROVINCE_DATA);
+        mapUrls.put("URL_VACCINES_DELIVERED_DATA", contextPath + VaccinesController.MAPPING_VACCINE_DELIVERED_DATA);
         model.addAttribute("urls", mapUrls);
         
         model.addAttribute("appVersion", appVersion);

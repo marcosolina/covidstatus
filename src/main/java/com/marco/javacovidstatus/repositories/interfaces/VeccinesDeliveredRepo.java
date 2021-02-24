@@ -1,5 +1,8 @@
 package com.marco.javacovidstatus.repositories.interfaces;
 
+import java.time.LocalDate;
+import java.util.List;
+
 import com.marco.javacovidstatus.model.entitites.EntityVacciniConsegne;
 
 /**
@@ -18,10 +21,20 @@ public interface VeccinesDeliveredRepo {
 	 * @return the operation status
 	 */
 	public boolean saveEntity(EntityVacciniConsegne entity);
-	
+
 	/**
 	 * It clears the table
+	 * 
 	 * @return
 	 */
 	public boolean deleteAll();
+
+	/**
+	 * It returns the list of delivered vaccines between the provided data
+	 * 
+	 * @param start
+	 * @param end
+	 * @return
+	 */
+	public List<EntityVacciniConsegne> getDeliveredVaccinesBetween(LocalDate start, LocalDate end);
 }

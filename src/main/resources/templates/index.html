@@ -104,6 +104,7 @@
 			<a class="nav-item nav-link"		id="nav-region-tab"		data-toggle="tab" href="#nav-region"	role="tab" aria-controls="nav-region"		aria-selected="false">Regionali</a>
 			<a class="nav-item nav-link"		id="nav-province-tab"	data-toggle="tab" href="#nav-province"	role="tab" aria-controls="nav-province" 	aria-selected="false">Provinciali</a>
 			<a class="nav-item nav-link"		id="nav-region-map-tab"	data-toggle="tab" href="#nav-region-map"role="tab" aria-controls="nav-region-map" 	aria-selected="false">Mappa Regioni</a>
+			<a class="nav-item nav-link"		id="nav-vaccines-tab"	data-toggle="tab" href="#nav-vaccines"	role="tab" aria-controls="nav-vaccines" 	aria-selected="false">Vaccini</a>
 		</div>
 	</nav>
 	<div class="tab-content" id="nav-tabContent">
@@ -250,6 +251,32 @@
 				<div class="row">
 					<div class="col-md-8 col-lg-6 col-xl-4">
 						<div th:remove="tag" th:utext="${svgmap}"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="tab-pane fade" id="nav-vaccines" role="tabpanel" aria-labelledby="nav-vaccines-tab">
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-12">
+						&nbsp;
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-12">
+						<div class="d-flex justify-content-center">
+							<h5>Vaccini Consegnati</h5>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-12">
+						&nbsp;
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-lg-12 col-xl-8">
+						<canvas id="chartVaccinesDelivered"></canvas>
 					</div>
 				</div>
 			</div>

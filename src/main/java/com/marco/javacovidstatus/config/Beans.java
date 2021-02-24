@@ -22,12 +22,14 @@ import com.marco.javacovidstatus.services.implementations.NationalCovidDataDownl
 import com.marco.javacovidstatus.services.implementations.ProvinceCoviddataDownloader;
 import com.marco.javacovidstatus.services.implementations.RegionCovidDataDownloader;
 import com.marco.javacovidstatus.services.implementations.RegionMapDownloaderFromNationalWebSite;
+import com.marco.javacovidstatus.services.implementations.VaccineDateServiceMarco;
 import com.marco.javacovidstatus.services.implementations.VaccinesDeliveredDownloader;
 import com.marco.javacovidstatus.services.implementations.VaccinesGivenDownloader;
 import com.marco.javacovidstatus.services.interfaces.CovidDataDownloader;
 import com.marco.javacovidstatus.services.interfaces.CovidDataService;
 import com.marco.javacovidstatus.services.interfaces.NotificationSenderInterface;
 import com.marco.javacovidstatus.services.interfaces.RegionMapDownloader;
+import com.marco.javacovidstatus.services.interfaces.VaccineDateService;
 
 /**
  * Standard Springboot configuration class
@@ -81,6 +83,11 @@ public class Beans {
     @Bean
     public GivenVaccinesRepo getGivenVaccinesRepo() {
     	return new GivenVaccinesRepoMarco();
+    }
+    
+    @Bean
+    public VaccineDateService getVaccineDateService() {
+    	return new VaccineDateServiceMarco();
     }
 
     @Bean
