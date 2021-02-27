@@ -1,0 +1,79 @@
+<div th:fragment="tabNationalData" th:remove="tag">
+<!--
+****************************************************************************
+  Begin Fragment: National Data
+****************************************************************************
+-->
+
+<div class="tab-pane fade show active" id="nav-national" role="tabpanel" aria-labelledby="nav-home-tab">
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col">&nbsp;</div>
+		</div>
+		<div class="row">
+			<div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2">
+				<div class="custom-control custom-switch">
+					<input type="checkbox" class="custom-control-input" id="arrNewInfections">
+					<label class="custom-control-label switch-label color-new-infections" for="arrNewInfections">Nuove Infezioni</label>
+				</div>
+			</div>
+			<div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2">
+				<div class="custom-control custom-switch">
+					<input type="checkbox" class="custom-control-input" id="arrNewTests">
+					<label class="custom-control-label switch-label color-new-tests" for="arrNewTests">Test Eseguiti</label>
+				</div>
+			</div>
+			<div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2">
+				<div class="custom-control custom-switch">
+					<input type="checkbox" class="custom-control-input" id="arrPercInfections">
+					<label class="custom-control-label switch-label color-perc-infections" for="arrPercInfections">% Infetti su tamponi eseguiti</label>
+				</div>
+			</div>
+			<div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2">
+				<div class="custom-control custom-switch">
+					<input type="checkbox" class="custom-control-input" id="arrNewCasualties">
+					<label class="custom-control-label switch-label color-new-casualties" for="arrNewCasualties">Decessi</label>
+				</div>
+			</div>
+			<div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2">
+				<div class="custom-control custom-switch">
+					<input type="checkbox" class="custom-control-input" id="arrPercCasualties">
+					<label class="custom-control-label switch-label color-perc-casualties" for="arrPercCasualties">% Decessi su infetti</label>
+				</div>
+			</div>
+			<div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2">
+				<div class="custom-control custom-switch">
+					<input type="checkbox" class="custom-control-input" id="arrNewHospitalized">
+					<label class="custom-control-label switch-label color-new-hospitalized" for="arrNewHospitalized">Nuovi Ricoveri</label>
+				</div>
+			</div>
+			<div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2">
+				<div class="custom-control custom-switch">
+					<input type="checkbox" class="custom-control-input" id="arrNewIntensiveTherapy">
+					<label class="custom-control-label switch-label color-new-intensive-therapy" for="arrNewIntensiveTherapy">Ricoveri Terapia intensiva (Di Cui)</label>
+				</div>
+			</div>
+			<div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2">
+				<div class="custom-control custom-switch">
+					<input type="checkbox" class="custom-control-input" id="arrNewRecovered">
+					<label class="custom-control-label switch-label color-new-recovered" for="arrNewRecovered">Nuovi Dismessi/Guariti</label>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col">&nbsp;</div>
+		</div>
+		<div class="row">
+			<div class="col-lg-12 col-xl-8">
+				<canvas id="chartNational"></canvas>
+			</div>
+		</div>		
+	</div>
+</div>
+
+<!--
+****************************************************************************
+  End Fragment: National Data
+****************************************************************************
+-->
+</div>
