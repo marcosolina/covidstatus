@@ -21,7 +21,7 @@ public class RespGetVaccinesDelivered extends RespDataSets {
 	 * The first key is the provider, the second key is the region code
 	 */
 	private Map<String, List<Integer>> dataPerRegion;
-	private Map<String, List<Integer>> dataPerSupplier;
+	private Map<String, Integer> dataPerSupplier;
 
 	public Map<String, List<Integer>> getDataPerRegion() {
 		return dataPerRegion;
@@ -31,11 +31,11 @@ public class RespGetVaccinesDelivered extends RespDataSets {
 		this.dataPerRegion = dataPerRegion;
 	}
 
-	public Map<String, List<Integer>> getDataPerSupplier() {
+	public Map<String, Integer> getDataPerSupplier() {
 		return dataPerSupplier;
 	}
 
-	public void setDataPerSupplier(Map<String, List<Integer>> dataPerSupplier) {
+	public void setDataPerSupplier(Map<String, Integer> dataPerSupplier) {
 		this.dataPerSupplier = dataPerSupplier;
 	}
 

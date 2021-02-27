@@ -30,5 +30,5 @@ public interface VaccineDateService {
 	 * @param end
 	 * @return
 	 */
-	public Map<String, List<VaccinesDelivered>> getDeliveredVaccinesBetweenDatesPerSupplier(LocalDate start, LocalDate end);
+	public Map<String, Integer> getDeliveredVaccinesBetweenDatesPerSupplier(LocalDate start, LocalDate end);
 }

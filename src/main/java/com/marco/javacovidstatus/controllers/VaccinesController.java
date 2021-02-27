@@ -46,26 +46,21 @@ public class VaccinesController {
 
 		
 		Map<String, List<VaccinesDelivered>> regionData = service.getDeliveredVaccinesBetweenDatesPerRegion(request.getFrom(), request.getTo());
-		Map<String, List<VaccinesDelivered>> supplierData = service.getDeliveredVaccinesBetweenDatesPerRegion(request.getFrom(), request.getTo()); 
+		Map<String, Integer> supplierData = service.getDeliveredVaccinesBetweenDatesPerSupplier(request.getFrom(), request.getTo()); 
 		
 		Map<String, List<Integer>> dataPerRegion = new HashMap<>();
 		regionData.forEach((k, v) -> dataPerRegion.put(k, v.stream().map(VaccinesDelivered::getDosesDelivered).collect(Collectors.toList())));
 		
 		
-		Map<String, List<Integer>> dataPerSupplier = new HashMap<>();
-		supplierData.forEach((k, v) -> dataPerSupplier.put(k, v.stream().map(VaccinesDelivered::getDosesDelivered).collect(Collectors.toList())));
-		
-		
 		Set<LocalDate> dates = new HashSet<>();
 		regionData.forEach((k, v) -> v.stream().forEach(o -> dates.add(o.getDate())));
-		supplierData.forEach((k, v) -> v.stream().forEach(o -> dates.add(o.getDate())));
 		
 		
 		List<LocalDate> list = Arrays.asList(dates.toArray(new LocalDate[0]));
 		Collections.sort(list);
 		
 		resp.setDataPerRegion(dataPerRegion);
-		resp.setDataPerSupplier(dataPerSupplier);
+		resp.setDataPerSupplier(supplierData);
 		resp.setArrDates(list);
 		resp.setStatus(true);
 

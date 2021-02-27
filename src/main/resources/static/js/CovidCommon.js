@@ -66,6 +66,7 @@ var CovidCommon = (function(CovidCommon){
 	var chartProvince;
 	var chartRegion;
 	var chartVaccinesDelivered;
+	var chartVaccinesSuppliers;
 	
 	/*
 		These property will hold the last value selected in the region drop down
@@ -155,6 +156,7 @@ var CovidCommon = (function(CovidCommon){
 		chartProvince = new CovidChart(document.getElementById('chartProvince'));
 		chartRegion = new CovidChart(document.getElementById('chartRegions'));
 		chartVaccinesDelivered = new CovidChart(document.getElementById('chartVaccinesDelivered'));
+		chartVaccinesSuppliers = new DoughnutChart(document.getElementById('chartVaccinesSuppliers'));
 		chartProvince.setTitle("Nuove infezioni nelle province di:");
 		
 		CovidCommon.createRegionCheckboxesInRow("#rowRegionVaccines");
@@ -387,6 +389,7 @@ var CovidCommon = (function(CovidCommon){
 					break;
 				case "GIVEN":
 					CovidCommon.drawVaccineDeliveredChart(response);
+					CovidCommon.drawVaccineSuppliersChart(response);
 					break;
 				default:
 					break;
@@ -605,6 +608,30 @@ var CovidCommon = (function(CovidCommon){
 		}
 		
 		chartVaccinesDelivered.drawChart(darkModeOn);
+	}
+	
+	CovidCommon.drawVaccineSuppliersChart = function(response){
+		if(chartVaccinesSuppliers == undefined){
+			return;
+		}
+		
+		chartVaccinesSuppliers.clearDataSets();
+		
+		/*
+			Checking which data the user has selected to be drawn
+		*/
+		var i = 0;
+		var arrLabels = [];
+		for(let supplier in response.dataPerSupplier){
+			const dataset = new CovidChartDataset(supplier);
+			dataset.setData(response.dataPerSupplier[supplier]);
+			dataset.setColor(provinceColorPalette[i++],);
+			chartVaccinesSuppliers.addCovidChartDataset(dataset);
+			arrLabels.push(supplier);
+		}
+		chartVaccinesSuppliers.setLabels(arrLabels);
+		
+		chartVaccinesSuppliers.drawChart(darkModeOn, "doughnut");
 	}
 	
 	/**

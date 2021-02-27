@@ -30,11 +30,11 @@ public class VaccineDateServiceMarco implements VaccineDateService {
 	}
 
 	@Override
-	public Map<String, List<VaccinesDelivered>> getDeliveredVaccinesBetweenDatesPerSupplier(LocalDate start,
+	public Map<String, Integer> getDeliveredVaccinesBetweenDatesPerSupplier(LocalDate start,
 			LocalDate end) {
-		Map<String, List<VaccinesDelivered>> data = new HashMap<>();
+		Map<String, Integer> data = new HashMap<>();
 		repo.getDeliveredVaccinesBetween(start, end).stream()
-			.forEach(entity -> data.computeIfAbsent(entity.getId().getSupplier(), k -> new ArrayList<>()).add(fromEntityVacciniConsegneToVaccinesDelivered(entity)));
+			.forEach(entity -> data.compute(entity.getId().getSupplier(), (k, v) -> v == null ? 0 : v + entity.getDosesDelivered()));
 
 		return data;
 	}
