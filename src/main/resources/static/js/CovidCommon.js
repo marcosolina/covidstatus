@@ -158,6 +158,14 @@ var CovidCommon = (function(CovidCommon){
 		chartProvince.setTitle("Nuove infezioni nelle province di:");
 		
 		CovidCommon.createRegionCheckboxesInRow("#rowRegionVaccines");
+		
+		
+		var i = 0;
+		for(let region of __REGIONS_LIST){
+			region.color= provinceColorPalette[i],
+			__REGIONS_MAP[region.code] = region;
+			i++;
+		}
 	}
 	
 	/**
@@ -412,7 +420,7 @@ var CovidCommon = (function(CovidCommon){
 		var i = 0;
 		var arr = [];
 		
-		for(let region of __REGIONS){
+		for(let region of __REGIONS_LIST){
 			region.color= provinceColorPalette[i],
 			arr.push(region);
 			i++;
@@ -589,9 +597,9 @@ var CovidCommon = (function(CovidCommon){
 		for(let regionCode in response.dataPerRegion){
 			if($("#region-code-" + regionCode).prop("checked")){
 				var arr = response.dataPerRegion[regionCode];
-				const dataset = new CovidChartDataset(regionCode);
+				const dataset = new CovidChartDataset(__REGIONS_MAP[regionCode].desc);
 				dataset.setData(arr);
-				dataset.setColor($("#label-region-code-" + regionCode).css("color"));
+				dataset.setColor(__REGIONS_MAP[regionCode].color);
 				chartVaccinesDelivered.addCovidChartDataset(dataset);
 			}
 		}
