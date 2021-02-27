@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.marco.javacovidstatus.model.dto.CharDataType;
-import com.marco.javacovidstatus.model.dto.VaccinesDelivered;
 
 /**
  * Http response model used to return the delivered vaccines data
@@ -18,14 +17,26 @@ public class RespGetVaccinesDelivered extends RespDataSets {
 		super(CharDataType.GIVEN);
 	}
 
-	private Map<String, List<VaccinesDelivered>> dataMap;
+	/**
+	 * The first key is the provider, the second key is the region code
+	 */
+	private Map<String, List<Integer>> dataPerRegion;
+	private Map<String, List<Integer>> dataPerSupplier;
 
-	public Map<String, List<VaccinesDelivered>> getDataMap() {
-		return dataMap;
+	public Map<String, List<Integer>> getDataPerRegion() {
+		return dataPerRegion;
 	}
 
-	public void setDataMap(Map<String, List<VaccinesDelivered>> dataMap) {
-		this.dataMap = dataMap;
+	public void setDataPerRegion(Map<String, List<Integer>> dataPerRegion) {
+		this.dataPerRegion = dataPerRegion;
+	}
+
+	public Map<String, List<Integer>> getDataPerSupplier() {
+		return dataPerSupplier;
+	}
+
+	public void setDataPerSupplier(Map<String, List<Integer>> dataPerSupplier) {
+		this.dataPerSupplier = dataPerSupplier;
 	}
 
 }

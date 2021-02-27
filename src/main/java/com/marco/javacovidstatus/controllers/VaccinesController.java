@@ -1,7 +1,8 @@
 package com.marco.javacovidstatus.controllers;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -24,36 +25,50 @@ import com.marco.javacovidstatus.services.interfaces.VaccineDateService;
 
 /**
  * This controller returns the data used to create the Vaccines charts
+ * 
  * @author Marco
  *
  */
 @Controller
 public class VaccinesController {
 	private static final Logger LOGGER = LoggerFactory.getLogger(VaccinesController.class);
-	
+
 	public static final String MAPPING_VACCINE_DELIVERED_DATA = "/vaccinesDelivered";
-	
+
 	@Autowired
 	private VaccineDateService service;
-	
+
 	@PostMapping(value = MAPPING_VACCINE_DELIVERED_DATA)
 	@ResponseBody
 	public RespGetVaccinesDelivered getVaccinesDeliveredData(@RequestBody ReqGetVaccinesDelivered request) {
 		LOGGER.trace("Inside VaccinesController.getVaccinesDeliveredData");
 		RespGetVaccinesDelivered resp = new RespGetVaccinesDelivered();
+
 		
-		List<VaccinesDelivered> data = service.getDeliveredVaccinesBetweenDates(request.getFrom(), request.getTo());
+		Map<String, List<VaccinesDelivered>> regionData = service.getDeliveredVaccinesBetweenDatesPerRegion(request.getFrom(), request.getTo());
+		Map<String, List<VaccinesDelivered>> supplierData = service.getDeliveredVaccinesBetweenDatesPerRegion(request.getFrom(), request.getTo()); 
+		
+		Map<String, List<Integer>> dataPerRegion = new HashMap<>();
+		regionData.forEach((k, v) -> dataPerRegion.put(k, v.stream().map(VaccinesDelivered::getDosesDelivered).collect(Collectors.toList())));
+		
+		
+		Map<String, List<Integer>> dataPerSupplier = new HashMap<>();
+		supplierData.forEach((k, v) -> dataPerSupplier.put(k, v.stream().map(VaccinesDelivered::getDosesDelivered).collect(Collectors.toList())));
+		
 		
 		Set<LocalDate> dates = new HashSet<>();
-		data.stream().map(VaccinesDelivered::getDate).forEach(dates::add);
-		resp.setArrDates(dates.stream().sorted().collect(Collectors.toList()));
+		regionData.forEach((k, v) -> v.stream().forEach(o -> dates.add(o.getDate())));
+		supplierData.forEach((k, v) -> v.stream().forEach(o -> dates.add(o.getDate())));
 		
-		Map<String, List<VaccinesDelivered>> dataMap = new HashMap<>();
-		data.stream().forEach(d -> dataMap.computeIfAbsent(d.getSupplier(), k -> new ArrayList<>()).add(d));
-		resp.setDataMap(dataMap);
 		
+		List<LocalDate> list = Arrays.asList(dates.toArray(new LocalDate[0]));
+		Collections.sort(list);
+		
+		resp.setDataPerRegion(dataPerRegion);
+		resp.setDataPerSupplier(dataPerSupplier);
+		resp.setArrDates(list);
 		resp.setStatus(true);
-		
+
 		return resp;
 	}
 }

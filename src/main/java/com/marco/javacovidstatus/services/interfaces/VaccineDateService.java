@@ -2,6 +2,7 @@ package com.marco.javacovidstatus.services.interfaces;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 import com.marco.javacovidstatus.model.dto.VaccinesDelivered;
 
@@ -14,11 +15,20 @@ import com.marco.javacovidstatus.model.dto.VaccinesDelivered;
 public interface VaccineDateService {
 
 	/**
-	 * It will return the list of delivered vaccined between the provided dates
+	 * It will return the list of delivered vaccines between the provided dates divede per region
 	 * 
 	 * @param start
 	 * @param end
 	 * @return
 	 */
-	public List<VaccinesDelivered> getDeliveredVaccinesBetweenDates(LocalDate start, LocalDate end);
+	public Map<String, List<VaccinesDelivered>> getDeliveredVaccinesBetweenDatesPerRegion(LocalDate start, LocalDate end);
+	
+	/**
+	 * It will return the list of delivered vaccines between the provided dates divede per provider
+	 * 
+	 * @param start
+	 * @param end
+	 * @return
+	 */
+	public Map<String, List<VaccinesDelivered>> getDeliveredVaccinesBetweenDatesPerSupplier(LocalDate start, LocalDate end);
 }

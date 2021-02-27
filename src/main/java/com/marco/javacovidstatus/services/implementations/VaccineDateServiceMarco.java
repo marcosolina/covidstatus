@@ -1,8 +1,10 @@
 package com.marco.javacovidstatus.services.implementations;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -11,22 +13,36 @@ import com.marco.javacovidstatus.model.entitites.EntityVacciniConsegne;
 import com.marco.javacovidstatus.repositories.interfaces.VeccinesDeliveredRepo;
 import com.marco.javacovidstatus.services.interfaces.VaccineDateService;
 
-public class VaccineDateServiceMarco implements VaccineDateService{
+public class VaccineDateServiceMarco implements VaccineDateService {
 
 	@Autowired
 	private VeccinesDeliveredRepo repo;
-	
+
 	@Override
-	public List<VaccinesDelivered> getDeliveredVaccinesBetweenDates(LocalDate start, LocalDate end) {
-		return repo.getDeliveredVaccinesBetween(start, end).stream().map(this::fromVaccinesDeliveredToEntityVacciniConsegne).collect(Collectors.toList());
+	public Map<String, List<VaccinesDelivered>> getDeliveredVaccinesBetweenDatesPerRegion(LocalDate start,
+			LocalDate end) {
+
+		Map<String, List<VaccinesDelivered>> data = new HashMap<>();
+		repo.getDeliveredVaccinesBetween(start, end).stream()
+			.forEach(entity -> data.computeIfAbsent(entity.getId().getRegionCode(), k -> new ArrayList<>()).add(fromEntityVacciniConsegneToVaccinesDelivered(entity)));
+
+		return data;
 	}
-	
-	private VaccinesDelivered fromVaccinesDeliveredToEntityVacciniConsegne(EntityVacciniConsegne entity) {
+
+	@Override
+	public Map<String, List<VaccinesDelivered>> getDeliveredVaccinesBetweenDatesPerSupplier(LocalDate start,
+			LocalDate end) {
+		Map<String, List<VaccinesDelivered>> data = new HashMap<>();
+		repo.getDeliveredVaccinesBetween(start, end).stream()
+			.forEach(entity -> data.computeIfAbsent(entity.getId().getSupplier(), k -> new ArrayList<>()).add(fromEntityVacciniConsegneToVaccinesDelivered(entity)));
+
+		return data;
+	}
+
+	private VaccinesDelivered fromEntityVacciniConsegneToVaccinesDelivered(EntityVacciniConsegne entity) {
 		VaccinesDelivered dto = new VaccinesDelivered();
 		dto.setDate(entity.getId().getDate());
 		dto.setDosesDelivered(entity.getDosesDelivered());
-		dto.setRegionCode(entity.getId().getRegionCode());
-		dto.setSupplier(entity.getId().getSupplier());
 		return dto;
 	}
 

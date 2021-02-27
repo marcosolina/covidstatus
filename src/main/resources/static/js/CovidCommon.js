@@ -65,6 +65,7 @@ var CovidCommon = (function(CovidCommon){
 	var chartNational;
 	var chartProvince;
 	var chartRegion;
+	var chartVaccinesDelivered;
 	
 	/*
 		These property will hold the last value selected in the region drop down
@@ -153,7 +154,10 @@ var CovidCommon = (function(CovidCommon){
 		chartNational = new CovidChart(document.getElementById('chartNational'));
 		chartProvince = new CovidChart(document.getElementById('chartProvince'));
 		chartRegion = new CovidChart(document.getElementById('chartRegions'));
+		chartVaccinesDelivered = new CovidChart(document.getElementById('chartVaccinesDelivered'));
 		chartProvince.setTitle("Nuove infezioni nelle province di:");
+		
+		CovidCommon.createRegionCheckboxesInRow("#rowRegionVaccines");
 	}
 	
 	/**
@@ -248,6 +252,25 @@ var CovidCommon = (function(CovidCommon){
 		}
 	}
 	
+	CovidCommon.loadVaccinesDeliveredData = function(){
+		CovidCommon.loadData(__URLS.URL_VACCINES_DELIVERED_DATA);
+	}
+	
+	CovidCommon.loadData = function(url){
+		var from = $.datepicker.formatDate('yy-mm-dd', CovidCommon.getDate(document.getElementById("dateFrom")));
+		var to = $.datepicker.formatDate('yy-mm-dd', CovidCommon.getDate(document.getElementById("dateTo")));
+		if(from != "" && to != ""){
+			MarcoUtils.executeAjax({
+				dataToPost: {
+				    from: from,
+				    to: to
+				},
+				showLoading: true,
+				url: url
+			}).then(CovidCommon.dataRetrieved);
+		}
+	}
+	
 	/**
 		It manages the onchange event of the switches available in the National chart tab
 	 */
@@ -295,6 +318,7 @@ var CovidCommon = (function(CovidCommon){
 			chartNational.setLabels(response.arrDates);
 			chartProvince.setLabels(response.arrDates);
 			chartRegion.setLabels(response.arrDates);
+			chartVaccinesDelivered.setLabels(response.arrDates);
 			
 			/*
 				Updating the data of the specific data type
@@ -353,6 +377,9 @@ var CovidCommon = (function(CovidCommon){
 					
 					CovidCommon.drawRegionChart();
 					break;
+				case "GIVEN":
+					CovidCommon.drawVaccineDeliveredChart(response);
+					break;
 				default:
 					break;
 			}
@@ -367,6 +394,49 @@ var CovidCommon = (function(CovidCommon){
 			$("#" + idCheckbox).prop("checked", dataProvinceStatus[idCheckbox].active);
 			dataProvinceChart[idCheckbox].active = dataProvinceStatus[idCheckbox].active;
 		}
+	}
+	
+	/**
+		This function will dynamically create the required checkboxes for the Region chart
+	 */
+	CovidCommon.createRegionCheckboxesInRow = function(rowId, funcOnChangeCheckBox){
+		var jRow = $(rowId);
+		jRow.empty();
+		
+		var strTmpl = '<div class="col-6 col-sm-4 col-md-3 col-lg-2 col-xl-2">' + 
+						'<div class="custom-control custom-switch">' +
+							'<input type="checkbox" class="custom-control-input" id="region-code-%code%">' +
+							'<label id="label-region-code-%code%" class="custom-control-label switch-label" style="color: %color%" for="region-code-%code%">%desc%</label>' + 
+						'</div>' +
+					  '</div>';	
+		var i = 0;
+		var arr = [];
+		
+		for(let region of __REGIONS){
+			region.color= provinceColorPalette[i],
+			arr.push(region);
+			i++;
+		}
+		
+		/*
+			Sorting the checkboxes
+		*/
+		arr.sort((a, b) => {
+			if(a.desc < b.desc){
+				return -1
+			} 
+			return 1;
+		});
+		
+		/*
+			Adding the sorted checkbox, setting the status and attaching the even listener.
+			By default I will active the first checkbox so the user can automatically see
+			some data
+		*/
+		arr.forEach(el => {jRow.append(MarcoUtils.template(strTmpl, el));});
+		//jRow.find("input").change(funcOnChangeCheckBox);
+		$(jRow.find("input").get(0)).prop("checked", true);
+		$(jRow.find("input").get(0)).change();
 	}
 	
 	/**
@@ -504,6 +574,29 @@ var CovidCommon = (function(CovidCommon){
 		}
 		
 		chartProvince.drawChart(darkModeOn);
+	}
+	
+	CovidCommon.drawVaccineDeliveredChart = function(response){
+		if(chartVaccinesDelivered == undefined){
+			return;
+		}
+		
+		chartVaccinesDelivered.clearDataSets();
+		
+		/*
+			Checking which data the user has selected to be drawn
+		*/
+		for(let regionCode in response.dataPerRegion){
+			if($("#region-code-" + regionCode).prop("checked")){
+				var arr = response.dataPerRegion[regionCode];
+				const dataset = new CovidChartDataset(regionCode);
+				dataset.setData(arr);
+				dataset.setColor($("#label-region-code-" + regionCode).css("color"));
+				chartVaccinesDelivered.addCovidChartDataset(dataset);
+			}
+		}
+		
+		chartVaccinesDelivered.drawChart(darkModeOn);
 	}
 	
 	/**

@@ -4,8 +4,7 @@ import java.io.Serializable;
 import java.time.LocalDate;
 
 /**
- * This class represent a simple POJO to pass the info related to the number of
- * vaccines delivered to a specific region
+ * This class represent number of vaccines Delivered in a single day
  * 
  * @author Marco
  *
@@ -13,8 +12,6 @@ import java.time.LocalDate;
 public class VaccinesDelivered implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private LocalDate date;
-	private String regionCode;
-	private String supplier;
 	private int dosesDelivered;
 
 	public LocalDate getDate() {
@@ -23,22 +20,6 @@ public class VaccinesDelivered implements Serializable {
 
 	public void setDate(LocalDate date) {
 		this.date = date;
-	}
-
-	public String getRegionCode() {
-		return regionCode;
-	}
-
-	public void setRegionCode(String regionCode) {
-		this.regionCode = regionCode;
-	}
-
-	public String getSupplier() {
-		return supplier;
-	}
-
-	public void setSupplier(String supplier) {
-		this.supplier = supplier;
 	}
 
 	public int getDosesDelivered() {

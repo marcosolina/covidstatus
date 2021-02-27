@@ -159,7 +159,7 @@ public class MainController {
 
     @PostMapping(value = MAPPING_PROVINCE_DATA)
     @ResponseBody
-    public RespGetProvinceData getNationalData(@RequestBody ReqGetProvinceData request) {
+    public RespGetProvinceData getProvinceData(@RequestBody ReqGetProvinceData request) {
         RespGetProvinceData resp = new RespGetProvinceData();
 
         /*
