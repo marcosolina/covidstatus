@@ -1,0 +1,46 @@
+<div th:fragment="tabProvinceData" th:remove="tag">
+<!--
+****************************************************************************
+  Begin Fragment: Provice Data
+****************************************************************************
+-->
+
+<div class="tab-pane fade" id="nav-province" role="tabpanel" aria-labelledby="nav-contact-tab">
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-12">
+				&nbsp;
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-lg-12 col-xl-8">
+				<div class="input-group input-group-sm">
+					<div class="input-group-prepend">
+						<span class="input-group-text">Province Regione</span>
+					</div>
+					<select class="form-control" id="region" >
+						<option th:each="region : ${regions}" th:value="${region.code}" th:text="${region.desc}"></option>
+					</select>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-12">
+				&nbsp;
+			</div>
+		</div>
+		<div class="row" id="rowProvince"></div>
+		<div class="row">
+			<div class="col-lg-12 col-xl-8">
+				<canvas id="chartProvince"></canvas>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!--
+****************************************************************************
+  End Fragment: Province Data
+****************************************************************************
+-->
+</div>

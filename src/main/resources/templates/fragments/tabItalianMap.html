@@ -1,0 +1,30 @@
+<div th:fragment="tabItalianMap" th:remove="tag">
+<!--
+****************************************************************************
+  Begin Fragment: Italian Map
+****************************************************************************
+-->
+<div class="tab-pane fade" id="nav-region-map" role="tabpanel" aria-labelledby="nav-region-map">
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-lg-12 col-xl-8">
+				<p></p>
+				<p>
+					Il ministero <b>non rilascia uno storico</b> dei dati per questa mappa, quindi qui vedrai sempre la situazzione ad oggi.
+					La mappa la recupero <a href="http://www.governo.it/it/articolo/domande-frequenti-sulle-misure-adottate-dal-governo/15638" target="_blank">da qui.</a>
+				</p>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-8 col-lg-6 col-xl-4">
+				<div th:remove="tag" th:utext="${svgmap}"></div>
+			</div>
+		</div>
+	</div>
+</div>
+<!--
+****************************************************************************
+  End Fragment: Italian Map
+****************************************************************************
+-->
+</div>

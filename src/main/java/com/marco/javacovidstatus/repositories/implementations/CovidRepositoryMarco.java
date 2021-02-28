@@ -31,7 +31,7 @@ import com.marco.javacovidstatus.repositories.interfaces.CovidRepository;
  *
  */
 @Transactional
-public class MarcoCovidRepository implements CovidRepository {
+public class CovidRepositoryMarco implements CovidRepository {
     @PersistenceContext
     private EntityManager em;
 

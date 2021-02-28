@@ -1,0 +1,46 @@
+<div th:fragment="tabRegionData" th:remove="tag">
+<!--
+****************************************************************************
+  Begin Fragment: Region Data
+****************************************************************************
+-->
+
+<div class="tab-pane fade" id="nav-region" role="tabpanel" aria-labelledby="nav-profile-tab">
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-12">
+				&nbsp;
+			</div>
+		</div>
+		<div class="row" id="regionInfoType">
+			<div class="col-lg-12 col-xl-8">
+				<div class="input-group input-group-sm">
+					<div class="input-group-prepend">
+						<span class="input-group-text">Tipo Informazioni</span>
+					</div>
+					<select class="form-control" id="covidData" >
+						<option th:each="cdata : ${covidDataType}" th:value="${cdata.key}" th:text="${cdata.value}"></option>
+					</select>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-12">
+				&nbsp;
+			</div>
+		</div>
+		<div class="row" id="rowRegionsCheckboxes"></div>
+		<div class="row">
+			<div class="col-lg-12 col-xl-8">
+				<canvas id="chartRegions"></canvas>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!--
+****************************************************************************
+  End Fragment: Region Data
+****************************************************************************
+-->
+</div>

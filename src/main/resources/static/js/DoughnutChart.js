@@ -1,7 +1,7 @@
 /**
 	This class uses the Chartjs library to create a Chart
  */
-class CovidChart {
+class DoughnutChart {
 	/**
 		Param: DOM element -> where to draw the Chart. It must be of type "canvas"
 	 */
@@ -41,56 +41,43 @@ class CovidChart {
 	/**
 		It draws the chart
 	 */
-	drawChart(darkModeOn, type){
+	drawChart(darkModeOn){
+		var arrData = [];
+		var labels = [];
+		var colors = [];
+		
+		for(let dataSet of this.arrDataSets){
+			arrData.push(dataSet.data);
+			labels.push(dataSet.label);
+			colors.push(dataSet.backgroundColor);
+		}
+		
 		var config = {
-		    type: type || 'line',
+		    type: 'doughnut',
 		    data: {
-		        labels: this.arrLabels,
-		        datasets: this.arrDataSets
+		        labels: labels,
+		        datasets: [{
+					data: arrData,
+					backgroundColor: colors
+				}]
 		    },
 		    options:{
 				title: {
 					display: this.title != undefined ? true : false,
 					text: this.title || ''
 				},
-				legend:{
-					display: false
-				},
-				scales: {
-	                yAxes: [{
-	                    ticks: {
-	                        fontColor: darkModeOn ? "#FFFFFF" : "#666666",
-	                    },
-						gridLines: {
-							color: darkModeOn ? "rgba(255, 255, 255, 0.5)" : 'rgba(0, 0, 0, 0.1)',
-						}
-	                }],
-	                xAxes: [{
-	                    ticks: {
-	                        fontColor: darkModeOn ? "#FFFFFF" : "#666666",
-	                    },
-						gridLines: {
-							color: darkModeOn ? "rgba(255, 255, 255, 0.5)" : 'rgba(0, 0, 0, 0.1)',
-						}
-	                }]
-	            },
+				
 		    	responsive: true,
-		    	tooltips: {
-					mode: 'index',
-					intersect: false,
-					itemSort: this.sortTooltip
+				title: {
+					display: this.title != undefined ? true : false,
+					text: this.title || ''
 				},
 
 		    }
 		    
 		};
-		if(type == "doughnut"){
-			delete config.options.scales;
-			delete config.options.tooltips;
-		}
+		
 		this.chart = new Chart(this.docElement, config);
-		
-		
 	}
 	
 	/**

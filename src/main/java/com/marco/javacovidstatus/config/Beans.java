@@ -7,20 +7,29 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
+import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import com.marco.javacovidstatus.repositories.implementations.MarcoCovidRepository;
+import com.marco.javacovidstatus.repositories.implementations.CovidRepositoryMarco;
+import com.marco.javacovidstatus.repositories.implementations.GivenVaccinesRepoMarco;
+import com.marco.javacovidstatus.repositories.implementations.VeccinesDeliveredRepoMarco;
 import com.marco.javacovidstatus.repositories.interfaces.CovidRepository;
+import com.marco.javacovidstatus.repositories.interfaces.GivenVaccinesRepo;
+import com.marco.javacovidstatus.repositories.interfaces.VeccinesDeliveredRepo;
 import com.marco.javacovidstatus.services.implementations.EmailNotificationSender;
 import com.marco.javacovidstatus.services.implementations.MarcoNationalDataService;
 import com.marco.javacovidstatus.services.implementations.NationalCovidDataDownloader;
 import com.marco.javacovidstatus.services.implementations.ProvinceCoviddataDownloader;
 import com.marco.javacovidstatus.services.implementations.RegionCovidDataDownloader;
 import com.marco.javacovidstatus.services.implementations.RegionMapDownloaderFromNationalWebSite;
+import com.marco.javacovidstatus.services.implementations.VaccineDateServiceMarco;
+import com.marco.javacovidstatus.services.implementations.VaccinesDeliveredDownloader;
+import com.marco.javacovidstatus.services.implementations.VaccinesGivenDownloader;
 import com.marco.javacovidstatus.services.interfaces.CovidDataDownloader;
 import com.marco.javacovidstatus.services.interfaces.CovidDataService;
 import com.marco.javacovidstatus.services.interfaces.NotificationSenderInterface;
 import com.marco.javacovidstatus.services.interfaces.RegionMapDownloader;
+import com.marco.javacovidstatus.services.interfaces.VaccineDateService;
 
 /**
  * Standard Springboot configuration class
@@ -33,7 +42,17 @@ public class Beans {
 
     @Bean
     public WebClient getWebClient() {
-        return WebClient.builder().build();
+    	// @formatter:off
+    	int megaByteNumber = 50;
+        return WebClient.builder()
+        		.exchangeStrategies(
+        			ExchangeStrategies.builder()
+        				.codecs(configurer -> 
+        					configurer.defaultCodecs().maxInMemorySize(megaByteNumber * 1024 *1024)
+        				).build()
+        		)
+        		.build();
+        // @formatter:on
     }
 
     @Bean
@@ -53,7 +72,22 @@ public class Beans {
 
     @Bean
     public CovidRepository getCovidRepository() {
-        return new MarcoCovidRepository();
+        return new CovidRepositoryMarco();
+    }
+    
+    @Bean
+    public VeccinesDeliveredRepo getVeccinesDeliveredRepo() {
+    	return new VeccinesDeliveredRepoMarco();
+    }
+    
+    @Bean
+    public GivenVaccinesRepo getGivenVaccinesRepo() {
+    	return new GivenVaccinesRepoMarco();
+    }
+    
+    @Bean
+    public VaccineDateService getVaccineDateService() {
+    	return new VaccineDateServiceMarco();
     }
 
     @Bean
@@ -95,6 +129,16 @@ public class Beans {
     @Bean(name = "Region")
     public CovidDataDownloader getRegionCovidDataDownloader() {
         return new RegionCovidDataDownloader(getWebClient());
+    }
+    
+    @Bean(name = "GivenVaccines")
+    public CovidDataDownloader getGivenVaccinesDownloader() {
+    	return new VaccinesGivenDownloader(getWebClient());
+    }
+    
+    @Bean(name = "DeliveredVaccines")
+    public CovidDataDownloader getDeliveredVaccinesDownloader() {
+    	return new VaccinesDeliveredDownloader(getWebClient());
     }
     
     @Bean

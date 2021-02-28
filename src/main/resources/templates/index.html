@@ -28,8 +28,13 @@
 	
 	<script th:src="@{/webjars/js/MarcoUtils.js}"></script>
 	<script th:src="@{/js/CovidChart.js?v=} + ${appVersion}"></script>	
+	<script th:src="@{/js/DoughnutChart.js?v=} + ${appVersion}"></script>
 	<script th:src="@{/js/CovidChartDataset.js?v=} + ${appVersion}"></script>
 	<script th:src="@{/js/CovidCommon.js?v=} + ${appVersion}"></script>
+	<script th:src="@{/js/NationalChart.js?v=} + ${appVersion}"></script>
+	<script th:src="@{/js/RegionsChart.js?v=} + ${appVersion}"></script>
+	<script th:src="@{/js/ProvinceChart.js?v=} + ${appVersion}"></script>
+	<script th:src="@{/js/VaccinesChart.js?v=} + ${appVersion}"></script>
 	
 	<link rel="stylesheet" th:href="@{/webjars/css/jquery-ui.css}">
 	<link rel="stylesheet" th:href="@{/webjars/css/bootstrap.min.css}">
@@ -44,6 +49,8 @@
 	/*<![CDATA[*/
 		
 	    var __URLS = /*[[${urls}]]*/ {};
+	    var __REGIONS_LIST = /*[[${regions}]]*/ {};
+	    var __REGIONS_MAP = {};
 		
 		window.onload = function(){
 			CovidCommon.init(); // Initialise the app
@@ -104,191 +111,17 @@
 			<a class="nav-item nav-link"		id="nav-region-tab"		data-toggle="tab" href="#nav-region"	role="tab" aria-controls="nav-region"		aria-selected="false">Regionali</a>
 			<a class="nav-item nav-link"		id="nav-province-tab"	data-toggle="tab" href="#nav-province"	role="tab" aria-controls="nav-province" 	aria-selected="false">Provinciali</a>
 			<a class="nav-item nav-link"		id="nav-region-map-tab"	data-toggle="tab" href="#nav-region-map"role="tab" aria-controls="nav-region-map" 	aria-selected="false">Mappa Regioni</a>
+			<a class="nav-item nav-link"		id="nav-vaccines-tab"	data-toggle="tab" href="#nav-vaccines"	role="tab" aria-controls="nav-vaccines" 	aria-selected="false">Vaccini</a>
 		</div>
 	</nav>
 	<div class="tab-content" id="nav-tabContent">
-		<div class="tab-pane fade show active" id="nav-national" role="tabpanel" aria-labelledby="nav-home-tab">
-			<div class="container-fluid">
-				<div class="row">
-					<div class="col">&nbsp;</div>
-				</div>
-				<div class="row">
-					<div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2">
-						<div class="custom-control custom-switch">
-							<input type="checkbox" class="custom-control-input" id="arrNewInfections">
-							<label class="custom-control-label switch-label color-new-infections" for="arrNewInfections">Nuove Infezioni</label>
-						</div>
-					</div>
-					<div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2">
-						<div class="custom-control custom-switch">
-							<input type="checkbox" class="custom-control-input" id="arrNewTests">
-							<label class="custom-control-label switch-label color-new-tests" for="arrNewTests">Test Eseguiti</label>
-						</div>
-					</div>
-					<div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2">
-						<div class="custom-control custom-switch">
-							<input type="checkbox" class="custom-control-input" id="arrPercInfections">
-							<label class="custom-control-label switch-label color-perc-infections" for="arrPercInfections">% Infetti su tamponi eseguiti</label>
-						</div>
-					</div>
-					<div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2">
-						<div class="custom-control custom-switch">
-							<input type="checkbox" class="custom-control-input" id="arrNewCasualties">
-							<label class="custom-control-label switch-label color-new-casualties" for="arrNewCasualties">Decessi</label>
-						</div>
-					</div>
-					<div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2">
-						<div class="custom-control custom-switch">
-							<input type="checkbox" class="custom-control-input" id="arrPercCasualties">
-							<label class="custom-control-label switch-label color-perc-casualties" for="arrPercCasualties">% Decessi su infetti</label>
-						</div>
-					</div>
-					<div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2">
-						<div class="custom-control custom-switch">
-							<input type="checkbox" class="custom-control-input" id="arrNewHospitalized">
-							<label class="custom-control-label switch-label color-new-hospitalized" for="arrNewHospitalized">Nuovi Ricoveri</label>
-						</div>
-					</div>
-					<div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2">
-						<div class="custom-control custom-switch">
-							<input type="checkbox" class="custom-control-input" id="arrNewIntensiveTherapy">
-							<label class="custom-control-label switch-label color-new-intensive-therapy" for="arrNewIntensiveTherapy">Ricoveri Terapia intensiva (Di Cui)</label>
-						</div>
-					</div>
-					<div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2">
-						<div class="custom-control custom-switch">
-							<input type="checkbox" class="custom-control-input" id="arrNewRecovered">
-							<label class="custom-control-label switch-label color-new-recovered" for="arrNewRecovered">Nuovi Dismessi/Guariti</label>
-						</div>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col">&nbsp;</div>
-				</div>
-				<div class="row">
-					<div class="col-lg-12 col-xl-8">
-						<canvas id="chartNational"></canvas>
-					</div>
-				</div>		
-			</div>
-		</div>
-		<div class="tab-pane fade" id="nav-region" role="tabpanel" aria-labelledby="nav-profile-tab">
-			<div class="container-fluid">
-				<div class="row">
-					<div class="col-12">
-						&nbsp;
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-lg-12 col-xl-8">
-						<div class="input-group input-group-sm">
-							<div class="input-group-prepend">
-								<span class="input-group-text">Tipo Informazioni</span>
-							</div>
-							<select class="form-control" id="covidData" >
-								<option th:each="cdata : ${covidDataType}" th:value="${cdata.key}" th:text="${cdata.value}"></option>
-							</select>
-						</div>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-12">
-						&nbsp;
-					</div>
-				</div>
-				<div class="row" id="rowRegion"></div>
-				<div class="row">
-					<div class="col-lg-12 col-xl-8">
-						<canvas id="chartRegions"></canvas>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="tab-pane fade" id="nav-province" role="tabpanel" aria-labelledby="nav-contact-tab">
-			<div class="container-fluid">
-				<div class="row">
-					<div class="col-12">
-						&nbsp;
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-lg-12 col-xl-8">
-						<div class="input-group input-group-sm">
-							<div class="input-group-prepend">
-								<span class="input-group-text">Province Regione</span>
-							</div>
-							<select class="form-control" id="region" >
-								<option th:each="region : ${regions}" th:value="${region.code}" th:text="${region.desc}"></option>
-							</select>
-						</div>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-12">
-						&nbsp;
-					</div>
-				</div>
-				<div class="row" id="rowProvince"></div>
-				<div class="row">
-					<div class="col-lg-12 col-xl-8">
-						<canvas id="chartProvince"></canvas>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="tab-pane fade" id="nav-region-map" role="tabpanel" aria-labelledby="nav-region-map">
-			<div class="container-fluid">
-				<div class="row">
-					<div class="col-lg-12 col-xl-8">
-						<p></p>
-						<p>
-							Il ministero <b>non rilascia uno storico</b> dei dati per questa mappa, quindi qui vedrai sempre la situazzione ad oggi.
-							La mappa la recupero <a href="http://www.governo.it/it/articolo/domande-frequenti-sulle-misure-adottate-dal-governo/15638" target="_blank">da qui.</a>
-						</p>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-md-8 col-lg-6 col-xl-4">
-						<div th:remove="tag" th:utext="${svgmap}"></div>
-					</div>
-				</div>
-			</div>
-		</div>
+		<div th:replace="fragments/tabNationalData.html::tabNationalData"></div>
+		<div th:replace="fragments/tabRegionData.html::tabRegionData"></div>
+		<div th:replace="fragments/tabProvinceData.html::tabProvinceData"></div>
+		<div th:replace="fragments/tabItalianMap.html::tabItalianMap"></div>
+		<div th:replace="fragments/tabVaccines.html::tabVaccinesBody"></div>
 	</div>
-	<div class="modal" tabindex="-1" id="infoModal">
-		<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title" th:text="'Covid Status v' + ${appVersion}">Title</h5>
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
-				</div>
-				<div class="modal-body">
-					<p>
-						Ho deciso di creare questo sito per visualizzare i dati del COVID-19 in Italia con l'aiuto di alcuni grafici.
-					</p>
-					<p>
-						I dati li recupero direttametne dal sito del Ministero della Salute e vengono aggiornati automaticamente
-						non appena il Ministero rilascia i "nuovi numeri", <b>di solito tra le 17:00 e le 18:00 di ogni giorno.</b>
-					</p>
-					<ul>
-						<li>
-							<a href="https://github.com/marcosolina/covidstatus" style="" target="_blank">Codice sorgente del mio progetto</a>
-					 	</li>
-						<li>
-							<a href="https://github.com/pcm-dpc/COVID-19" target="_blank">Dati del Ministero della Salute</a> 
-						</li>
-					</ul>
-				</div>
-				<div class="modal-footer">
-					<a target="_blank" href="https://it.linkedin.com/in/marco-solina-1bb561104" class="fa fa-linkedin modal-link-color"></a>
-					<a href="mailto:marcosolina@gmail.com" class="fa fa-envelope modal-link-color"></a>
-					<a href="https://github.com/marcosolina" target="_blank" class="fa fa-github modal-link-color"></a>
-				</div>
-			</div>
-		</div>
-	</div>
+	<div th:replace="fragments/infoModal.html::infoModal"></div>
 	<div class="button-notification alert-info">Clicca i bottoni qui sopra per cambiare i colori o leggere le informazioni</div>
 </body>
 </html>
