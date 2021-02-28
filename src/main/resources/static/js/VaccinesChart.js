@@ -38,6 +38,11 @@ class VaccinesChart {
 		this.addRegionsCheckboxes();
 		this.addPersonsCheckboxes();
 	}
+	
+	setDarkMode(darkModeOn){
+		this.darkModeOn = darkModeOn;
+	}
+	
 
 	addRegionsCheckboxes() {
 		var strTmpl = '<div class="col-6 col-sm-4 col-md-3 col-lg-2 col-xl-2">' +

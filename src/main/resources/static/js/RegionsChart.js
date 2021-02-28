@@ -14,6 +14,10 @@ class RegionsChart {
 		this.addCheckboxes();
 		$("#" + this.dropDownDataTypeId).change(this.changeDataType.bind(this));
 	}
+	
+	setDarkMode(darkModeOn){
+		this.darkModeOn = darkModeOn;
+	}
 
 	addCheckboxes() {
 		var strTmpl = '<div class="col-6 col-sm-4 col-md-3 col-lg-2 col-xl-2">' +

@@ -23,6 +23,10 @@ class NationalChart {
 
 		this.addCheckboxes();
 	}
+	
+	setDarkMode(darkModeOn){
+		this.darkModeOn = darkModeOn;
+	}
 
 	addCheckboxes() {
 		let template = '<div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2">' +
@@ -43,6 +47,7 @@ class NationalChart {
 
 		jContainer.find("input").change(this.drawChart.bind(this));
 		$(jContainer.find("input").get(0)).prop("checked", true);
+		$(jContainer.find("input").get(1)).prop("checked", true);
 	}
 
 	fetchData(from, to) {

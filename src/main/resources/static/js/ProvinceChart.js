@@ -13,6 +13,10 @@ class ProvinceChart {
 
 		$("#" + this.dropDownRegionsId).change(this.changeRegion.bind(this));
 	}
+	
+	setDarkMode(darkModeOn){
+		this.darkModeOn = darkModeOn;
+	}
 
 	addCheckboxes() {
 		var strTmpl = '<div class="col-6 col-sm-4 col-md-3 col-lg-2 col-xl-2">' +
@@ -24,15 +28,27 @@ class ProvinceChart {
 		let jContainer = $("#" + this.checkBoxesContainerId);
 		jContainer.empty();
 
+		let tmpMap = this.lastResponse.provinceData;
+		let keysSorted = Object.keys(tmpMap).sort(function(a, b) {
+			if (tmpMap[a].label < tmpMap[b].label) {
+				return -1;
+			}
+			if (tmpMap[a].label > tmpMap[b].label) {
+				return 1;
+			}
+			return 0;
+		});
+
 		let i = 0;
-		for (let province in this.lastResponse.provinceData) {
+		let colors = this.colorPalette;
+		keysSorted.forEach(function(key){
 			let obj = {
-				code: province,
-				color: this.colorPalette[i++],
-				label: this.lastResponse.provinceData[province].label
+				code: key,
+				color: colors[i++],
+				label: tmpMap[key].label
 			}
 			jContainer.append(MarcoUtils.template(strTmpl, obj));
-		}
+		});
 
 		jContainer.find("input").change(this.drawChart.bind(this));
 		$(jContainer.find("input").get(0)).prop("checked", true);
