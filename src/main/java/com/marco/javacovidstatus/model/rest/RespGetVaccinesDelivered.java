@@ -23,6 +23,10 @@ public class RespGetVaccinesDelivered extends RespDataSets {
 	private Map<String, List<Integer>> dataPerRegion;
 	private Map<String, Integer> dataPerSupplier;
 
+	private Map<String, List<Long>> dataVaccinatedPeople;
+	private Map<String, Integer> dataVaccinatedPerAge;
+	private Map<String, Integer> dataShotNumber;
+
 	public Map<String, List<Integer>> getDataPerRegion() {
 		return dataPerRegion;
 	}
@@ -37,6 +41,30 @@ public class RespGetVaccinesDelivered extends RespDataSets {
 
 	public void setDataPerSupplier(Map<String, Integer> dataPerSupplier) {
 		this.dataPerSupplier = dataPerSupplier;
+	}
+
+	public Map<String, List<Long>> getDataVaccinatedPeople() {
+		return dataVaccinatedPeople;
+	}
+
+	public void setDataVaccinatedPeople(Map<String, List<Long>> dataVaccinatedPeople) {
+		this.dataVaccinatedPeople = dataVaccinatedPeople;
+	}
+
+	public Map<String, Integer> getDataVaccinatedPerAge() {
+		return dataVaccinatedPerAge;
+	}
+
+	public void setDataVaccinatedPerAge(Map<String, Integer> dataVaccinatedPerAge) {
+		this.dataVaccinatedPerAge = dataVaccinatedPerAge;
+	}
+
+	public Map<String, Integer> getDataShotNumber() {
+		return dataShotNumber;
+	}
+
+	public void setDataShotNumber(Map<String, Integer> dataShotNumber) {
+		this.dataShotNumber = dataShotNumber;
 	}
 
 }

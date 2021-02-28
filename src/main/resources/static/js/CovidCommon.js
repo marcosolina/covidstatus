@@ -66,7 +66,10 @@ var CovidCommon = (function(CovidCommon){
 	var chartProvince;
 	var chartRegion;
 	var chartVaccinesDelivered;
+	var chartVaccinesGiven;
 	var chartVaccinesSuppliers;
+	var chartVaccinesPerAge;
+	var chartVaccinesDoses;
 	
 	/*
 		These property will hold the last value selected in the region drop down
@@ -156,8 +159,17 @@ var CovidCommon = (function(CovidCommon){
 		chartProvince = new CovidChart(document.getElementById('chartProvince'));
 		chartRegion = new CovidChart(document.getElementById('chartRegions'));
 		chartVaccinesDelivered = new CovidChart(document.getElementById('chartVaccinesDelivered'));
+		chartVaccinesGiven = new CovidChart(document.getElementById('chartVaccinesGiven'));
 		chartVaccinesSuppliers = new DoughnutChart(document.getElementById('chartVaccinesSuppliers'));
+		chartVaccinesPerAge = new DoughnutChart(document.getElementById('chartVaccinesPerAge'));
+		chartVaccinesDoses = new DoughnutChart(document.getElementById('chartVaccinesDoses'));
+		
 		chartProvince.setTitle("Nuove infezioni nelle province di:");
+		chartVaccinesDelivered.setTitle("Vaccini Consegnati");
+		chartVaccinesGiven.setTitle("Vaccini somministrati");
+		chartVaccinesSuppliers.setTitle("Fornitori Vaccini");
+		chartVaccinesPerAge.setTitle("Persone vaccinate per fasce di età");
+		chartVaccinesDoses.setTitle("Dosi vaccini");
 		
 		CovidCommon.createRegionCheckboxesInRow("#rowRegionVaccines");
 		
@@ -329,6 +341,7 @@ var CovidCommon = (function(CovidCommon){
 			chartProvince.setLabels(response.arrDates);
 			chartRegion.setLabels(response.arrDates);
 			chartVaccinesDelivered.setLabels(response.arrDates);
+			chartVaccinesGiven.setLabels(response.arrDates);
 			
 			/*
 				Updating the data of the specific data type
@@ -389,7 +402,10 @@ var CovidCommon = (function(CovidCommon){
 					break;
 				case "GIVEN":
 					CovidCommon.drawVaccineDeliveredChart(response);
+					CovidCommon.drawVaccineGivenChart(response);
 					CovidCommon.drawVaccineSuppliersChart(response);
+					CovidCommon.drawVaccinePerAgeChart(response);
+					CovidCommon.drawVaccineDosesChart(response);
 					break;
 				default:
 					break;
@@ -610,6 +626,31 @@ var CovidCommon = (function(CovidCommon){
 		chartVaccinesDelivered.drawChart(darkModeOn);
 	}
 	
+	CovidCommon.drawVaccineGivenChart = function(response){
+		if(chartVaccinesGiven == undefined){
+			return;
+		}
+		
+		chartVaccinesGiven.clearDataSets();
+		
+		/*
+			Checking which data the user has selected to be drawn
+		*/
+		var i = 0;
+		for(let person in response.dataVaccinatedPeople){
+			var arr = response.dataVaccinatedPeople[person];
+			const dataset = new CovidChartDataset(person);
+			dataset.setData(arr);
+			dataset.setColor(provinceColorPalette[i++]);
+			chartVaccinesGiven.addCovidChartDataset(dataset);
+			
+		}
+		
+		chartVaccinesGiven.drawChart(darkModeOn);
+	}
+	
+	
+	
 	CovidCommon.drawVaccineSuppliersChart = function(response){
 		if(chartVaccinesSuppliers == undefined){
 			return;
@@ -625,13 +666,61 @@ var CovidCommon = (function(CovidCommon){
 		for(let supplier in response.dataPerSupplier){
 			const dataset = new CovidChartDataset(supplier);
 			dataset.setData(response.dataPerSupplier[supplier]);
-			dataset.setColor(provinceColorPalette[i++],);
+			dataset.setColor(provinceColorPalette[i++]);
 			chartVaccinesSuppliers.addCovidChartDataset(dataset);
 			arrLabels.push(supplier);
 		}
 		chartVaccinesSuppliers.setLabels(arrLabels);
 		
 		chartVaccinesSuppliers.drawChart(darkModeOn, "doughnut");
+	}
+	
+	CovidCommon.drawVaccinePerAgeChart = function(response){
+		if(chartVaccinesPerAge == undefined){
+			return;
+		}
+		
+		chartVaccinesPerAge.clearDataSets();
+		
+		/*
+			Checking which data the user has selected to be drawn
+		*/
+		var i = 0;
+		var arrLabels = [];
+		for(let ageRange in response.dataVaccinatedPerAge){
+			const dataset = new CovidChartDataset(ageRange);
+			dataset.setData(response.dataVaccinatedPerAge[ageRange]);
+			dataset.setColor(provinceColorPalette[i++]);
+			chartVaccinesPerAge.addCovidChartDataset(dataset);
+			arrLabels.push(ageRange);
+		}
+		chartVaccinesPerAge.setLabels(arrLabels);
+		
+		chartVaccinesPerAge.drawChart(darkModeOn, "doughnut");
+	}
+	
+	CovidCommon.drawVaccineDosesChart = function(response){
+		if(chartVaccinesDoses == undefined){
+			return;
+		}
+		
+		chartVaccinesDoses.clearDataSets();
+		
+		/*
+			Checking which data the user has selected to be drawn
+		*/
+		var i = 0;
+		var arrLabels = [];
+		for(let shotNumber in response.dataShotNumber){
+			const dataset = new CovidChartDataset(shotNumber);
+			dataset.setData(response.dataShotNumber[shotNumber]);
+			dataset.setColor(provinceColorPalette[i++]);
+			chartVaccinesDoses.addCovidChartDataset(dataset);
+			arrLabels.push(shotNumber);
+		}
+		chartVaccinesDoses.setLabels(arrLabels);
+		
+		chartVaccinesDoses.drawChart(darkModeOn, "doughnut");
 	}
 	
 	/**
