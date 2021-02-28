@@ -113,8 +113,8 @@ var CovidCommon = (function(CovidCommon){
 		});
 		
 		$("[type=checkbox]").change(CovidCommon.updateNationalChart);
-		$("#region").change(CovidCommon.loadProvinceData);
-		$("#covidData").change(CovidCommon.loadRegionData);
+		//$("#region").change(CovidCommon.loadProvinceData);
+		//$("#covidData").change(CovidCommon.loadRegionData);
 		$("#btnTheme").click(CovidCommon.changeTheme);
 		
 		
@@ -171,7 +171,7 @@ var CovidCommon = (function(CovidCommon){
 		chartVaccinesPerAge.setTitle("Persone vaccinate per fasce di età");
 		chartVaccinesDoses.setTitle("Dosi vaccini");
 		
-		CovidCommon.createRegionCheckboxesInRow("#rowRegionVaccines");
+		//CovidCommon.createRegionCheckboxesInRow("#rowRegionVaccines");
 		
 		
 		var i = 0;
@@ -180,6 +180,28 @@ var CovidCommon = (function(CovidCommon){
 			__REGIONS_MAP[region.code] = region;
 			i++;
 		}
+		
+		var test = new NationalChart("chartNational", "nationalDataCheckboxesWrapper", provinceColorPalette);
+		test.fetchData("2021-02-20", "2021-02-24");
+		var test2 = new RegionsChart("chartRegions", "rowRegionsCheckboxes", "covidData", provinceColorPalette);
+		test2.fetchData("2021-02-20", "2021-02-24");
+		var test3 = new ProvinceChart("chartProvince", "rowProvince", "region", provinceColorPalette);
+		test3.fetchData("2021-02-20", "2021-02-24");
+		
+		let config = {
+			regionCheckBoxesContainerId: "rowRegionVaccines",
+			colorPalette: provinceColorPalette,
+			idPersonCheckboxesWrapper: "vaccinesGivenCheckboxes",
+			canvasIdGivenVaccinesPerRegion: "chartVaccinesDelivered",
+			canvasIdSuppliersVaccines: "chartVaccinesSuppliers",
+			canvasIdVaccinesPerPerson: "chartVaccinesGiven",
+			canvasIdVaccinesPerAge: "chartVaccinesPerAge",
+			convasIdVaccninsDoses: "chartVaccinesDoses"
+		};
+		
+		var test4 = new VaccinesChart(config);
+		test4.fetchData("2021-02-20", "2021-02-24");
+		
 	}
 	
 	/**

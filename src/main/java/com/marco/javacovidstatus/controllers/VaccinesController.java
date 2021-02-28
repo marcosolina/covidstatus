@@ -60,8 +60,8 @@ public class VaccinesController {
 		List<LocalDate> list = Arrays.asList(dates.toArray(new LocalDate[0]));
 		Collections.sort(list);
 		
-		resp.setDataPerRegion(dataPerRegion);
-		resp.setDataPerSupplier(supplierData);
+		resp.setDeliveredPerRegion(dataPerRegion);
+		resp.setDeliveredPerSupplier(supplierData);
 		resp.setArrDates(list);
 		resp.setDataVaccinatedPeople(dataVaccinatedPeople);
 		resp.setDataVaccinatedPerAge(dataVaccinatedPerAge);
