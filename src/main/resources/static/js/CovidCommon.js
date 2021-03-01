@@ -12,36 +12,33 @@ var CovidCommon = (function(CovidCommon){
 	var dateFormat = "dd/mm/yy";
 	var darkModeOn = false;
 	
-	let nationalChart = {};
-	let regionsChart = {};
-	let provinceChart = {};
-	let vaccinesChart = {};
+	var charts = {};
 	
 	/*
 		This array stores my color palette
 	*/
-	var provinceColorPalette = [];
-	provinceColorPalette.push("rgb( 255, 0, 0, 1)");
-	provinceColorPalette.push("rgb( 174, 67, 67, 1)");
-	provinceColorPalette.push("rgb( 186, 124, 66, 1)");
-	provinceColorPalette.push("rgb( 255, 123, 0, 1)");
-	provinceColorPalette.push("rgb( 182, 176, 53, 1)");
-	provinceColorPalette.push("rgb( 79, 255, 0, 1)");
-	provinceColorPalette.push("rgb( 255, 242, 0, 1)");
-	provinceColorPalette.push("rgb( 90, 163, 57, 1)");
-	provinceColorPalette.push("rgb( 55, 98, 36, 1)");
-	provinceColorPalette.push("rgb( 255, 104, 104, 1)");
-	provinceColorPalette.push("rgb( 0, 255, 229, 1)");
-	provinceColorPalette.push("rgb( 56, 180, 167, 1)");
-	provinceColorPalette.push("rgb( 67, 141, 133 , 1)");
-	provinceColorPalette.push("rgb( 0, 54, 255 , 1)");
-	provinceColorPalette.push("rgb( 119, 148, 255 , 1)");
-	provinceColorPalette.push("rgb( 48, 68, 144 , 1)");
-	provinceColorPalette.push("rgb( 255, 169, 90, 1)");
-	provinceColorPalette.push("rgb( 183, 0, 255 , 1)");
-	provinceColorPalette.push("rgb( 101, 46, 122 , 1)");
-	provinceColorPalette.push("rgb( 255, 0, 223 , 1)");
-	provinceColorPalette.push("rgb( 0, 0, 0, 1)");
+	var colorPalette = [];
+	colorPalette.push("rgb( 255, 0, 0, 1)");
+	colorPalette.push("rgb( 174, 67, 67, 1)");
+	colorPalette.push("rgb( 186, 124, 66, 1)");
+	colorPalette.push("rgb( 255, 123, 0, 1)");
+	colorPalette.push("rgb( 182, 176, 53, 1)");
+	colorPalette.push("rgb( 79, 255, 0, 1)");
+	colorPalette.push("rgb( 222, 212, 22, 1)");
+	colorPalette.push("rgb( 90, 163, 57, 1)");
+	colorPalette.push("rgb( 55, 98, 36, 1)");
+	colorPalette.push("rgb( 255, 104, 104, 1)");
+	colorPalette.push("rgb( 15, 212, 192, 1)");
+	colorPalette.push("rgb( 56, 180, 167, 1)");
+	colorPalette.push("rgb( 67, 141, 133 , 1)");
+	colorPalette.push("rgb( 0, 54, 255 , 1)");
+	colorPalette.push("rgb( 119, 148, 255 , 1)");
+	colorPalette.push("rgb( 48, 68, 144 , 1)");
+	colorPalette.push("rgb( 255, 169, 90, 1)");
+	colorPalette.push("rgb( 183, 0, 255 , 1)");
+	colorPalette.push("rgb( 101, 46, 122 , 1)");
+	colorPalette.push("rgb( 255, 0, 223 , 1)");
+	colorPalette.push("rgb( 0, 0, 0, 1)");
 
 	
 	
@@ -82,28 +79,19 @@ var CovidCommon = (function(CovidCommon){
 		
 		var i = 0;
 		for(let region of __REGIONS_LIST){
-			region.color= provinceColorPalette[i],
+			region.color= colorPalette[i],
 			__REGIONS_MAP[region.code] = region;
 			i++;
 		}
 		
-		nationalChart = new NationalChart("chartNational", "nationalDataCheckboxesWrapper", provinceColorPalette);
-		regionsChart = new RegionsChart("chartRegions", "rowRegionsCheckboxes", "covidData", provinceColorPalette);
-		provinceChart = new ProvinceChart("chartProvince", "rowProvince", "region", provinceColorPalette);
-		
-		let config = {
-			regionCheckBoxesContainerId: "rowRegionVaccines",
-			colorPalette: provinceColorPalette,
-			idPersonCheckboxesWrapper: "vaccinesGivenCheckboxes",
-			canvasIdGivenVaccinesPerRegion: "chartVaccinesDelivered",
-			canvasIdSuppliersVaccines: "chartVaccinesSuppliers",
-			canvasIdVaccinesPerPerson: "chartVaccinesGiven",
-			canvasIdVaccinesPerAge: "chartVaccinesPerAge",
-			convasIdVaccninsDoses: "chartVaccinesDoses"
-		};
-		
-		vaccinesChart = new VaccinesChart(config);
-		
+		charts.nationalChart = new NationalChart("chartNational", "nationalDataCheckboxesWrapper", colorPalette);
+		charts.regionsChart = new RegionsChart("chartRegions", "rowRegionsCheckboxes", "covidData", colorPalette);
+		charts.provinceChart = new ProvinceChart("chartProvince", "rowProvince", "region", colorPalette);
+		charts.vaccinesPerPersonChart = new VaccinesPerPersonChart("chartVaccinesGiven", "vaccinesGivenCheckboxes", colorPalette);
+		charts.suppliersChart = new SuppliersVaccinesChart("chartVaccinesSuppliers", colorPalette);
+		charts.deliveredVaccines = new DeliveredVaccinesChart("chartVaccinesDelivered", "rowRegionVaccines", colorPalette);
+		charts.vaccinesDoses = new VaccinesDoseChart("chartVaccinesDoses", colorPalette);
+		charts.vaccinesPerAge = new VaccinesPerAgeChart("chartVaccinesPerAge", colorPalette);
 	}
 	
 	/**
@@ -124,10 +112,9 @@ var CovidCommon = (function(CovidCommon){
 		var from = $.datepicker.formatDate('yy-mm-dd', CovidCommon.getDate(document.getElementById("dateFrom")));
 		var to = $.datepicker.formatDate('yy-mm-dd', CovidCommon.getDate(document.getElementById("dateTo")));
 		
-		nationalChart.fetchData(from, to);
-		regionsChart.fetchData(from, to);
-		provinceChart.fetchData(from, to);
-		vaccinesChart.fetchData(from, to);
+		for(let chartProp in charts){
+			charts[chartProp].fetchData(from, to);
+		}
 	}
 
 	/**
@@ -145,15 +132,10 @@ var CovidCommon = (function(CovidCommon){
 			$(selector).removeClass(className);
 		}
 		
-		nationalChart.setDarkMode(darkModeOn);
-		regionsChart.setDarkMode(darkModeOn);
-		provinceChart.setDarkMode(darkModeOn);
-		vaccinesChart.setDarkMode(darkModeOn);
-		
-		nationalChart.drawChart();
-		regionsChart.drawChart();
-		provinceChart.drawChart();
-		vaccinesChart.drawChart();
+		for(let chartProp in charts){
+			charts[chartProp].setDarkMode(darkModeOn);
+			charts[chartProp].drawChart();
+		}
     }
 	
 	return CovidCommon;
