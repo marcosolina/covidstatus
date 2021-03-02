@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.util.List;
 
 import com.marco.javacovidstatus.model.entitites.EntityVacciniConsegne;
+import com.marco.javacovidstatus.model.entitites.VacciniConsegne;
+import com.marco.javacovidstatus.model.entitites.VeccinesDeliveredPerSupplier;
 
 /**
  * This interface provides the contract to query the database
@@ -29,12 +31,9 @@ public interface VeccinesDeliveredRepo {
 	 */
 	public boolean deleteAll();
 
-	/**
-	 * It returns the list of delivered vaccines between the provided data
-	 * 
-	 * @param start
-	 * @param end
-	 * @return
-	 */
-	public List<EntityVacciniConsegne> getDeliveredVaccinesBetween(LocalDate start, LocalDate end);
+	public List<VacciniConsegne> getDeliveredVaccinesBetween(LocalDate start, LocalDate end);
+
+	public List<VeccinesDeliveredPerSupplier> getDeliveredVaccinesPerSupplierBetween(LocalDate start, LocalDate end);
+
+	public void addMissingRowsForNoDeliveryDays();
 }

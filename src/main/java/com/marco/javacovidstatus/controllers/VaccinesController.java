@@ -22,6 +22,7 @@ import com.marco.javacovidstatus.model.dto.VaccinesDelivered;
 import com.marco.javacovidstatus.model.rest.ReqGetVaccinesDelivered;
 import com.marco.javacovidstatus.model.rest.RespGetVaccinesDelivered;
 import com.marco.javacovidstatus.services.interfaces.VaccineDateService;
+import com.marco.utils.MarcoException;
 
 /**
  * This controller returns the data used to create the Vaccines charts
@@ -44,30 +45,36 @@ public class VaccinesController {
 		LOGGER.trace("Inside VaccinesController.getVaccinesDeliveredData");
 		RespGetVaccinesDelivered resp = new RespGetVaccinesDelivered();
 
-		
-		Map<String, List<VaccinesDelivered>> regionData = service.getDeliveredVaccinesBetweenDatesPerRegion(request.getFrom(), request.getTo());
-		Map<String, Integer> supplierData = service.getDeliveredVaccinesBetweenDatesPerSupplier(request.getFrom(), request.getTo()); 
-		Map<String, List<Long>> dataVaccinatedPeople = service.getVaccinatedPeopleBetweenDates(request.getFrom(), request.getTo());
-		Map<String, Integer> dataVaccinatedPerAge = service.getVaccinatedAgeRangeBetweenDates(request.getFrom(), request.getTo());
-		Map<String, Integer> dataShotNumber = service.getGiveShotNumberBetweenDates(request.getFrom(), request.getTo());
-		
-		Map<String, List<Integer>> dataPerRegion = new HashMap<>();
-		regionData.forEach((k, v) -> dataPerRegion.put(k, v.stream().map(VaccinesDelivered::getDosesDelivered).collect(Collectors.toList())));
-		
-		Set<LocalDate> dates = new HashSet<>();
-		regionData.forEach((k, v) -> v.stream().forEach(o -> dates.add(o.getDate())));
-		
-		List<LocalDate> list = Arrays.asList(dates.toArray(new LocalDate[0]));
-		Collections.sort(list);
-		
-		resp.setDeliveredPerRegion(dataPerRegion);
-		resp.setDeliveredPerSupplier(supplierData);
-		resp.setArrDates(list);
-		resp.setDataVaccinatedPeople(dataVaccinatedPeople);
-		resp.setDataVaccinatedPerAge(dataVaccinatedPerAge);
-		resp.setDataShotNumber(dataShotNumber);
-		resp.setStatus(true);
+		try {
+			Map<String, List<VaccinesDelivered>> regionData = service.getDeliveredVaccinesPerRegionBetweenDatesPerRegion(request.getFrom(), request.getTo());
+			Map<String, Long> supplierData = service.getDeliveredVaccinesBetweenDatesPerSupplier(request.getFrom(), request.getTo());
 
+			Map<String, List<Long>> dataVaccinatedPeople = service.getVaccinatedPeopleBetweenDates(request.getFrom(), request.getTo());
+			Map<String, Long> dataVaccinatedPerAge = service.getVaccinatedAgeRangeBetweenDates(request.getFrom(), request.getTo());
+			Map<String, Long> dataShotNumber = service.getGiveShotNumberBetweenDates(request.getFrom(), request.getTo());
+
+			Map<String, List<Long>> dataPerRegion = new HashMap<>();
+			regionData.forEach((k, v) -> dataPerRegion.put(k,
+					v.stream().map(VaccinesDelivered::getDosesDelivered).collect(Collectors.toList())));
+
+			Set<LocalDate> dates = new HashSet<>();
+			regionData.forEach((k, v) -> v.stream().forEach(o -> dates.add(o.getDate())));
+
+			List<LocalDate> list = Arrays.asList(dates.toArray(new LocalDate[0]));
+			Collections.sort(list);
+
+			resp.setDeliveredPerRegion(dataPerRegion);
+			resp.setDeliveredPerSupplier(supplierData);
+			resp.setArrDates(list);
+			resp.setDataVaccinatedPeople(dataVaccinatedPeople);
+			resp.setDataVaccinatedPerAge(dataVaccinatedPerAge);
+			resp.setDataShotNumber(dataShotNumber);
+			resp.setStatus(true);
+
+		} catch (MarcoException e) {
+			e.printStackTrace();
+			resp.addError(e);
+		}
 		return resp;
 	}
 }
