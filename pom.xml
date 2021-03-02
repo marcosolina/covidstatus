@@ -11,7 +11,7 @@
 	</parent>
 	<groupId>com.marco</groupId>
 	<artifactId>covidstatus</artifactId>
-	<version>0.0.7</version>
+	<version>0.0.8</version>
 	<name>CovidStatus</name>
 	<description>Demo project for Spring Boot</description>
 

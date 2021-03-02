@@ -20,26 +20,26 @@ public class RespGetVaccinesDelivered extends RespDataSets {
 	/**
 	 * The first key is the provider, the second key is the region code
 	 */
-	private Map<String, List<Integer>> deliveredPerRegion;
-	private Map<String, Integer> deliveredPerSupplier;
+	private Map<String, List<Long>> deliveredPerRegion;
+	private Map<String, Long> deliveredPerSupplier;
 
 	private Map<String, List<Long>> dataVaccinatedPeople;
-	private Map<String, Integer> dataVaccinatedPerAge;
-	private Map<String, Integer> dataShotNumber;
+	private Map<String, Long> dataVaccinatedPerAge;
+	private Map<String, Long> dataShotNumber;
 
-	public Map<String, List<Integer>> getDeliveredPerRegion() {
+	public Map<String, List<Long>> getDeliveredPerRegion() {
 		return deliveredPerRegion;
 	}
 
-	public void setDeliveredPerRegion(Map<String, List<Integer>> deliveredPerRegion) {
+	public void setDeliveredPerRegion(Map<String, List<Long>> deliveredPerRegion) {
 		this.deliveredPerRegion = deliveredPerRegion;
 	}
 
-	public Map<String, Integer> getDeliveredPerSupplier() {
+	public Map<String, Long> getDeliveredPerSupplier() {
 		return deliveredPerSupplier;
 	}
 
-	public void setDeliveredPerSupplier(Map<String, Integer> deliveredPerSupplier) {
+	public void setDeliveredPerSupplier(Map<String, Long> deliveredPerSupplier) {
 		this.deliveredPerSupplier = deliveredPerSupplier;
 	}
 
@@ -51,19 +51,19 @@ public class RespGetVaccinesDelivered extends RespDataSets {
 		this.dataVaccinatedPeople = dataVaccinatedPeople;
 	}
 
-	public Map<String, Integer> getDataVaccinatedPerAge() {
+	public Map<String, Long> getDataVaccinatedPerAge() {
 		return dataVaccinatedPerAge;
 	}
 
-	public void setDataVaccinatedPerAge(Map<String, Integer> dataVaccinatedPerAge) {
+	public void setDataVaccinatedPerAge(Map<String, Long> dataVaccinatedPerAge) {
 		this.dataVaccinatedPerAge = dataVaccinatedPerAge;
 	}
 
-	public Map<String, Integer> getDataShotNumber() {
+	public Map<String, Long> getDataShotNumber() {
 		return dataShotNumber;
 	}
 
-	public void setDataShotNumber(Map<String, Integer> dataShotNumber) {
+	public void setDataShotNumber(Map<String, Long> dataShotNumber) {
 		this.dataShotNumber = dataShotNumber;
 	}
 

@@ -3,7 +3,9 @@ package com.marco.javacovidstatus.repositories.interfaces;
 import java.time.LocalDate;
 import java.util.List;
 
+import com.marco.javacovidstatus.model.entitites.AgeRangeGivenVaccines;
 import com.marco.javacovidstatus.model.entitites.DailySumGivenVaccines;
+import com.marco.javacovidstatus.model.entitites.DoseCounter;
 import com.marco.javacovidstatus.model.entitites.EntitySomministrazioneVaccini;
 
 /**
@@ -29,14 +31,11 @@ public interface GivenVaccinesRepo {
 	 */
 	public boolean deleteAll();
 
-	/**
-	 * It returns the data of the vaccines given during the specified period
-	 * 
-	 * @param start
-	 * @param end
-	 * @return
-	 */
-	public List<EntitySomministrazioneVaccini> getGivenVaccinesBetween(LocalDate start, LocalDate end);
+	public List<DoseCounter> getDosesCounterVaccinesBetween(LocalDate start, LocalDate end);
 	
 	public List<DailySumGivenVaccines> getDailySumGivenVaccinesBetween(LocalDate start, LocalDate end);
+	
+	public void addMissingRowsForNoVaccinationDays();
+	
+	public List<AgeRangeGivenVaccines> getDeliveredVaccinesPerAgeRange(LocalDate start, LocalDate end);
 }

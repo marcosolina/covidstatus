@@ -73,6 +73,8 @@ public class VaccinesGivenDownloader extends CovidDataDownloader {
 			
 			repo.saveEntity(data);
 		});
+		
+		repo.addMissingRowsForNoVaccinationDays();
 	}
 
 	@Override
