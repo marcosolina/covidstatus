@@ -1,4 +1,4 @@
-package com.marco.javacovidstatus.model.rest;
+package com.marco.javacovidstatus.model.rest.vaccines;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -9,7 +9,7 @@ import java.time.LocalDate;
  * @author Marco
  *
  */
-public class ReqGetVaccinesDelivered implements Serializable {
+public class ReqGetVaccinesData implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private LocalDate from;
 	private LocalDate to;

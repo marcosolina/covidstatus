@@ -69,7 +69,7 @@ class ProvinceChart {
 					regionCode: $("#" + this.dropDownRegionsId).val(),
 				},
 				showLoading: true,
-				url: __URLS.URL_PROVINCE_DATA
+				url: __URLS.INFECTIONS.PROVINCE_DATA
 			}).then(this.dataRetrieved.bind(this));
 		}
 	}

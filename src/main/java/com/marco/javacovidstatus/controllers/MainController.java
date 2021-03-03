@@ -26,16 +26,17 @@ import com.marco.javacovidstatus.model.dto.NationalDailyData;
 import com.marco.javacovidstatus.model.dto.ProvinceDailyData;
 import com.marco.javacovidstatus.model.dto.Region;
 import com.marco.javacovidstatus.model.dto.RegionalDailyData;
-import com.marco.javacovidstatus.model.rest.ReqGetNationalData;
-import com.marco.javacovidstatus.model.rest.ReqGetProvinceData;
-import com.marco.javacovidstatus.model.rest.ReqGetRegionData;
-import com.marco.javacovidstatus.model.rest.RespGetNationalData;
-import com.marco.javacovidstatus.model.rest.RespGetProvinceData;
-import com.marco.javacovidstatus.model.rest.RespGetRegionData;
-import com.marco.javacovidstatus.model.rest.RespProvinceChartData;
-import com.marco.javacovidstatus.model.rest.RespRegionChartData;
+import com.marco.javacovidstatus.model.rest.infections.ReqGetNationalData;
+import com.marco.javacovidstatus.model.rest.infections.ReqGetProvinceData;
+import com.marco.javacovidstatus.model.rest.infections.ReqGetRegionData;
+import com.marco.javacovidstatus.model.rest.infections.RespGetNationalData;
+import com.marco.javacovidstatus.model.rest.infections.RespGetProvinceData;
+import com.marco.javacovidstatus.model.rest.infections.RespGetRegionData;
+import com.marco.javacovidstatus.model.rest.infections.RespProvinceChartData;
+import com.marco.javacovidstatus.model.rest.infections.RespRegionChartData;
 import com.marco.javacovidstatus.services.interfaces.CovidDataService;
 import com.marco.javacovidstatus.services.interfaces.RegionMapDownloader;
+import com.marco.javacovidstatus.utils.CovidUtils;
 
 /**
  * This is a standard Spring controller
@@ -47,10 +48,12 @@ import com.marco.javacovidstatus.services.interfaces.RegionMapDownloader;
 public class MainController {
     private static final Logger LOGGER = LoggerFactory.getLogger(MainController.class);
     
-    @Value("${server.servlet.context-path}")
-    private String contextPath;
     @Value("${covidstatus.version}")
     private String appVersion;
+    
+    @Autowired
+    private CovidUtils covidUtils;
+    
     public static final String MAPPING_HOME = "/";
     public static final String MAPPING_REGION_DATA = "/regiondata";
     public static final String MAPPING_NATIONAL_DATA = "/nationaldata";
@@ -89,12 +92,7 @@ public class MainController {
         /*
          * Passing to the front end the map of available end points
          */
-        Map<String, String> mapUrls = new HashMap<>();
-        mapUrls.put("URL_REGION_DATA", contextPath + MAPPING_REGION_DATA);
-        mapUrls.put("URL_NATIONAL_DATA", contextPath + MAPPING_NATIONAL_DATA);
-        mapUrls.put("URL_PROVINCE_DATA", contextPath + MAPPING_PROVINCE_DATA);
-        mapUrls.put("URL_VACCINES_DELIVERED_DATA", contextPath + VaccinesController.MAPPING_VACCINE_DELIVERED_DATA);
-        model.addAttribute("urls", mapUrls);
+        model.addAttribute("urls", covidUtils.getEndPoints());
         
         model.addAttribute("appVersion", appVersion);
         

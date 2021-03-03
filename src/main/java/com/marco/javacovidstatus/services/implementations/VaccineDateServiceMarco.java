@@ -2,12 +2,17 @@ package com.marco.javacovidstatus.services.implementations;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.marco.javacovidstatus.model.dto.VaccinatedPeople;
 import com.marco.javacovidstatus.model.dto.VaccinesDelivered;
 import com.marco.javacovidstatus.model.entitites.AgeRangeGivenVaccines;
 import com.marco.javacovidstatus.model.entitites.DailySumGivenVaccines;
@@ -55,11 +60,16 @@ public class VaccineDateServiceMarco implements VaccineDateService {
 	}
 
 	@Override
-	public Map<String, List<Long>> getVaccinatedPeopleBetweenDates(LocalDate start, LocalDate end) {
-		List<DailySumGivenVaccines> list = repoGiven.getDailySumGivenVaccinesBetween(start, end);
-
+	public VaccinatedPeople getVaccinatedPeopleBetweenDates(LocalDate start, LocalDate end) {
+		
+		VaccinatedPeople vp = new VaccinatedPeople();
+		Set<LocalDate> dateSet = new HashSet<>();
 		Map<String, List<Long>> dataMap = new HashMap<>();
+		
+		List<DailySumGivenVaccines> list = repoGiven.getDailySumGivenVaccinesBetween(start, end);
+		
 		list.forEach(dto -> {
+			dateSet.add(dto.getDate());
 			dataMap.compute(Constants.VACCINES_GIVEN_MEN, (k, v) -> {
 				if(v == null) {
 					v = new ArrayList<>();
@@ -117,8 +127,14 @@ public class VaccineDateServiceMarco implements VaccineDateService {
 				return v;
 			});
 		});
+		
+		vp.setDataVaccinatedPeople(dataMap);
+		
+		List<LocalDate> dateList = Arrays.asList(dateSet.toArray(new LocalDate[0]));
+		Collections.sort(dateList);
+		vp.setDates(dateList);
 
-		return dataMap;
+		return vp;
 	}
 
 	@Override

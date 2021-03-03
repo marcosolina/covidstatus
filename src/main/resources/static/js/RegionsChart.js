@@ -62,7 +62,7 @@ class RegionsChart {
 					covidData: $("#" + this.dropDownDataTypeId).val(),
 				},
 				showLoading: true,
-				url: __URLS.URL_REGION_DATA
+				url: __URLS.INFECTIONS.REGION_DATA
 			}).then(this.dataRetrieved.bind(this));
 		}
 	}
