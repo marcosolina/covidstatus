@@ -23,7 +23,7 @@ class VaccinesDoseChart {
 					to: to
 				},
 				showLoading: true,
-				url: __URLS.URL_VACCINES_DELIVERED_DATA
+				url: __URLS.VACCINES.DOSE
 			}).then(this.dataRetrieved.bind(this));
 		}
 	}

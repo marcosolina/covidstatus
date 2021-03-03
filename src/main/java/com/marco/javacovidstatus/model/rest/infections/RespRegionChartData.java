@@ -1,4 +1,4 @@
-package com.marco.javacovidstatus.model.rest;
+package com.marco.javacovidstatus.model.rest.infections;
 
 import java.util.List;
 

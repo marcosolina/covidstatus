@@ -58,7 +58,7 @@ class NationalChart {
 					to: to
 				},
 				showLoading: true,
-				url: __URLS.URL_NATIONAL_DATA
+				url: __URLS.INFECTIONS.NATIONAL_DATA
 			}).then(this.dataRetrieved.bind(this));
 		}
 	}

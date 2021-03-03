@@ -56,7 +56,7 @@ class DeliveredVaccinesChart {
 					to: to
 				},
 				showLoading: true,
-				url: __URLS.URL_VACCINES_DELIVERED_DATA
+				url: __URLS.VACCINES.PER_REGION
 			}).then(this.dataRetrieved.bind(this));
 		}
 	}
