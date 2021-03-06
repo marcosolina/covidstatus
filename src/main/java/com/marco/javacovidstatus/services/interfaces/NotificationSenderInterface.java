@@ -8,5 +8,12 @@ package com.marco.javacovidstatus.services.interfaces;
  */
 public interface NotificationSenderInterface {
 
-    public void sendEmailMessage(String to, String title, String message);
+	/**
+	 * It sends the email message
+	 * 
+	 * @param to
+	 * @param title
+	 * @param message
+	 */
+	public void sendEmailMessage(String to, String title, String message);
 }

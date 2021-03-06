@@ -4,9 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
 
-@Service
 public class CovidUtils {
 	@Value("${server.servlet.context-path}")
 	private String contextPath;
@@ -28,6 +26,11 @@ public class CovidUtils {
 	public static final String MAPPING_VACCINE_VACCINATED_PER_AGE = "/vaccineperage";
 	public static final String MAPPING_VACCINE_DOSES_DATA = "/vaccinesdoses";
 
+	/**
+	 * It returns a map of the available Covid Endpoints
+	 * 
+	 * @return
+	 */
 	public Map<String, Map<String, String>> getEndPoints() {
 		Map<String, Map<String, String>> map = new HashMap<>();
 

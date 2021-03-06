@@ -31,7 +31,7 @@ import com.marco.javacovidstatus.utils.CovidUtils;
 import com.marco.utils.MarcoException;
 
 /**
- * This controller returns the data used to create the Vaccines charts
+ * This controller returns the data related to the Vaccines
  * 
  * @author Marco
  *
@@ -43,22 +43,38 @@ public class VaccinesController {
 	@Autowired
 	private VaccineDateService service;
 
+	/**
+	 * It returns the delivered vaccines per Region
+	 * 
+	 * @param request
+	 * @return
+	 */
 	@PostMapping(value = CovidUtils.MAPPING_VACCINE_DELIVERED_PER_REGION)
 	@ResponseBody
-	public RespGetVaccinesDeliveredPerRegion getVaccinesDeliveredPerRegionData(@RequestBody ReqGetVaccinesData request) {
+	public RespGetVaccinesDeliveredPerRegion getVaccinesDeliveredPerRegionData(
+			@RequestBody ReqGetVaccinesData request) {
 		LOGGER.trace("Inside VaccinesController.getVaccinesDeliveredPerRegionData");
-		
+
 		RespGetVaccinesDeliveredPerRegion resp = new RespGetVaccinesDeliveredPerRegion();
 
+		/*
+		 * The Key of the map is the Region Code
+		 */
 		Map<String, List<VaccinesDelivered>> regionData = service.getDeliveredVaccinesPerRegionBetweenDatesPerRegion(request.getFrom(), request.getTo());
-
+		
+		/*
+		 * Createing a map with:
+		 * Key -> Region Code
+		 * Value -> List of number of delivered vaccines
+		 */
 		Map<String, List<Long>> dataPerRegion = new HashMap<>();
-		regionData.forEach((k, v) -> dataPerRegion.put(k,
-				v.stream().map(VaccinesDelivered::getDosesDelivered).collect(Collectors.toList())));
+		regionData.forEach((k, v) -> dataPerRegion.put(k,v.stream().map(VaccinesDelivered::getDosesDelivered).collect(Collectors.toList())));
 
+		/*
+		 * Creating the list of Dates for which I have the data
+		 */
 		Set<LocalDate> dates = new HashSet<>();
 		regionData.forEach((k, v) -> v.stream().forEach(o -> dates.add(o.getDate())));
-
 		List<LocalDate> list = Arrays.asList(dates.toArray(new LocalDate[0]));
 		Collections.sort(list);
 
@@ -68,31 +84,43 @@ public class VaccinesController {
 		return resp;
 	}
 
+	/**
+	 * It returns the vaccines delivered by every supplier
+	 * @param request
+	 * @return
+	 */
 	@PostMapping(value = CovidUtils.MAPPING_VACCINE_DELIVERED_PER_SUPPLIER)
 	@ResponseBody
-	public RespGetVaccinesDeliveredPerSupplier getVaccinesDeliveredPerSupplier(@RequestBody ReqGetVaccinesData request) {
+	public RespGetVaccinesDeliveredPerSupplier getVaccinesDeliveredPerSupplier(
+			@RequestBody ReqGetVaccinesData request) {
 		LOGGER.trace("Inside VaccinesController.getVaccinesDeliveredPerSupplier");
-		
-		RespGetVaccinesDeliveredPerSupplier resp = new RespGetVaccinesDeliveredPerSupplier();
 
-		Map<String, Long> supplierData = service.getDeliveredVaccinesBetweenDatesPerSupplier(request.getFrom(),
-				request.getTo());
+		RespGetVaccinesDeliveredPerSupplier resp = new RespGetVaccinesDeliveredPerSupplier();
+		Map<String, Long> supplierData = service.getDeliveredVaccinesBetweenDatesPerSupplier(request.getFrom(), request.getTo());
 
 		resp.setDeliveredPerSupplier(supplierData);
 		resp.setStatus(true);
 
 		return resp;
 	}
-	
+
+	/**
+	 * It returns the number of persons who has received either the first
+	 * or second vaccine dose
+	 * 
+	 * @param request
+	 * @return
+	 */
 	@PostMapping(value = CovidUtils.MAPPING_VACCINE_DOSES_DATA)
 	@ResponseBody
 	public RespGetVaccinesDosesData getVaccinesDosesData(@RequestBody ReqGetVaccinesData request) {
 		LOGGER.trace("Inside VaccinesController.getVaccinesDosesData");
-		
+
 		RespGetVaccinesDosesData resp = new RespGetVaccinesDosesData();
 
 		try {
-			Map<String, Long> dataShotNumber = service.getGiveShotNumberBetweenDates(request.getFrom(), request.getTo());
+			Map<String, Long> dataShotNumber = service.getGiveShotNumberBetweenDates(request.getFrom(),
+					request.getTo());
 			resp.setDataShotNumber(dataShotNumber);
 			resp.setStatus(true);
 
@@ -102,15 +130,22 @@ public class VaccinesController {
 		}
 		return resp;
 	}
-	
+
+	/**
+	 * It returns the data of the persons vaccinated
+	 * 
+	 * @param request
+	 * @return
+	 */
 	@PostMapping(value = CovidUtils.MAPPING_VACCINE_VACCINATED_PEOPLE)
 	@ResponseBody
 	public RespGetVaccinatedPeopleData getVaccinatedPeople(@RequestBody ReqGetVaccinesData request) {
 		LOGGER.trace("Inside VaccinesController.getVaccinatedPeople");
-		
+
 		RespGetVaccinatedPeopleData resp = new RespGetVaccinatedPeopleData();
 
-		VaccinatedPeople dataVaccinatedPeople = service.getVaccinatedPeopleBetweenDates(request.getFrom(), request.getTo());
+		VaccinatedPeople dataVaccinatedPeople = service.getVaccinatedPeopleBetweenDates(request.getFrom(),
+				request.getTo());
 
 		resp.setDataVaccinatedPeople(dataVaccinatedPeople.getDataVaccinatedPeople());
 		resp.setArrDates(dataVaccinatedPeople.getDates());
@@ -118,15 +153,22 @@ public class VaccinesController {
 
 		return resp;
 	}
-	
+
+	/**
+	 * It returns the number of people vaccinated grouped per age
+	 * 
+	 * @param request
+	 * @return
+	 */
 	@PostMapping(value = CovidUtils.MAPPING_VACCINE_VACCINATED_PER_AGE)
 	@ResponseBody
 	public RespGetVaccinatedPeoplePerAgeData getVaccinesPerAgeData(@RequestBody ReqGetVaccinesData request) {
 		LOGGER.trace("Inside VaccinesController.getVaccinesPerAgeData");
-		
+
 		RespGetVaccinatedPeoplePerAgeData resp = new RespGetVaccinatedPeoplePerAgeData();
 
-		Map<String, Long> dataVaccinatedPerAge = service.getVaccinatedAgeRangeBetweenDates(request.getFrom(), request.getTo());
+		Map<String, Long> dataVaccinatedPerAge = service.getVaccinatedAgeRangeBetweenDates(request.getFrom(),
+				request.getTo());
 
 		resp.setDataVaccinatedPerAge(dataVaccinatedPerAge);
 		resp.setStatus(true);

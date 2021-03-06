@@ -2,6 +2,12 @@ package com.marco.javacovidstatus.model.entitites;
 
 import java.time.LocalDate;
 
+/**
+ * Custom Query Model to retrieve the number of delivered vaccines per Region
+ * 
+ * @author Marco
+ *
+ */
 public class VacciniConsegne {
 
 	private String regionCode;

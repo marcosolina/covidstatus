@@ -42,6 +42,10 @@ class CovidChart {
 		It draws the chart
 	 */
 	drawChart(darkModeOn, type){
+		
+		let fontColor = darkModeOn ? "#FFFFFF" : "#666666";
+		let color = darkModeOn ? "rgba(255, 255, 255, 0.5)" : 'rgba(0, 0, 0, 0.1)';
+		
 		var config = {
 		    type: type || 'line',
 		    data: {
@@ -51,7 +55,8 @@ class CovidChart {
 		    options:{
 				title: {
 					display: this.title != undefined ? true : false,
-					text: this.title || ''
+					text: this.title || '',
+					fontColor: fontColor,
 				},
 				legend:{
 					display: false
@@ -59,18 +64,18 @@ class CovidChart {
 				scales: {
 	                yAxes: [{
 	                    ticks: {
-	                        fontColor: darkModeOn ? "#FFFFFF" : "#666666",
+	                        fontColor: fontColor,
 	                    },
 						gridLines: {
-							color: darkModeOn ? "rgba(255, 255, 255, 0.5)" : 'rgba(0, 0, 0, 0.1)',
+							color: color,
 						}
 	                }],
 	                xAxes: [{
 	                    ticks: {
-	                        fontColor: darkModeOn ? "#FFFFFF" : "#666666",
+	                        fontColor: fontColor,
 	                    },
 						gridLines: {
-							color: darkModeOn ? "rgba(255, 255, 255, 0.5)" : 'rgba(0, 0, 0, 0.1)',
+							color: color,
 						}
 	                }]
 	            },
@@ -78,7 +83,10 @@ class CovidChart {
 		    	tooltips: {
 					mode: 'index',
 					intersect: false,
-					itemSort: this.sortTooltip
+					itemSort: this.sortTooltip,
+					callbacks: {
+						label: this.formatToolTip 
+					}
 				},
 
 		    }
@@ -91,6 +99,17 @@ class CovidChart {
 		this.chart = new Chart(this.docElement, config);
 		
 		
+	}
+	
+	formatToolTip(toolTip, data){
+		let tmp = data.datasets[toolTip.datasetIndex].label;
+		
+		// If it is an Integer
+		if(toolTip.yLabel % 1 === 0){
+			return tmp + ": " + toolTip.yLabel.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+		}else{
+			return tmp + ": " + toolTip.yLabel;
+		}
 	}
 	
 	/**

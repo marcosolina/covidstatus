@@ -3,6 +3,13 @@ package com.marco.javacovidstatus.model.entitites;
 import java.io.Serializable;
 import java.time.LocalDate;
 
+/**
+ * Custom Query Model used to retrieve number of given vaccines per "people
+ * type"
+ * 
+ * @author Marco
+ *
+ */
 public class DailySumGivenVaccines implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private LocalDate date;
@@ -17,9 +24,9 @@ public class DailySumGivenVaccines implements Serializable {
 	private long firstDoseCounter;
 	private long secondDoseCounter;
 
-	public DailySumGivenVaccines(LocalDate date, long menCounter, long womenCounter,
-			long nhsPeopleCounter, long nonNhsPeopleCounter, long nursingHomeCounter, long over80Counter,
-			long publicOrderCounter, long schoolStaffCounter, long firstDoseCounter, long secondDoseCounter) {
+	public DailySumGivenVaccines(LocalDate date, long menCounter, long womenCounter, long nhsPeopleCounter,
+			long nonNhsPeopleCounter, long nursingHomeCounter, long over80Counter, long publicOrderCounter,
+			long schoolStaffCounter, long firstDoseCounter, long secondDoseCounter) {
 		super();
 		this.date = date;
 		this.menCounter = menCounter;

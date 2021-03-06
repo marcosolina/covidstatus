@@ -1,5 +1,11 @@
 package com.marco.javacovidstatus.model.entitites;
 
+/**
+ * Custom Query Model used to retrieve number of given vaccines grouped by age
+ * 
+ * @author Marco
+ *
+ */
 public class AgeRangeGivenVaccines {
 	private String ageRange;
 	private Long men;

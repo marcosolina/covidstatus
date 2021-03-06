@@ -1,0 +1,34 @@
+<div th:fragment="jsImports" th:remove="tag">
+<!--
+****************************************************************************
+  Begin Fragment: Javascript Imports
+****************************************************************************
+-->
+
+<script th:src="@{/webjars/js/Chart.min.js}"></script>
+<script th:src="@{/webjars/js/popper.min.js}"></script>	
+<script th:src="@{/webjars/js/jquery.min.js}"></script>
+<script th:src="@{/webjars/js/jquery-ui.min.js}"></script>
+<script th:src="@{/webjars/js/bootstrap.bundle.min.js}"></script>
+<script th:src="@{/webjars/js/pnotify.custom.min.js}"></script>
+
+<script th:src="@{/webjars/js/MarcoUtils.js}"></script>
+<script th:src="@{/js/CovidChart.js?v=} + ${appVersion}"></script>	
+<script th:src="@{/js/DoughnutChart.js?v=} + ${appVersion}"></script>
+<script th:src="@{/js/CovidChartDataset.js?v=} + ${appVersion}"></script>
+<script th:src="@{/js/CovidCommon.js?v=} + ${appVersion}"></script>
+<script th:src="@{/js/NationalChart.js?v=} + ${appVersion}"></script>
+<script th:src="@{/js/RegionsChart.js?v=} + ${appVersion}"></script>
+<script th:src="@{/js/ProvinceChart.js?v=} + ${appVersion}"></script>
+<script th:src="@{/js/VaccinesPerPersonChart.js?v=} + ${appVersion}"></script>
+<script th:src="@{/js/SuppliersVaccinesChart.js?v=} + ${appVersion}"></script>
+<script th:src="@{/js/DeliveredVaccinesChart.js?v=} + ${appVersion}"></script>
+<script th:src="@{/js/VaccinesDoseChart.js?v=} + ${appVersion}"></script>
+<script th:src="@{/js/VaccinesPerAgeChart.js?v=} + ${appVersion}"></script>
+
+<!--
+****************************************************************************
+  End Fragment: Javascript Imports
+****************************************************************************
+-->
+</div>

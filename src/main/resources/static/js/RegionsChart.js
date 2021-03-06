@@ -1,3 +1,6 @@
+/**
+	This class will fetch the data at Region level and draw the Chart
+ */
 class RegionsChart {
 
 	constructor(canvasId, checkBoxesContainerId, dropDownDataTypeId, colorPalette) {
@@ -19,6 +22,9 @@ class RegionsChart {
 		this.darkModeOn = darkModeOn;
 	}
 
+	/*
+		It adds the checkboxes to select/de-select the regions to display the data for
+	*/
 	addCheckboxes() {
 		var strTmpl = '<div class="col-6 col-sm-4 col-md-3 col-lg-2 col-xl-2">' +
 							'<div class="custom-control custom-switch">' +

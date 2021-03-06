@@ -1,3 +1,6 @@
+/**
+	This class will fetch the data at national level and draw the Chart
+ */
 class NationalChart {
 
 	constructor(canvasId, checkBoxesContainerId, colorPalette) {
@@ -28,6 +31,9 @@ class NationalChart {
 		this.darkModeOn = darkModeOn;
 	}
 
+	/**
+		Adds the checkboxes used to select/de-select the data to display
+	 */
 	addCheckboxes() {
 		let template = '<div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2">' +
 							'<div class="custom-control custom-switch">' +

@@ -31,11 +31,39 @@ public interface GivenVaccinesRepo {
 	 */
 	public boolean deleteAll();
 
+	/**
+	 * It returns an array with total vaccines given between the provided dates
+	 * grouped by "Dose"
+	 * 
+	 * @param start
+	 * @param end
+	 * @return
+	 */
 	public List<DoseCounter> getDosesCounterVaccinesBetween(LocalDate start, LocalDate end);
-	
+
+	/**
+	 * It returns an array with total vaccines given between the provided dates to
+	 * the different type of people
+	 * 
+	 * @param start
+	 * @param end
+	 * @return
+	 */
 	public List<DailySumGivenVaccines> getDailySumGivenVaccinesBetween(LocalDate start, LocalDate end);
-	
+
+	/**
+	 * It performs some queries to add empty rows for the days where the data are
+	 * missing
+	 */
 	public void addMissingRowsForNoVaccinationDays();
-	
+
+	/**
+	 * It returns an array with the total vaccines given betweeb the provided dates
+	 * group by age range
+	 * 
+	 * @param start
+	 * @param end
+	 * @return
+	 */
 	public List<AgeRangeGivenVaccines> getDeliveredVaccinesPerAgeRange(LocalDate start, LocalDate end);
 }

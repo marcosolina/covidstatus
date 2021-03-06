@@ -39,137 +39,157 @@ import com.marco.javacovidstatus.services.interfaces.RegionMapDownloader;
 import com.marco.javacovidstatus.utils.CovidUtils;
 
 /**
- * This is a standard Spring controller
+ * This controller provides the information related to the infections
  * 
  * @author Marco
  *
  */
 @Controller
 public class MainController {
-    private static final Logger LOGGER = LoggerFactory.getLogger(MainController.class);
-    
-    @Value("${covidstatus.version}")
-    private String appVersion;
-    
-    @Autowired
-    private CovidUtils covidUtils;
-    
-    public static final String MAPPING_HOME = "/";
-    public static final String MAPPING_REGION_DATA = "/regiondata";
-    public static final String MAPPING_NATIONAL_DATA = "/nationaldata";
-    public static final String MAPPING_PROVINCE_DATA = "/provincedata";
-    
-    @Autowired
-    private CovidDataService service;
-    
-    @Autowired
-    private RegionMapDownloader regionMapDownloader;
+	private static final Logger LOGGER = LoggerFactory.getLogger(MainController.class);
 
-    @GetMapping(value = MAPPING_HOME)
-    public String homePage(Model model) {
-        LOGGER.info("Inside MainController.homePage");
-        
-        /*
-         * By default I will show the data of the last month to the user
-         */
-        LocalDate today = LocalDate.now();
-        model.addAttribute("from", today.minusMonths(1).format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
-        model.addAttribute("to", today.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+	@Value("${covidstatus.version}")
+	private String appVersion;
 
-        /*
-         * Preparing the data for the 2 drop down
-         */
-        EnumMap<CovidDataType, String> mapCovidDataType = new EnumMap<>(CovidDataType.class);
-        Arrays.asList(CovidDataType.values()).stream().forEach(c -> mapCovidDataType.put(c, c.getDescription()));
-        model.addAttribute("covidDataType", mapCovidDataType);
-        model.addAttribute("regions", service.getRegionsList());
-        
-        /*
-         * Adding the SVG map
-         */
-        model.addAttribute("svgmap", regionMapDownloader.createHtmlMap());
-        
-        /*
-         * Passing to the front end the map of available end points
-         */
-        model.addAttribute("urls", covidUtils.getEndPoints());
-        
-        model.addAttribute("appVersion", appVersion);
-        
-        return "index";
-    }
+	@Autowired
+	private CovidUtils covidUtils;
 
-    @PostMapping(value = MAPPING_REGION_DATA)
-    @ResponseBody
-    public RespGetRegionData getRegionalData(@RequestBody ReqGetRegionData request) {
-        RespGetRegionData resp = new RespGetRegionData();
+	public static final String MAPPING_HOME = "/";
+	public static final String MAPPING_REGION_DATA = "/regiondata";
+	public static final String MAPPING_NATIONAL_DATA = "/nationaldata";
+	public static final String MAPPING_PROVINCE_DATA = "/provincedata";
 
-        List<RegionalDailyData> listData = service.getRegionalDatesInRangeAscending(request.getFrom(), request.getTo());
-        List<Region> listRegions = service.getRegionsList();
+	@Autowired
+	private CovidDataService service;
 
-        if (!listData.isEmpty()) {
-            listRegions.stream().forEach(r -> {
-                RespRegionChartData chartData = new RespRegionChartData();
-                chartData.setLabel(r.getDesc());
+	@Autowired
+	private RegionMapDownloader regionMapDownloader;
 
-                Function<RegionalDailyData, Object> mapper = null;
+	/**
+	 * Home page Endpoint. It will return the html file to load and the initial set
+	 * of properties to us in the model.
+	 * 
+	 * 
+	 * @param model
+	 * @return
+	 */
+	@GetMapping(value = MAPPING_HOME)
+	public String homePage(Model model) {
+		LOGGER.info("Inside MainController.homePage");
 
-                switch (request.getCovidData()) {
-                case NEW_TESTS:
-                    mapper = RegionalDailyData::getNewTests;
-                    break;
-                case CASUALTIES:
-                    mapper = RegionalDailyData::getNewCasualties;
-                    break;
-                case NEW_HOSPITALISED:
-                    mapper = RegionalDailyData::getNewHospitalized;
-                    break;
-                case NEW_INFECTIONS:
-                    mapper = RegionalDailyData::getNewInfections;
-                    break;
-                case NEW_INTENSIVE_THERAPY:
-                    mapper = RegionalDailyData::getNewIntensiveTherapy;
-                    break;
-                case NEW_RECOVER:
-                    mapper = RegionalDailyData::getNewRecovered;
-                    break;
-                case PERC_CASUALTIES:
-                    mapper = RegionalDailyData::getCasualtiesPercentage;
-                    break;
-                case PERC_INFECTIONS:
-                    mapper = RegionalDailyData::getInfectionPercentage;
-                    break;
-                }
+		/*
+		 * By default I will show the data of the last month to the user
+		 */
+		LocalDate today = LocalDate.now();
+		model.addAttribute("from", today.minusMonths(1).format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+		model.addAttribute("to", today.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
 
-                chartData.setData(listData.stream().filter(data -> data.getRegionCode().equals(r.getCode())).map(mapper)
-                        .collect(Collectors.toList()));
-                resp.getRegionData().put(r.getCode(), chartData);
-            });
+		/*
+		 * Preparing the data for the 2 drop down
+		 */
+		EnumMap<CovidDataType, String> mapCovidDataType = new EnumMap<>(CovidDataType.class);
+		Arrays.asList(CovidDataType.values()).stream().forEach(c -> mapCovidDataType.put(c, c.getDescription()));
+		model.addAttribute("covidDataType", mapCovidDataType);
+		model.addAttribute("regions", service.getRegionsList());
 
-            Region region = listRegions.get(0);
-            resp.setArrDates(listData.stream().filter(r -> r.getRegionCode().equals(region.getCode()))
-                    .map(RegionalDailyData::getDate).collect(Collectors.toList()));
-        }
+		/*
+		 * Adding the SVG map
+		 */
+		model.addAttribute("svgmap", regionMapDownloader.createHtmlMap());
 
-        resp.setStatus(true);
-        return resp;
-    }
+		/*
+		 * Passing to the front end the map of available end points
+		 */
+		model.addAttribute("urls", covidUtils.getEndPoints());
 
-    @PostMapping(value = MAPPING_PROVINCE_DATA)
-    @ResponseBody
-    public RespGetProvinceData getProvinceData(@RequestBody ReqGetProvinceData request) {
-        RespGetProvinceData resp = new RespGetProvinceData();
+		model.addAttribute("appVersion", appVersion);
 
-        /*
-         * Get all the data for the provinces of the specific region
-         */
-        List<ProvinceDailyData> listData = service.getProvinceDataInRangeAscending(request.getFrom(), request.getTo(),
-                request.getRegionCode());
-        List<String> provinces = service.getProfinceListForRegion(request.getRegionCode());
-        
-        Map<String, RespProvinceChartData> map = new HashMap<>();
-        if (!listData.isEmpty()) {
-            // @formatter:off
+		return "index";
+	}
+
+	/**
+	 * It returns the data per Region
+	 * 
+	 * @param request
+	 * @return
+	 */
+	@PostMapping(value = MAPPING_REGION_DATA)
+	@ResponseBody
+	public RespGetRegionData getRegionalData(@RequestBody ReqGetRegionData request) {
+		RespGetRegionData resp = new RespGetRegionData();
+
+		List<RegionalDailyData> listData = service.getRegionalDatesInRangeAscending(request.getFrom(), request.getTo());
+		List<Region> listRegions = service.getRegionsList();
+
+		if (!listData.isEmpty()) {
+			listRegions.stream().forEach(r -> {
+				RespRegionChartData chartData = new RespRegionChartData();
+				chartData.setLabel(r.getDesc());
+
+				Function<RegionalDailyData, Object> mapper = null;
+
+				switch (request.getCovidData()) {
+				case NEW_TESTS:
+					mapper = RegionalDailyData::getNewTests;
+					break;
+				case CASUALTIES:
+					mapper = RegionalDailyData::getNewCasualties;
+					break;
+				case NEW_HOSPITALISED:
+					mapper = RegionalDailyData::getNewHospitalized;
+					break;
+				case NEW_INFECTIONS:
+					mapper = RegionalDailyData::getNewInfections;
+					break;
+				case NEW_INTENSIVE_THERAPY:
+					mapper = RegionalDailyData::getNewIntensiveTherapy;
+					break;
+				case NEW_RECOVER:
+					mapper = RegionalDailyData::getNewRecovered;
+					break;
+				case PERC_CASUALTIES:
+					mapper = RegionalDailyData::getCasualtiesPercentage;
+					break;
+				case PERC_INFECTIONS:
+					mapper = RegionalDailyData::getInfectionPercentage;
+					break;
+				}
+
+				chartData.setData(listData.stream().filter(data -> data.getRegionCode().equals(r.getCode())).map(mapper)
+						.collect(Collectors.toList()));
+				resp.getRegionData().put(r.getCode(), chartData);
+			});
+
+			Region region = listRegions.get(0);
+			resp.setArrDates(listData.stream().filter(r -> r.getRegionCode().equals(region.getCode()))
+					.map(RegionalDailyData::getDate).collect(Collectors.toList()));
+		}
+
+		resp.setStatus(true);
+		return resp;
+	}
+
+	/**
+	 * It returns the data per Province
+	 * 
+	 * @param request
+	 * @return
+	 */
+	@PostMapping(value = MAPPING_PROVINCE_DATA)
+	@ResponseBody
+	public RespGetProvinceData getProvinceData(@RequestBody ReqGetProvinceData request) {
+		RespGetProvinceData resp = new RespGetProvinceData();
+
+		/*
+		 * Get all the data for the provinces of the specific region
+		 */
+		List<ProvinceDailyData> listData = service.getProvinceDataInRangeAscending(request.getFrom(), request.getTo(),
+				request.getRegionCode());
+		List<String> provinces = service.getProfinceListForRegion(request.getRegionCode());
+
+		Map<String, RespProvinceChartData> map = new HashMap<>();
+		if (!listData.isEmpty()) {
+			// @formatter:off
             
             provinces.stream().forEach(codiceProvincia -> {
                 /*
@@ -184,32 +204,39 @@ public class MainController {
                 map.put(codiceProvincia, data);
             });
             // @formatter:on
-            String province = provinces.get(0);
-            resp.setArrDates(listData.stream().filter(p -> p.getProvinceCode().equals(province))
-                    .map(ProvinceDailyData::getDate).collect(Collectors.toList()));
-            resp.setProvinceData(map);
-        }
-        resp.setStatus(true);
-        return resp;
-    }
+			String province = provinces.get(0);
+			resp.setArrDates(listData.stream().filter(p -> p.getProvinceCode().equals(province))
+					.map(ProvinceDailyData::getDate).collect(Collectors.toList()));
+			resp.setProvinceData(map);
+		}
+		resp.setStatus(true);
+		return resp;
+	}
 
-    @PostMapping(value = MAPPING_NATIONAL_DATA)
-    @ResponseBody
-    public RespGetNationalData getNationalData(@RequestBody ReqGetNationalData request) {
-        RespGetNationalData resp = new RespGetNationalData();
+	/**
+	 * It returns the National data
+	 * @param request
+	 * @return
+	 */
+	@PostMapping(value = MAPPING_NATIONAL_DATA)
+	@ResponseBody
+	public RespGetNationalData getNationalData(@RequestBody ReqGetNationalData request) {
+		RespGetNationalData resp = new RespGetNationalData();
 
-        List<NationalDailyData> listData = service.getDatesInRangeAscending(request.getFrom(), request.getTo());
-        resp.setArrDates(listData.stream().map(NationalDailyData::getDate).collect(Collectors.toList()));
-        resp.setArrNewCasualties(listData.stream().map(NationalDailyData::getNewCasualties).collect(Collectors.toList()));
-        resp.setArrNewHospitalized(listData.stream().map(NationalDailyData::getNewHospitalized).collect(Collectors.toList()));
-        resp.setArrNewInfections(listData.stream().map(NationalDailyData::getNewInfections).collect(Collectors.toList()));
-        resp.setArrNewIntensiveTherapy(listData.stream().map(NationalDailyData::getNewIntensiveTherapy).collect(Collectors.toList()));
-        resp.setArrNewRecovered(listData.stream().map(NationalDailyData::getNewRecovered).collect(Collectors.toList()));
-        resp.setArrNewTests(listData.stream().map(NationalDailyData::getNewTests).collect(Collectors.toList()));
-        resp.setArrPercCasualties(listData.stream().map(NationalDailyData::getCasualtiesPercentage).collect(Collectors.toList()));
-        resp.setArrPercInfections(listData.stream().map(NationalDailyData::getInfectionPercentage).collect(Collectors.toList()));
+		List<NationalDailyData> listData = service.getDatesInRangeAscending(request.getFrom(), request.getTo());
+		// @formatter:off
+		resp.setArrDates(				listData.stream().map(NationalDailyData::getDate)					.collect(Collectors.toList()));
+		resp.setArrNewCasualties(		listData.stream().map(NationalDailyData::getNewCasualties)			.collect(Collectors.toList()));
+		resp.setArrNewHospitalized(		listData.stream().map(NationalDailyData::getNewHospitalized)		.collect(Collectors.toList()));
+		resp.setArrNewInfections(		listData.stream().map(NationalDailyData::getNewInfections)			.collect(Collectors.toList()));
+		resp.setArrNewIntensiveTherapy(	listData.stream().map(NationalDailyData::getNewIntensiveTherapy)	.collect(Collectors.toList()));
+		resp.setArrNewRecovered(		listData.stream().map(NationalDailyData::getNewRecovered)			.collect(Collectors.toList()));
+		resp.setArrNewTests(			listData.stream().map(NationalDailyData::getNewTests)				.collect(Collectors.toList()));
+		resp.setArrPercCasualties(		listData.stream().map(NationalDailyData::getCasualtiesPercentage)	.collect(Collectors.toList()));
+		resp.setArrPercInfections(		listData.stream().map(NationalDailyData::getInfectionPercentage)	.collect(Collectors.toList()));
+		// @formatter:on
 
-        resp.setStatus(true);
-        return resp;
-    }
+		resp.setStatus(true);
+		return resp;
+	}
 }

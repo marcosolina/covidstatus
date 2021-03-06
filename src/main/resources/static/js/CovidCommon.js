@@ -1,5 +1,5 @@
 /**
-	Simple object to provid simple set of functions
+	Simple object to provid some basic common function
  */
 var CovidCommon = (function(CovidCommon){
 	"use strict";
@@ -12,7 +12,7 @@ var CovidCommon = (function(CovidCommon){
 	var dateFormat = "dd/mm/yy";
 	var darkModeOn = false;
 	
-	var charts = {};
+	var charts = {};// It will hold the charts objects instances 
 	
 	/*
 		This array stores my color palette
@@ -55,11 +55,13 @@ var CovidCommon = (function(CovidCommon){
 		var dateFrom = $( "#dateFrom" ).datepicker({
 							minDate: "24/02/2020",
 						    changeMonth: true,
+							changeYear: true,
 						    numberOfMonths: 1,
 						    dateFormat: dateFormat
 						  });
 		var dateTo = $( "#dateTo" ).datepicker({
 				            changeMonth: true,
+							changeYear: true, 
 				            numberOfMonths: 1,
 				            dateFormat: dateFormat
 				          });
@@ -76,7 +78,10 @@ var CovidCommon = (function(CovidCommon){
 		
 		$("#btnTheme").click(CovidCommon.changeTheme);
 		
-		
+		/*
+		* Creating a new region map including a color
+		* from the color Palette
+		*/
 		var i = 0;
 		for(let region of __REGIONS_LIST){
 			region.color= colorPalette[i],
@@ -84,14 +89,17 @@ var CovidCommon = (function(CovidCommon){
 			i++;
 		}
 		
-		charts.nationalChart = new NationalChart("chartNational", "nationalDataCheckboxesWrapper", colorPalette);
-		charts.regionsChart = new RegionsChart("chartRegions", "rowRegionsCheckboxes", "covidData", colorPalette);
-		charts.provinceChart = new ProvinceChart("chartProvince", "rowProvince", "region", colorPalette);
-		charts.vaccinesPerPersonChart = new VaccinesPerPersonChart("chartVaccinesGiven", "vaccinesGivenCheckboxes", colorPalette);
-		charts.suppliersChart = new SuppliersVaccinesChart("chartVaccinesSuppliers", colorPalette);
-		charts.deliveredVaccines = new DeliveredVaccinesChart("chartVaccinesDelivered", "rowRegionVaccines", colorPalette);
-		charts.vaccinesDoses = new VaccinesDoseChart("chartVaccinesDoses", colorPalette);
-		charts.vaccinesPerAge = new VaccinesPerAgeChart("chartVaccinesPerAge", colorPalette);
+		/*
+		* Creating an instance of the charts
+		*/
+		charts.nationalChart			= new NationalChart("chartNational", "nationalDataCheckboxesWrapper", colorPalette);
+		charts.regionsChart				= new RegionsChart("chartRegions", "rowRegionsCheckboxes", "covidData", colorPalette);
+		charts.provinceChart			= new ProvinceChart("chartProvince", "rowProvince", "region", colorPalette);
+		charts.vaccinesPerPersonChart	= new VaccinesPerPersonChart("chartVaccinesGiven", "vaccinesGivenCheckboxes", colorPalette);
+		charts.suppliersChart			= new SuppliersVaccinesChart("chartVaccinesSuppliers", colorPalette);
+		charts.deliveredVaccines		= new DeliveredVaccinesChart("chartVaccinesDelivered", "rowRegionVaccines", colorPalette);
+		charts.vaccinesDoses			= new VaccinesDoseChart("chartVaccinesDoses", colorPalette);
+		charts.vaccinesPerAge			= new VaccinesPerAgeChart("chartVaccinesPerAge", colorPalette);
 	}
 	
 	/**
@@ -108,6 +116,12 @@ var CovidCommon = (function(CovidCommon){
 		return date;
     }
 
+	/*
+	* It is called when the user changes the date range.
+	* It will loop through all the charts objects and 
+	* request them to fecth the data for the new selected
+	* date range
+	*/
 	CovidCommon.changeDates = function() {
 		var from = $.datepicker.formatDate('yy-mm-dd', CovidCommon.getDate(document.getElementById("dateFrom")));
 		var to = $.datepicker.formatDate('yy-mm-dd', CovidCommon.getDate(document.getElementById("dateTo")));
@@ -118,7 +132,7 @@ var CovidCommon = (function(CovidCommon){
 	}
 
 	/**
-		It changes the CSS theme
+	* Switching the Themes
 	*/
 	CovidCommon.changeTheme = function() {
 		darkModeOn = !darkModeOn;

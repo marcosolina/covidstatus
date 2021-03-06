@@ -1,5 +1,12 @@
 package com.marco.javacovidstatus.model.entitites;
 
+/**
+ * Custom Query Model used to retrieve the number of delivered doses per
+ * Supplier
+ * 
+ * @author Marco
+ *
+ */
 public class VeccinesDeliveredPerSupplier {
 
 	private String supplier;

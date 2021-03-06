@@ -52,6 +52,8 @@ class DoughnutChart {
 			colors.push(dataSet.backgroundColor);
 		}
 		
+		let fontColor = darkModeOn ? "#FFFFFF" : "#666666";
+		
 		var config = {
 		    type: 'doughnut',
 		    data: {
@@ -64,15 +66,15 @@ class DoughnutChart {
 		    options:{
 				title: {
 					display: this.title != undefined ? true : false,
-					text: this.title || ''
+					text: this.title || '',
+					fontColor: fontColor
 				},
-				
+				legend:{
+					labels:{
+						fontColor: fontColor
+					}
+				},
 		    	responsive: true,
-				title: {
-					display: this.title != undefined ? true : false,
-					text: this.title || ''
-				},
-
 		    }
 		    
 		};

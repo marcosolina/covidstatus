@@ -6,13 +6,16 @@ import java.util.Map;
 import com.marco.javacovidstatus.model.rest.RespDataSets;
 
 /**
- * Http response model used to return the delivered vaccines data
+ * Response model used to return the number of vaccines delivered per region
  * 
  * @author Marco
  *
  */
 public class RespGetVaccinesDeliveredPerRegion extends RespDataSets {
 
+	/**
+	 * The key is the Region code
+	 */
 	private Map<String, List<Long>> deliveredPerRegion;
 
 	public Map<String, List<Long>> getDeliveredPerRegion() {
