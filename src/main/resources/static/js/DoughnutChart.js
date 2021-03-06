@@ -88,7 +88,7 @@ class DoughnutChart {
 	}
 	
 	formatToolTip(toolTip, data){
-		return data.labels[toolTip.datasetIndex] + ": " + data.datasets[toolTip.datasetIndex].data[toolTip.datasetIndex].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+		return data.labels[toolTip.index] + ": " + data.datasets[toolTip.index].data[toolTip.index].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 	}
 	
 	/**
