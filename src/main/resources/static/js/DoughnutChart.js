@@ -88,14 +88,7 @@ class DoughnutChart {
 	}
 	
 	formatToolTip(toolTip, data){
-		let tmp = data.datasets[toolTip.datasetIndex].label;
-		
-		// If it is an Integer
-		if(toolTip.yLabel % 1 === 0){
-			return tmp + ": " + toolTip.yLabel.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-		}else{
-			return tmp + ": " + toolTip.yLabel;
-		}
+		return data.labels[toolTip.datasetIndex] + ": " + data.datasets[toolTip.datasetIndex].data[toolTip.datasetIndex].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 	}
 	
 	/**
