@@ -1,5 +1,11 @@
 package com.marco.javacovidstatus.model.entitites;
 
+/**
+ * Custom Query Model used to retrieve the number of given vaccines doses
+ * 
+ * @author Marco
+ *
+ */
 public class DoseCounter {
 	private Long firstDoseCounter;
 	private Long secondDoseCounter;

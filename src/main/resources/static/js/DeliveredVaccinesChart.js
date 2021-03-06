@@ -1,5 +1,8 @@
+/**
+ This class it is used to create the chart of the delivered vaccines per region
+ */
 class DeliveredVaccinesChart {
-	//TODO
+	
 	constructor(canvasId, checkboxWrapperId, colorPalette) {
 		this.canvasId = canvasId;
 		this.checkboxWrapperId = checkboxWrapperId;
@@ -9,16 +12,18 @@ class DeliveredVaccinesChart {
 		this.lastResponse = {};
 
 		this.chart = new CovidChart(document.getElementById(this.canvasId));
-		this.chart.setTitle("Vaccini consegnati per regione");
+		//this.chart.setTitle("Vaccini consegnati per regione");
 
 		this.addRegionsCheckboxes();
 	}
-	
-	setDarkMode(darkModeOn){
+
+	setDarkMode(darkModeOn) {
 		this.darkModeOn = darkModeOn;
 	}
-	
 
+	/**
+		It creates the checboxes used to select/un-select the region
+	 */
 	addRegionsCheckboxes() {
 		var strTmpl = '<div class="col-6 col-sm-4 col-md-3 col-lg-2 col-xl-2">' +
 			'<div class="custom-control custom-switch">' +
@@ -72,9 +77,6 @@ class DeliveredVaccinesChart {
 		this.chart.clearDataSets();
 		this.chart.setLabels(this.lastResponse.arrDates);
 
-		/*
-			Line Chart to display the number of vaccnes delivered per region
-		*/
 		for (let region in this.lastResponse.deliveredPerRegion) {
 			if ($("#region-code-" + region).prop("checked")) {
 				var arr = this.lastResponse.deliveredPerRegion[region];
@@ -86,6 +88,6 @@ class DeliveredVaccinesChart {
 		}
 
 		this.chart.drawChart(this.darkModeOn);
-		
+
 	}
 }

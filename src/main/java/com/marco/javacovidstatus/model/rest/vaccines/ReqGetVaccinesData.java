@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.time.LocalDate;
 
 /**
- * HTTP Request to retrieve the list of delivered vaccines
+ * HTTP Request to retrieve the list of Vaccines Data in the date range
  * 
  * @author Marco
  *

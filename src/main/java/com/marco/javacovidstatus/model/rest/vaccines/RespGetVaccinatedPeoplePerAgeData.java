@@ -4,7 +4,16 @@ import java.util.Map;
 
 import com.marco.javacovidstatus.model.rest.RespDataSets;
 
-public class RespGetVaccinatedPeoplePerAgeData  extends RespDataSets {
+/**
+ * Response model used to return the given vaccines group by age range
+ * 
+ * @author Marco
+ *
+ */
+public class RespGetVaccinatedPeoplePerAgeData extends RespDataSets {
+	/**
+	 * The key is the "age range" example: 20-29, 30-39 etc
+	 */
 	private Map<String, Long> dataVaccinatedPerAge;
 
 	public Map<String, Long> getDataVaccinatedPerAge() {

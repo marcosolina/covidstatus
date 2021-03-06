@@ -1,5 +1,8 @@
+/**
+	This class will fetch the number of delivered vaccines grouped by supplier and draw the Chart
+ */
 class SuppliersVaccinesChart {
-	//TODO
+	
 	constructor(canvasId, colorPalette) {
 		this.colorPalette = colorPalette;
 		this.canvasId = canvasId;
@@ -40,9 +43,6 @@ class SuppliersVaccinesChart {
 		
 		this.chart.clearDataSets();
 
-		/*
-			Doughnut chart to show the suppliers
-		*/
 		var i = 0;
 		var arrLabels = [];
 		for (let supplier in this.lastResponse.deliveredPerSupplier) {

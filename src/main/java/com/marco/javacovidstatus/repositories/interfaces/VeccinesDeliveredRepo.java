@@ -31,9 +31,28 @@ public interface VeccinesDeliveredRepo {
 	 */
 	public boolean deleteAll();
 
+	/**
+	 * It returns the list of vaccines delivered to the regions every day in the
+	 * date range
+	 * 
+	 * @param start
+	 * @param end
+	 * @return
+	 */
 	public List<VacciniConsegne> getDeliveredVaccinesBetween(LocalDate start, LocalDate end);
 
+	/**
+	 * It returns the list of vaccines delivered by every supplier per every day in
+	 * the date range
+	 * 
+	 * @param start
+	 * @param end
+	 * @return
+	 */
 	public List<VeccinesDeliveredPerSupplier> getDeliveredVaccinesPerSupplierBetween(LocalDate start, LocalDate end);
 
+	/**
+	 * It adds the default rows for the days where data are missing
+	 */
 	public void addMissingRowsForNoDeliveryDays();
 }

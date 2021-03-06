@@ -30,6 +30,7 @@ import com.marco.javacovidstatus.services.interfaces.CovidDataService;
 import com.marco.javacovidstatus.services.interfaces.NotificationSenderInterface;
 import com.marco.javacovidstatus.services.interfaces.RegionMapDownloader;
 import com.marco.javacovidstatus.services.interfaces.VaccineDateService;
+import com.marco.javacovidstatus.utils.CovidUtils;
 
 /**
  * Standard Springboot configuration class
@@ -144,6 +145,11 @@ public class Beans {
     @Bean
     public RegionMapDownloader getRegionMapDownloader() {
     	return new RegionMapDownloaderFromNationalWebSite();
+    }
+    
+    @Bean 
+    public CovidUtils getCovidUtils() {
+    	return new CovidUtils();
     }
 
 }

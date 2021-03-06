@@ -24,6 +24,7 @@ All the "number" are retrieved from the [Ministero della Salute](https://www.sal
 
 ## History
 
+* **06/03/2021 v0.1.0**: Refactoring
 * **03/03/2021 v0.0.9**: Small refactoring
 * **02/03/2021 v0.0.8**: Vaccines bug fixing
 * **28/02/2021 v0.0.7**: Added Vaccination data
@@ -33,8 +34,3 @@ All the "number" are retrieved from the [Ministero della Salute](https://www.sal
 * **12/12/2020 v0.0.3**: Added the dark mode
 * **12/12/2020 v0.0.2**: Added the map with the color of the regions
 * **15/11/2020 v0.0.1**: First release
-
-## TODO
-
-* Refactoring the Vaccines code (When I have some extra time)
-* Anything else that cames up in my mind

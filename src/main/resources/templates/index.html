@@ -1,53 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="UTF-8">
 	<title>COVID-19 ITALY</title>
-	<meta name="theme-color" content="#d0d0d0">
-	<meta name="msapplication-navbutton-color" content="#d0d0d0">
-	<meta name="apple-mobile-web-app-status-bar-style" content="#d0d0d0">
-	<meta name="apple-mobile-web-app-capable" content="yes" />
-	<meta name="mobile-web-app-capable" content="yes" />
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta name="viewport" id="vp" content="initial-scale=1.0,user-scalable=no,maximum-scale=1"/>
-	<meta name="apple-mobile-web-app-status-bar-style" content="black">
-	
-	<meta property="og:title" content="Marco Solina | Italian Covid Status">
-	<meta name="description" content="Marco Solina : Every day the news provides the updated numbers with respect the Covid Situation in Italy. I don't think that the way that the news gives us the number is appropriate, hence I create this simple page, which retrieves the numbers from the Goverment Website, and it shows the same number but using charts">
-	<meta property="og:description" content="Marco Solina : Every day the news provides the updated numbers with respect the Covid Situation in Italy. I don't think that the way that the news gives us the number is appropriate, hence I create this simple page, which retrieves the numbers from the Goverment Website, and it shows the same number but using charts">
-	<meta property="og:type" content="website">
-	<meta property="og:url" content="https://marco.selfip.net/Covid19Italy">
-	<meta property="og:image" th:content="@{/pictures/covid-coronavirus.jpg}">
-	
-	<script th:src="@{/webjars/js/Chart.min.js}"></script>
-	<script th:src="@{/webjars/js/popper.min.js}"></script>	
-	<script th:src="@{/webjars/js/jquery.min.js}"></script>
-	<script th:src="@{/webjars/js/jquery-ui.min.js}"></script>
-	<script th:src="@{/webjars/js/bootstrap.bundle.min.js}"></script>
-	<script th:src="@{/webjars/js/pnotify.custom.min.js}"></script>
-	
-	<script th:src="@{/webjars/js/MarcoUtils.js}"></script>
-	<script th:src="@{/js/CovidChart.js?v=} + ${appVersion}"></script>	
-	<script th:src="@{/js/DoughnutChart.js?v=} + ${appVersion}"></script>
-	<script th:src="@{/js/CovidChartDataset.js?v=} + ${appVersion}"></script>
-	<script th:src="@{/js/CovidCommon.js?v=} + ${appVersion}"></script>
-	<script th:src="@{/js/NationalChart.js?v=} + ${appVersion}"></script>
-	<script th:src="@{/js/RegionsChart.js?v=} + ${appVersion}"></script>
-	<script th:src="@{/js/ProvinceChart.js?v=} + ${appVersion}"></script>
-	<script th:src="@{/js/VaccinesPerPersonChart.js?v=} + ${appVersion}"></script>
-	<script th:src="@{/js/SuppliersVaccinesChart.js?v=} + ${appVersion}"></script>
-	<script th:src="@{/js/DeliveredVaccinesChart.js?v=} + ${appVersion}"></script>
-	<script th:src="@{/js/VaccinesDoseChart.js?v=} + ${appVersion}"></script>
-	<script th:src="@{/js/VaccinesPerAgeChart.js?v=} + ${appVersion}"></script>
-	
-	<link rel="stylesheet" th:href="@{/webjars/css/jquery-ui.css}">
-	<link rel="stylesheet" th:href="@{/webjars/css/bootstrap.min.css}">
-	<link rel="stylesheet" th:href="@{/webjars/css/pnotify.custom.min.css}">
-	<link rel="stylesheet" th:href="@{/webjars/css/font-awesome.min.css}">
-	<link rel="stylesheet" th:href="@{/webjars/css/animate.css}">
-	<link rel="stylesheet" th:href="@{/webjars/css/marco.css}">
-	<link rel="stylesheet" th:href="@{/css/style.css?v=} + ${appVersion}">	
-	
+
+	<meta th:replace="fragments/metaHeaders.html::metaHeaders"></meta>
+	<script th:replace="fragments/importJs.html::jsImports"></script>
+	<style th:replace="fragments/importCss.html::cssImports"></style>
 	
 	<script th:inline="javascript">
 	/*<![CDATA[*/

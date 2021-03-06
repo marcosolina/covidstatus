@@ -4,6 +4,13 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Model that contains the information of the type of people who has received
+ * the vaccine
+ * 
+ * @author Marco
+ *
+ */
 public class VaccinatedPeople {
 	private List<LocalDate> dates;
 	private Map<String, List<Long>> dataVaccinatedPeople;

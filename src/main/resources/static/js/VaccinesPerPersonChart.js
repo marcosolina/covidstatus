@@ -1,3 +1,7 @@
+/**
+	This class will fetch the number of vaccines given at the different
+	type of people and draw the Chart
+ */
 class VaccinesPerPersonChart {
 	constructor(canvasId, checkBoxesContainerId, colorPalette) {
 		this.colorPalette = colorPalette;
@@ -18,7 +22,7 @@ class VaccinesPerPersonChart {
 		};
 		
 		this.chart = new CovidChart(document.getElementById(this.canvasId));
-		this.chart.setTitle("Persone Vaccinate");
+		//this.chart.setTitle("Persone Vaccinate");
 		
 		this.addPersonsCheckboxes();
 	}
@@ -27,6 +31,9 @@ class VaccinesPerPersonChart {
 		this.darkModeOn = darkModeOn;
 	}
 	
+	/**
+		It adds the checkboxes di select/de-select the person type to display the data for
+	 */
 	addPersonsCheckboxes() {
 		var strTmpl = '<div class="col-6 col-sm-4 col-md-3 col-lg-2 col-xl-2">' +
 							'<div class="custom-control custom-switch">' +

@@ -4,7 +4,16 @@ import java.util.Map;
 
 import com.marco.javacovidstatus.model.rest.RespDataSets;
 
-public class RespGetVaccinesDosesData  extends RespDataSets {
+/**
+ * Response model used to return the given doses data
+ * 
+ * @author Marco
+ *
+ */
+public class RespGetVaccinesDosesData extends RespDataSets {
+	/**
+	 * The key is the "Dose name", First, Second
+	 */
 	private Map<String, Long> dataShotNumber;
 
 	public Map<String, Long> getDataShotNumber() {

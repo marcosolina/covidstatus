@@ -1,3 +1,6 @@
+/**
+	This class will fetch the data at Province level and draw the Chart
+ */
 class ProvinceChart {
 
 	constructor(canvasId, checkBoxesContainerId, dropDownRegionsId, colorPalette) {
@@ -18,6 +21,9 @@ class ProvinceChart {
 		this.darkModeOn = darkModeOn;
 	}
 
+	/**
+		It adds the checkboxes used to select/de-select the provices to display the data for
+	 */
 	addCheckboxes() {
 		var strTmpl = '<div class="col-6 col-sm-4 col-md-3 col-lg-2 col-xl-2">' +
 			'<div class="custom-control custom-switch">' +

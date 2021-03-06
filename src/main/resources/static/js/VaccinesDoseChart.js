@@ -1,5 +1,8 @@
+/**
+	This class will fetch the number of given vaccines grouped by doses and draw the Chart
+ */
 class VaccinesDoseChart {
-	//TODO
+	
 	constructor(canvasId, colorPalette) {
 		this.canvasId = canvasId;
 		this.colorPalette = colorPalette;

@@ -1,3 +1,6 @@
+/**
+	This class will fetch the number of vaccines given grouped by age range and draw the Chart
+ */
 class VaccinesPerAgeChart {
 	
 	constructor(canvasId, colorPalette) {
