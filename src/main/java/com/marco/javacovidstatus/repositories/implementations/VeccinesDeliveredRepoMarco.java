@@ -124,7 +124,7 @@ public class VeccinesDeliveredRepoMarco implements VeccinesDeliveredRepo {
 
 		/*
 		 * SELECT supplier, sum(doses_delivered) as delivered FROM
-		 * public.vaccini_consegne group by supplier order by supplier
+		 * vaccini_consegne group by supplier order by supplier
 		 */
 		// @formatter:off
 		cq.multiselect(root.get(EntityVacciniConsegne_.ID).get(EntityVacciniConsegnePk_.SUPPLIER),
@@ -138,5 +138,20 @@ public class VeccinesDeliveredRepoMarco implements VeccinesDeliveredRepo {
 
 		TypedQuery<VeccinesDeliveredPerSupplier> tq = em.createQuery(cq);
 		return tq.getResultList();
+	}
+
+	@Override
+	public LocalDate getDataAvailableLastDate() {
+		/*
+         * SELECT MAX(DATE_DATA) AS DATE_DATA FROM VACCINI_CONSEGNE
+         */
+        
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<LocalDate> cq = cb.createQuery(LocalDate.class);
+        Root<EntityVacciniConsegne> root = cq.from(EntityVacciniConsegne.class);
+        
+        cq.select(cb.greatest(root.get(EntityVacciniConsegne_.ID).<LocalDate>get(EntityVacciniConsegnePk_.DATE)));
+        TypedQuery<LocalDate> tq = em.createQuery(cq);
+        return tq.getSingleResult();
 	}
 }

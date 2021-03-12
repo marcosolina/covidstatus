@@ -66,4 +66,11 @@ public interface GivenVaccinesRepo {
 	 * @return
 	 */
 	public List<AgeRangeGivenVaccines> getDeliveredVaccinesPerAgeRange(LocalDate start, LocalDate end);
+	
+	/**
+	 * It returns the last date of available data, null if none are available
+	 * 
+	 * @return
+	 */
+	public LocalDate getDataAvailableLastDate();
 }

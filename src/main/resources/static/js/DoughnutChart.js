@@ -90,16 +90,4 @@ class DoughnutChart {
 	formatToolTip(toolTip, data){
 		return data.labels[toolTip.index] + ": " + data.datasets[0].data[toolTip.index].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 	}
-	
-	/**
-		Function used to sort the info insed the tooltip
-	 */
-	sortTooltip(a, b, data){
-		var labelA = data.datasets[a.datasetIndex].label;
-		var labelB = data.datasets[b.datasetIndex].label;
-		if(labelA < labelB){
-			return -1;
-		}
-		return 1;
-	}
 }

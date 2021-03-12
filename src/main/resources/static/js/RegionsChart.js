@@ -26,7 +26,7 @@ class RegionsChart {
 		It adds the checkboxes to select/de-select the regions to display the data for
 	*/
 	addCheckboxes() {
-		var strTmpl = '<div class="col-6 col-sm-4 col-md-3 col-lg-2 col-xl-2">' +
+		var strTmpl = '<div class="col-6 col-sm-4 col-md-3 col-lg-2 col-xl-6">' +
 							'<div class="custom-control custom-switch">' +
 								'<input type="checkbox" class="custom-control-input" id="region-chart-region-%code%">' +
 								'<label id="label-region-chart-region-%code%" class="custom-control-label switch-label" style="color: %color%" for="region-chart-region-%code%">%desc%</label>' +

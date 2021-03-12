@@ -13,10 +13,16 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.marco.javacovidstatus.model.dto.VaccinatedPeople;
+import com.marco.javacovidstatus.model.dto.VaccinatedPeopleDto;
 import com.marco.javacovidstatus.model.dto.VaccinesDelivered;
+import com.marco.javacovidstatus.model.dto.VaccinesDeliveredDto;
 import com.marco.javacovidstatus.model.entitites.AgeRangeGivenVaccines;
 import com.marco.javacovidstatus.model.entitites.DailySumGivenVaccines;
 import com.marco.javacovidstatus.model.entitites.DoseCounter;
+import com.marco.javacovidstatus.model.entitites.EntitySomministrazioneVaccini;
+import com.marco.javacovidstatus.model.entitites.EntitySomministrazioneVacciniPk;
+import com.marco.javacovidstatus.model.entitites.EntityVacciniConsegne;
+import com.marco.javacovidstatus.model.entitites.EntityVacciniConsegnePk;
 import com.marco.javacovidstatus.model.entitites.VacciniConsegne;
 import com.marco.javacovidstatus.repositories.interfaces.GivenVaccinesRepo;
 import com.marco.javacovidstatus.repositories.interfaces.VeccinesDeliveredRepo;
@@ -164,11 +170,88 @@ public class VaccineDateServiceMarco implements VaccineDateService {
 		return map;
 	}
 	
+	@Override
+	public void deleteAllVaccineDeliveredData() {
+		repoDelivered.deleteAll();
+	}
+
+	@Override
+	public boolean saveVaccinesDeliveredData(VaccinesDeliveredDto data) {
+		return repoDelivered.saveEntity(fromVaccinesDeliveredDtoToVacciniEntityVacciniConsegne(data));
+	}
+
+	@Override
+	public void addMissingRowsForNoDeliveryDays() {
+		repoDelivered.addMissingRowsForNoDeliveryDays();
+	}
+
+	@Override
+	public LocalDate getVaccineDeliveredLastUpdateDate() {
+		return repoDelivered.getDataAvailableLastDate();
+	}
+
+	@Override
+	public void deleteAllGivenVaccineData() {
+		repoGiven.deleteAll();
+	}
+
+	@Override
+	public boolean saveGivenVaccinesData(VaccinatedPeopleDto data) {
+		return repoGiven.saveEntity(fromVaccinatedPeopleDtoToEntitySomministrazioneVaccini(data));
+	}
+
+	@Override
+	public void addMissingRowsForNoVaccinationDays() {
+		repoGiven.addMissingRowsForNoVaccinationDays();
+	}
+
+	@Override
+	public LocalDate getGivenVaccinesLastUpdateDate() {
+		return repoGiven.getDataAvailableLastDate();
+	}
+	
 	private VaccinesDelivered fromEntityVacciniConsegneToVaccinesDelivered(VacciniConsegne entity) {
 		VaccinesDelivered dto = new VaccinesDelivered();
 		dto.setDate(entity.getDate());
 		dto.setDosesDelivered(entity.getDosesDelivered());
 		return dto;
+	}
+	
+	private EntityVacciniConsegne fromVaccinesDeliveredDtoToVacciniEntityVacciniConsegne(VaccinesDeliveredDto dto) {
+		EntityVacciniConsegnePk key = new EntityVacciniConsegnePk();
+		key.setDate(dto.getDate());
+		key.setRegionCode(dto.getRegionCode());
+		key.setSupplier(dto.getSupplier());
+		
+		EntityVacciniConsegne entity = new EntityVacciniConsegne();
+		entity.setId(key);
+		entity.setDosesDelivered(dto.getDosesDelivered());
+		
+		return entity;
+	}
+	
+	private EntitySomministrazioneVaccini fromVaccinatedPeopleDtoToEntitySomministrazioneVaccini(VaccinatedPeopleDto dto) {
+		EntitySomministrazioneVaccini entity = new EntitySomministrazioneVaccini();
+		EntitySomministrazioneVacciniPk key = new EntitySomministrazioneVacciniPk();
+		
+		key.setDate(dto.getDate());
+		key.setRegionCode(dto.getRegionCode());
+		key.setSupplier(dto.getSupplier());
+		key.setAgeRange(dto.getAgeRange());
+		
+		entity.setId(key);
+		entity.setMenCounter(dto.getMenCounter());
+		entity.setWomenCounter(dto.getWomenCounter());
+		entity.setNhsPeopleCounter(dto.getNhsPeopleCounter());
+		entity.setNonNhsPeopleCounter(dto.getNonNhsPeopleCounter());
+		entity.setNursingHomeCounter(dto.getNursingHomeCounter());
+		entity.setOver80Counter(dto.getOver80Counter());
+		entity.setPublicOrderCounter(dto.getPublicOrderCounter());
+		entity.setSchoolStaffCounter(dto.getSchoolStaffCounter());
+		entity.setFirstDoseCounter(dto.getFirstDoseCounter());
+		entity.setSecondDoseCounter(dto.getSecondDoseCounter());
+		
+		return entity;
 	}
 
 }

@@ -35,7 +35,7 @@ class VaccinesPerPersonChart {
 		It adds the checkboxes di select/de-select the person type to display the data for
 	 */
 	addPersonsCheckboxes() {
-		var strTmpl = '<div class="col-6 col-sm-4 col-md-3 col-lg-2 col-xl-2">' +
+		var strTmpl = '<div class="col-6 col-sm-4 col-md-3 col-lg-2 col-xl-6">' +
 							'<div class="custom-control custom-switch">' +
 								'<input type="checkbox" class="custom-control-input" id="person-code-%code%">' +
 								'<label id="label-person-code-%code%" class="custom-control-label switch-label" style="color: %color%" for="person-code-%code%">%desc%</label>' +

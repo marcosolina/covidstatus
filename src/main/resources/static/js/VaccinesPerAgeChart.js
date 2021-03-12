@@ -43,14 +43,27 @@ class VaccinesPerAgeChart {
 		this.chart.clearDataSets();
 		
 		let i = 0;
+		
+		let keysSorted = Object.keys(this.lastResponse.dataVaccinatedPerAge).sort(function(a, b) {
+			if (a.charAt(0) < b.charAt(0)) {
+				return -1;
+			}
+			if (a.charAt(0) > b.charAt(0)) {
+				return 1;
+			}
+			return 0;
+		});
+		
+		
 		let arrLabels = [];
-		for (let ageRange in this.lastResponse.dataVaccinatedPerAge) {
-			const dataset = new CovidChartDataset(ageRange);
-			dataset.setData(this.lastResponse.dataVaccinatedPerAge[ageRange]);
+		keysSorted.forEach(function(key) {
+			const dataset = new CovidChartDataset(key);
+			dataset.setData(this.lastResponse.dataVaccinatedPerAge[key]);
 			dataset.setColor(this.colorPalette[i++]);
 			this.chart.addCovidChartDataset(dataset);
-			arrLabels.push(ageRange);
-		}
+			arrLabels.push(key);
+		}.bind(this));
+		
 		this.chart.setLabels(arrLabels);
 		this.chart.drawChart(this.darkModeOn);
 	}

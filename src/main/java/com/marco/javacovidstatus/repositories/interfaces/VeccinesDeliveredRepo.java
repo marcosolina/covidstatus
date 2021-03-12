@@ -55,4 +55,11 @@ public interface VeccinesDeliveredRepo {
 	 * It adds the default rows for the days where data are missing
 	 */
 	public void addMissingRowsForNoDeliveryDays();
+
+	/**
+	 * It returns the last date of available data, null if none are available
+	 * 
+	 * @return
+	 */
+	public LocalDate getDataAvailableLastDate();
 }
