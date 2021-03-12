@@ -5,7 +5,9 @@ import java.util.List;
 import java.util.Map;
 
 import com.marco.javacovidstatus.model.dto.VaccinatedPeople;
+import com.marco.javacovidstatus.model.dto.VaccinatedPeopleDto;
 import com.marco.javacovidstatus.model.dto.VaccinesDelivered;
+import com.marco.javacovidstatus.model.dto.VaccinesDeliveredDto;
 import com.marco.utils.MarcoException;
 
 /**
@@ -54,6 +56,7 @@ public interface VaccineDateService {
 
 	/**
 	 * It returns the numbers of vaccinated people grouped by age range
+	 * 
 	 * @param start
 	 * @param end
 	 * @return A map which contains:
@@ -66,6 +69,7 @@ public interface VaccineDateService {
 
 	/**
 	 * It returns the number of people who has received the vaccine shot
+	 * 
 	 * @param start
 	 * @param end
 	 * @return A map which contains:
@@ -76,4 +80,54 @@ public interface VaccineDateService {
 	 * @throws MarcoException
 	 */
 	public Map<String, Long> getGiveShotNumberBetweenDates(LocalDate start, LocalDate end) throws MarcoException;
+
+	/**
+	 * It removes all the data related to the vaccines delivered
+	 */
+	public void deleteAllVaccineDeliveredData();
+
+	/**
+	 * It stores the data in the database
+	 * 
+	 * @param data
+	 * @return
+	 */
+	public boolean saveVaccinesDeliveredData(VaccinesDeliveredDto data);
+
+	/**
+	 * Add default empty rows for the region who has not provided data for some days
+	 */
+	public void addMissingRowsForNoDeliveryDays();
+
+	/**
+	 * It returns the last date for which the Delivered Vaccines data are available
+	 * 
+	 * @return
+	 */
+	public LocalDate getVaccineDeliveredLastUpdateDate();
+
+	/**
+	 * It removes all the data related to the given vaccines
+	 */
+	public void deleteAllGivenVaccineData();
+
+	/**
+	 * It stores the data in the database
+	 * 
+	 * @param data
+	 * @return
+	 */
+	public boolean saveGivenVaccinesData(VaccinatedPeopleDto data);
+
+	/**
+	 * Add default empty rows for the region who has not provided data for some days
+	 */
+	public void addMissingRowsForNoVaccinationDays();
+
+	/**
+	 * It returns the last date for which the Given Vaccines data are available
+	 * 
+	 * @return
+	 */
+	public LocalDate getGivenVaccinesLastUpdateDate();
 }

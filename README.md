@@ -28,6 +28,7 @@ All the data are retrieved from the [Ministero della Salute](https://www.salute.
 
 ## History
 
+- **12/03/2021 v0.1.2**: UI XL Screen improvements, Backend improvements
 - **12/03/2021 v0.1.1**: Bug Fixing
 - **06/03/2021 v0.1.0**: Refactoring
 - **03/03/2021 v0.0.9**: Small refactoring

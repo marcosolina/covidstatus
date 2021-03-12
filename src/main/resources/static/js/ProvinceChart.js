@@ -25,12 +25,12 @@ class ProvinceChart {
 		It adds the checkboxes used to select/de-select the provices to display the data for
 	 */
 	addCheckboxes() {
-		var strTmpl = '<div class="col-6 col-sm-4 col-md-3 col-lg-2 col-xl-2">' +
-			'<div class="custom-control custom-switch">' +
-			'<input type="checkbox" class="custom-control-input" id="province-%code%">' +
-			'<label id="label-province-%code%" class="custom-control-label switch-label" style="color: %color%" for="province-%code%">%label%</label>' +
-			'</div>' +
-			'</div>';
+		var strTmpl = '<div class="col-6 col-sm-4 col-md-3 col-lg-2 col-xl-6">' +
+							'<div class="custom-control custom-switch">' +
+								'<input type="checkbox" class="custom-control-input" id="province-%code%">' +
+								'<label id="label-province-%code%" class="custom-control-label switch-label" style="color: %color%" for="province-%code%">%label%</label>' +
+							'</div>' +
+						'</div>';
 		let jContainer = $("#" + this.checkBoxesContainerId);
 		jContainer.empty();
 

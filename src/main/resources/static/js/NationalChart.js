@@ -35,7 +35,7 @@ class NationalChart {
 		Adds the checkboxes used to select/de-select the data to display
 	 */
 	addCheckboxes() {
-		let template = '<div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2">' +
+		let template = '<div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-6">' +
 							'<div class="custom-control custom-switch">' +
 								'<input type="checkbox" class="custom-control-input" id="%checkBoxId%">' +
 								'<label class="custom-control-label switch-label" style="color: %color%" for="%checkBoxId%" id="label%checkBoxId%">%label%</label>' +

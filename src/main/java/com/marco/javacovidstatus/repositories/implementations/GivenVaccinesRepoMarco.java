@@ -220,4 +220,18 @@ public class GivenVaccinesRepoMarco implements GivenVaccinesRepo {
 		return tq.getResultList();
 	}
 
+	@Override
+	public LocalDate getDataAvailableLastDate() {
+		/*
+         * SELECT MAX(DATE_DATA) AS DATE_DATA FROM SOMMINISTRAZIONI_VACCINI
+         */
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<LocalDate> cq = cb.createQuery(LocalDate.class);
+        Root<EntitySomministrazioneVaccini> root = cq.from(EntitySomministrazioneVaccini.class);
+        
+        cq.select(cb.greatest(root.get(EntitySomministrazioneVaccini_.ID).<LocalDate>get(EntitySomministrazioneVacciniPk_.DATE)));
+        TypedQuery<LocalDate> tq = em.createQuery(cq);
+        return tq.getSingleResult();
+	}
+
 }

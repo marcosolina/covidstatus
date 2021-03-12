@@ -7,16 +7,24 @@
 
 <div class="tab-pane fade show active" id="nav-national" role="tabpanel" aria-labelledby="nav-home-tab">
 	<div class="container-fluid">
+		<div th:replace="fragments/generic.html::emptyBootstrapRow"></div>
 		<div class="row">
-			<div class="col">&nbsp;</div>
+			<div class="col-12 d-flex justify-content-center">
+				<h5>Dati a livello nazionale</h5>
+			</div>
 		</div>
-		<div class="row" id="nationalDataCheckboxesWrapper"></div>
+		<div th:replace="fragments/generic.html::emptyBootstrapRow"></div>
 		<div class="row">
-			<div class="col">&nbsp;</div>
-		</div>
-		<div class="row">
-			<div class="col-lg-12 col-xl-8">
-				<canvas id="chartNational"></canvas>
+			<div class="col-12">
+				<div class="row">
+					<div class="col-lg-12 col-xl-4">
+						<div class="row" id="nationalDataCheckboxesWrapper"></div>
+						<div th:replace="fragments/generic.html::emptyBootstrapRow"></div>	
+					</div>
+					<div class="col-lg-12 col-xl-8">
+						<canvas id="chartNational"></canvas>
+					</div>
+				</div>
 			</div>
 		</div>		
 	</div>

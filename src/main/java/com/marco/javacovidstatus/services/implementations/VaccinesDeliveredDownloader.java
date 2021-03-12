@@ -8,10 +8,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import com.marco.javacovidstatus.model.entitites.EntityVacciniConsegne;
-import com.marco.javacovidstatus.model.entitites.EntityVacciniConsegnePk;
-import com.marco.javacovidstatus.repositories.interfaces.VeccinesDeliveredRepo;
+import com.marco.javacovidstatus.model.dto.VaccinesDeliveredDto;
 import com.marco.javacovidstatus.services.interfaces.CovidDataDownloader;
+import com.marco.javacovidstatus.services.interfaces.VaccineDateService;
 import com.marco.utils.DateUtils;
 import com.marco.utils.enums.DateFormats;
 
@@ -23,11 +22,11 @@ import com.marco.utils.enums.DateFormats;
  */
 public class VaccinesDeliveredDownloader extends CovidDataDownloader {
 	@Autowired
-	private VeccinesDeliveredRepo repo;
+	private VaccineDateService dataService;
 
 	private static final Logger _LOGGER = LoggerFactory.getLogger(VaccinesDeliveredDownloader.class);
 
-	private final String csvUrl = "https://raw.githubusercontent.com/italia/covid19-opendata-vaccini/master/dati/consegne-vaccini-latest.csv";
+	private static final String CVS_URL = "https://raw.githubusercontent.com/italia/covid19-opendata-vaccini/master/dati/consegne-vaccini-latest.csv";
 
 	public VaccinesDeliveredDownloader(WebClient webClient) {
 		super(webClient);
@@ -36,46 +35,46 @@ public class VaccinesDeliveredDownloader extends CovidDataDownloader {
 	@Override
 	public void downloadData() {
 		_LOGGER.info("Downloading delivered vaccines data");
-		
-		_LOGGER.trace("Downloading delivered vaccines data");
-		List<String> rows = this.getCsvRows(csvUrl);
-		_LOGGER.trace("delivered vaccines data downloaded");
-		
-		_LOGGER.trace("Clearing delivered vaccines table");
-		repo.deleteAll();
+
+		LocalDate startDate = getStartDate();
+
+		List<String> rows = this.getCsvRows(CVS_URL);
 		rows.stream().forEach(row -> {
 			String[] columns = row.split(",");
-			
-			EntityVacciniConsegnePk key = new EntityVacciniConsegnePk();
-			key.setDate(DateUtils.fromStringToLocalDate(columns[3], DateFormats.DB_DATE));
+
 			String regionCode = columns[6];
-			
 			String areaCode = columns[0];
 			if (areaCode.equals("PAB")) {
 				regionCode = "21";
-            } else if (areaCode.equals("PAT")) {
-            	regionCode = "22";
-            }
-			
-			key.setRegionCode(("00" + regionCode).substring(regionCode.length()));
-			key.setSupplier(columns[1]);
-			
-			EntityVacciniConsegne data = new EntityVacciniConsegne();
-			data.setId(key);
+			} else if (areaCode.equals("PAT")) {
+				regionCode = "22";
+			}
+
+			LocalDate date = DateUtils.fromStringToLocalDate(columns[3], DateFormats.DB_DATE);
+			if (!date.isAfter(startDate)) {
+				return;
+			}
+
+			VaccinesDeliveredDto data = new VaccinesDeliveredDto();
+			data.setDate(date);
 			data.setDosesDelivered(Integer.parseInt(columns[2]));
-			
-			_LOGGER.trace(String.format("Storing Delivered vaccine day: %s Region: %s Supplier: %s", key.getDate(), key.getRegionCode(), key.getSupplier()));
-			repo.saveEntity(data);
+			data.setRegionCode(("00" + regionCode).substring(regionCode.length()));
+			data.setSupplier(columns[1]);
+
+			_LOGGER.debug(String.format("Storing Delivered date for Date: %s Region: %s Supplier: %s", data.getDate(), data.getRegionCode(), data.getSupplier()));
+			dataService.saveVaccinesDeliveredData(data);
 		});
-		_LOGGER.trace("Delivered vaccine data stored");
-		
-		repo.addMissingRowsForNoDeliveryDays();
+
+		dataService.addMissingRowsForNoDeliveryDays();
 	}
 
 	@Override
 	public LocalDate getStartDate() {
-		// TODO Auto-generated method stub
-		return null;
+		LocalDate date = dataService.getVaccineDeliveredLastUpdateDate();
+		if (date == null) {
+			date = this.defaultStartData;
+		}
+		return date;
 	}
 
 }

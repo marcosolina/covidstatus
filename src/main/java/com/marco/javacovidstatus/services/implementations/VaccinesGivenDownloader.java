@@ -8,10 +8,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import com.marco.javacovidstatus.model.entitites.EntitySomministrazioneVaccini;
-import com.marco.javacovidstatus.model.entitites.EntitySomministrazioneVacciniPk;
-import com.marco.javacovidstatus.repositories.interfaces.GivenVaccinesRepo;
+import com.marco.javacovidstatus.model.dto.VaccinatedPeopleDto;
 import com.marco.javacovidstatus.services.interfaces.CovidDataDownloader;
+import com.marco.javacovidstatus.services.interfaces.VaccineDateService;
 import com.marco.utils.DateUtils;
 import com.marco.utils.enums.DateFormats;
 
@@ -24,11 +23,11 @@ import com.marco.utils.enums.DateFormats;
  */
 public class VaccinesGivenDownloader extends CovidDataDownloader {
 	@Autowired
-	private GivenVaccinesRepo repo;
+	private VaccineDateService dataService;
 
 	private static final Logger _LOGGER = LoggerFactory.getLogger(VaccinesGivenDownloader.class);
 
-	private final String csvUrl = "https://raw.githubusercontent.com/italia/covid19-opendata-vaccini/master/dati/somministrazioni-vaccini-latest.csv";
+	private static final String CSV_URL = "https://raw.githubusercontent.com/italia/covid19-opendata-vaccini/master/dati/somministrazioni-vaccini-latest.csv";
 
 	public VaccinesGivenDownloader(WebClient webClient) {
 		super(webClient);
@@ -38,19 +37,14 @@ public class VaccinesGivenDownloader extends CovidDataDownloader {
 	public void downloadData() {
 		_LOGGER.info("Downloading Given vaccines data");
 		
-		_LOGGER.trace("Downloading Given vaccines data");
-		List<String> rows = this.getCsvRows(csvUrl);
-		_LOGGER.trace("Given vaccines data downloaded");
+		LocalDate startDate = getStartDate();
 		
-		_LOGGER.trace("Clearing given vaccines table");
-		repo.deleteAll();
+		List<String> rows = this.getCsvRows(CSV_URL);
+		
 		rows.stream().forEach(row -> {
 			String[] columns = row.split(",");
 			
-			EntitySomministrazioneVacciniPk key = new EntitySomministrazioneVacciniPk();
-			key.setDate(DateUtils.fromStringToLocalDate(columns[0], DateFormats.DB_DATE));
 			String regionCode = columns[16];
-			
 			String areaCode = columns[2];
 			if (areaCode.equals("PAB")) {
 				regionCode = "21";
@@ -58,12 +52,17 @@ public class VaccinesGivenDownloader extends CovidDataDownloader {
             	regionCode = "22";
             }
 			
-			key.setRegionCode(("00" + regionCode).substring(regionCode.length()));
-			key.setSupplier(columns[1]);
-			key.setAgeRange(columns[3]);
+			LocalDate date = DateUtils.fromStringToLocalDate(columns[0], DateFormats.DB_DATE);
 			
-			EntitySomministrazioneVaccini data = new EntitySomministrazioneVaccini();
-			data.setId(key);
+			if (!date.isAfter(startDate)) {
+				return;
+			}
+			
+			VaccinatedPeopleDto data = new VaccinatedPeopleDto();
+			data.setDate(date);
+			data.setRegionCode(("00" + regionCode).substring(regionCode.length()));
+			data.setSupplier(columns[1]);
+			data.setAgeRange(columns[3]);
 			data.setMenCounter(Integer.parseInt(columns[4]));
 			data.setWomenCounter(Integer.parseInt(columns[5]));
 			data.setNhsPeopleCounter(Integer.parseInt(columns[6]));
@@ -75,18 +74,22 @@ public class VaccinesGivenDownloader extends CovidDataDownloader {
 			data.setFirstDoseCounter(Integer.parseInt(columns[12]));
 			data.setSecondDoseCounter(Integer.parseInt(columns[13]));
 			
-			_LOGGER.trace(String.format("Storing Given vaccine data date: %s Region: %s AgeRange: %s Supplier: %s", key.getDate(), key.getRegionCode(), key.getAgeRange(), key.getSupplier()));
-			repo.saveEntity(data);
+			
+			_LOGGER.debug(String.format("Storing Given vaccine data date: %s Region: %s AgeRange: %s Supplier: %s", data.getDate(), data.getRegionCode(), data.getAgeRange(), data.getSupplier()));
+			dataService.saveGivenVaccinesData(data);
 		});
 		_LOGGER.trace("Given vaccine data stored");
 		
-		repo.addMissingRowsForNoVaccinationDays();
+		dataService.addMissingRowsForNoVaccinationDays();
 	}
 
 	@Override
 	public LocalDate getStartDate() {
-		// TODO Auto-generated method stub
-		return null;
+		LocalDate date = dataService.getGivenVaccinesLastUpdateDate();
+		if (date == null) {
+			date = this.defaultStartData;
+		}
+		return date;
 	}
 
 }
