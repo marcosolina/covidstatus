@@ -84,27 +84,25 @@ public class VeccinesDeliveredRepoMarco implements VeccinesDeliveredRepo {
 	public void addMissingRowsForNoDeliveryDays() {
 		_LOGGER.debug("Adding mepty rows");
 
+		String tableName = "vaccini_consegne";
+
 		List<StringBuilder> sqls = new ArrayList<>();
-		sqls.add(new StringBuilder(
-				"create table temp_dates as select date_data from vaccini_consegne group by date_data with data"));
-		sqls.add(new StringBuilder(
-				"create table temp_regions as select region_code from vaccini_consegne group by region_code with data"));
-		sqls.add(new StringBuilder(
-				"create table temp_supplier as select supplier from vaccini_consegne group by supplier with data"));
-		sqls.add(new StringBuilder(
-				"create table cartesian as select * from temp_dates , temp_regions , temp_supplier order by date_data, region_code, supplier with data"));
+		sqls.add(new StringBuilder(String.format("create table temp_dates as select date_data from %s group by date_data with data", tableName)));
+		sqls.add(new StringBuilder(String.format("create table temp_regions as select region_code from %s group by region_code with data", tableName)));
+		sqls.add(new StringBuilder(String.format("create table temp_supplier as select supplier from %s group by supplier with data", tableName)));
+		sqls.add(new StringBuilder("create table cartesian as select * from temp_dates , temp_regions , temp_supplier order by date_data, region_code, supplier with data"));
 
 		StringBuilder sql = new StringBuilder();
 		sql.append("create table filldata as ");
 		sql.append("select a.region_code, a.date_data, a.supplier, b.doses_delivered ");
-		sql.append(
-				"from cartesian as a left join vaccini_consegne as b on a.date_data = b.date_data and a.region_code = b.region_code and a.supplier = b.supplier ");
+		sql.append(String.format("from cartesian as a left join %s as b ", tableName));
+		sql.append(" on a.date_data = b.date_data and a.region_code = b.region_code and a.supplier = b.supplier ");
 		sql.append("with data");
 		sqls.add(sql);
 
 		sqls.add(new StringBuilder("update filldata set doses_delivered = 0 where doses_delivered is null"));
-		sqls.add(new StringBuilder("truncate vaccini_consegne"));
-		sqls.add(new StringBuilder("insert into vaccini_consegne select * from filldata"));
+		sqls.add(new StringBuilder(String.format("truncate %s", tableName)));
+		sqls.add(new StringBuilder(String.format("insert into %s select * from filldata", tableName)));
 		sqls.add(new StringBuilder("drop table temp_dates"));
 		sqls.add(new StringBuilder("drop table temp_regions"));
 		sqls.add(new StringBuilder("drop table temp_supplier"));

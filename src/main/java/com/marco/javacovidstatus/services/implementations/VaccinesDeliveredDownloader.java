@@ -36,7 +36,12 @@ public class VaccinesDeliveredDownloader extends CovidDataDownloader {
 	@Override
 	public void downloadData() {
 		_LOGGER.info("Downloading delivered vaccines data");
+		
+		_LOGGER.trace("Downloading delivered vaccines data");
 		List<String> rows = this.getCsvRows(csvUrl);
+		_LOGGER.trace("delivered vaccines data downloaded");
+		
+		_LOGGER.trace("Clearing delivered vaccines table");
 		repo.deleteAll();
 		rows.stream().forEach(row -> {
 			String[] columns = row.split(",");
@@ -59,8 +64,11 @@ public class VaccinesDeliveredDownloader extends CovidDataDownloader {
 			data.setId(key);
 			data.setDosesDelivered(Integer.parseInt(columns[2]));
 			
+			_LOGGER.trace(String.format("Storing Delivered vaccine day: %s Region: %s Supplier: %s", key.getDate(), key.getRegionCode(), key.getSupplier()));
 			repo.saveEntity(data);
 		});
+		_LOGGER.trace("Delivered vaccine data stored");
+		
 		repo.addMissingRowsForNoDeliveryDays();
 	}
 

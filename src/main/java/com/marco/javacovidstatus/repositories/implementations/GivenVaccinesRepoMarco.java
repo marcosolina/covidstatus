@@ -102,11 +102,13 @@ public class GivenVaccinesRepoMarco implements GivenVaccinesRepo {
 	public void addMissingRowsForNoVaccinationDays() {
 		_LOGGER.debug("Adding mepty rows");
 		
+		String tableName = "somministrazioni_vaccini";
+		
 		List<StringBuilder> sqls = new ArrayList<>();
-		sqls.add(new StringBuilder("create table tmp_dates as select date_data from vaccini_consegne group by date_data with data"));
-		sqls.add(new StringBuilder("create table tmp_regions as select region_code from somministrazioni_vaccini group by region_code with data"));
-		sqls.add(new StringBuilder("create table tmp_supplier as select supplier from somministrazioni_vaccini group by supplier with data"));
-		sqls.add(new StringBuilder("create table tmp_age as select age_range from somministrazioni_vaccini group by age_range with data"));
+		sqls.add(new StringBuilder(String.format("create table tmp_dates as select date_data from %s group by date_data with data", tableName)));
+		sqls.add(new StringBuilder(String.format("create table tmp_regions as select region_code from %s group by region_code with data", tableName)));
+		sqls.add(new StringBuilder(String.format("create table tmp_supplier as select supplier from %s group by supplier with data", tableName)));
+		sqls.add(new StringBuilder(String.format("create table tmp_age as select age_range from %s group by age_range with data", tableName)));
 		sqls.add(new StringBuilder("create table cartesian_table as select * from tmp_dates , tmp_regions , tmp_supplier, tmp_age order by date_data, region_code, supplier, age_range with data"));
 		
 		StringBuilder sql = new StringBuilder();
@@ -122,7 +124,7 @@ public class GivenVaccinesRepoMarco implements GivenVaccinesRepo {
 		sql.append("b.first_dose_counter,");
 		sql.append("b.second_dose_counter ");
 		sql.append("from cartesian_table as a ");
-		sql.append("left join somministrazioni_vaccini as b ");
+		sql.append(String.format("left join %s as b ", tableName));
 		sql.append("on a.date_data = b.date_data and ");
 		sql.append("a.region_code = b.region_code and ");
 		sql.append("a.supplier = b.supplier and ");
@@ -146,8 +148,8 @@ public class GivenVaccinesRepoMarco implements GivenVaccinesRepo {
 		
 		sqls.add(sql);
 		
-		sqls.add(new StringBuilder("truncate somministrazioni_vaccini"));
-		sqls.add(new StringBuilder("insert into somministrazioni_vaccini select * from filldata2"));
+		sqls.add(new StringBuilder(String.format("truncate %s", tableName)));
+		sqls.add(new StringBuilder(String.format("insert into %s select * from filldata2", tableName)));
 		sqls.add(new StringBuilder("drop table tmp_dates"));
 		sqls.add(new StringBuilder("drop table tmp_regions"));
 		sqls.add(new StringBuilder("drop table tmp_supplier"));
