@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import com.marco.javacovidstatus.model.dto.NationalDailyData;
+import com.marco.javacovidstatus.model.dto.NationalDailyDataDto;
 import com.marco.javacovidstatus.services.interfaces.CovidDataDownloader;
 import com.marco.javacovidstatus.services.interfaces.CovidDataService;
 
@@ -56,15 +56,15 @@ public class NationalCovidDataDownloader extends CovidDataDownloader {
                 /*
                  * Retrieve the data
                  */
-                NationalDailyData precedente = getNationalDataAtDate(start.minusDays(1));
-                NationalDailyData corrente = getNationalDataAtDate(start);
+                NationalDailyDataDto precedente = getNationalDataAtDate(start.minusDays(1));
+                NationalDailyDataDto corrente = getNationalDataAtDate(start);
                 if (corrente == null) {
                     break;
                 }
 
                 lastWeeknNewInfection.add(corrente.getNewInfections());
 
-                NationalDailyData dataToSave = calculateNationalDailyDataDelta(corrente, precedente,
+                NationalDailyDataDto dataToSave = calculateNationalDailyDataDelta(corrente, precedente,
                         lastWeeknNewInfection.get(0));
 
                 if (lastWeeknNewInfection.size() > 7) {
@@ -94,8 +94,8 @@ public class NationalCovidDataDownloader extends CovidDataDownloader {
      * @return
      */
     private List<Integer> getNationalLastWeeknNewInfection(LocalDate end) {
-        List<NationalDailyData> list = dataService.getDatesInRangeAscending(end.minusDays(7), end);
-        return list.stream().map(NationalDailyData::getNewInfections).collect(Collectors.toList());
+        List<NationalDailyDataDto> list = dataService.getDatesInRangeAscending(end.minusDays(7), end);
+        return list.stream().map(NationalDailyDataDto::getNewInfections).collect(Collectors.toList());
     }
 
     /**
@@ -104,7 +104,7 @@ public class NationalCovidDataDownloader extends CovidDataDownloader {
      * @param date
      * @return
      */
-    private NationalDailyData getNationalDataAtDate(LocalDate date) {
+    private NationalDailyDataDto getNationalDataAtDate(LocalDate date) {
         _LOGGER.trace("Inside CronServiceGit.getNationalDataAtDate");
 
         /*
@@ -118,7 +118,7 @@ public class NationalCovidDataDownloader extends CovidDataDownloader {
         }
         List<String> columns = Arrays.asList(listRows.get(0).split(","));
 
-        NationalDailyData data = new NationalDailyData();
+        NationalDailyDataDto data = new NationalDailyDataDto();
         data.setDate(date);
         data.setNewCasualties(Integer.parseInt(columns.get(10)));
         data.setNewTests(Integer.parseInt(columns.get(14)));
@@ -138,9 +138,9 @@ public class NationalCovidDataDownloader extends CovidDataDownloader {
      * @param newInfectionOneWeekAgo
      * @return
      */
-    private NationalDailyData calculateNationalDailyDataDelta(NationalDailyData current, NationalDailyData previous,
+    private NationalDailyDataDto calculateNationalDailyDataDelta(NationalDailyDataDto current, NationalDailyDataDto previous,
             int newInfectionOneWeekAgo) {
-        NationalDailyData newDailyData = new NationalDailyData();
+        NationalDailyDataDto newDailyData = new NationalDailyDataDto();
         /*
          * Do some math
          */

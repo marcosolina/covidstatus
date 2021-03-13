@@ -100,6 +100,9 @@ var CovidCommon = (function(CovidCommon){
 		charts.deliveredVaccines		= new DeliveredVaccinesChart("chartVaccinesDelivered", "rowRegionVaccines", colorPalette);
 		charts.vaccinesDoses			= new VaccinesDoseChart("chartVaccinesDoses", colorPalette);
 		charts.vaccinesPerAge			= new VaccinesPerAgeChart("chartVaccinesPerAge", colorPalette);
+		charts.vaccinesDeliveredUsed	= new TotalDeliveredUsedVaccinesChart("chartTotalsVaccinesUsedDelivered", colorPalette);
+		charts.vaxDeliveredUsedPerReg	= new TotalDeliveredUsedVaccinesPerRegionChart("chartTotalsVaccinesUsedDeliveredPerRegion", colorPalette);
+		
 	}
 	
 	/**

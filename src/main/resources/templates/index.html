@@ -72,8 +72,9 @@
 			<a class="nav-item nav-link active"	id="nav-national-tab"	data-toggle="tab" href="#nav-national"	role="tab" aria-controls="nav-national" 	aria-selected="true">Dati Nazionali</a>
 			<a class="nav-item nav-link"		id="nav-region-tab"		data-toggle="tab" href="#nav-region"	role="tab" aria-controls="nav-region"		aria-selected="false">Regionali</a>
 			<a class="nav-item nav-link"		id="nav-province-tab"	data-toggle="tab" href="#nav-province"	role="tab" aria-controls="nav-province" 	aria-selected="false">Provinciali</a>
-			<a class="nav-item nav-link"		id="nav-region-map-tab"	data-toggle="tab" href="#nav-region-map"role="tab" aria-controls="nav-region-map" 	aria-selected="false">Mappa Regioni</a>
+			<a class="nav-item nav-link"		id="nav-region-map-tab"	data-toggle="tab" href="#nav-region-map"role="tab" aria-controls="nav-region-map" 	aria-selected="false">Mappa</a>
 			<a class="nav-item nav-link"		id="nav-vaccines-tab"	data-toggle="tab" href="#nav-vaccines"	role="tab" aria-controls="nav-vaccines" 	aria-selected="false">Vaccini</a>
+			<a class="nav-item nav-link"		id="nav-totals-tab"		data-toggle="tab" href="#nav-totals"	role="tab" aria-controls="nav-totals"	 	aria-selected="false">Totali</a>
 		</div>
 	</nav>
 	<div class="tab-content" id="nav-tabContent">
@@ -82,6 +83,7 @@
 		<div th:replace="fragments/tabProvinceData.html::tabProvinceData"></div>
 		<div th:replace="fragments/tabItalianMap.html::tabItalianMap"></div>
 		<div th:replace="fragments/tabVaccines.html::tabVaccinesBody"></div>
+		<div th:replace="fragments/tabTotals.html::tabTotals"></div>
 	</div>
 	<div th:replace="fragments/infoModal.html::infoModal"></div>
 	<div class="button-notification alert-info">Clicca i bottoni qui sopra per cambiare i colori o leggere le informazioni</div>

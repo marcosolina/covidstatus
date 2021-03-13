@@ -5,31 +5,22 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 /**
- * This class represents the data at the region level
+ * This class represents the data at national level
  * 
  * @author Marco
  *
  */
-public class RegionalDailyData implements Serializable {
+public class NationalDailyDataDto implements Serializable {
     private static final long serialVersionUID = 1L;
     private LocalDate date;
-    private String regionCode;
     private int newInfections;
     private int newTests;
     private int newCasualties;
     private int newHospitalized;
     private int newIntensiveTherapy;
     private int newRecovered;
-    private BigDecimal infectionPercentage = BigDecimal.ZERO;
-    private BigDecimal casualtiesPercentage = BigDecimal.ZERO;
-
-    public String getRegionCode() {
-        return regionCode;
-    }
-
-    public void setRegionCode(String regionCode) {
-        this.regionCode = regionCode;
-    }
+    private BigDecimal infectionPercentage;
+    private BigDecimal casualtiesPercentage;
 
     public LocalDate getDate() {
         return date;
@@ -123,7 +114,7 @@ public class RegionalDailyData implements Serializable {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        RegionalDailyData other = (RegionalDailyData) obj;
+        NationalDailyDataDto other = (NationalDailyDataDto) obj;
         if (date == null) {
             if (other.date != null)
                 return false;

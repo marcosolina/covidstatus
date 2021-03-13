@@ -75,7 +75,7 @@ public class VaccinesGivenDownloader extends CovidDataDownloader {
 			data.setSecondDoseCounter(Integer.parseInt(columns[13]));
 			
 			
-			_LOGGER.debug(String.format("Storing Given vaccine data date: %s Region: %s AgeRange: %s Supplier: %s", data.getDate(), data.getRegionCode(), data.getAgeRange(), data.getSupplier()));
+			_LOGGER.trace(String.format("Storing Given vaccine data date: %s Region: %s AgeRange: %s Supplier: %s", data.getDate(), data.getRegionCode(), data.getAgeRange(), data.getSupplier()));
 			dataService.saveGivenVaccinesData(data);
 		});
 		_LOGGER.trace("Given vaccine data stored");

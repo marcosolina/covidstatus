@@ -3,10 +3,10 @@ package com.marco.javacovidstatus.services.interfaces;
 import java.time.LocalDate;
 import java.util.List;
 
-import com.marco.javacovidstatus.model.dto.NationalDailyData;
-import com.marco.javacovidstatus.model.dto.ProvinceDailyData;
-import com.marco.javacovidstatus.model.dto.Region;
-import com.marco.javacovidstatus.model.dto.RegionalDailyData;
+import com.marco.javacovidstatus.model.dto.NationalDailyDataDto;
+import com.marco.javacovidstatus.model.dto.ProvinceDailyDataDto;
+import com.marco.javacovidstatus.model.dto.RegionDto;
+import com.marco.javacovidstatus.model.dto.RegionalDailyDataDto;
 
 /**
  * This interfaces provides a list of functionalities that you can use to
@@ -22,21 +22,21 @@ public interface CovidDataService {
      * 
      * @return
      */
-    public List<NationalDailyData> getAllDataDescending();
+    public List<NationalDailyDataDto> getAllDataDescending();
 
     /**
      * It returns a list of regions
      * 
      * @return
      */
-    public List<Region> getRegionsList();
+    public List<RegionDto> getRegionsList();
 
     /**
      * It returns the list of the national data in an ascending order
      * 
      * @return
      */
-    public List<NationalDailyData> getAllDataAscending();
+    public List<NationalDailyDataDto> getAllDataAscending();
 
     /**
      * It returns the list of the national data of the specific range in a ascending
@@ -46,7 +46,7 @@ public interface CovidDataService {
      * @param to
      * @return
      */
-    public List<NationalDailyData> getDatesInRangeAscending(LocalDate from, LocalDate to);
+    public List<NationalDailyDataDto> getDatesInRangeAscending(LocalDate from, LocalDate to);
 
     /**
      * It returns the regional data between the provided dates in ascending order
@@ -55,15 +55,15 @@ public interface CovidDataService {
      * @param to
      * @return
      */
-    public List<RegionalDailyData> getRegionalDatesInRangeAscending(LocalDate from, LocalDate to);
+    public List<RegionalDailyDataDto> getRegionalDatesInRangeAscending(LocalDate from, LocalDate to);
 
     /**
-     * It stores the {@link RegionalDailyData}
+     * It stores the {@link RegionalDailyDataDto}
      * 
      * @param data
      * @return
      */
-    public boolean saveRegionalDailyData(RegionalDailyData data);
+    public boolean saveRegionalDailyData(RegionalDailyDataDto data);
 
     /**
      * It returns the data of the provinces for the selected region
@@ -72,7 +72,7 @@ public interface CovidDataService {
      * @param to
      * @return
      */
-    public List<ProvinceDailyData> getProvinceDataInRangeAscending(LocalDate from, LocalDate to, String regionCode);
+    public List<ProvinceDailyDataDto> getProvinceDataInRangeAscending(LocalDate from, LocalDate to, String regionCode);
 
     /**
      * Retrieves the list of provinces for the specific region
@@ -88,7 +88,7 @@ public interface CovidDataService {
      * @param dto
      * @return
      */
-    public boolean storeData(NationalDailyData dto);
+    public boolean storeData(NationalDailyDataDto dto);
 
     /**
      * It deletes all the data
@@ -98,12 +98,12 @@ public interface CovidDataService {
     public boolean deleteAllData();
 
     /**
-     * It stores the {@link ProvinceDailyData}
+     * It stores the {@link ProvinceDailyDataDto}
      * 
      * @param data
      * @return
      */
-    public boolean storeProvinceDailyData(ProvinceDailyData data);
+    public boolean storeProvinceDailyData(ProvinceDailyDataDto data);
 
     /**
      * It returns the last date for the available national data

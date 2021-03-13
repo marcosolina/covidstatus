@@ -4,10 +4,12 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
-import com.marco.javacovidstatus.model.dto.VaccinatedPeople;
+import com.marco.javacovidstatus.model.dto.VaccinatedPeopleTypeDto;
 import com.marco.javacovidstatus.model.dto.VaccinatedPeopleDto;
-import com.marco.javacovidstatus.model.dto.VaccinesDelivered;
+import com.marco.javacovidstatus.model.dto.VaccinesDeliveredPerDayDto;
 import com.marco.javacovidstatus.model.dto.VaccinesDeliveredDto;
+import com.marco.javacovidstatus.model.dto.VaccinesReceivedUsedDto;
+import com.marco.javacovidstatus.model.dto.VacinesTotalDeliveredGivenPerRegionDto;
 import com.marco.utils.MarcoException;
 
 /**
@@ -29,7 +31,7 @@ public interface VaccineDateService {
 	 *         <li>Value -> Delivered Vaccines to the region grouped by date</li>
 	 *         </ul>
 	 */
-	public Map<String, List<VaccinesDelivered>> getDeliveredVaccinesPerRegionBetweenDatesPerRegion(LocalDate start,
+	public Map<String, List<VaccinesDeliveredPerDayDto>> getDeliveredVaccinesPerRegionBetweenDatesPerRegion(LocalDate start,
 			LocalDate end);
 
 	/**
@@ -52,7 +54,7 @@ public interface VaccineDateService {
 	 * @param end
 	 * @return
 	 */
-	public VaccinatedPeople getVaccinatedPeopleBetweenDates(LocalDate start, LocalDate end);
+	public VaccinatedPeopleTypeDto getVaccinatedPeopleBetweenDates(LocalDate start, LocalDate end);
 
 	/**
 	 * It returns the numbers of vaccinated people grouped by age range
@@ -130,4 +132,20 @@ public interface VaccineDateService {
 	 * @return
 	 */
 	public LocalDate getGivenVaccinesLastUpdateDate();
+
+	/**
+	 * It returns the total number of vaccines delivered, and total number of used
+	 * vaccines
+	 * 
+	 * @return
+	 */
+	public VaccinesReceivedUsedDto getTotlalVaccinesDeliveredUsed();
+
+	/**
+	 * It returns the total data of the number of delivered and injected vaccines
+	 * per region
+	 * 
+	 * @return
+	 */
+	public Map<String, VacinesTotalDeliveredGivenPerRegionDto> getVacinesTotalDeliveredGivenPerRegion();
 }

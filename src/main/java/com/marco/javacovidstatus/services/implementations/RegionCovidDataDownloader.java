@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import com.marco.javacovidstatus.model.dto.RegionalDailyData;
+import com.marco.javacovidstatus.model.dto.RegionalDailyDataDto;
 import com.marco.javacovidstatus.services.interfaces.CovidDataDownloader;
 import com.marco.javacovidstatus.services.interfaces.CovidDataService;
 
@@ -57,19 +57,19 @@ public class RegionCovidDataDownloader extends CovidDataDownloader {
                 /*
                  * Retrieve the data from the repository
                  */
-                Map<String, RegionalDailyData> precedente = parseRegionData(start.minusDays(1));
-                Map<String, RegionalDailyData> corrente = parseRegionData(start);
+                Map<String, RegionalDailyDataDto> precedente = parseRegionData(start.minusDays(1));
+                Map<String, RegionalDailyDataDto> corrente = parseRegionData(start);
 
                 corrente.forEach((k, v) -> {
-                    RegionalDailyData regioneCorrente = v;
-                    RegionalDailyData regionePrecedente = precedente.get(k);
+                    RegionalDailyDataDto regioneCorrente = v;
+                    RegionalDailyDataDto regionePrecedente = precedente.get(k);
 
                     List<Integer> listInfectionLastWeek = mapInfectionLastWeek.computeIfAbsent(k,
                             key -> new ArrayList<>());
 
                     listInfectionLastWeek.add(regioneCorrente.getNewInfections());
 
-                    RegionalDailyData dataToStore = calculateRegionalDailyDataDelta(regioneCorrente, regionePrecedente,
+                    RegionalDailyDataDto dataToStore = calculateRegionalDailyDataDelta(regioneCorrente, regionePrecedente,
                             listInfectionLastWeek.get(0));
 
                     if (listInfectionLastWeek.size() > 7) {
@@ -98,7 +98,7 @@ public class RegionCovidDataDownloader extends CovidDataDownloader {
      * @return
      */
     private Map<String, List<Integer>> getRegionalLastWeeknNewInfection(LocalDate end) {
-        List<RegionalDailyData> list = dataService.getRegionalDatesInRangeAscending(end.minusDays(7), end);
+        List<RegionalDailyDataDto> list = dataService.getRegionalDatesInRangeAscending(end.minusDays(7), end);
         Map<String, List<Integer>> mapInfectionLastWeek = new HashMap<>();
 
         list.stream().forEach(rdd -> mapInfectionLastWeek.computeIfAbsent(rdd.getRegionCode(), k -> new ArrayList<>())
@@ -113,8 +113,8 @@ public class RegionCovidDataDownloader extends CovidDataDownloader {
      * @param date
      * @return
      */
-    private Map<String, RegionalDailyData> parseRegionData(LocalDate date) {
-        Map<String, RegionalDailyData> dataMap = new HashMap<>();
+    private Map<String, RegionalDailyDataDto> parseRegionData(LocalDate date) {
+        Map<String, RegionalDailyDataDto> dataMap = new HashMap<>();
 
         /*
          * Inserting the date into the URL
@@ -126,7 +126,7 @@ public class RegionCovidDataDownloader extends CovidDataDownloader {
         // @formatter:off
         listRows.stream().map(s -> {
             List<String> columns = Arrays.asList(s.split(","));
-            RegionalDailyData data = new RegionalDailyData();
+            RegionalDailyDataDto data = new RegionalDailyDataDto();
             
             if(columns.size() < 2) {
                 return data;
@@ -156,9 +156,9 @@ public class RegionCovidDataDownloader extends CovidDataDownloader {
      * @param previous
      * @return
      */
-    private RegionalDailyData calculateRegionalDailyDataDelta(RegionalDailyData current, RegionalDailyData previous,
+    private RegionalDailyDataDto calculateRegionalDailyDataDelta(RegionalDailyDataDto current, RegionalDailyDataDto previous,
             int newInfectionOneWeekAgo) {
-        RegionalDailyData newDailyData = new RegionalDailyData();
+        RegionalDailyDataDto newDailyData = new RegionalDailyDataDto();
         newDailyData.setDate(current.getDate());
         newDailyData.setRegionCode(current.getRegionCode());
         newDailyData.setNewInfections(current.getNewInfections());

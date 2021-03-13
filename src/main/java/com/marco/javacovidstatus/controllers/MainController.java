@@ -22,10 +22,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.marco.javacovidstatus.model.dto.CovidDataType;
-import com.marco.javacovidstatus.model.dto.NationalDailyData;
-import com.marco.javacovidstatus.model.dto.ProvinceDailyData;
-import com.marco.javacovidstatus.model.dto.Region;
-import com.marco.javacovidstatus.model.dto.RegionalDailyData;
+import com.marco.javacovidstatus.model.dto.NationalDailyDataDto;
+import com.marco.javacovidstatus.model.dto.ProvinceDailyDataDto;
+import com.marco.javacovidstatus.model.dto.RegionDto;
+import com.marco.javacovidstatus.model.dto.RegionalDailyDataDto;
 import com.marco.javacovidstatus.model.rest.infections.ReqGetNationalData;
 import com.marco.javacovidstatus.model.rest.infections.ReqGetProvinceData;
 import com.marco.javacovidstatus.model.rest.infections.ReqGetRegionData;
@@ -118,40 +118,40 @@ public class MainController {
 	public RespGetRegionData getRegionalData(@RequestBody ReqGetRegionData request) {
 		RespGetRegionData resp = new RespGetRegionData();
 
-		List<RegionalDailyData> listData = service.getRegionalDatesInRangeAscending(request.getFrom(), request.getTo());
-		List<Region> listRegions = service.getRegionsList();
+		List<RegionalDailyDataDto> listData = service.getRegionalDatesInRangeAscending(request.getFrom(), request.getTo());
+		List<RegionDto> listRegions = service.getRegionsList();
 
 		if (!listData.isEmpty()) {
 			listRegions.stream().forEach(r -> {
 				RespRegionChartData chartData = new RespRegionChartData();
 				chartData.setLabel(r.getDesc());
 
-				Function<RegionalDailyData, Object> mapper = null;
+				Function<RegionalDailyDataDto, Object> mapper = null;
 
 				switch (request.getCovidData()) {
 				case NEW_TESTS:
-					mapper = RegionalDailyData::getNewTests;
+					mapper = RegionalDailyDataDto::getNewTests;
 					break;
 				case CASUALTIES:
-					mapper = RegionalDailyData::getNewCasualties;
+					mapper = RegionalDailyDataDto::getNewCasualties;
 					break;
 				case NEW_HOSPITALISED:
-					mapper = RegionalDailyData::getNewHospitalized;
+					mapper = RegionalDailyDataDto::getNewHospitalized;
 					break;
 				case NEW_INFECTIONS:
-					mapper = RegionalDailyData::getNewInfections;
+					mapper = RegionalDailyDataDto::getNewInfections;
 					break;
 				case NEW_INTENSIVE_THERAPY:
-					mapper = RegionalDailyData::getNewIntensiveTherapy;
+					mapper = RegionalDailyDataDto::getNewIntensiveTherapy;
 					break;
 				case NEW_RECOVER:
-					mapper = RegionalDailyData::getNewRecovered;
+					mapper = RegionalDailyDataDto::getNewRecovered;
 					break;
 				case PERC_CASUALTIES:
-					mapper = RegionalDailyData::getCasualtiesPercentage;
+					mapper = RegionalDailyDataDto::getCasualtiesPercentage;
 					break;
 				case PERC_INFECTIONS:
-					mapper = RegionalDailyData::getInfectionPercentage;
+					mapper = RegionalDailyDataDto::getInfectionPercentage;
 					break;
 				}
 
@@ -160,9 +160,9 @@ public class MainController {
 				resp.getRegionData().put(r.getCode(), chartData);
 			});
 
-			Region region = listRegions.get(0);
+			RegionDto region = listRegions.get(0);
 			resp.setArrDates(listData.stream().filter(r -> r.getRegionCode().equals(region.getCode()))
-					.map(RegionalDailyData::getDate).collect(Collectors.toList()));
+					.map(RegionalDailyDataDto::getDate).collect(Collectors.toList()));
 		}
 
 		resp.setStatus(true);
@@ -183,7 +183,7 @@ public class MainController {
 		/*
 		 * Get all the data for the provinces of the specific region
 		 */
-		List<ProvinceDailyData> listData = service.getProvinceDataInRangeAscending(request.getFrom(), request.getTo(),
+		List<ProvinceDailyDataDto> listData = service.getProvinceDataInRangeAscending(request.getFrom(), request.getTo(),
 				request.getRegionCode());
 		List<String> provinces = service.getProfinceListForRegion(request.getRegionCode());
 
@@ -195,18 +195,18 @@ public class MainController {
                 /*
                  * Get the data for the specific province
                  */
-                List<ProvinceDailyData> provinceData = listData.stream().filter(data -> data.getProvinceCode().equals(codiceProvincia)).collect(Collectors.toList());
+                List<ProvinceDailyDataDto> provinceData = listData.stream().filter(data -> data.getProvinceCode().equals(codiceProvincia)).collect(Collectors.toList());
                 
                 RespProvinceChartData data = new RespProvinceChartData();
                 data.setLabel(provinceData.get(0).getDescription());
-                data.setNewInfections(provinceData.stream().map(ProvinceDailyData::getNewInfections).collect(Collectors.toList()));
+                data.setNewInfections(provinceData.stream().map(ProvinceDailyDataDto::getNewInfections).collect(Collectors.toList()));
                 
                 map.put(codiceProvincia, data);
             });
             // @formatter:on
 			String province = provinces.get(0);
 			resp.setArrDates(listData.stream().filter(p -> p.getProvinceCode().equals(province))
-					.map(ProvinceDailyData::getDate).collect(Collectors.toList()));
+					.map(ProvinceDailyDataDto::getDate).collect(Collectors.toList()));
 			resp.setProvinceData(map);
 		}
 		resp.setStatus(true);
@@ -223,17 +223,17 @@ public class MainController {
 	public RespGetNationalData getNationalData(@RequestBody ReqGetNationalData request) {
 		RespGetNationalData resp = new RespGetNationalData();
 
-		List<NationalDailyData> listData = service.getDatesInRangeAscending(request.getFrom(), request.getTo());
+		List<NationalDailyDataDto> listData = service.getDatesInRangeAscending(request.getFrom(), request.getTo());
 		// @formatter:off
-		resp.setArrDates(				listData.stream().map(NationalDailyData::getDate)					.collect(Collectors.toList()));
-		resp.setArrNewCasualties(		listData.stream().map(NationalDailyData::getNewCasualties)			.collect(Collectors.toList()));
-		resp.setArrNewHospitalized(		listData.stream().map(NationalDailyData::getNewHospitalized)		.collect(Collectors.toList()));
-		resp.setArrNewInfections(		listData.stream().map(NationalDailyData::getNewInfections)			.collect(Collectors.toList()));
-		resp.setArrNewIntensiveTherapy(	listData.stream().map(NationalDailyData::getNewIntensiveTherapy)	.collect(Collectors.toList()));
-		resp.setArrNewRecovered(		listData.stream().map(NationalDailyData::getNewRecovered)			.collect(Collectors.toList()));
-		resp.setArrNewTests(			listData.stream().map(NationalDailyData::getNewTests)				.collect(Collectors.toList()));
-		resp.setArrPercCasualties(		listData.stream().map(NationalDailyData::getCasualtiesPercentage)	.collect(Collectors.toList()));
-		resp.setArrPercInfections(		listData.stream().map(NationalDailyData::getInfectionPercentage)	.collect(Collectors.toList()));
+		resp.setArrDates(				listData.stream().map(NationalDailyDataDto::getDate)					.collect(Collectors.toList()));
+		resp.setArrNewCasualties(		listData.stream().map(NationalDailyDataDto::getNewCasualties)			.collect(Collectors.toList()));
+		resp.setArrNewHospitalized(		listData.stream().map(NationalDailyDataDto::getNewHospitalized)		.collect(Collectors.toList()));
+		resp.setArrNewInfections(		listData.stream().map(NationalDailyDataDto::getNewInfections)			.collect(Collectors.toList()));
+		resp.setArrNewIntensiveTherapy(	listData.stream().map(NationalDailyDataDto::getNewIntensiveTherapy)	.collect(Collectors.toList()));
+		resp.setArrNewRecovered(		listData.stream().map(NationalDailyDataDto::getNewRecovered)			.collect(Collectors.toList()));
+		resp.setArrNewTests(			listData.stream().map(NationalDailyDataDto::getNewTests)				.collect(Collectors.toList()));
+		resp.setArrPercCasualties(		listData.stream().map(NationalDailyDataDto::getCasualtiesPercentage)	.collect(Collectors.toList()));
+		resp.setArrPercInfections(		listData.stream().map(NationalDailyDataDto::getInfectionPercentage)	.collect(Collectors.toList()));
 		// @formatter:on
 
 		resp.setStatus(true);

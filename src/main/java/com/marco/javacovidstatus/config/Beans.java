@@ -10,9 +10,9 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import com.marco.javacovidstatus.repositories.implementations.CovidRepositoryMarco;
-import com.marco.javacovidstatus.repositories.implementations.GivenVaccinesRepoMarco;
-import com.marco.javacovidstatus.repositories.implementations.VeccinesDeliveredRepoMarco;
+import com.marco.javacovidstatus.repositories.implementations.CovidRepositoryPostgres;
+import com.marco.javacovidstatus.repositories.implementations.GivenVaccinesRepoPostgres;
+import com.marco.javacovidstatus.repositories.implementations.VeccinesDeliveredRepoPostgres;
 import com.marco.javacovidstatus.repositories.interfaces.CovidRepository;
 import com.marco.javacovidstatus.repositories.interfaces.GivenVaccinesRepo;
 import com.marco.javacovidstatus.repositories.interfaces.VeccinesDeliveredRepo;
@@ -73,17 +73,17 @@ public class Beans {
 
     @Bean
     public CovidRepository getCovidRepository() {
-        return new CovidRepositoryMarco();
+        return new CovidRepositoryPostgres();
     }
     
     @Bean
     public VeccinesDeliveredRepo getVeccinesDeliveredRepo() {
-    	return new VeccinesDeliveredRepoMarco();
+    	return new VeccinesDeliveredRepoPostgres();
     }
     
     @Bean
     public GivenVaccinesRepo getGivenVaccinesRepo() {
-    	return new GivenVaccinesRepoMarco();
+    	return new GivenVaccinesRepoPostgres();
     }
     
     @Bean

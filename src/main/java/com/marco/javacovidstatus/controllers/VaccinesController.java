@@ -14,13 +14,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.marco.javacovidstatus.model.dto.VaccinatedPeople;
-import com.marco.javacovidstatus.model.dto.VaccinesDelivered;
+import com.marco.javacovidstatus.model.dto.VaccinatedPeopleTypeDto;
+import com.marco.javacovidstatus.model.dto.VaccinesDeliveredPerDayDto;
+import com.marco.javacovidstatus.model.dto.VaccinesReceivedUsedDto;
 import com.marco.javacovidstatus.model.rest.vaccines.ReqGetVaccinesData;
+import com.marco.javacovidstatus.model.rest.vaccines.RespGetTotalDelivereUsedVaccineData;
+import com.marco.javacovidstatus.model.rest.vaccines.RespGetTotalDelivereUsedVaccineDataPerRegion;
 import com.marco.javacovidstatus.model.rest.vaccines.RespGetVaccinatedPeopleData;
 import com.marco.javacovidstatus.model.rest.vaccines.RespGetVaccinatedPeoplePerAgeData;
 import com.marco.javacovidstatus.model.rest.vaccines.RespGetVaccinesDeliveredPerRegion;
@@ -60,15 +64,16 @@ public class VaccinesController {
 		/*
 		 * The Key of the map is the Region Code
 		 */
-		Map<String, List<VaccinesDelivered>> regionData = service.getDeliveredVaccinesPerRegionBetweenDatesPerRegion(request.getFrom(), request.getTo());
-		
+		Map<String, List<VaccinesDeliveredPerDayDto>> regionData = service
+				.getDeliveredVaccinesPerRegionBetweenDatesPerRegion(request.getFrom(), request.getTo());
+
 		/*
-		 * Createing a map with:
-		 * Key -> Region Code
-		 * Value -> List of number of delivered vaccines
+		 * Createing a map with: Key -> Region Code Value -> List of number of delivered
+		 * vaccines
 		 */
 		Map<String, List<Long>> dataPerRegion = new HashMap<>();
-		regionData.forEach((k, v) -> dataPerRegion.put(k,v.stream().map(VaccinesDelivered::getDosesDelivered).collect(Collectors.toList())));
+		regionData.forEach((k, v) -> dataPerRegion.put(k,
+				v.stream().map(VaccinesDeliveredPerDayDto::getDosesDelivered).collect(Collectors.toList())));
 
 		/*
 		 * Creating the list of Dates for which I have the data
@@ -86,6 +91,7 @@ public class VaccinesController {
 
 	/**
 	 * It returns the vaccines delivered by every supplier
+	 * 
 	 * @param request
 	 * @return
 	 */
@@ -96,7 +102,8 @@ public class VaccinesController {
 		LOGGER.trace("Inside VaccinesController.getVaccinesDeliveredPerSupplier");
 
 		RespGetVaccinesDeliveredPerSupplier resp = new RespGetVaccinesDeliveredPerSupplier();
-		Map<String, Long> supplierData = service.getDeliveredVaccinesBetweenDatesPerSupplier(request.getFrom(), request.getTo());
+		Map<String, Long> supplierData = service.getDeliveredVaccinesBetweenDatesPerSupplier(request.getFrom(),
+				request.getTo());
 
 		resp.setDeliveredPerSupplier(supplierData);
 		resp.setStatus(true);
@@ -105,8 +112,8 @@ public class VaccinesController {
 	}
 
 	/**
-	 * It returns the number of persons who has received either the first
-	 * or second vaccine dose
+	 * It returns the number of persons who has received either the first or second
+	 * vaccine dose
 	 * 
 	 * @param request
 	 * @return
@@ -144,7 +151,7 @@ public class VaccinesController {
 
 		RespGetVaccinatedPeopleData resp = new RespGetVaccinatedPeopleData();
 
-		VaccinatedPeople dataVaccinatedPeople = service.getVaccinatedPeopleBetweenDates(request.getFrom(),
+		VaccinatedPeopleTypeDto dataVaccinatedPeople = service.getVaccinatedPeopleBetweenDates(request.getFrom(),
 				request.getTo());
 
 		resp.setDataVaccinatedPeople(dataVaccinatedPeople.getDataVaccinatedPeople());
@@ -171,6 +178,32 @@ public class VaccinesController {
 				request.getTo());
 
 		resp.setDataVaccinatedPerAge(dataVaccinatedPerAge);
+		resp.setStatus(true);
+
+		return resp;
+	}
+
+	@GetMapping(value = CovidUtils.MAPPING_VACCINE_TOTAL_DATA)
+	@ResponseBody
+	public RespGetTotalDelivereUsedVaccineData getTotlaVaccinesDeliveredUsed() {
+		LOGGER.trace("Inside VaccinesController.getTotlaVaccinesDeliveredUsed");
+
+		RespGetTotalDelivereUsedVaccineData resp = new RespGetTotalDelivereUsedVaccineData();
+		VaccinesReceivedUsedDto dto = service.getTotlalVaccinesDeliveredUsed();
+		resp.setTotalDeliveredVaccines(dto.getTotalVaccinesReceived());
+		resp.setTotalUsedVaccines(dto.getTotalVaccinesUsed());
+		resp.setStatus(true);
+
+		return resp;
+	}
+
+	@GetMapping(value = CovidUtils.MAPPING_VACCINE_TOTAL_DATA_PER_REGION)
+	@ResponseBody
+	public RespGetTotalDelivereUsedVaccineDataPerRegion getTotlaVaccinesDeliveredUsedPerRegion() {
+		LOGGER.trace("Inside VaccinesController.getTotlaVaccinesDeliveredUsedPerRegion");
+
+		RespGetTotalDelivereUsedVaccineDataPerRegion resp = new RespGetTotalDelivereUsedVaccineDataPerRegion();
+		resp.setData(service.getVacinesTotalDeliveredGivenPerRegion());
 		resp.setStatus(true);
 
 		return resp;

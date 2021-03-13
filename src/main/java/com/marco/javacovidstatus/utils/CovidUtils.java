@@ -25,6 +25,8 @@ public class CovidUtils {
 	public static final String MAPPING_VACCINE_VACCINATED_PEOPLE = "/vaccinepeople";
 	public static final String MAPPING_VACCINE_VACCINATED_PER_AGE = "/vaccineperage";
 	public static final String MAPPING_VACCINE_DOSES_DATA = "/vaccinesdoses";
+	public static final String MAPPING_VACCINE_TOTAL_DATA = "/vaccinestotal";
+	public static final String MAPPING_VACCINE_TOTAL_DATA_PER_REGION = "/vaccinestotalperregion";
 
 	/**
 	 * It returns a map of the available Covid Endpoints
@@ -46,6 +48,8 @@ public class CovidUtils {
 		vaccinesEndPoints.put("PEOPlE", contextPath + MAPPING_VACCINE_VACCINATED_PEOPLE);
 		vaccinesEndPoints.put("AGE", contextPath + MAPPING_VACCINE_VACCINATED_PER_AGE);
 		vaccinesEndPoints.put("DOSE", contextPath + MAPPING_VACCINE_DOSES_DATA);
+		vaccinesEndPoints.put("TOTALS", contextPath + MAPPING_VACCINE_TOTAL_DATA);
+		vaccinesEndPoints.put("TOTALS_REGION", contextPath + MAPPING_VACCINE_TOTAL_DATA_PER_REGION);
 		map.put("VACCINES", vaccinesEndPoints);
 
 		return map;

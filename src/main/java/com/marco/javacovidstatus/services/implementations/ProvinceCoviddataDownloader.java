@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import com.marco.javacovidstatus.model.dto.ProvinceDailyData;
+import com.marco.javacovidstatus.model.dto.ProvinceDailyDataDto;
 import com.marco.javacovidstatus.services.interfaces.CovidDataDownloader;
 import com.marco.javacovidstatus.services.interfaces.CovidDataService;
 
@@ -53,10 +53,10 @@ public class ProvinceCoviddataDownloader extends CovidDataDownloader {
                     _LOGGER.debug(String.format("Looking for province data at date: %s", start.toString()));
                 }
 
-                Map<String, ProvinceDailyData> precedente = parseProvinceData(start.minusDays(1));
-                Map<String, ProvinceDailyData> corrente = parseProvinceData(start);
+                Map<String, ProvinceDailyDataDto> precedente = parseProvinceData(start.minusDays(1));
+                Map<String, ProvinceDailyDataDto> corrente = parseProvinceData(start);
 
-                List<ProvinceDailyData> dataToStore = new ArrayList<>();
+                List<ProvinceDailyDataDto> dataToStore = new ArrayList<>();
 
                 corrente.forEach((k, v) -> dataToStore.add(calculateProvinceDailyDelta(v, precedente.get(k))));
                 // @formatter:off
@@ -92,8 +92,8 @@ public class ProvinceCoviddataDownloader extends CovidDataDownloader {
      * @param date
      * @return
      */
-    private Map<String, ProvinceDailyData> parseProvinceData(LocalDate date) {
-        Map<String, ProvinceDailyData> dataMap = new HashMap<>();
+    private Map<String, ProvinceDailyDataDto> parseProvinceData(LocalDate date) {
+        Map<String, ProvinceDailyDataDto> dataMap = new HashMap<>();
         String uriFile = String.format(url, date.format(DateTimeFormatter.ofPattern("yyyyMMdd")));
 
         List<String> listRows = getCsvRows(uriFile);
@@ -101,7 +101,7 @@ public class ProvinceCoviddataDownloader extends CovidDataDownloader {
         // @formatter:off
         listRows.stream().map(s -> {
             List<String> columns = Arrays.asList(s.split(","));
-            ProvinceDailyData data = new ProvinceDailyData();
+            ProvinceDailyDataDto data = new ProvinceDailyDataDto();
             data.setDate(date);
             data.setProvinceCode(columns.get(4));
             data.setRegionCode(columns.get(2));
@@ -126,7 +126,7 @@ public class ProvinceCoviddataDownloader extends CovidDataDownloader {
      * @param previous
      * @return
      */
-    private ProvinceDailyData calculateProvinceDailyDelta(ProvinceDailyData current, ProvinceDailyData previous) {
+    private ProvinceDailyDataDto calculateProvinceDailyDelta(ProvinceDailyDataDto current, ProvinceDailyDataDto previous) {
         current.setNewInfections(current.getNewInfections() - previous.getNewInfections());
         if (current.getNewInfections() < 0) {
             current.setNewInfections(0);

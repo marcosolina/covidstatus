@@ -6,16 +6,16 @@ package com.marco.javacovidstatus.model.dto;
  * @author Marco
  *
  */
-public class Region {
+public class RegionDto {
 
     private String code;
     private String desc;
 
-    public Region() {
+    public RegionDto() {
 
     }
 
-    public Region(String code, String desc) {
+    public RegionDto(String code, String desc) {
         this.code = code;
         this.desc = desc;
     }
