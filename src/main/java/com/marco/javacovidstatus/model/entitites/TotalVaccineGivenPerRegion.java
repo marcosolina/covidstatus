@@ -9,7 +9,7 @@ package com.marco.javacovidstatus.model.entitites;
  */
 public class TotalVaccineGivenPerRegion {
 	private String regionCode;
-	private Long givenDoses;
+	private Long givenDoses = Long.valueOf(0);
 
 	public TotalVaccineGivenPerRegion(String regionCode, Long givenDoses) {
 		super();

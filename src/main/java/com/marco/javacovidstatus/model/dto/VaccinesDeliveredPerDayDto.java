@@ -12,7 +12,7 @@ import java.time.LocalDate;
 public class VaccinesDeliveredPerDayDto implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private LocalDate date;
-	private Long dosesDelivered;
+	private Long dosesDelivered = Long.valueOf(0);
 
 	public LocalDate getDate() {
 		return date;

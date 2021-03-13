@@ -36,4 +36,8 @@ public class EntityVacciniConsegne {
 		this.dosesDelivered = dosesDelivered;
 	}
 
+	@Override
+	public String toString() {
+		return "EntityVacciniConsegne [id=" + id + ", dosesDelivered=" + dosesDelivered + "]";
+	}
 }

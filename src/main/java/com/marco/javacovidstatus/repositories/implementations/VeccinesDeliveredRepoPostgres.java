@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
@@ -40,7 +41,15 @@ public class VeccinesDeliveredRepoPostgres implements VeccinesDeliveredRepo {
 
 	@Override
 	public boolean saveEntity(EntityVacciniConsegne entity) {
-		em.persist(entity);
+		try {
+			em.persist(entity);
+		} catch (EntityExistsException e) {
+			_LOGGER.error(String.format("The entity already exist: %s", entity.toString()));
+			return false;
+		} catch (Exception e) {
+			_LOGGER.error(String.format("Error while saving: %s", entity.toString()));
+			return false;
+		}
 		return true;
 	}
 

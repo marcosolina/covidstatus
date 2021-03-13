@@ -247,6 +247,10 @@ public class VaccineDateServiceMarco implements VaccineDateService {
 		List<TotalVaccineGivenPerRegion> list2 = repoGiven.getTotalPeaopleVaccinatedPerRegion();
 		list2.forEach(el -> 
 			map.compute(el.getRegionCode(), (k, v) -> {
+				if(v == null) {
+					v = new VacinesTotalDeliveredGivenPerRegionDto();
+					v.setRegionCode(k);
+				}
 				v.setGivenVaccines(el.getGivenDoses());
 				return v;
 			})
