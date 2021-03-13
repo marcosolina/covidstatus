@@ -87,4 +87,9 @@ public class EntityVacciniConsegnePk implements Serializable {
 		return true;
 	}
 
+	@Override
+	public String toString() {
+		return "EntityVacciniConsegnePk [regionCode=" + regionCode + ", date=" + date + ", supplier=" + supplier + "]";
+	}
+
 }

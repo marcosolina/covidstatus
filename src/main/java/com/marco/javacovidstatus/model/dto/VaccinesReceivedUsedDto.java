@@ -11,8 +11,8 @@ import java.io.Serializable;
  */
 public class VaccinesReceivedUsedDto implements Serializable {
 	private static final long serialVersionUID = 1L;
-	private Long totalVaccinesReceived;
-	private Long totalVaccinesUsed;
+	private Long totalVaccinesReceived = Long.valueOf(0);
+	private Long totalVaccinesUsed = Long.valueOf(0);
 
 	public Long getTotalVaccinesReceived() {
 		return totalVaccinesReceived;

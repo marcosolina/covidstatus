@@ -2,8 +2,10 @@ package com.marco.javacovidstatus.config;
 
 import java.util.Properties;
 
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
@@ -41,9 +43,9 @@ import com.marco.javacovidstatus.utils.CovidUtils;
 @Configuration
 public class Beans {
 
-    @Bean
-    public WebClient getWebClient() {
-    	// @formatter:off
+	@Bean
+	public WebClient getWebClient() {
+		// @formatter:off
     	int megaByteNumber = 50;
         return WebClient.builder()
         		.exchangeStrategies(
@@ -54,102 +56,110 @@ public class Beans {
         		)
         		.build();
         // @formatter:on
-    }
+	}
 
-    @Bean
-    public CovidDataService getNationalDataService() {
-        return new MarcoNationalDataService();
-    }
+	@Bean
+	public CovidDataService getNationalDataService() {
+		return new MarcoNationalDataService();
+	}
 
-    @Bean()
-    public ThreadPoolTaskScheduler taskScheduler() {
-        /*
-         * Setting a thread pool, so the scheduler can run in a different thread
-         */
-        ThreadPoolTaskScheduler taskScheduler = new ThreadPoolTaskScheduler();
-        taskScheduler.setPoolSize(20);
-        return taskScheduler;
-    }
+	@Bean()
+	public ThreadPoolTaskScheduler taskScheduler() {
+		/*
+		 * Setting a thread pool, so the scheduler can run in a different thread
+		 */
+		ThreadPoolTaskScheduler taskScheduler = new ThreadPoolTaskScheduler();
+		taskScheduler.setPoolSize(20);
+		return taskScheduler;
+	}
 
-    @Bean
-    public CovidRepository getCovidRepository() {
-        return new CovidRepositoryPostgres();
-    }
-    
-    @Bean
-    public VeccinesDeliveredRepo getVeccinesDeliveredRepo() {
-    	return new VeccinesDeliveredRepoPostgres();
-    }
-    
-    @Bean
-    public GivenVaccinesRepo getGivenVaccinesRepo() {
-    	return new GivenVaccinesRepoPostgres();
-    }
-    
-    @Bean
-    public VaccineDateService getVaccineDateService() {
-    	return new VaccineDateServiceMarco();
-    }
+	@Bean
+	public CovidRepository getCovidRepository() {
+		return new CovidRepositoryPostgres();
+	}
 
-    @Bean
-    public JavaMailSender getJavaMailSender() {
-        /*
-         * Send email using your GMAIL account
-         */
-        JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
-        mailSender.setHost("smtp.gmail.com");
-        mailSender.setPort(587);
+	@Bean
+	public VeccinesDeliveredRepo getVeccinesDeliveredRepo() {
+		return new VeccinesDeliveredRepoPostgres();
+	}
 
-        mailSender.setUsername("XXXX");
-        mailSender.setPassword("XXXX");
+	@Bean
+	public GivenVaccinesRepo getGivenVaccinesRepo() {
+		return new GivenVaccinesRepoPostgres();
+	}
 
-        Properties props = mailSender.getJavaMailProperties();
-        props.put("mail.transport.protocol", "smtp");
-        props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.starttls.enable", "true");
-        props.put("mail.debug", "true");
+	@Bean
+	public VaccineDateService getVaccineDateService() {
+		return new VaccineDateServiceMarco();
+	}
 
-        return mailSender;
-    }
+	@Bean
+	public JavaMailSender getJavaMailSender() {
+		/*
+		 * Send email using your GMAIL account
+		 */
+		JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
+		mailSender.setHost("smtp.gmail.com");
+		mailSender.setPort(587);
 
-    @Bean
-    public NotificationSenderInterface getNotificationSenderInterface() {
-        return new EmailNotificationSender();
-    }
+		mailSender.setUsername("XXXX");
+		mailSender.setPassword("XXXX");
 
-    @Bean(name = "National")
-    public CovidDataDownloader getNationalCovidDataDownloader() {
-        return new NationalCovidDataDownloader(getWebClient());
-    }
+		Properties props = mailSender.getJavaMailProperties();
+		props.put("mail.transport.protocol", "smtp");
+		props.put("mail.smtp.auth", "true");
+		props.put("mail.smtp.starttls.enable", "true");
+		props.put("mail.debug", "true");
 
-    @Bean(name = "Province")
-    public CovidDataDownloader getProvinceCoviddataDownloader() {
-        return new ProvinceCoviddataDownloader(getWebClient());
-    }
+		return mailSender;
+	}
 
-    @Bean(name = "Region")
-    public CovidDataDownloader getRegionCovidDataDownloader() {
-        return new RegionCovidDataDownloader(getWebClient());
-    }
-    
-    @Bean(name = "GivenVaccines")
-    public CovidDataDownloader getGivenVaccinesDownloader() {
-    	return new VaccinesGivenDownloader(getWebClient());
-    }
-    
-    @Bean(name = "DeliveredVaccines")
-    public CovidDataDownloader getDeliveredVaccinesDownloader() {
-    	return new VaccinesDeliveredDownloader(getWebClient());
-    }
-    
-    @Bean
-    public RegionMapDownloader getRegionMapDownloader() {
-    	return new RegionMapDownloaderFromNationalWebSite();
-    }
-    
-    @Bean 
-    public CovidUtils getCovidUtils() {
-    	return new CovidUtils();
-    }
+	@Bean
+	public NotificationSenderInterface getNotificationSenderInterface() {
+		return new EmailNotificationSender();
+	}
+
+	@Bean(name = "National")
+	public CovidDataDownloader getNationalCovidDataDownloader() {
+		return new NationalCovidDataDownloader(getWebClient());
+	}
+
+	@Bean(name = "Province")
+	public CovidDataDownloader getProvinceCoviddataDownloader() {
+		return new ProvinceCoviddataDownloader(getWebClient());
+	}
+
+	@Bean(name = "Region")
+	public CovidDataDownloader getRegionCovidDataDownloader() {
+		return new RegionCovidDataDownloader(getWebClient());
+	}
+
+	@Bean(name = "GivenVaccines")
+	public CovidDataDownloader getGivenVaccinesDownloader() {
+		return new VaccinesGivenDownloader(getWebClient());
+	}
+
+	@Bean(name = "DeliveredVaccines")
+	public CovidDataDownloader getDeliveredVaccinesDownloader() {
+		return new VaccinesDeliveredDownloader(getWebClient());
+	}
+
+	@Bean
+	public RegionMapDownloader getRegionMapDownloader() {
+		return new RegionMapDownloaderFromNationalWebSite();
+	}
+
+	@Bean
+	public CovidUtils getCovidUtils() {
+		return new CovidUtils();
+	}
+
+	@Bean
+	public MessageSource messageSource() {
+		ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
+		messageSource.setBasenames("classpath:/messages/errorCodes");
+
+		return messageSource;
+	}
 
 }

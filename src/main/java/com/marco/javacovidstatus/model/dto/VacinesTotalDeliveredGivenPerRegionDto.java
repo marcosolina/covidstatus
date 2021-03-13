@@ -8,8 +8,8 @@ package com.marco.javacovidstatus.model.dto;
  */
 public class VacinesTotalDeliveredGivenPerRegionDto {
 	private String regionCode;
-	private Long deliveredVaccines;
-	private Long givenVaccines;
+	private Long deliveredVaccines = Long.valueOf(0);
+	private Long givenVaccines = Long.valueOf(0);
 
 	public String getRegionCode() {
 		return regionCode;
