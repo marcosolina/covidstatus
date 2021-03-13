@@ -9,7 +9,7 @@ import java.time.LocalDate;
  * @author Marco
  *
  */
-public class VaccinesDelivered implements Serializable {
+public class VaccinesDeliveredPerDayDto implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private LocalDate date;
 	private Long dosesDelivered;

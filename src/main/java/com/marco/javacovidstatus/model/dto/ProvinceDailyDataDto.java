@@ -9,7 +9,7 @@ import java.time.LocalDate;
  * @author Marco
  *
  */
-public class ProvinceDailyData implements Serializable {
+public class ProvinceDailyDataDto implements Serializable {
 
     private static final long serialVersionUID = 1L;
     private LocalDate date;

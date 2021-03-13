@@ -62,7 +62,7 @@ class RegionsChart {
 		this.lastTo = to;
 		if (from != "" && to != "") {
 			MarcoUtils.executeAjax({
-				dataToPost: {
+				body: {
 					from: from,
 					to: to,
 					covidData: $("#" + this.dropDownDataTypeId).val(),

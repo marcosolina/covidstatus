@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.marco.javacovidstatus.model.entitites.EntityVacciniConsegne;
 import com.marco.javacovidstatus.model.entitites.EntityVacciniConsegnePk_;
 import com.marco.javacovidstatus.model.entitites.EntityVacciniConsegne_;
+import com.marco.javacovidstatus.model.entitites.TotalVaccineDeliveredPerRegion;
 import com.marco.javacovidstatus.model.entitites.VacciniConsegne;
 import com.marco.javacovidstatus.model.entitites.VeccinesDeliveredPerSupplier;
 import com.marco.javacovidstatus.repositories.interfaces.VeccinesDeliveredRepo;
@@ -31,8 +32,8 @@ import com.marco.javacovidstatus.repositories.interfaces.VeccinesDeliveredRepo;
  *
  */
 @Transactional
-public class VeccinesDeliveredRepoMarco implements VeccinesDeliveredRepo {
-	private static final Logger _LOGGER = LoggerFactory.getLogger(VeccinesDeliveredRepoMarco.class);
+public class VeccinesDeliveredRepoPostgres implements VeccinesDeliveredRepo {
+	private static final Logger _LOGGER = LoggerFactory.getLogger(VeccinesDeliveredRepoPostgres.class);
 
 	@PersistenceContext
 	private EntityManager em;
@@ -66,13 +67,23 @@ public class VeccinesDeliveredRepoMarco implements VeccinesDeliveredRepo {
 		 * date_data order by date_data
 		 */
 		// @formatter:off
-		cq.multiselect(root.get(EntityVacciniConsegne_.ID).get(EntityVacciniConsegnePk_.REGION_CODE),
+		cq.multiselect(
+				root.get(EntityVacciniConsegne_.ID).get(EntityVacciniConsegnePk_.REGION_CODE),
 				root.get(EntityVacciniConsegne_.ID).get(EntityVacciniConsegnePk_.DATE),
-				cb.sum(root.get(EntityVacciniConsegne_.DOSES_DELIVERED)))
-				.where(cb.between(root.get(EntityVacciniConsegne_.ID).get(EntityVacciniConsegnePk_.DATE), start, end))
-				.groupBy(root.get(EntityVacciniConsegne_.ID).get(EntityVacciniConsegnePk_.REGION_CODE),
-						root.get(EntityVacciniConsegne_.ID).get(EntityVacciniConsegnePk_.DATE))
-				.orderBy(cb.asc(root.get(EntityVacciniConsegne_.ID).get(EntityVacciniConsegnePk_.DATE)));
+				cb.sum(root.get(EntityVacciniConsegne_.DOSES_DELIVERED))
+			)
+		.where(
+				cb.between(root.get(EntityVacciniConsegne_.ID).get(EntityVacciniConsegnePk_.DATE), start, end)
+			)
+		.groupBy(
+				root.get(EntityVacciniConsegne_.ID).get(EntityVacciniConsegnePk_.REGION_CODE),
+				root.get(EntityVacciniConsegne_.ID).get(EntityVacciniConsegnePk_.DATE)
+			)
+		.orderBy(
+				cb.asc(
+					root.get(EntityVacciniConsegne_.ID).get(EntityVacciniConsegnePk_.DATE)
+				)
+			);
 
 		// @formatter:on
 
@@ -86,6 +97,7 @@ public class VeccinesDeliveredRepoMarco implements VeccinesDeliveredRepo {
 
 		String tableName = "vaccini_consegne";
 
+		// @formatter:off
 		List<StringBuilder> sqls = new ArrayList<>();
 		sqls.add(new StringBuilder(String.format("create table temp_dates as select date_data from %s group by date_data with data", tableName)));
 		sqls.add(new StringBuilder(String.format("create table temp_regions as select region_code from %s group by region_code with data", tableName)));
@@ -108,6 +120,7 @@ public class VeccinesDeliveredRepoMarco implements VeccinesDeliveredRepo {
 		sqls.add(new StringBuilder("drop table temp_supplier"));
 		sqls.add(new StringBuilder("drop table cartesian"));
 		sqls.add(new StringBuilder("drop table filldata"));
+		// @formatter:on
 
 		sqls.forEach(sb -> {
 			Query query = em.createNativeQuery(sb.toString());
@@ -123,17 +136,22 @@ public class VeccinesDeliveredRepoMarco implements VeccinesDeliveredRepo {
 		Root<EntityVacciniConsegne> root = cq.from(EntityVacciniConsegne.class);
 
 		/*
-		 * SELECT supplier, sum(doses_delivered) as delivered FROM
-		 * vaccini_consegne group by supplier order by supplier
+		 * SELECT supplier, sum(doses_delivered) as delivered FROM vaccini_consegne
+		 * group by supplier order by supplier
 		 */
 		// @formatter:off
-		cq.multiselect(root.get(EntityVacciniConsegne_.ID).get(EntityVacciniConsegnePk_.SUPPLIER),
-				cb.sum(root.get(EntityVacciniConsegne_.DOSES_DELIVERED)))
-				.where(cb.between(root.get(EntityVacciniConsegne_.ID).get(EntityVacciniConsegnePk_.DATE), start, end))
-				.groupBy(root.get(EntityVacciniConsegne_.ID).get(EntityVacciniConsegnePk_.SUPPLIER),
-						root.get(EntityVacciniConsegne_.ID).get(EntityVacciniConsegnePk_.DATE))
-				.orderBy(cb.asc(root.get(EntityVacciniConsegne_.ID).get(EntityVacciniConsegnePk_.SUPPLIER)));
-
+		cq.multiselect(
+				root.get(EntityVacciniConsegne_.ID).get(EntityVacciniConsegnePk_.SUPPLIER),
+				cb.sum(root.get(EntityVacciniConsegne_.DOSES_DELIVERED))
+			)
+		.where(
+				cb.between(root.get(EntityVacciniConsegne_.ID).get(EntityVacciniConsegnePk_.DATE), start, end)
+			)
+		.groupBy(
+				root.get(EntityVacciniConsegne_.ID).get(EntityVacciniConsegnePk_.SUPPLIER),
+				root.get(EntityVacciniConsegne_.ID).get(EntityVacciniConsegnePk_.DATE)
+			)
+		.orderBy(cb.asc(root.get(EntityVacciniConsegne_.ID).get(EntityVacciniConsegnePk_.SUPPLIER)));
 		// @formatter:on
 
 		TypedQuery<VeccinesDeliveredPerSupplier> tq = em.createQuery(cq);
@@ -143,15 +161,66 @@ public class VeccinesDeliveredRepoMarco implements VeccinesDeliveredRepo {
 	@Override
 	public LocalDate getDataAvailableLastDate() {
 		/*
-         * SELECT MAX(DATE_DATA) AS DATE_DATA FROM VACCINI_CONSEGNE
-         */
-        
-        CriteriaBuilder cb = em.getCriteriaBuilder();
-        CriteriaQuery<LocalDate> cq = cb.createQuery(LocalDate.class);
-        Root<EntityVacciniConsegne> root = cq.from(EntityVacciniConsegne.class);
-        
-        cq.select(cb.greatest(root.get(EntityVacciniConsegne_.ID).<LocalDate>get(EntityVacciniConsegnePk_.DATE)));
-        TypedQuery<LocalDate> tq = em.createQuery(cq);
-        return tq.getSingleResult();
+		 * SELECT MAX(DATE_DATA) AS DATE_DATA FROM VACCINI_CONSEGNE
+		 */
+
+		CriteriaBuilder cb = em.getCriteriaBuilder();
+		CriteriaQuery<LocalDate> cq = cb.createQuery(LocalDate.class);
+		Root<EntityVacciniConsegne> root = cq.from(EntityVacciniConsegne.class);
+
+		cq.select(cb.greatest(root.get(EntityVacciniConsegne_.ID).<LocalDate>get(EntityVacciniConsegnePk_.DATE)));
+		TypedQuery<LocalDate> tq = em.createQuery(cq);
+		return tq.getSingleResult();
+	}
+
+	@Override
+	public Long getTotalNumberDeliveedVaccines() {
+		CriteriaBuilder cb = em.getCriteriaBuilder();
+
+		CriteriaQuery<Long> cq = cb.createQuery(Long.class);
+		Root<EntityVacciniConsegne> root = cq.from(EntityVacciniConsegne.class);
+
+		/*
+		 * SELECT sum(doses_delivered) FROM vaccini_consegne
+		 */
+		// @formatter:off
+		cq.multiselect(
+				cb.sum(root.get(EntityVacciniConsegne_.DOSES_DELIVERED))
+			);
+
+		// @formatter:on
+
+		TypedQuery<Long> tq = em.createQuery(cq);
+		List<Long> list = tq.getResultList();
+		if (list.size() == 1) {
+			return list.get(0);
+		}
+		return 0L;
+	}
+
+	@Override
+	public List<TotalVaccineDeliveredPerRegion> getTotalVaccineDeliveredPerRegion() {
+		CriteriaBuilder cb = em.getCriteriaBuilder();
+
+		CriteriaQuery<TotalVaccineDeliveredPerRegion> cq = cb.createQuery(TotalVaccineDeliveredPerRegion.class);
+		Root<EntityVacciniConsegne> root = cq.from(EntityVacciniConsegne.class);
+
+		/*
+		 * SELECT region_code, sum(doses_delivered) as doses_delivered FROM
+		 * vaccini_consegne group by region_code order by region_code
+		 */
+		// @formatter:off
+		cq.multiselect(
+				root.get(EntityVacciniConsegne_.ID).get(EntityVacciniConsegnePk_.REGION_CODE),
+				cb.sum(root.get(EntityVacciniConsegne_.DOSES_DELIVERED))
+			)
+		.groupBy(
+				root.get(EntityVacciniConsegne_.ID).get(EntityVacciniConsegnePk_.REGION_CODE)
+			)
+		.orderBy(cb.asc(root.get(EntityVacciniConsegne_.ID).get(EntityVacciniConsegnePk_.REGION_CODE)));
+		// @formatter:on
+
+		TypedQuery<TotalVaccineDeliveredPerRegion> tq = em.createQuery(cq);
+		return tq.getResultList();
 	}
 }

@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import com.marco.javacovidstatus.model.entitites.EntityVacciniConsegne;
+import com.marco.javacovidstatus.model.entitites.TotalVaccineDeliveredPerRegion;
 import com.marco.javacovidstatus.model.entitites.VacciniConsegne;
 import com.marco.javacovidstatus.model.entitites.VeccinesDeliveredPerSupplier;
 
@@ -62,4 +63,17 @@ public interface VeccinesDeliveredRepo {
 	 * @return
 	 */
 	public LocalDate getDataAvailableLastDate();
+
+	/**
+	 * It returns the total number of vaccines delivered
+	 * 
+	 * @return
+	 */
+	public Long getTotalNumberDeliveedVaccines();
+	
+	/**
+	 * It returns the total of delivered vaccines per region
+	 * @return
+	 */
+	public List<TotalVaccineDeliveredPerRegion> getTotalVaccineDeliveredPerRegion();
 }

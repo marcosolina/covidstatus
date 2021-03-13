@@ -23,6 +23,7 @@ import com.marco.javacovidstatus.model.entitites.DoseCounter;
 import com.marco.javacovidstatus.model.entitites.EntitySomministrazioneVaccini;
 import com.marco.javacovidstatus.model.entitites.EntitySomministrazioneVacciniPk_;
 import com.marco.javacovidstatus.model.entitites.EntitySomministrazioneVaccini_;
+import com.marco.javacovidstatus.model.entitites.TotalVaccineGivenPerRegion;
 import com.marco.javacovidstatus.repositories.interfaces.GivenVaccinesRepo;
 
 /**
@@ -32,11 +33,11 @@ import com.marco.javacovidstatus.repositories.interfaces.GivenVaccinesRepo;
  *
  */
 @Transactional
-public class GivenVaccinesRepoMarco implements GivenVaccinesRepo {
-	private static final Logger _LOGGER = LoggerFactory.getLogger(GivenVaccinesRepoMarco.class);
+public class GivenVaccinesRepoPostgres implements GivenVaccinesRepo {
+	private static final Logger _LOGGER = LoggerFactory.getLogger(GivenVaccinesRepoPostgres.class);
 	@PersistenceContext
-    private EntityManager em;
-	
+	private EntityManager em;
+
 	@Override
 	public boolean saveEntity(EntitySomministrazioneVaccini entity) {
 		em.persist(entity);
@@ -47,7 +48,8 @@ public class GivenVaccinesRepoMarco implements GivenVaccinesRepo {
 	public boolean deleteAll() {
 		// Truncate from table
 		CriteriaBuilder cb = em.getCriteriaBuilder();
-		CriteriaDelete<EntitySomministrazioneVaccini> query = cb.createCriteriaDelete(EntitySomministrazioneVaccini.class);
+		CriteriaDelete<EntitySomministrazioneVaccini> query = cb
+				.createCriteriaDelete(EntitySomministrazioneVaccini.class);
 		query.from(EntitySomministrazioneVaccini.class);
 		em.createQuery(query).executeUpdate();
 		return true;
@@ -58,7 +60,7 @@ public class GivenVaccinesRepoMarco implements GivenVaccinesRepo {
 		CriteriaBuilder cb = em.getCriteriaBuilder();
 		CriteriaQuery<DailySumGivenVaccines> cq = cb.createQuery(DailySumGivenVaccines.class);
 		Root<EntitySomministrazioneVaccini> root = cq.from(EntitySomministrazioneVaccini.class);
-		
+
 		// @formatter:off
 		/*
 		 * SELECT DATE_DATA, SUM(MEN_COUNTER), SUM(WOMEN_COUNTER), SUM(NHS_PEOPLE_COUNTER), 
@@ -93,7 +95,7 @@ public class GivenVaccinesRepoMarco implements GivenVaccinesRepo {
 				cb.asc(root.get(EntitySomministrazioneVaccini_.ID).get(EntitySomministrazioneVacciniPk_.DATE))
 			);
 		// @formatter:on
-		
+
 		TypedQuery<DailySumGivenVaccines> tq = em.createQuery(cq);
 		return tq.getResultList();
 	}
@@ -101,16 +103,17 @@ public class GivenVaccinesRepoMarco implements GivenVaccinesRepo {
 	@Override
 	public void addMissingRowsForNoVaccinationDays() {
 		_LOGGER.debug("Adding mepty rows");
-		
+
 		String tableName = "somministrazioni_vaccini";
-		
+
+		// @formatter:off
 		List<StringBuilder> sqls = new ArrayList<>();
 		sqls.add(new StringBuilder(String.format("create table tmp_dates as select date_data from %s group by date_data with data", tableName)));
 		sqls.add(new StringBuilder(String.format("create table tmp_regions as select region_code from %s group by region_code with data", tableName)));
 		sqls.add(new StringBuilder(String.format("create table tmp_supplier as select supplier from %s group by supplier with data", tableName)));
 		sqls.add(new StringBuilder(String.format("create table tmp_age as select age_range from %s group by age_range with data", tableName)));
 		sqls.add(new StringBuilder("create table cartesian_table as select * from tmp_dates , tmp_regions , tmp_supplier, tmp_age order by date_data, region_code, supplier, age_range with data"));
-		
+
 		StringBuilder sql = new StringBuilder();
 		sql.append("create table filldata2 as select a.region_code, a.date_data, a.supplier, a.age_range, ");
 		sql.append("b.men_counter,");
@@ -129,9 +132,9 @@ public class GivenVaccinesRepoMarco implements GivenVaccinesRepo {
 		sql.append("a.region_code = b.region_code and ");
 		sql.append("a.supplier = b.supplier and ");
 		sql.append("a.age_range = b.age_range with data");
-		
+
 		sqls.add(sql);
-		
+
 		sql = new StringBuilder();
 		sql.append("update filldata2 set ");
 		sql.append("men_counter = 0,");
@@ -145,9 +148,9 @@ public class GivenVaccinesRepoMarco implements GivenVaccinesRepo {
 		sql.append("first_dose_counter = 0,");
 		sql.append("second_dose_counter = 0 ");
 		sql.append("where men_counter is null");
-		
+
 		sqls.add(sql);
-		
+
 		sqls.add(new StringBuilder(String.format("truncate %s", tableName)));
 		sqls.add(new StringBuilder(String.format("insert into %s select * from filldata2", tableName)));
 		sqls.add(new StringBuilder("drop table tmp_dates"));
@@ -156,7 +159,8 @@ public class GivenVaccinesRepoMarco implements GivenVaccinesRepo {
 		sqls.add(new StringBuilder("drop table tmp_age"));
 		sqls.add(new StringBuilder("drop table cartesian_table"));
 		sqls.add(new StringBuilder("drop table filldata2"));
-		
+		// @formatter:on
+
 		sqls.forEach(sb -> {
 			Query query = em.createNativeQuery(sb.toString());
 			query.executeUpdate();
@@ -171,8 +175,8 @@ public class GivenVaccinesRepoMarco implements GivenVaccinesRepo {
 		Root<EntitySomministrazioneVaccini> root = cq.from(EntitySomministrazioneVaccini.class);
 
 		/*
-		 * SELECT sum(first_dose_counter), sum(second_dose_counter) FROM somministrazioni_vaccini
-		 * WHERE DATE_DATA BETWEEN X AND Y
+		 * SELECT sum(first_dose_counter), sum(second_dose_counter) FROM
+		 * somministrazioni_vaccini WHERE DATE_DATA BETWEEN X AND Y
 		 */
 		// @formatter:off
 		cq.multiselect(
@@ -197,11 +201,10 @@ public class GivenVaccinesRepoMarco implements GivenVaccinesRepo {
 		Root<EntitySomministrazioneVaccini> root = cq.from(EntitySomministrazioneVaccini.class);
 
 		/*
-		 * SELECT age_range, sum(men_counter), sum (women_counter) from somministrazioni_vaccini
-		 * WHERE DATE_DATA BETWEEN X AND Y
-		 * group by age_range
+		 * SELECT age_range, sum(men_counter), sum (women_counter) from
+		 * somministrazioni_vaccini WHERE DATE_DATA BETWEEN X AND Y group by age_range
 		 */
-		
+
 		// @formatter:off
 		cq.multiselect(
 				root.get(EntitySomministrazioneVaccini_.ID).get(EntitySomministrazioneVacciniPk_.AGE_RANGE),
@@ -223,15 +226,74 @@ public class GivenVaccinesRepoMarco implements GivenVaccinesRepo {
 	@Override
 	public LocalDate getDataAvailableLastDate() {
 		/*
-         * SELECT MAX(DATE_DATA) AS DATE_DATA FROM SOMMINISTRAZIONI_VACCINI
-         */
-        CriteriaBuilder cb = em.getCriteriaBuilder();
-        CriteriaQuery<LocalDate> cq = cb.createQuery(LocalDate.class);
-        Root<EntitySomministrazioneVaccini> root = cq.from(EntitySomministrazioneVaccini.class);
-        
-        cq.select(cb.greatest(root.get(EntitySomministrazioneVaccini_.ID).<LocalDate>get(EntitySomministrazioneVacciniPk_.DATE)));
-        TypedQuery<LocalDate> tq = em.createQuery(cq);
-        return tq.getSingleResult();
+		 * SELECT MAX(DATE_DATA) AS DATE_DATA FROM SOMMINISTRAZIONI_VACCINI
+		 */
+		CriteriaBuilder cb = em.getCriteriaBuilder();
+		CriteriaQuery<LocalDate> cq = cb.createQuery(LocalDate.class);
+		Root<EntitySomministrazioneVaccini> root = cq.from(EntitySomministrazioneVaccini.class);
+
+		cq.select(cb.greatest(
+				root.get(EntitySomministrazioneVaccini_.ID).<LocalDate>get(EntitySomministrazioneVacciniPk_.DATE)));
+		TypedQuery<LocalDate> tq = em.createQuery(cq);
+		return tq.getSingleResult();
+	}
+
+	@Override
+	public Long getTotalPeaopleVaccinated() {
+		CriteriaBuilder cb = em.getCriteriaBuilder();
+
+		CriteriaQuery<DoseCounter> cq = cb.createQuery(DoseCounter.class);
+		Root<EntitySomministrazioneVaccini> root = cq.from(EntitySomministrazioneVaccini.class);
+
+		/*
+		 * SELECT sum(first_dose_counter), sum(second_dose_counter) FROM
+		 * somministrazioni_vaccini
+		 */
+		// @formatter:off
+		cq.multiselect(
+				cb.sum(root.get(EntitySomministrazioneVaccini_.FIRST_DOSE_COUNTER)),
+				cb.sum(root.get(EntitySomministrazioneVaccini_.SECOND_DOSE_COUNTER))
+			);
+		
+		// @formatter:on
+
+		TypedQuery<DoseCounter> tq = em.createQuery(cq);
+		List<DoseCounter> list = tq.getResultList();
+		if (list.size() == 1) {
+			return list.get(0).getFirstDoseCounter() + list.get(0).getSecondDoseCounter();
+		}
+		return 0L;
+	}
+
+	@Override
+	public List<TotalVaccineGivenPerRegion> getTotalPeaopleVaccinatedPerRegion() {
+		CriteriaBuilder cb = em.getCriteriaBuilder();
+
+		CriteriaQuery<TotalVaccineGivenPerRegion> cq = cb.createQuery(TotalVaccineGivenPerRegion.class);
+		Root<EntitySomministrazioneVaccini> root = cq.from(EntitySomministrazioneVaccini.class);
+
+		/*
+		 * SELECT region_code, sum(first_dose_counter + second_dose_counter)
+  		 * FROM somministrazioni_vaccini group by region_code order by region_code
+		 */
+		
+		// @formatter:off
+		cq.multiselect(
+				root.get(EntitySomministrazioneVaccini_.ID).get(EntitySomministrazioneVacciniPk_.REGION_CODE),
+				cb.sum(
+					cb.sum(root.get(EntitySomministrazioneVaccini_.FIRST_DOSE_COUNTER)),
+					cb.sum(root.get(EntitySomministrazioneVaccini_.SECOND_DOSE_COUNTER))
+				)
+			)
+		.groupBy(
+				root.get(EntitySomministrazioneVaccini_.ID).get(EntitySomministrazioneVacciniPk_.REGION_CODE)
+			)
+		.orderBy(cb.asc(root.get(EntitySomministrazioneVaccini_.ID).get(EntitySomministrazioneVacciniPk_.REGION_CODE)));
+		
+		// @formatter:on
+
+		TypedQuery<TotalVaccineGivenPerRegion> tq = em.createQuery(cq);
+		return tq.getResultList();
 	}
 
 }

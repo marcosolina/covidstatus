@@ -14,7 +14,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.marco.javacovidstatus.model.dto.NationalDailyData;
+import com.marco.javacovidstatus.model.dto.NationalDailyDataDto;
 import com.marco.javacovidstatus.model.entitites.EntityNationalData;
 import com.marco.javacovidstatus.repositories.interfaces.ProvinceDataRepo;
 import com.marco.javacovidstatus.repositories.interfaces.RegionalDataRepository;
@@ -51,7 +51,7 @@ class MarcoNationalDataServiceTest {
 
         when(mockRepo.findAllByOrderByDateDesc()).thenReturn(list);
 
-        List<NationalDailyData> respList = service.getAllDataDescending();
+        List<NationalDailyDataDto> respList = service.getAllDataDescending();
         assertEquals(10, respList.size());
         assertEquals(LocalDate.now(), respList.get(0).getDate());
         assertEquals(LocalDate.now().minusDays(9), respList.get(respList.size() - 1).getDate());
@@ -69,7 +69,7 @@ class MarcoNationalDataServiceTest {
 
         when(mockRepo.findAllByOrderByDateAsc()).thenReturn(list);
 
-        List<NationalDailyData> respList = service.getAllDataAscending();
+        List<NationalDailyDataDto> respList = service.getAllDataAscending();
         assertEquals(11, respList.size());
         assertEquals(LocalDate.now().minusDays(10), respList.get(0).getDate());
         assertEquals(LocalDate.now(), respList.get(respList.size() - 1).getDate());
@@ -77,7 +77,7 @@ class MarcoNationalDataServiceTest {
     
     @Test
     void storeDataTest() {
-        boolean result = service.storeData(new NationalDailyData());
+        boolean result = service.storeData(new NationalDailyDataDto());
         assertTrue(result);
     }
     
@@ -94,7 +94,7 @@ class MarcoNationalDataServiceTest {
         LocalDate end = LocalDate.now();
         when(mockRepo.findByDateBetweenOrderByDateAsc(start, end)).thenReturn(list);
         
-        List<NationalDailyData> respList = service.getDatesInRangeAscending(start, end);
+        List<NationalDailyDataDto> respList = service.getDatesInRangeAscending(start, end);
         assertEquals(11, respList.size());
         assertEquals(start, respList.get(0).getDate());
         assertEquals(end, respList.get(respList.size() - 1).getDate());

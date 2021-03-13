@@ -21,7 +21,7 @@ class VaccinesDoseChart {
 	fetchData(from, to) {
 		if (from != "" && to != "") {
 			MarcoUtils.executeAjax({
-				dataToPost: {
+				body: {
 					from: from,
 					to: to
 				},

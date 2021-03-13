@@ -7,6 +7,7 @@ import com.marco.javacovidstatus.model.entitites.AgeRangeGivenVaccines;
 import com.marco.javacovidstatus.model.entitites.DailySumGivenVaccines;
 import com.marco.javacovidstatus.model.entitites.DoseCounter;
 import com.marco.javacovidstatus.model.entitites.EntitySomministrazioneVaccini;
+import com.marco.javacovidstatus.model.entitites.TotalVaccineGivenPerRegion;
 
 /**
  * This interface provides the contract to query the database
@@ -66,11 +67,26 @@ public interface GivenVaccinesRepo {
 	 * @return
 	 */
 	public List<AgeRangeGivenVaccines> getDeliveredVaccinesPerAgeRange(LocalDate start, LocalDate end);
-	
+
 	/**
 	 * It returns the last date of available data, null if none are available
 	 * 
 	 * @return
 	 */
 	public LocalDate getDataAvailableLastDate();
+
+	/**
+	 * It returns the total number of people who received the vaccine, first +
+	 * second shot
+	 * 
+	 * @return
+	 */
+	public Long getTotalPeaopleVaccinated();
+
+	/**
+	 * It returns the number of vaccination (first + second shot) listed per region
+	 * 
+	 * @return
+	 */
+	public List<TotalVaccineGivenPerRegion> getTotalPeaopleVaccinatedPerRegion();
 }

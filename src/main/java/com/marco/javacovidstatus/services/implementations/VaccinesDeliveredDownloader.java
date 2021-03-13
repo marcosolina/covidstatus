@@ -61,7 +61,8 @@ public class VaccinesDeliveredDownloader extends CovidDataDownloader {
 			data.setRegionCode(("00" + regionCode).substring(regionCode.length()));
 			data.setSupplier(columns[1]);
 
-			_LOGGER.debug(String.format("Storing Delivered date for Date: %s Region: %s Supplier: %s", data.getDate(), data.getRegionCode(), data.getSupplier()));
+			_LOGGER.trace(String.format("Storing Delivered date for Date: %s Region: %s Supplier: %s", data.getDate(),
+					data.getRegionCode(), data.getSupplier()));
 			dataService.saveVaccinesDeliveredData(data);
 		});
 

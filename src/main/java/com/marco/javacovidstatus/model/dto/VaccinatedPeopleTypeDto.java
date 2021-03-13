@@ -11,7 +11,7 @@ import java.util.Map;
  * @author Marco
  *
  */
-public class VaccinatedPeople {
+public class VaccinatedPeopleTypeDto {
 	private List<LocalDate> dates;
 	private Map<String, List<Long>> dataVaccinatedPeople;
 
