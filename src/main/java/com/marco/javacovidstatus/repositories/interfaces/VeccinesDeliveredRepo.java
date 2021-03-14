@@ -70,10 +70,18 @@ public interface VeccinesDeliveredRepo {
 	 * @return
 	 */
 	public Long getTotalNumberDeliveedVaccines();
-	
+
 	/**
 	 * It returns the total of delivered vaccines per region
+	 * 
 	 * @return
 	 */
 	public List<TotalVaccineDeliveredPerRegion> getTotalVaccineDeliveredPerRegion();
+
+	/**
+	 * It removes the informations stored for the specific date
+	 * 
+	 * @param date
+	 */
+	public void deleteInformationForDate(LocalDate date);
 }

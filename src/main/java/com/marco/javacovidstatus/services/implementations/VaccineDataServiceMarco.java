@@ -32,11 +32,17 @@ import com.marco.javacovidstatus.model.entitites.TotalVaccineGivenPerRegion;
 import com.marco.javacovidstatus.model.entitites.VacciniConsegne;
 import com.marco.javacovidstatus.repositories.interfaces.GivenVaccinesRepo;
 import com.marco.javacovidstatus.repositories.interfaces.VeccinesDeliveredRepo;
-import com.marco.javacovidstatus.services.interfaces.VaccineDateService;
+import com.marco.javacovidstatus.services.interfaces.VaccineDataService;
 import com.marco.javacovidstatus.utils.Constants;
 import com.marco.utils.MarcoException;
 
-public class VaccineDateServiceMarco implements VaccineDateService {
+/**
+ * My implementation of the interface
+ * 
+ * @author Marco
+ *
+ */
+public class VaccineDataServiceMarco implements VaccineDataService {
 
 	@Autowired
 	private VeccinesDeliveredRepo repoDelivered;
@@ -44,8 +50,8 @@ public class VaccineDateServiceMarco implements VaccineDateService {
 	private GivenVaccinesRepo repoGiven;
 
 	@Override
-	public Map<String, List<VaccinesDeliveredPerDayDto>> getDeliveredVaccinesPerRegionBetweenDatesPerRegion(LocalDate start,
-			LocalDate end) {
+	public Map<String, List<VaccinesDeliveredPerDayDto>> getDeliveredVaccinesPerRegionBetweenDatesPerRegion(
+			LocalDate start, LocalDate end) {
 
 		Map<String, List<VaccinesDeliveredPerDayDto>> data = new HashMap<>();
 		repoDelivered.getDeliveredVaccinesBetween(start, end).stream()
@@ -222,8 +228,8 @@ public class VaccineDateServiceMarco implements VaccineDateService {
 		return entity;
 	}
 
-	private BiFunction<String, List<Long>, List<Long>> getAttToArrayBiFunction(ToLongFunction<DailySumGivenVaccines> function,
-			DailySumGivenVaccines dto) {
+	private BiFunction<String, List<Long>, List<Long>> getAttToArrayBiFunction(
+			ToLongFunction<DailySumGivenVaccines> function, DailySumGivenVaccines dto) {
 		return (k, v) -> {
 			if (v == null) {
 				v = new ArrayList<>();
@@ -243,20 +249,27 @@ public class VaccineDateServiceMarco implements VaccineDateService {
 			obj.setDeliveredVaccines(el.getDosesDelivered());
 			map.put(el.getRegionCode(), obj);
 		});
-		
+
 		List<TotalVaccineGivenPerRegion> list2 = repoGiven.getTotalPeaopleVaccinatedPerRegion();
-		list2.forEach(el -> 
-			map.compute(el.getRegionCode(), (k, v) -> {
-				if(v == null) {
-					v = new VacinesTotalDeliveredGivenPerRegionDto();
-					v.setRegionCode(k);
-				}
-				v.setGivenVaccines(el.getGivenDoses());
-				return v;
-			})
-		);
-		
-		
+		list2.forEach(el -> map.compute(el.getRegionCode(), (k, v) -> {
+			if (v == null) {
+				v = new VacinesTotalDeliveredGivenPerRegionDto();
+				v.setRegionCode(k);
+			}
+			v.setGivenVaccines(el.getGivenDoses());
+			return v;
+		}));
+
 		return map;
+	}
+
+	@Override
+	public void deleteGivenVaccineInformation(LocalDate date) {
+		repoGiven.deleteInformationForDate(date);
+	}
+
+	@Override
+	public void deleteDeliveredVaccineInformation(LocalDate date) {
+		repoDelivered.deleteInformationForDate(date);
 	}
 }

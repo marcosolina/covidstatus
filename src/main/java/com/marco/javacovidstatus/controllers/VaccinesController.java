@@ -32,7 +32,7 @@ import com.marco.javacovidstatus.model.rest.vaccines.RespGetVaccinatedPeoplePerA
 import com.marco.javacovidstatus.model.rest.vaccines.RespGetVaccinesDeliveredPerRegion;
 import com.marco.javacovidstatus.model.rest.vaccines.RespGetVaccinesDeliveredPerSupplier;
 import com.marco.javacovidstatus.model.rest.vaccines.RespGetVaccinesDosesData;
-import com.marco.javacovidstatus.services.interfaces.VaccineDateService;
+import com.marco.javacovidstatus.services.interfaces.VaccineDataService;
 import com.marco.javacovidstatus.utils.CovidUtils;
 import com.marco.utils.MarcoException;
 
@@ -47,7 +47,7 @@ public class VaccinesController {
 	private static final Logger LOGGER = LoggerFactory.getLogger(VaccinesController.class);
 
 	@Autowired
-	private VaccineDateService service;
+	private VaccineDataService service;
 
 	@Autowired
     private MessageSource msgSource;

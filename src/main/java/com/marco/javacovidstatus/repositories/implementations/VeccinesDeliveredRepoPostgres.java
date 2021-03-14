@@ -232,4 +232,23 @@ public class VeccinesDeliveredRepoPostgres implements VeccinesDeliveredRepo {
 		TypedQuery<TotalVaccineDeliveredPerRegion> tq = em.createQuery(cq);
 		return tq.getResultList();
 	}
+
+	@Override
+	public void deleteInformationForDate(LocalDate date) {
+		
+		/*
+		 * DELETE FROM VACCINI_CONSEGNE WHERE DATE_DATA = X
+		 */
+		
+		CriteriaBuilder cb = em.getCriteriaBuilder();
+		CriteriaDelete<EntityVacciniConsegne> cd = cb.createCriteriaDelete(EntityVacciniConsegne.class);
+		Root<EntityVacciniConsegne> root = cd.from(EntityVacciniConsegne.class);
+	
+		// @formatter:off
+		cd.where(
+			cb.equal(root.get(EntityVacciniConsegne_.ID).<LocalDate>get(EntityVacciniConsegnePk_.DATE), date)
+		);
+		// @formatter:on
+		em.createQuery(cd).executeUpdate();
+	}
 }

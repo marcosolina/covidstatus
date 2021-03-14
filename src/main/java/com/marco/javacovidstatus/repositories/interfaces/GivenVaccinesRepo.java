@@ -89,4 +89,11 @@ public interface GivenVaccinesRepo {
 	 * @return
 	 */
 	public List<TotalVaccineGivenPerRegion> getTotalPeaopleVaccinatedPerRegion();
+
+	/**
+	 * It removes the informations stored for the specific date
+	 * 
+	 * @param date
+	 */
+	public void deleteInformationForDate(LocalDate date);
 }
