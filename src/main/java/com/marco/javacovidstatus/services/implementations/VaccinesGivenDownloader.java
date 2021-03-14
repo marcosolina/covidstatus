@@ -11,7 +11,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import com.marco.javacovidstatus.model.dto.VaccinatedPeopleDto;
 import com.marco.javacovidstatus.services.interfaces.CovidDataDownloader;
-import com.marco.javacovidstatus.services.interfaces.VaccineDateService;
+import com.marco.javacovidstatus.services.interfaces.VaccineDataService;
 import com.marco.utils.DateUtils;
 import com.marco.utils.enums.DateFormats;
 
@@ -24,7 +24,7 @@ import com.marco.utils.enums.DateFormats;
  */
 public class VaccinesGivenDownloader extends CovidDataDownloader {
 	@Autowired
-	private VaccineDateService dataService;
+	private VaccineDataService dataService;
 
 	private static final Logger _LOGGER = LoggerFactory.getLogger(VaccinesGivenDownloader.class);
 
@@ -38,6 +38,11 @@ public class VaccinesGivenDownloader extends CovidDataDownloader {
 	public void downloadData() {
 		_LOGGER.info("Downloading Given vaccines data");
 
+		/*
+		 * Forcing the refresh of the last available day data as the goverment might
+		 * update the last day data multiple times
+		 */
+		dataService.deleteGivenVaccineInformation(getStartDate());
 		LocalDate startDate = getStartDate();
 
 		List<String> rows = this.getCsvRows(CSV_URL);
@@ -86,8 +91,8 @@ public class VaccinesGivenDownloader extends CovidDataDownloader {
 				error.set(true);
 			}
 		});
-		
-		if(error.get()) {
+
+		if (error.get()) {
 			_LOGGER.error("There was an error with the data, cleaning everything and retrying at the next cron tick");
 			dataService.deleteAllGivenVaccineData();
 		}

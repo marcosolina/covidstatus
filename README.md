@@ -28,6 +28,7 @@ All the data are retrieved from the [Ministero della Salute](https://www.salute.
 
 ## History
 
+- **14/03/2021 v0.1.5**: Forcing the refresh of the last available "day" data as the goverments might provide multiple updates on the same day
 - **13/03/2021 v0.1.4**: Adding a workaround for the Government data [issue](https://github.com/italia/covid19-opendata-vaccini/issues/106)
 - **13/03/2021 v0.1.3**: Adding the "total" tab
 - **12/03/2021 v0.1.2**: UI XL Screen improvements, Backend improvements

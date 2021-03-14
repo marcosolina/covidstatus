@@ -11,7 +11,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import com.marco.javacovidstatus.model.dto.VaccinesDeliveredDto;
 import com.marco.javacovidstatus.services.interfaces.CovidDataDownloader;
-import com.marco.javacovidstatus.services.interfaces.VaccineDateService;
+import com.marco.javacovidstatus.services.interfaces.VaccineDataService;
 import com.marco.utils.DateUtils;
 import com.marco.utils.enums.DateFormats;
 
@@ -23,7 +23,7 @@ import com.marco.utils.enums.DateFormats;
  */
 public class VaccinesDeliveredDownloader extends CovidDataDownloader {
 	@Autowired
-	private VaccineDateService dataService;
+	private VaccineDataService dataService;
 
 	private static final Logger _LOGGER = LoggerFactory.getLogger(VaccinesDeliveredDownloader.class);
 
@@ -37,6 +37,11 @@ public class VaccinesDeliveredDownloader extends CovidDataDownloader {
 	public void downloadData() {
 		_LOGGER.info("Downloading delivered vaccines data");
 
+		/*
+		 * Forcing the refresh of the last available day data as the goverment might
+		 * update the last day data multiple times
+		 */
+		dataService.deleteDeliveredVaccineInformation(getStartDate());
 		LocalDate startDate = getStartDate();
 
 		AtomicBoolean error = new AtomicBoolean();

@@ -18,7 +18,7 @@ import com.marco.utils.MarcoException;
  * @author Marco
  *
  */
-public interface VaccineDateService {
+public interface VaccineDataService {
 
 	/**
 	 * It returns the number of vaccines delivered at the regions
@@ -31,8 +31,8 @@ public interface VaccineDateService {
 	 *         <li>Value -> Delivered Vaccines to the region grouped by date</li>
 	 *         </ul>
 	 */
-	public Map<String, List<VaccinesDeliveredPerDayDto>> getDeliveredVaccinesPerRegionBetweenDatesPerRegion(LocalDate start,
-			LocalDate end);
+	public Map<String, List<VaccinesDeliveredPerDayDto>> getDeliveredVaccinesPerRegionBetweenDatesPerRegion(
+			LocalDate start, LocalDate end);
 
 	/**
 	 * It returns the number of vaccines deliverd by the different suppliers
@@ -148,4 +148,18 @@ public interface VaccineDateService {
 	 * @return
 	 */
 	public Map<String, VacinesTotalDeliveredGivenPerRegionDto> getVacinesTotalDeliveredGivenPerRegion();
+
+	/**
+	 * It deletes the data from the given vaccines repo for the specified date
+	 * 
+	 * @param date
+	 */
+	public void deleteGivenVaccineInformation(LocalDate date);
+
+	/**
+	 * It deletes the data from the delivered vaccine repo for the specified date
+	 * 
+	 * @param date
+	 */
+	public void deleteDeliveredVaccineInformation(LocalDate date);
 }

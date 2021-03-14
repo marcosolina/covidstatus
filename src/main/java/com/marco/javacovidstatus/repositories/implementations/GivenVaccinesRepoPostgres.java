@@ -232,8 +232,14 @@ public class GivenVaccinesRepoPostgres implements GivenVaccinesRepo {
 		CriteriaQuery<LocalDate> cq = cb.createQuery(LocalDate.class);
 		Root<EntitySomministrazioneVaccini> root = cq.from(EntitySomministrazioneVaccini.class);
 
-		cq.select(cb.greatest(
-				root.get(EntitySomministrazioneVaccini_.ID).<LocalDate>get(EntitySomministrazioneVacciniPk_.DATE)));
+		// @formatter:off
+		cq.select(
+			cb.greatest(
+				root.get(EntitySomministrazioneVaccini_.ID).<LocalDate>get(EntitySomministrazioneVacciniPk_.DATE)
+				)
+		);
+		
+		// @formatter:on
 		TypedQuery<LocalDate> tq = em.createQuery(cq);
 		return tq.getSingleResult();
 	}
@@ -294,6 +300,25 @@ public class GivenVaccinesRepoPostgres implements GivenVaccinesRepo {
 
 		TypedQuery<TotalVaccineGivenPerRegion> tq = em.createQuery(cq);
 		return tq.getResultList();
+	}
+
+	@Override
+	public void deleteInformationForDate(LocalDate date) {
+		
+		/*
+		 * DELETE FROM SOMMINISTRAZIONI_VACCINI WHERE DATE_DATA = X
+		 */
+		
+		CriteriaBuilder cb = em.getCriteriaBuilder();
+		CriteriaDelete<EntitySomministrazioneVaccini> cd = cb.createCriteriaDelete(EntitySomministrazioneVaccini.class);
+		Root<EntitySomministrazioneVaccini> root = cd.from(EntitySomministrazioneVaccini.class);
+	
+		// @formatter:off
+		cd.where(
+			cb.equal(root.get(EntitySomministrazioneVaccini_.ID).<LocalDate>get(EntitySomministrazioneVacciniPk_.DATE), date)
+		);
+		// @formatter:on
+		em.createQuery(cd).executeUpdate();
 	}
 
 }
