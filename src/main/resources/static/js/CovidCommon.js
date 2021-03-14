@@ -102,6 +102,7 @@ var CovidCommon = (function(CovidCommon){
 		charts.vaccinesPerAge			= new VaccinesPerAgeChart("chartVaccinesPerAge", colorPalette);
 		charts.vaccinesDeliveredUsed	= new TotalDeliveredUsedVaccinesChart("chartTotalsVaccinesUsedDelivered", colorPalette);
 		charts.vaxDeliveredUsedPerReg	= new TotalDeliveredUsedVaccinesPerRegionChart("chartTotalsVaccinesUsedDeliveredPerRegion", colorPalette);
+		charts.vaxTotalPerAge			= new TotalGivenVeccinesPerAge("chartTotalsVaccinesGivenPerAge", colorPalette);
 		
 	}
 	

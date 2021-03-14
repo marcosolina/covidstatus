@@ -96,4 +96,11 @@ public interface GivenVaccinesRepo {
 	 * @param date
 	 */
 	public void deleteInformationForDate(LocalDate date);
+
+	/**
+	 * It returns the total number of given vaccines per age range
+	 * 
+	 * @return
+	 */
+	public List<AgeRangeGivenVaccines> getTotalAgeRangeGivenVaccines();
 }

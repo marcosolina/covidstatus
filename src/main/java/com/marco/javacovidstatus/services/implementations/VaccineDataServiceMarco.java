@@ -126,13 +126,14 @@ public class VaccineDataServiceMarco implements VaccineDataService {
 	public Map<String, Long> getVaccinatedAgeRangeBetweenDates(LocalDate start, LocalDate end) {
 		List<AgeRangeGivenVaccines> list = repoGiven.getDeliveredVaccinesPerAgeRange(start, end);
 
-		Map<String, Long> map = new HashMap<>();
-		list.forEach(dto -> {
-			Long counter = dto.getMen() + dto.getWomen();
-			map.compute(dto.getAgeRange(), (k, v) -> v == null ? counter : v + counter);
-		});
+		return parseListAgeRangeGivenVaccines(list);
+	}
 
-		return map;
+	@Override
+	public Map<String, Long> getVaccinatedAgeRangeTotals() {
+		List<AgeRangeGivenVaccines> list = repoGiven.getTotalAgeRangeGivenVaccines();
+
+		return parseListAgeRangeGivenVaccines(list);
 	}
 
 	@Override
@@ -181,6 +182,40 @@ public class VaccineDataServiceMarco implements VaccineDataService {
 		dto.setTotalVaccinesReceived(repoDelivered.getTotalNumberDeliveedVaccines());
 		dto.setTotalVaccinesUsed(repoGiven.getTotalPeaopleVaccinated());
 		return dto;
+	}
+
+	@Override
+	public Map<String, VacinesTotalDeliveredGivenPerRegionDto> getVacinesTotalDeliveredGivenPerRegion() {
+		Map<String, VacinesTotalDeliveredGivenPerRegionDto> map = new HashMap<>();
+		List<TotalVaccineDeliveredPerRegion> list = repoDelivered.getTotalVaccineDeliveredPerRegion();
+		list.forEach(el -> {
+			VacinesTotalDeliveredGivenPerRegionDto obj = new VacinesTotalDeliveredGivenPerRegionDto();
+			obj.setRegionCode(el.getRegionCode());
+			obj.setDeliveredVaccines(el.getDosesDelivered());
+			map.put(el.getRegionCode(), obj);
+		});
+
+		List<TotalVaccineGivenPerRegion> list2 = repoGiven.getTotalPeaopleVaccinatedPerRegion();
+		list2.forEach(el -> map.compute(el.getRegionCode(), (k, v) -> {
+			if (v == null) {
+				v = new VacinesTotalDeliveredGivenPerRegionDto();
+				v.setRegionCode(k);
+			}
+			v.setGivenVaccines(el.getGivenDoses());
+			return v;
+		}));
+
+		return map;
+	}
+
+	@Override
+	public void deleteGivenVaccineInformation(LocalDate date) {
+		repoGiven.deleteInformationForDate(date);
+	}
+
+	@Override
+	public void deleteDeliveredVaccineInformation(LocalDate date) {
+		repoDelivered.deleteInformationForDate(date);
 	}
 
 	private VaccinesDeliveredPerDayDto fromEntityVacciniConsegneToVaccinesDelivered(VacciniConsegne entity) {
@@ -239,37 +274,14 @@ public class VaccineDataServiceMarco implements VaccineDataService {
 		};
 	}
 
-	@Override
-	public Map<String, VacinesTotalDeliveredGivenPerRegionDto> getVacinesTotalDeliveredGivenPerRegion() {
-		Map<String, VacinesTotalDeliveredGivenPerRegionDto> map = new HashMap<>();
-		List<TotalVaccineDeliveredPerRegion> list = repoDelivered.getTotalVaccineDeliveredPerRegion();
-		list.forEach(el -> {
-			VacinesTotalDeliveredGivenPerRegionDto obj = new VacinesTotalDeliveredGivenPerRegionDto();
-			obj.setRegionCode(el.getRegionCode());
-			obj.setDeliveredVaccines(el.getDosesDelivered());
-			map.put(el.getRegionCode(), obj);
+	private Map<String, Long> parseListAgeRangeGivenVaccines(List<AgeRangeGivenVaccines> list) {
+		Map<String, Long> map = new HashMap<>();
+		list.forEach(dto -> {
+			Long counter = dto.getMen() + dto.getWomen();
+			map.compute(dto.getAgeRange(), (k, v) -> v == null ? counter : v + counter);
 		});
-
-		List<TotalVaccineGivenPerRegion> list2 = repoGiven.getTotalPeaopleVaccinatedPerRegion();
-		list2.forEach(el -> map.compute(el.getRegionCode(), (k, v) -> {
-			if (v == null) {
-				v = new VacinesTotalDeliveredGivenPerRegionDto();
-				v.setRegionCode(k);
-			}
-			v.setGivenVaccines(el.getGivenDoses());
-			return v;
-		}));
 
 		return map;
 	}
 
-	@Override
-	public void deleteGivenVaccineInformation(LocalDate date) {
-		repoGiven.deleteInformationForDate(date);
-	}
-
-	@Override
-	public void deleteDeliveredVaccineInformation(LocalDate date) {
-		repoDelivered.deleteInformationForDate(date);
-	}
 }

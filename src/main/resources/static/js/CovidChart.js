@@ -8,6 +8,7 @@ class CovidChart {
 	constructor(docElement){
 		this.docElement = docElement;
 		this.arrDataSets = [];
+		this.invertedAxes = false;
 	}
 	
 	/**
@@ -45,6 +46,7 @@ class CovidChart {
 		
 		let fontColor = darkModeOn ? "#FFFFFF" : "#666666";
 		let color = darkModeOn ? "rgba(255, 255, 255, 0.5)" : 'rgba(0, 0, 0, 0.1)';
+		this.invertedAxes = type == "horizontalBar";
 		
 		var config = {
 		    type: type || 'line',
@@ -85,7 +87,7 @@ class CovidChart {
 					intersect: false,
 					itemSort: this.sortTooltip,
 					callbacks: {
-						label: this.formatToolTip 
+						label: this.formatToolTip.bind(this)
 					}
 				},
 
@@ -104,11 +106,13 @@ class CovidChart {
 	formatToolTip(toolTip, data){
 		let tmp = data.datasets[toolTip.datasetIndex].label;
 		
+		let label = this.invertedAxes ? toolTip.xLabel : toolTip.yLabel;
+		
 		// If it is an Integer
-		if(toolTip.yLabel % 1 === 0){
-			return tmp + ": " + toolTip.yLabel.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+		if(label % 1 === 0){
+			return tmp + ": " + label.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 		}else{
-			return tmp + ": " + toolTip.yLabel;
+			return tmp + ": " + label;
 		}
 	}
 	

@@ -4,10 +4,10 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
-import com.marco.javacovidstatus.model.dto.VaccinatedPeopleTypeDto;
 import com.marco.javacovidstatus.model.dto.VaccinatedPeopleDto;
-import com.marco.javacovidstatus.model.dto.VaccinesDeliveredPerDayDto;
+import com.marco.javacovidstatus.model.dto.VaccinatedPeopleTypeDto;
 import com.marco.javacovidstatus.model.dto.VaccinesDeliveredDto;
+import com.marco.javacovidstatus.model.dto.VaccinesDeliveredPerDayDto;
 import com.marco.javacovidstatus.model.dto.VaccinesReceivedUsedDto;
 import com.marco.javacovidstatus.model.dto.VacinesTotalDeliveredGivenPerRegionDto;
 import com.marco.utils.MarcoException;
@@ -68,6 +68,13 @@ public interface VaccineDataService {
 	 *         </ul>
 	 */
 	public Map<String, Long> getVaccinatedAgeRangeBetweenDates(LocalDate start, LocalDate end);
+
+	/**
+	 * It returns the numbers of vaccinated people grouped by age range
+	 * 
+	 * @return
+	 */
+	public Map<String, Long> getVaccinatedAgeRangeTotals();
 
 	/**
 	 * It returns the number of people who has received the vaccine shot
