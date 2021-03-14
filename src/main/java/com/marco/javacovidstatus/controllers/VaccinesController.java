@@ -50,8 +50,8 @@ public class VaccinesController {
 	private VaccineDataService service;
 
 	@Autowired
-    private MessageSource msgSource;
-	
+	private MessageSource msgSource;
+
 	/**
 	 * It returns the delivered vaccines per Region
 	 * 
@@ -92,10 +92,11 @@ public class VaccinesController {
 			resp.setArrDates(list);
 			resp.setStatus(true);
 		} catch (Exception e) {
-			if(LOGGER.isTraceEnabled()) {
+			if (LOGGER.isTraceEnabled()) {
 				e.printStackTrace();
 			}
-			resp.addError(new MarcoException(msgSource.getMessage("COVID00001", null, LocaleContextHolder.getLocale())));
+			resp.addError(
+					new MarcoException(msgSource.getMessage("COVID00001", null, LocaleContextHolder.getLocale())));
 		}
 		return resp;
 	}
@@ -120,10 +121,11 @@ public class VaccinesController {
 			resp.setDeliveredPerSupplier(supplierData);
 			resp.setStatus(true);
 		} catch (Exception e) {
-			if(LOGGER.isTraceEnabled()) {
+			if (LOGGER.isTraceEnabled()) {
 				e.printStackTrace();
 			}
-			resp.addError(new MarcoException(msgSource.getMessage("COVID00001", null, LocaleContextHolder.getLocale())));
+			resp.addError(
+					new MarcoException(msgSource.getMessage("COVID00001", null, LocaleContextHolder.getLocale())));
 		}
 
 		return resp;
@@ -150,7 +152,7 @@ public class VaccinesController {
 			resp.setStatus(true);
 
 		} catch (MarcoException e) {
-			if(LOGGER.isTraceEnabled()) {
+			if (LOGGER.isTraceEnabled()) {
 				e.printStackTrace();
 			}
 			resp.addError(e);
@@ -178,10 +180,11 @@ public class VaccinesController {
 			resp.setArrDates(dataVaccinatedPeople.getDates());
 			resp.setStatus(true);
 		} catch (Exception e) {
-			if(LOGGER.isTraceEnabled()) {
+			if (LOGGER.isTraceEnabled()) {
 				e.printStackTrace();
 			}
-			resp.addError(new MarcoException(msgSource.getMessage("COVID00001", null, LocaleContextHolder.getLocale())));
+			resp.addError(
+					new MarcoException(msgSource.getMessage("COVID00001", null, LocaleContextHolder.getLocale())));
 		}
 		return resp;
 	}
@@ -205,14 +208,21 @@ public class VaccinesController {
 			resp.setDataVaccinatedPerAge(dataVaccinatedPerAge);
 			resp.setStatus(true);
 		} catch (Exception e) {
-			if(LOGGER.isTraceEnabled()) {
+			if (LOGGER.isTraceEnabled()) {
 				e.printStackTrace();
 			}
-			resp.addError(new MarcoException(msgSource.getMessage("COVID00001", null, LocaleContextHolder.getLocale())));
+			resp.addError(
+					new MarcoException(msgSource.getMessage("COVID00001", null, LocaleContextHolder.getLocale())));
 		}
 		return resp;
 	}
 
+	/**
+	 * It returns the total data of delivered vaccines and total number of used
+	 * vaccines
+	 * 
+	 * @return
+	 */
 	@GetMapping(value = CovidUtils.MAPPING_VACCINE_TOTAL_DATA)
 	@ResponseBody
 	public RespGetTotalDelivereUsedVaccineData getTotlaVaccinesDeliveredUsed() {
@@ -225,15 +235,21 @@ public class VaccinesController {
 			resp.setTotalUsedVaccines(dto.getTotalVaccinesUsed());
 			resp.setStatus(true);
 		} catch (Exception e) {
-			if(LOGGER.isTraceEnabled()) {
+			if (LOGGER.isTraceEnabled()) {
 				e.printStackTrace();
 			}
-			resp.addError(new MarcoException(msgSource.getMessage("COVID00001", null, LocaleContextHolder.getLocale())));
+			resp.addError(
+					new MarcoException(msgSource.getMessage("COVID00001", null, LocaleContextHolder.getLocale())));
 		}
 
 		return resp;
 	}
 
+	/**
+	 * It returns the total number of delivered and used vaccines per region
+	 * 
+	 * @return
+	 */
 	@GetMapping(value = CovidUtils.MAPPING_VACCINE_TOTAL_DATA_PER_REGION)
 	@ResponseBody
 	public RespGetTotalDelivereUsedVaccineDataPerRegion getTotlaVaccinesDeliveredUsedPerRegion() {
@@ -244,10 +260,37 @@ public class VaccinesController {
 			resp.setData(service.getVacinesTotalDeliveredGivenPerRegion());
 			resp.setStatus(true);
 		} catch (Exception e) {
-			if(LOGGER.isTraceEnabled()) {
+			if (LOGGER.isTraceEnabled()) {
 				e.printStackTrace();
 			}
-			resp.addError(new MarcoException(msgSource.getMessage("COVID00001", null, LocaleContextHolder.getLocale())));
+			resp.addError(
+					new MarcoException(msgSource.getMessage("COVID00001", null, LocaleContextHolder.getLocale())));
+		}
+		return resp;
+	}
+
+	/**
+	 * It returns the total number of vaccinated people per age range
+	 * 
+	 * @return
+	 */
+	@GetMapping(value = CovidUtils.MAPPING_VACCINE_TOTAL_DATA_PER_AGE)
+	@ResponseBody
+	public RespGetVaccinatedPeoplePerAgeData getTotalVaccinesPerAgeData() {
+		LOGGER.trace("Inside VaccinesController.getVaccinesPerAgeData");
+
+		RespGetVaccinatedPeoplePerAgeData resp = new RespGetVaccinatedPeoplePerAgeData();
+		try {
+			Map<String, Long> dataVaccinatedPerAge = service.getVaccinatedAgeRangeTotals();
+
+			resp.setDataVaccinatedPerAge(dataVaccinatedPerAge);
+			resp.setStatus(true);
+		} catch (Exception e) {
+			if (LOGGER.isTraceEnabled()) {
+				e.printStackTrace();
+			}
+			resp.addError(
+					new MarcoException(msgSource.getMessage("COVID00001", null, LocaleContextHolder.getLocale())));
 		}
 		return resp;
 	}

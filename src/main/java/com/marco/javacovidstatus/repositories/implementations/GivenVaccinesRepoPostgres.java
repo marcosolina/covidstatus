@@ -321,4 +321,31 @@ public class GivenVaccinesRepoPostgres implements GivenVaccinesRepo {
 		em.createQuery(cd).executeUpdate();
 	}
 
+	@Override
+	public List<AgeRangeGivenVaccines> getTotalAgeRangeGivenVaccines() {
+		CriteriaBuilder cb = em.getCriteriaBuilder();
+
+		CriteriaQuery<AgeRangeGivenVaccines> cq = cb.createQuery(AgeRangeGivenVaccines.class);
+		Root<EntitySomministrazioneVaccini> root = cq.from(EntitySomministrazioneVaccini.class);
+
+		/*
+		 * SELECT age_range, sum(men_counter), sum (women_counter) from
+		 * somministrazioni_vaccini group by age_range
+		 */
+
+		// @formatter:off
+		cq.multiselect(
+				root.get(EntitySomministrazioneVaccini_.ID).get(EntitySomministrazioneVacciniPk_.AGE_RANGE),
+				cb.sum(root.get(EntitySomministrazioneVaccini_.MEN_COUNTER)),
+				cb.sum(root.get(EntitySomministrazioneVaccini_.WOMEN_COUNTER))
+			)
+		.groupBy(
+				root.get(EntitySomministrazioneVaccini_.ID).get(EntitySomministrazioneVacciniPk_.AGE_RANGE)
+		);
+		// @formatter:on
+
+		TypedQuery<AgeRangeGivenVaccines> tq = em.createQuery(cq);
+		return tq.getResultList();
+	}
+
 }
