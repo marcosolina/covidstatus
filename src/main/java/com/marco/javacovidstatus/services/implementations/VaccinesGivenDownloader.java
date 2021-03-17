@@ -39,14 +39,12 @@ public class VaccinesGivenDownloader extends CovidDataDownloader {
 		_LOGGER.info("Downloading Given vaccines data");
 
 		/*
-		 * Forcing the refresh of the last available day data as the goverment might
-		 * update the last day data multiple times
+		 * Forcing the re-loading of all the data. I notice that the government updates
+		 * the data of the previous days. There is no way for me to understand
+		 * "how much back" they go... so I decided to clear the table at every scan
 		 */
-		LocalDate tmpDate = getStartDate();
-		for(int i = 0; i < 3; i++) {
-			dataService.deleteGivenVaccineInformation(tmpDate.plusDays(i * -1));
-		}
-		
+		dataService.deleteAllGivenVaccineData();
+
 		LocalDate startDate = getStartDate();
 
 		List<String> rows = this.getCsvRows(CSV_URL);
