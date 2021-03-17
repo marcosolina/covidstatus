@@ -42,7 +42,11 @@ public class VaccinesGivenDownloader extends CovidDataDownloader {
 		 * Forcing the refresh of the last available day data as the goverment might
 		 * update the last day data multiple times
 		 */
-		dataService.deleteGivenVaccineInformation(getStartDate());
+		LocalDate tmpDate = getStartDate();
+		for(int i = 0; i < 3; i++) {
+			dataService.deleteGivenVaccineInformation(tmpDate.plusDays(i * -1));
+		}
+		
 		LocalDate startDate = getStartDate();
 
 		List<String> rows = this.getCsvRows(CSV_URL);
