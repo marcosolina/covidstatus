@@ -28,6 +28,7 @@ All the data are retrieved from the [Ministero della Salute](https://www.salute.
 
 ## History
 
+- **14/03/2021 v0.1.7**: Refreshing all the "vaccines" data at every check. I notice that the goverments ammends the data from the previous days.
 - **14/03/2021 v0.1.6**: Adding chart totals per age
 - **14/03/2021 v0.1.5**: Forcing the refresh of the last available "day" data as the goverments might provide multiple updates on the same day
 - **13/03/2021 v0.1.4**: Adding a workaround for the Government data [issue](https://github.com/italia/covid19-opendata-vaccini/issues/106)
