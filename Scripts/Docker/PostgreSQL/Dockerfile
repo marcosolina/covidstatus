@@ -1,4 +1,4 @@
-FROM postgres:9.5
+FROM postgres:11
 
 COPY initCovidDb.sql  /docker-entrypoint-initdb.d
 

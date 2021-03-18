@@ -13,10 +13,31 @@ All the data are retrieved from the [Ministero della Salute](https://www.salute.
 - JDK 11
 - Maven 3.x.x
 - Database (PostgreSQL)
+- Custom Dependencies:
+  - [My WebJar](https://github.com/marcosolina/WebJar)
+  - [My Java Utils](https://github.com/marcosolina/javautils)
 
-## Info
+## OR
 
-- I am providing a **docker file** that you can use to run and initialise the database. You will find it insider the folde: Scripts/Docker/PostgreSQL/*
+![Docker](Misc/Pictures/docker_logo200.png)
+
+- Docker
+- Docker compose
+
+## Running the project with Docker & Docker Compose
+
+- Run the following command from the repository folder
+
+  ~~~~bash
+  $ docker-compose -f ./Scripts/Docker/app-and-db-docker-compose.yml up
+  
+  Creating network "covid_network" with the default driver
+  Building postgres
+  Step 1/4 : FROM postgres:11
+  ...
+  ...
+  ...
+  ~~~~
 
 ## Screenshots
 
@@ -28,6 +49,7 @@ All the data are retrieved from the [Ministero della Salute](https://www.salute.
 
 ## History
 
+- **18/03/2021 v0.1.8**: Updating the PostgreSQL driver & providing docker files to run the whole application inside docker containers
 - **14/03/2021 v0.1.7**: Refreshing all the "vaccines" data at every check. I notice that the goverments ammends the data from the previous days.
 - **14/03/2021 v0.1.6**: Adding chart totals per age
 - **14/03/2021 v0.1.5**: Forcing the refresh of the last available "day" data as the goverments might provide multiple updates on the same day

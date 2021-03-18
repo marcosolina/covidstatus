@@ -1,0 +1,8 @@
+version: "3.7"
+services:
+  app:
+    image: app_covid
+    build:
+      context: .
+    ports:
+      - "8080:8080"
