@@ -13,8 +13,8 @@ logging:
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/coviditaly
-    username: postgres
-    password: postgres
+    username: ${POSTGRES_USER:REPLACE_ME} # Replace the value
+    password: ${POSTGRES_PASSW:REPLACE_ME} # Replace the value
   #autoconfigure:
     #exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration, org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
   mail:    host: smtp.gmail.com
