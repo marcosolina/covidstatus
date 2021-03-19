@@ -27,7 +27,7 @@ All the data are retrieved from the [Ministero della Salute](https://www.salute.
 ## Running the project with Docker & Docker Compose
 
 ~~~~bash
-curl -L https://raw.githubusercontent.com/marcosolina/covidstatus/developing/Scripts/Docker/downloadAndStartContainers.sh | bash
+curl -L https://raw.githubusercontent.com/marcosolina/covidstatus/main/Scripts/Docker/downloadAndStartContainers.sh | bash
 ~~~~
 
 ## Screenshots
