@@ -49,6 +49,7 @@ All the data are retrieved from the [Ministero della Salute](https://www.salute.
 
 ## History
 
+- **19/03/2021 v0.1.9**: Adding auto-refresh data switch
 - **18/03/2021 v0.1.8**: Updating the PostgreSQL driver & providing docker files to run the whole application inside docker containers
 - **14/03/2021 v0.1.7**: Refreshing all the "vaccines" data at every check. I notice that the goverments ammends the data from the previous days.
 - **14/03/2021 v0.1.6**: Adding chart totals per age

@@ -28,7 +28,7 @@ class CovidChart {
 	clearDataSets(){
 		if(this.chart != undefined){
 			this.arrDataSets = [];
-			this.chart.destroy();
+			//this.chart.destroy();
 		}
 	}
 	
@@ -94,13 +94,22 @@ class CovidChart {
 		    }
 		    
 		};
-		if(type == "doughnut"){
-			delete config.options.scales;
-			delete config.options.tooltips;
+		
+		if(this.chart != undefined){
+			if(config.data.labels && this.chart.data.labels && this.chart.data.labels.length == config.data.labels.length){
+				this.chart.data.labels.map((v, i) => config.data.labels[i]);
+				this.chart.data.datasets.forEach((dataSet, i) => {
+					dataSet.backgroundColor = config.data.datasets[i].backgroundColor;  
+					dataSet.data = dataSet.data.map((v, j) => config.data.datasets[i].data[j]);
+				});			
+				this.chart.update();
+				return;		
+			}else{
+				this.chart.destroy();
+			}
+
 		}
 		this.chart = new Chart(this.docElement, config);
-		
-		
 	}
 	
 	formatToolTip(toolTip, data){

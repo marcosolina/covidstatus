@@ -27,7 +27,7 @@ class DoughnutChart {
 	clearDataSets(){
 		if(this.chart != undefined){
 			this.arrDataSets = [];
-			this.chart.destroy();
+			//this.chart.destroy();
 		}
 	}
 	
@@ -84,7 +84,17 @@ class DoughnutChart {
 		    
 		};
 		
-		this.chart = new Chart(this.docElement, config);
+		if(this.chart != undefined){
+			this.chart.data.labels.map((v, i) => config.data.labels[i]);
+			this.chart.data.datasets.forEach((dataSet, i) => {
+				dataSet.backgroundColor = dataSet.backgroundColor.map((v, j) => config.data.datasets[i].backgroundColor[j]);  
+				dataSet.data = dataSet.data.map((v, j) => config.data.datasets[i].data[j]);
+			});
+			
+			this.chart.update();			
+		}else{
+			this.chart = new Chart(this.docElement, config);
+		}
 	}
 	
 	formatToolTip(toolTip, data){

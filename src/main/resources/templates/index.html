@@ -18,6 +18,7 @@
 			CovidCommon.init(); // Initialise the app
 			//$("#btnTheme").click();
 			$("#dateFrom").change(); // Load the first set of data
+			CovidCommon.autoRefreshData();
 			//$("#infoModal").modal("show"); // Show the info modal
 			setTimeout(function(){$(".button-notification").fadeIn();}, 2000);
 			setTimeout(function(){$(".button-notification").fadeOut();}, 11000);
@@ -60,6 +61,14 @@
 						<span class="input-group-text">Al</span>
 					</div>
 					<input type="text" id="dateTo" class="form-control" th:value="${to}">
+				</div>
+			</div>
+			<div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3">
+				<div class="custom-control custom-switch wrapper-auto-refresh">
+					<input type="checkbox" class="custom-control-input" id="checkRefresh">
+					<label class="custom-control-label switch-label" for="checkRefresh" id="labelCheckRefresh">
+						Auto aggiornamento dati
+					</label>
 				</div>
 			</div>
 		</div>

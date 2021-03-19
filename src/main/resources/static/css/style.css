@@ -41,6 +41,10 @@
 /*
 * End Dark Mode
 */
+.wrapper-auto-refresh{
+	padding-top: 5px;
+}
+
 .switch-label {
 	font-weight: bold;
 }
