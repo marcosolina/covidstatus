@@ -1,19 +1,22 @@
 /**
 	Simple object to provid some basic common function
  */
-var CovidCommon = (function(CovidCommon){
+var CovidCommon = (function(CovidCommon) {
 	"use strict";
-	
-	if(typeof CovidCommon === "undefined"){
+
+	if (typeof CovidCommon === "undefined") {
 		CovidCommon = {};
 	}
-	
-	
+
+
 	var dateFormat = "dd/mm/yy";
 	var darkModeOn = false;
-	
+	var autoRefreshEnabled = true;
+	var refreshInterval;
+	var idRefreshCheckBox = "checkRefresh";
+
 	var charts = {};// It will hold the charts objects instances 
-	
+
 	/*
 		This array stores my color palette
 	*/
@@ -40,85 +43,87 @@ var CovidCommon = (function(CovidCommon){
 	colorPalette.push("rgb( 255, 0, 0, 1)");// Rosso
 	colorPalette.push("rgb( 0, 0, 0, 1)");// Nero
 
-	
-	
+
+
 	/**
 		Initialise the UI
 	 */
-	CovidCommon.init = function(){
-		
+	CovidCommon.init = function() {
+
 		/*
 			Setting up some jQuery elements and registering the event listeners
 		*/
 		$('[data-toggle="tooltip"]').tooltip();
-		
-		var dateFrom = $( "#dateFrom" ).datepicker({
-							minDate: "24/02/2020",
-						    changeMonth: true,
-							changeYear: true,
-						    numberOfMonths: 1,
-						    dateFormat: dateFormat
-						  });
-		var dateTo = $( "#dateTo" ).datepicker({
-				            changeMonth: true,
-							changeYear: true, 
-				            numberOfMonths: 1,
-				            dateFormat: dateFormat
-				          });
-			
-		dateFrom.on( "change", function() {
-			dateTo.datepicker( "option", "minDate", CovidCommon.getDate( this ) );
-			CovidCommon.changeDates();
-        });
 
-		dateTo.on( "change", function() {
-	        dateFrom.datepicker( "option", "maxDate", CovidCommon.getDate( this ) );
+		var dateFrom = $("#dateFrom").datepicker({
+			minDate: "24/02/2020",
+			changeMonth: true,
+			changeYear: true,
+			numberOfMonths: 1,
+			dateFormat: dateFormat
+		});
+		var dateTo = $("#dateTo").datepicker({
+			changeMonth: true,
+			changeYear: true,
+			numberOfMonths: 1,
+			dateFormat: dateFormat
+		});
+
+		dateFrom.on("change", function() {
+			dateTo.datepicker("option", "minDate", CovidCommon.getDate(this));
 			CovidCommon.changeDates();
 		});
-		
+
+		dateTo.on("change", function() {
+			dateFrom.datepicker("option", "maxDate", CovidCommon.getDate(this));
+			CovidCommon.changeDates();
+		});
+
 		$("#btnTheme").click(CovidCommon.changeTheme);
-		
+		$("#" + idRefreshCheckBox).click(CovidCommon.autoRefreshData);
+		$("#" + idRefreshCheckBox).prop("checked", autoRefreshEnabled);
+
 		/*
 		* Creating a new region map including a color
 		* from the color Palette
 		*/
 		var i = 0;
-		for(let region of __REGIONS_LIST){
-			region.color= colorPalette[i],
-			__REGIONS_MAP[region.code] = region;
+		for (let region of __REGIONS_LIST) {
+			region.color = colorPalette[i],
+				__REGIONS_MAP[region.code] = region;
 			i++;
 		}
-		
+
 		/*
 		* Creating an instance of the charts
 		*/
-		charts.nationalChart			= new NationalChart("chartNational", "nationalDataCheckboxesWrapper", colorPalette);
-		charts.regionsChart				= new RegionsChart("chartRegions", "rowRegionsCheckboxes", "covidData", colorPalette);
-		charts.provinceChart			= new ProvinceChart("chartProvince", "rowProvince", "region", colorPalette);
-		charts.vaccinesPerPersonChart	= new VaccinesPerPersonChart("chartVaccinesGiven", "vaccinesGivenCheckboxes", colorPalette);
-		charts.suppliersChart			= new SuppliersVaccinesChart("chartVaccinesSuppliers", colorPalette);
-		charts.deliveredVaccines		= new DeliveredVaccinesChart("chartVaccinesDelivered", "rowRegionVaccines", colorPalette);
-		charts.vaccinesDoses			= new VaccinesDoseChart("chartVaccinesDoses", colorPalette);
-		charts.vaccinesPerAge			= new VaccinesPerAgeChart("chartVaccinesPerAge", colorPalette);
-		charts.vaccinesDeliveredUsed	= new TotalDeliveredUsedVaccinesChart("chartTotalsVaccinesUsedDelivered", colorPalette);
-		charts.vaxDeliveredUsedPerReg	= new TotalDeliveredUsedVaccinesPerRegionChart("chartTotalsVaccinesUsedDeliveredPerRegion", colorPalette);
-		charts.vaxTotalPerAge			= new TotalGivenVeccinesPerAge("chartTotalsVaccinesGivenPerAge", colorPalette);
-		
+		charts.regionsChart = new RegionsChart("chartRegions", "rowRegionsCheckboxes", "covidData", colorPalette);
+		charts.provinceChart = new ProvinceChart("chartProvince", "rowProvince", "region", colorPalette);
+		charts.vaccinesPerPersonChart = new VaccinesPerPersonChart("chartVaccinesGiven", "vaccinesGivenCheckboxes", colorPalette);
+		charts.suppliersChart = new SuppliersVaccinesChart("chartVaccinesSuppliers", colorPalette);
+		charts.deliveredVaccines = new DeliveredVaccinesChart("chartVaccinesDelivered", "rowRegionVaccines", colorPalette);
+		charts.vaccinesDoses = new VaccinesDoseChart("chartVaccinesDoses", colorPalette);
+		charts.vaccinesPerAge = new VaccinesPerAgeChart("chartVaccinesPerAge", colorPalette);
+		charts.vaxTotalPerAge = new TotalGivenVeccinesPerAge("chartTotalsVaccinesGivenPerAge", colorPalette);
+		charts.vaccinesDeliveredUsed = new TotalDeliveredUsedVaccinesChart("chartTotalsVaccinesUsedDelivered", colorPalette);
+		charts.vaxDeliveredUsedPerReg = new TotalDeliveredUsedVaccinesPerRegionChart("chartTotalsVaccinesUsedDeliveredPerRegion", colorPalette);
+		charts.nationalChart = new NationalChart("chartNational", "nationalDataCheckboxesWrapper", colorPalette);
+
 	}
-	
+
 	/**
 		It gets the Date() value of the element
-	 */	
+	 */
 	CovidCommon.getDate = function(element) {
 		var date;
 		try {
-			date = $.datepicker.parseDate( dateFormat, element.value );
-		} catch( error ) {
+			date = $.datepicker.parseDate(dateFormat, element.value);
+		} catch (error) {
 			date = null;
 		}
- 
+
 		return date;
-    }
+	}
 
 	/*
 	* It is called when the user changes the date range.
@@ -129,8 +134,8 @@ var CovidCommon = (function(CovidCommon){
 	CovidCommon.changeDates = function() {
 		var from = $.datepicker.formatDate('yy-mm-dd', CovidCommon.getDate(document.getElementById("dateFrom")));
 		var to = $.datepicker.formatDate('yy-mm-dd', CovidCommon.getDate(document.getElementById("dateTo")));
-		
-		for(let chartProp in charts){
+
+		for (let chartProp in charts) {
 			charts[chartProp].fetchData(from, to);
 		}
 	}
@@ -142,20 +147,31 @@ var CovidCommon = (function(CovidCommon){
 		darkModeOn = !darkModeOn;
 		var selector = "select, span, input, body, a, .modal-content, .custom-control-label, .navbar";
 		var govermentCellSelector = ".cella_rossa *, .cella_rossa *, .cella_rossa *";
-		var className = "dark-background"; 
-		if(darkModeOn){
+		var className = "dark-background";
+		if (darkModeOn) {
 			$(selector).addClass(className);
 			$(govermentCellSelector).removeClass(className);
-		}else{
+		} else {
 			$(selector).removeClass(className);
 		}
-		
-		for(let chartProp in charts){
+
+		for (let chartProp in charts) {
 			charts[chartProp].setDarkMode(darkModeOn);
 			charts[chartProp].drawChart();
 		}
-    }
-	
+	}
+
+	CovidCommon.autoRefreshData = function() {
+		autoRefreshEnabled = $("#" + idRefreshCheckBox).prop("checked");
+		if (autoRefreshEnabled) {
+			refreshInterval = setInterval(CovidCommon.changeDates, 60000);
+		} else {
+			if (refreshInterval) {
+				clearInterval(refreshInterval);
+			}
+		}
+	}
+
 	return CovidCommon;
 })();
 
