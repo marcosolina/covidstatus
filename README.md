@@ -26,18 +26,9 @@ All the data are retrieved from the [Ministero della Salute](https://www.salute.
 
 ## Running the project with Docker & Docker Compose
 
-- Run the following command from the repository folder
-
-  ~~~~bash
-  $ docker-compose -f ./Scripts/Docker/app-and-db-docker-compose.yml up
-  
-  Creating network "covid_network" with the default driver
-  Building postgres
-  Step 1/4 : FROM postgres:11
-  ...
-  ...
-  ...
-  ~~~~
+~~~~bash
+curl -L https://raw.githubusercontent.com/marcosolina/covidstatus/developing/Scripts/Docker/downloadAndStartContainers.sh | bash
+~~~~
 
 ## Screenshots
 
