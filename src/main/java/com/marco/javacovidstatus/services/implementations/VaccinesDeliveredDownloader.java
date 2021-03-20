@@ -36,6 +36,8 @@ public class VaccinesDeliveredDownloader extends CovidDataDownloader {
 	@Override
 	public void downloadData() {
 		_LOGGER.info("Downloading delivered vaccines data");
+		
+		List<String> rows = this.getCsvRows(CVS_URL);
 
 		/*
 		 * Forcing the re-loading of all the data. I notice that the government updates
@@ -45,10 +47,8 @@ public class VaccinesDeliveredDownloader extends CovidDataDownloader {
 		dataService.deleteAllVaccineDeliveredData();
 		
 		LocalDate startDate = getStartDate();
-
 		AtomicBoolean error = new AtomicBoolean();
 
-		List<String> rows = this.getCsvRows(CVS_URL);
 		rows.stream().forEach(row -> {
 			try {
 				String[] columns = row.split(",");

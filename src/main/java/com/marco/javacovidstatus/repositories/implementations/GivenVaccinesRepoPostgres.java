@@ -252,13 +252,15 @@ public class GivenVaccinesRepoPostgres implements GivenVaccinesRepo {
 		Root<EntitySomministrazioneVaccini> root = cq.from(EntitySomministrazioneVaccini.class);
 
 		/*
-		 * SELECT sum(first_dose_counter), sum(second_dose_counter) FROM
+		 * https://www.postgresql.org/docs/8.1/functions-conditional.html
+		 * 
+		 * SELECT COALESCE(SUM(first_dose_counter), 0), COALESCE(SUM(second_dose_counter), 0) FROM
 		 * somministrazioni_vaccini
 		 */
 		// @formatter:off
 		cq.multiselect(
-				cb.sum(root.get(EntitySomministrazioneVaccini_.FIRST_DOSE_COUNTER)),
-				cb.sum(root.get(EntitySomministrazioneVaccini_.SECOND_DOSE_COUNTER))
+				cb.coalesce(cb.sum(root.get(EntitySomministrazioneVaccini_.FIRST_DOSE_COUNTER)), 0L),
+				cb.coalesce(cb.sum(root.get(EntitySomministrazioneVaccini_.SECOND_DOSE_COUNTER)), 0L)
 			);
 		
 		// @formatter:on

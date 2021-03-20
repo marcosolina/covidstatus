@@ -38,6 +38,8 @@ public class VaccinesGivenDownloader extends CovidDataDownloader {
 	public void downloadData() {
 		_LOGGER.info("Downloading Given vaccines data");
 
+		List<String> rows = this.getCsvRows(CSV_URL);
+		
 		/*
 		 * Forcing the re-loading of all the data. I notice that the government updates
 		 * the data of the previous days. There is no way for me to understand
@@ -46,9 +48,6 @@ public class VaccinesGivenDownloader extends CovidDataDownloader {
 		dataService.deleteAllGivenVaccineData();
 
 		LocalDate startDate = getStartDate();
-
-		List<String> rows = this.getCsvRows(CSV_URL);
-
 		AtomicBoolean error = new AtomicBoolean();
 
 		rows.stream().forEach(row -> {
