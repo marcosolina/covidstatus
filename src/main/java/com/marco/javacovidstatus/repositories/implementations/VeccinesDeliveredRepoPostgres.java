@@ -190,11 +190,13 @@ public class VeccinesDeliveredRepoPostgres implements VeccinesDeliveredRepo {
 		Root<EntityVacciniConsegne> root = cq.from(EntityVacciniConsegne.class);
 
 		/*
-		 * SELECT sum(doses_delivered) FROM vaccini_consegne
+		 * https://www.postgresql.org/docs/8.1/functions-conditional.html
+		 * 
+		 * SELECT COALESCE(SUM(doses_delivered), 0) FROM vaccini_consegne
 		 */
 		// @formatter:off
 		cq.multiselect(
-				cb.sum(root.get(EntityVacciniConsegne_.DOSES_DELIVERED))
+				cb.coalesce(cb.sum(root.get(EntityVacciniConsegne_.DOSES_DELIVERED)), 0L)
 			);
 
 		// @formatter:on
