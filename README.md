@@ -29,6 +29,7 @@ All the data are retrieved from the [Ministero della Salute](https://www.salute.
 ~~~~bash
 curl -L https://raw.githubusercontent.com/marcosolina/covidstatus/main/Scripts/Docker/downloadAndStartContainers.sh | bash
 ~~~~
+Once the containers are up and runnig open the following link: [http://localhost/Covid19Italy/](http://localhost/Covid19Italy/)
 
 ## Screenshots
 
