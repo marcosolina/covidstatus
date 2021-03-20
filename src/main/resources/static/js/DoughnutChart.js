@@ -85,6 +85,8 @@ class DoughnutChart {
 		};
 		
 		if(this.chart != undefined){
+			this.chart.options.title.fontColor = fontColor;
+			this.chart.options.legend.labels.fontColor = fontColor;
 			this.chart.data.labels.map((v, i) => config.data.labels[i]);
 			this.chart.data.datasets.forEach((dataSet, i) => {
 				dataSet.backgroundColor = dataSet.backgroundColor.map((v, j) => config.data.datasets[i].backgroundColor[j]);  

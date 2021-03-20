@@ -24,4 +24,11 @@ FOLDER_TO_KEEP="$GIT_FOLDER/Scripts"
 #find $GIT_FOLDER -mindepth 1 ! -regex '^'$FOLDER_TO_KEEP'\(/.*\)?' -delete
 #find $GIT_FOLDER -maxdepth 3 -type f -name "*.sh" -delete
 
+rm -rf "$GIT_FOLDER/Misc"
+rm -rf "$GIT_FOLDER/src"
+rm -rf "$GIT_FOLDER/pom.xml"
+rm -rf "$GIT_FOLDER/README.md"
+rm -rf "$GIT_FOLDER/Scripts/startStop.sh"
+rm -rf "$GIT_FOLDER/Scripts/Docker/downloadAndStartContainers.sh"
+
 docker-compose -f covidstatus/Scripts/Docker/app-and-db-docker-compose.yml up

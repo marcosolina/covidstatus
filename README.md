@@ -29,6 +29,7 @@ All the data are retrieved from the [Ministero della Salute](https://www.salute.
 ~~~~bash
 curl -L https://raw.githubusercontent.com/marcosolina/covidstatus/main/Scripts/Docker/downloadAndStartContainers.sh | bash
 ~~~~
+
 Once the containers are up and runnig open the following link: [http://localhost/Covid19Italy/](http://localhost/Covid19Italy/)
 
 ## Screenshots
@@ -41,6 +42,7 @@ Once the containers are up and runnig open the following link: [http://localhost
 
 ## History
 
+- **20/03/2021 v0.1.11**: UI Improvements for the Dark Mode
 - **19/03/2021 v0.1.10**: Managing empty vaccines tables
 - **19/03/2021 v0.1.9**: Adding auto-refresh data switch
 - **18/03/2021 v0.1.8**: Updating the PostgreSQL driver & providing docker files to run the whole application inside docker containers
