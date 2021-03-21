@@ -11,7 +11,7 @@
 	</parent>
 	<groupId>com.marco</groupId>
 	<artifactId>covidstatus</artifactId>
-	<version>0.1.11</version>
+	<version>0.1.12</version>
 	<name>CovidStatus</name>
 	<description>Demo project for Spring Boot</description>
 
@@ -19,6 +19,7 @@
 		<java.version>11</java.version>
 		<resource.delimiter>^</resource.delimiter>
 		<postgresql.version>42.2.19</postgresql.version>
+		<swagger.version>2.9.2</swagger.version>
 	</properties>
 
 	<dependencies>
@@ -83,6 +84,19 @@
 		    <version>1.13.1</version>
 		</dependency>
 		
+		<!--Start Swagger Dependencies https://www.baeldung.com/swagger-2-documentation-for-spring-rest-api -->
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger2</artifactId>
+			<version>${swagger.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger-ui</artifactId>
+			<version>${swagger.version}</version>
+		</dependency>
+		<!-- End swagger dependencies -->
 		
 		<!-- My custom libraries. You can find the source code on my GitHub
 			https://github.com/marcosolina/WebJar		

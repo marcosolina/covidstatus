@@ -16,11 +16,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.DateTimeFormat.ISO;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.marco.javacovidstatus.model.dto.CovidDataType;
@@ -28,9 +29,6 @@ import com.marco.javacovidstatus.model.dto.NationalDailyDataDto;
 import com.marco.javacovidstatus.model.dto.ProvinceDailyDataDto;
 import com.marco.javacovidstatus.model.dto.RegionDto;
 import com.marco.javacovidstatus.model.dto.RegionalDailyDataDto;
-import com.marco.javacovidstatus.model.rest.infections.ReqGetNationalData;
-import com.marco.javacovidstatus.model.rest.infections.ReqGetProvinceData;
-import com.marco.javacovidstatus.model.rest.infections.ReqGetRegionData;
 import com.marco.javacovidstatus.model.rest.infections.RespGetNationalData;
 import com.marco.javacovidstatus.model.rest.infections.RespGetProvinceData;
 import com.marco.javacovidstatus.model.rest.infections.RespGetRegionData;
@@ -40,6 +38,8 @@ import com.marco.javacovidstatus.services.interfaces.CovidDataService;
 import com.marco.javacovidstatus.services.interfaces.RegionMapDownloader;
 import com.marco.javacovidstatus.utils.CovidUtils;
 import com.marco.utils.MarcoException;
+
+import io.swagger.annotations.ApiOperation;
 
 /**
  * This controller provides the information related to the infections
@@ -60,11 +60,6 @@ public class MainController {
 	@Autowired
 	private CovidUtils covidUtils;
 
-	public static final String MAPPING_HOME = "/";
-	public static final String MAPPING_REGION_DATA = "/regiondata";
-	public static final String MAPPING_NATIONAL_DATA = "/nationaldata";
-	public static final String MAPPING_PROVINCE_DATA = "/provincedata";
-
 	@Autowired
 	private CovidDataService service;
 
@@ -79,7 +74,8 @@ public class MainController {
 	 * @param model
 	 * @return
 	 */
-	@GetMapping(value = MAPPING_HOME)
+	@GetMapping(value = CovidUtils.MAPPING_HOME)
+	@ApiOperation(value = "It returns the HTML page")
 	public String homePage(Model model) {
 		LOGGER.info("Inside MainController.homePage");
 
@@ -119,13 +115,23 @@ public class MainController {
 	 * @param request
 	 * @return
 	 */
-	@PostMapping(value = MAPPING_REGION_DATA)
+	@GetMapping(value = CovidUtils.MAPPING_REGION_DATA)
 	@ResponseBody
-	public RespGetRegionData getRegionalData(@RequestBody ReqGetRegionData request) {
+	@ApiOperation(value = "It returns the selected data type group by region")
+	// @formatter:off
+	public RespGetRegionData getRegionalData(
+			@RequestParam("from")
+			@DateTimeFormat(iso = ISO.DATE)
+			LocalDate from, 
+			@RequestParam("to")
+			@DateTimeFormat(iso = ISO.DATE)
+			LocalDate to,
+			@RequestParam("dataType")
+			CovidDataType dataType) {
+		// @formatter:on
 		RespGetRegionData resp = new RespGetRegionData();
 		try {
-			List<RegionalDailyDataDto> listData = service.getRegionalDatesInRangeAscending(request.getFrom(),
-					request.getTo());
+			List<RegionalDailyDataDto> listData = service.getRegionalDatesInRangeAscending(from, to);
 			List<RegionDto> listRegions = service.getRegionsList();
 
 			if (!listData.isEmpty()) {
@@ -135,7 +141,7 @@ public class MainController {
 
 					Function<RegionalDailyDataDto, Object> mapper = null;
 
-					switch (request.getCovidData()) {
+					switch (dataType) {
 					case NEW_TESTS:
 						mapper = RegionalDailyDataDto::getNewTests;
 						break;
@@ -188,17 +194,27 @@ public class MainController {
 	 * @param request
 	 * @return
 	 */
-	@PostMapping(value = MAPPING_PROVINCE_DATA)
+	@GetMapping(value = CovidUtils.MAPPING_PROVINCE_DATA)
 	@ResponseBody
-	public RespGetProvinceData getProvinceData(@RequestBody ReqGetProvinceData request) {
+	@ApiOperation(value = "It returns the number of new infections finded in the selected Region group by Province")
+	// @formatter:off
+	public RespGetProvinceData getProvinceData(
+			@RequestParam("from")
+			@DateTimeFormat(iso = ISO.DATE)
+			LocalDate from, 
+			@RequestParam("to")
+			@DateTimeFormat(iso = ISO.DATE)
+			LocalDate to,
+			@RequestParam("regionCode")
+			String regionCode) {
+		// @formatter:on
 		RespGetProvinceData resp = new RespGetProvinceData();
 		try {
 			/*
 			 * Get all the data for the provinces of the specific region
 			 */
-			List<ProvinceDailyDataDto> listData = service.getProvinceDataInRangeAscending(request.getFrom(),
-					request.getTo(), request.getRegionCode());
-			List<String> provinces = service.getProfinceListForRegion(request.getRegionCode());
+			List<ProvinceDailyDataDto> listData = service.getProvinceDataInRangeAscending(from, to, regionCode);
+			List<String> provinces = service.getProfinceListForRegion(regionCode);
 
 			Map<String, RespProvinceChartData> map = new HashMap<>();
 			if (!listData.isEmpty()) {
@@ -238,12 +254,21 @@ public class MainController {
 	 * @param request
 	 * @return
 	 */
-	@PostMapping(value = MAPPING_NATIONAL_DATA)
+	@GetMapping(value = CovidUtils.MAPPING_NATIONAL_DATA)
+	@ApiOperation(value = "It returns the National situation")
 	@ResponseBody
-	public RespGetNationalData getNationalData(@RequestBody ReqGetNationalData request) {
+	// @formatter:off
+	public RespGetNationalData getNationalData(
+			@RequestParam("from")
+			@DateTimeFormat(iso = ISO.DATE)
+			LocalDate from, 
+			@RequestParam("to")
+			@DateTimeFormat(iso = ISO.DATE)
+			LocalDate to) {
+		// @formatter:on
 		RespGetNationalData resp = new RespGetNationalData();
 		try {
-			List<NationalDailyDataDto> listData = service.getDatesInRangeAscending(request.getFrom(), request.getTo());
+			List<NationalDailyDataDto> listData = service.getDatesInRangeAscending(from, to);
 			// @formatter:off
 			resp.setArrDates(				listData.stream().map(NationalDailyDataDto::getDate)				.collect(Collectors.toList()));
 			resp.setArrNewCasualties(		listData.stream().map(NationalDailyDataDto::getNewCasualties)		.collect(Collectors.toList()));

@@ -99,7 +99,7 @@ var CovidCommon = (function(CovidCommon) {
 		*/
 		charts.regionsChart = new RegionsChart("chartRegions", "rowRegionsCheckboxes", "covidData", colorPalette);
 		charts.provinceChart = new ProvinceChart("chartProvince", "rowProvince", "region", colorPalette);
-		charts.vaccinesPerPersonChart = new VaccinesPerPersonChart("chartVaccinesGiven", "vaccinesGivenCheckboxes", colorPalette);
+		charts.nationalChart = new NationalChart("chartNational", "nationalDataCheckboxesWrapper", colorPalette);
 		charts.suppliersChart = new SuppliersVaccinesChart("chartVaccinesSuppliers", colorPalette);
 		charts.deliveredVaccines = new DeliveredVaccinesChart("chartVaccinesDelivered", "rowRegionVaccines", colorPalette);
 		charts.vaccinesDoses = new VaccinesDoseChart("chartVaccinesDoses", colorPalette);
@@ -107,7 +107,7 @@ var CovidCommon = (function(CovidCommon) {
 		charts.vaxTotalPerAge = new TotalGivenVeccinesPerAge("chartTotalsVaccinesGivenPerAge", colorPalette);
 		charts.vaccinesDeliveredUsed = new TotalDeliveredUsedVaccinesChart("chartTotalsVaccinesUsedDelivered", colorPalette);
 		charts.vaxDeliveredUsedPerReg = new TotalDeliveredUsedVaccinesPerRegionChart("chartTotalsVaccinesUsedDeliveredPerRegion", colorPalette);
-		charts.nationalChart = new NationalChart("chartNational", "nationalDataCheckboxesWrapper", colorPalette);
+		charts.vaccinesPerPersonChart = new VaccinesPerPersonChart("chartVaccinesGiven", "vaccinesGivenCheckboxes", colorPalette);
 
 	}
 
@@ -135,8 +135,12 @@ var CovidCommon = (function(CovidCommon) {
 		var from = $.datepicker.formatDate('yy-mm-dd', CovidCommon.getDate(document.getElementById("dateFrom")));
 		var to = $.datepicker.formatDate('yy-mm-dd', CovidCommon.getDate(document.getElementById("dateTo")));
 
-		for (let chartProp in charts) {
-			charts[chartProp].fetchData(from, to);
+		if(from != "" && to != ""){
+			let fromToQueryParam = MarcoUtils.template("&from=%from%&to=%to%", {from, to})
+	
+			for (let chartProp in charts) {
+				charts[chartProp].fetchData(fromToQueryParam);
+			}
 		}
 	}
 

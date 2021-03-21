@@ -54,23 +54,13 @@ class RegionsChart {
 	}
 
 	changeDataType() {
-		this.fetchData(this.lastFrom, this.lastTo);
+		this.fetchData(this.lastFromToQueryParam);
 	}
-
-	fetchData(from, to) {
-		this.lastFrom = from;
-		this.lastTo = to;
-		if (from != "" && to != "") {
-			MarcoUtils.executeAjax({
-				body: {
-					from: from,
-					to: to,
-					covidData: $("#" + this.dropDownDataTypeId).val(),
-				},
-				showLoading: true,
-				url: __URLS.INFECTIONS.REGION_DATA
-			}).then(this.dataRetrieved.bind(this));
-		}
+	
+	fetchData(fromToQueryParam) {
+		this.lastFromToQueryParam = fromToQueryParam;
+		let url = __URLS.INFECTIONS.REGION_DATA + "?" + fromToQueryParam + "&dataType=" + $("#" + this.dropDownDataTypeId).val();
+		MarcoUtils.executeAjax({type: "GET", url: url}).then(this.dataRetrieved.bind(this));
 	}
 
 	dataRetrieved(response) {

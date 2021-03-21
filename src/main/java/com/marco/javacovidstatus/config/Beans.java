@@ -1,17 +1,22 @@
 package com.marco.javacovidstatus.config;
 
+import java.time.LocalDate;
+import java.util.List;
 import java.util.Properties;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
+import org.springframework.core.Ordered;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import com.fasterxml.classmate.TypeResolver;
 import com.marco.javacovidstatus.repositories.implementations.CovidRepositoryPostgres;
 import com.marco.javacovidstatus.repositories.implementations.GivenVaccinesRepoPostgres;
 import com.marco.javacovidstatus.repositories.implementations.VeccinesDeliveredRepoPostgres;
@@ -34,6 +39,15 @@ import com.marco.javacovidstatus.services.interfaces.RegionMapDownloader;
 import com.marco.javacovidstatus.services.interfaces.VaccineDataService;
 import com.marco.javacovidstatus.utils.CovidUtils;
 
+import springfox.documentation.builders.ApiInfoBuilder;
+import springfox.documentation.builders.PathSelectors;
+import springfox.documentation.builders.RequestHandlerSelectors;
+import springfox.documentation.schema.AlternateTypeRules;
+import springfox.documentation.service.ApiInfo;
+import springfox.documentation.service.Contact;
+import springfox.documentation.spi.DocumentationType;
+import springfox.documentation.spring.web.plugins.Docket;
+
 /**
  * Standard Springboot configuration class
  * 
@@ -43,6 +57,9 @@ import com.marco.javacovidstatus.utils.CovidUtils;
 @Configuration
 public class Beans {
 
+	@Value("${covidstatus.version}")
+	private String appVersion;
+	
 	@Bean
 	public WebClient getWebClient() {
 		// @formatter:off
@@ -161,5 +178,27 @@ public class Beans {
 
 		return messageSource;
 	}
+	
+	 @Bean
+    public Docket swaggerConfiguration() {
+		 TypeResolver resolver = new TypeResolver();
+		 return new Docket(DocumentationType.SWAGGER_2)
+			 .alternateTypeRules( AlternateTypeRules.newRule(
+					 resolver.resolve(List.class, LocalDate.class),
+					 resolver.resolve(List.class, String.class), Ordered.HIGHEST_PRECEDENCE))
+        	.select()
+            .apis(RequestHandlerSelectors.basePackage("com.marco.javacovidstatus.controllers"))
+            .paths(PathSelectors.regex("/.*"))
+            .build().apiInfo(apiEndPointsInfo());
+    }
+    
+    
+    private ApiInfo apiEndPointsInfo() {
+        return new ApiInfoBuilder().title("Covid 19 Italy")
+            .description("I have created this project to collect the Covid 19 data related to the Italian situation and display them into multiple charts")
+            .contact(new Contact("Marco Solina", "", ""))
+            .version(appVersion)
+            .build();
+    }
 
 }

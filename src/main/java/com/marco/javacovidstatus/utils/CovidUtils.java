@@ -13,22 +13,22 @@ public class CovidUtils {
 	 * Main controller paths
 	 */
 	public static final String MAPPING_HOME = "/";
-	public static final String MAPPING_REGION_DATA = "/regiondata";
-	public static final String MAPPING_NATIONAL_DATA = "/nationaldata";
-	public static final String MAPPING_PROVINCE_DATA = "/provincedata";
+	public static final String MAPPING_REGION_DATA = "/data/regions";
+	public static final String MAPPING_NATIONAL_DATA = "/data/national";
+	public static final String MAPPING_PROVINCE_DATA = "/data/provinces";
 
 	/*
 	 * Vaccines Data controller
 	 */
-	public static final String MAPPING_VACCINE_DELIVERED_PER_REGION = "/vaccineperregion";
-	public static final String MAPPING_VACCINE_DELIVERED_PER_SUPPLIER = "/vaccinepersupplier";
-	public static final String MAPPING_VACCINE_VACCINATED_PEOPLE = "/vaccinepeople";
-	public static final String MAPPING_VACCINE_VACCINATED_PER_AGE = "/vaccineperage";
-	public static final String MAPPING_VACCINE_DOSES_DATA = "/vaccinesdoses";
+	public static final String MAPPING_VACCINE_DELIVERED_PER_REGION = "/vaccines/delivered/per/region";
+	public static final String MAPPING_VACCINE_DELIVERED_PER_SUPPLIER = "/vaccines/delivered/per/supplier";
+	public static final String MAPPING_VACCINE_VACCINATED_PEOPLE = "/vaccinated/people/per/type";
+	public static final String MAPPING_VACCINE_VACCINATED_PER_AGE = "/vaccinated/people/per/age";
+	public static final String MAPPING_VACCINE_DOSES_DATA = "/vaccinated/given/doses";
 	
-	public static final String MAPPING_VACCINE_TOTAL_DATA = "/vaccinestotal";
-	public static final String MAPPING_VACCINE_TOTAL_DATA_PER_REGION = "/vaccinestotalperregion";
-	public static final String MAPPING_VACCINE_TOTAL_DATA_PER_AGE = "/vaccinestotalperage";
+	public static final String MAPPING_VACCINE_TOTAL_DATA = "/vaccines/total/delivered/used";
+	public static final String MAPPING_VACCINE_TOTAL_DATA_PER_REGION = "/vaccines/total/delivered/used/per/region";
+	public static final String MAPPING_VACCINE_TOTAL_DATA_PER_AGE = "/vaccinated/total/people/per/age";
 
 	/**
 	 * It returns a map of the available Covid Endpoints

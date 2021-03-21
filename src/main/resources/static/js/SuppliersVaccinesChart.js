@@ -19,17 +19,9 @@ class SuppliersVaccinesChart {
 		this.darkModeOn = darkModeOn;
 	}
 	
-	fetchData(from, to) {
-		if (from != "" && to != "") {
-			MarcoUtils.executeAjax({
-				body: {
-					from: from,
-					to: to
-				},
-				showLoading: true,
-				url: __URLS.VACCINES.PER_SUPPLIER
-			}).then(this.dataRetrieved.bind(this));
-		}
+	fetchData(fromToQueryParam) {
+		let url = __URLS.VACCINES.PER_SUPPLIER + "?" + fromToQueryParam;
+		MarcoUtils.executeAjax({type: "GET", url: url}).then(this.dataRetrieved.bind(this));
 	}
 
 	dataRetrieved(response) {

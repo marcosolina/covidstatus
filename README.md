@@ -7,6 +7,7 @@ All the data are retrieved from the [Ministero della Salute](https://www.salute.
 - [Vaccines GitHub Repository](https://github.com/italia/covid19-opendata-vaccini)
 
 [Live example of my prject](https://marco.selfip.net/Covid19Italy/)
+[API Documentation](https://marco.selfip.net/Covid19Italy/swagger-ui.html)
 
 ## Requirements
 
@@ -30,7 +31,10 @@ All the data are retrieved from the [Ministero della Salute](https://www.salute.
 curl -L https://raw.githubusercontent.com/marcosolina/covidstatus/main/Scripts/Docker/downloadAndStartContainers.sh | bash
 ~~~~
 
-Once the containers are up and runnig open the following link: [http://localhost/Covid19Italy/](http://localhost/Covid19Italy/)
+Once the containers are up and runnig open the following links: 
+
+- [http://localhost/Covid19Italy/](http://localhost/Covid19Italy/)
+- [http://localhost/Covid19Italy/swagger-ui.html](http://localhost/Covid19Italy/swagger-ui.html)
 
 ## Screenshots
 
@@ -42,6 +46,7 @@ Once the containers are up and runnig open the following link: [http://localhost
 
 ## History
 
+- **20/03/2021 v0.1.12**: Bug Fixing, Using appropriate HTTP verb, adding Swagger fro API documentation
 - **20/03/2021 v0.1.11**: UI Improvements for the Dark Mode
 - **19/03/2021 v0.1.10**: Managing empty vaccines tables
 - **19/03/2021 v0.1.9**: Adding auto-refresh data switch
