@@ -61,23 +61,13 @@ class ProvinceChart {
 	}
 
 	changeRegion() {
-		this.fetchData(this.lastFrom, this.lastTo);
+		this.fetchData(this.lastFromToQueryParam);
 	}
-
-	fetchData(from, to) {
-		this.lastFrom = from;
-		this.lastTo = to;
-		if(from != "" && to != ""){
-			MarcoUtils.executeAjax({
-				body: {
-				    from: from,
-				    to: to,
-					regionCode: $("#" + this.dropDownRegionsId).val(),
-				},
-				showLoading: true,
-				url: __URLS.INFECTIONS.PROVINCE_DATA
-			}).then(this.dataRetrieved.bind(this));
-		}
+	
+	fetchData(fromToQueryParam) {
+		this.lastFromToQueryParam = fromToQueryParam;
+		let url = __URLS.INFECTIONS.PROVINCE_DATA + "?" + fromToQueryParam + "&regionCode=" + $("#" + this.dropDownRegionsId).val();
+		MarcoUtils.executeAjax({type: "GET", url: url}).then(this.dataRetrieved.bind(this));
 	}
 
 	dataRetrieved(response) {

@@ -56,17 +56,9 @@ class NationalChart {
 		$(jContainer.find("input").get(1)).prop("checked", true);
 	}
 
-	fetchData(from, to) {
-		if (from != "" && to != "") {
-			MarcoUtils.executeAjax({
-				body: {
-					from: from,
-					to: to
-				},
-				showLoading: true,
-				url: __URLS.INFECTIONS.NATIONAL_DATA
-			}).then(this.dataRetrieved.bind(this));
-		}
+	fetchData(fromToQueryParam) {
+		let url = __URLS.INFECTIONS.NATIONAL_DATA + "?" + fromToQueryParam;
+		MarcoUtils.executeAjax({type: "GET", url: url}).then(this.dataRetrieved.bind(this));
 	}
 
 	dataRetrieved(response) {

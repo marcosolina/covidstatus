@@ -18,10 +18,10 @@ class TotalGivenVeccinesPerAge {
 	setDarkMode(darkModeOn){
 		this.darkModeOn = darkModeOn;
 	}
-
-	fetchData(from, to) {
-		MarcoUtils.executeAjax({type: "GET", url: __URLS.VACCINES.TOTALS_AGE})
-			.then(this.dataRetrieved.bind(this));
+	
+	fetchData(fromToQueryParam) {
+		let url = __URLS.VACCINES.TOTALS_AGE;
+		MarcoUtils.executeAjax({type: "GET", url: url}).then(this.dataRetrieved.bind(this));
 	}
 
 	dataRetrieved(response) {

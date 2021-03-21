@@ -9,7 +9,10 @@ import org.springframework.context.annotation.Bean;
 
 import com.marco.javacovidstatus.services.interfaces.CovidScheduler;
 
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
+
 @SpringBootApplication
+@EnableSwagger2
 public class JavaCovidStatusApplication {
 
     @Autowired

@@ -65,17 +65,9 @@ class VaccinesPerPersonChart {
 		$(jContainer.find("input").get(0)).prop("checked", true);
 	}
 
-	fetchData(from, to) {
-		if (from != "" && to != "") {
-			MarcoUtils.executeAjax({
-				body: {
-					from: from,
-					to: to
-				},
-				showLoading: true,
-				url: __URLS.VACCINES.PEOPlE
-			}).then(this.dataRetrieved.bind(this));
-		}
+	fetchData(fromToQueryParam) {
+		let url = __URLS.VACCINES.PEOPlE + "?" + fromToQueryParam;
+		MarcoUtils.executeAjax({type: "GET", url: url}).then(this.dataRetrieved.bind(this));
 	}
 
 	dataRetrieved(response) {

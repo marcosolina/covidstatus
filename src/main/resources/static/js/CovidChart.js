@@ -97,7 +97,12 @@ class CovidChart {
 		};
 		
 		if(this.chart != undefined){
-			if(this.oldDarkMode == darkModeOn && config.data.labels && this.chart.data.labels && this.chart.data.labels.length == config.data.labels.length){
+			if(this.oldDarkMode == darkModeOn && 
+				config.data.labels && 
+				this.chart.data.labels && 
+				this.chart.data.labels.length == config.data.labels.length &&
+				this.chart.data.datasets.length == config.data.datasets.length){
+					
 				this.chart.data.labels.map((v, i) => config.data.labels[i]);
 				this.chart.data.datasets.forEach((dataSet, i) => {
 					dataSet.backgroundColor = config.data.datasets[i].backgroundColor;  
