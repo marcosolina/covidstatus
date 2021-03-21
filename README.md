@@ -6,8 +6,10 @@ All the data are retrieved from the [Ministero della Salute](https://www.salute.
 - [Infections GitHub Repository](https://github.com/pcm-dpc/COVID-19)
 - [Vaccines GitHub Repository](https://github.com/italia/covid19-opendata-vaccini)
 
-[Live example of my prject](https://marco.selfip.net/Covid19Italy/)
-[API Documentation](https://marco.selfip.net/Covid19Italy/swagger-ui.html)
+## Examples
+
+- [Live example of my prject](https://marco.selfip.net/Covid19Italy/)
+- [API Documentation](https://marco.selfip.net/Covid19Italy/swagger-ui.html)
 
 ## Requirements
 
