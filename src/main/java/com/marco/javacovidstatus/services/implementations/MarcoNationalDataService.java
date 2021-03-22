@@ -7,6 +7,8 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 
 import com.marco.javacovidstatus.model.dto.NationalDailyDataDto;
 import com.marco.javacovidstatus.model.dto.ProvinceDailyDataDto;
@@ -23,6 +25,7 @@ import com.marco.javacovidstatus.repositories.interfaces.NationallDataRepository
 import com.marco.javacovidstatus.repositories.interfaces.ProvinceDataRepo;
 import com.marco.javacovidstatus.repositories.interfaces.RegionalDataRepository;
 import com.marco.javacovidstatus.services.interfaces.CovidDataService;
+import com.marco.utils.MarcoException;
 
 /**
  * My implementation of the {@link CovidDataService}
@@ -41,6 +44,8 @@ public class MarcoNationalDataService implements CovidDataService {
     private ProvinceDataRepo repoProvince;
     @Autowired
     private CovidRepository repoCovidCustom;
+	@Autowired
+	private MessageSource msgSource;
 
     @Override
     public List<NationalDailyDataDto> getAllDataDescending() {
@@ -71,7 +76,9 @@ public class MarcoNationalDataService implements CovidDataService {
     }
 
     @Override
-    public List<NationalDailyDataDto> getDatesInRangeAscending(LocalDate from, LocalDate to) {
+    public List<NationalDailyDataDto> getDatesInRangeAscending(LocalDate from, LocalDate to) throws MarcoException {
+    	checkDates(from, to);
+    	
         List<EntityNationalData> listEntity = repoNationalData.findByDateBetweenOrderByDateAsc(from, to);
         return listEntity.stream().map(this::fromEntityNationalDataToDailyData).collect(Collectors.toList());
     }
@@ -89,7 +96,12 @@ public class MarcoNationalDataService implements CovidDataService {
     }
 
     @Override
-    public List<ProvinceDailyDataDto> getProvinceDataInRangeAscending(LocalDate from, LocalDate to, String regionCode) {
+    public List<ProvinceDailyDataDto> getProvinceDataInRangeAscending(LocalDate from, LocalDate to, String regionCode) throws MarcoException {
+    	checkDates(from, to);
+    	if(regionCode == null || regionCode.isBlank()) {
+    		throw new MarcoException(msgSource.getMessage("COVID00003", null, LocaleContextHolder.getLocale()));
+    	}
+    	
         List<EntityProvinceData> list = repoCovidCustom.getProvinceDataBetweenDatesOrderByDateAscending(from, to,
                 regionCode);
         return list.stream().map(this::fromEntityProvinceDataToProvinceDailyData).collect(Collectors.toList());
@@ -116,7 +128,9 @@ public class MarcoNationalDataService implements CovidDataService {
     }
 
     @Override
-    public List<RegionalDailyDataDto> getRegionalDatesInRangeAscending(LocalDate from, LocalDate to) {
+    public List<RegionalDailyDataDto> getRegionalDatesInRangeAscending(LocalDate from, LocalDate to) throws MarcoException {
+    	checkDates(from, to);
+    	
         List<EntityRegionalData> regianlData = repoCovidCustom.getRegionalDataAscending(from, to);
         return regianlData.stream().map(this::fromEntityRegionalDataToRegionalDailyData).collect(Collectors.toList());
     }
@@ -222,5 +236,11 @@ public class MarcoNationalDataService implements CovidDataService {
         entity.setNewRecovered(data.getNewRecovered());
         return entity;
     }
+    
+    private void checkDates(LocalDate from, LocalDate to) throws MarcoException {
+		if(from == null || to == null) {
+			throw new MarcoException(msgSource.getMessage("COVID00002", null, LocaleContextHolder.getLocale()));
+		}
+	}
 
 }

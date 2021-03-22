@@ -29,6 +29,7 @@ public class CovidUtils {
 	public static final String MAPPING_VACCINE_TOTAL_DATA = "/vaccines/total/delivered/used";
 	public static final String MAPPING_VACCINE_TOTAL_DATA_PER_REGION = "/vaccines/total/delivered/used/per/region";
 	public static final String MAPPING_VACCINE_TOTAL_DATA_PER_AGE = "/vaccinated/total/people/per/age";
+	public static final String MAPPING_VACCINE_TOTAL_DELIVERED_PER_SUPPLIER = "/vaccines/total/delivered/per/supplier";
 
 	/**
 	 * It returns a map of the available Covid Endpoints
@@ -50,10 +51,15 @@ public class CovidUtils {
 		vaccinesEndPoints.put("PEOPlE", contextPath + MAPPING_VACCINE_VACCINATED_PEOPLE);
 		vaccinesEndPoints.put("AGE", contextPath + MAPPING_VACCINE_VACCINATED_PER_AGE);
 		vaccinesEndPoints.put("DOSE", contextPath + MAPPING_VACCINE_DOSES_DATA);
-		vaccinesEndPoints.put("TOTALS", contextPath + MAPPING_VACCINE_TOTAL_DATA);
-		vaccinesEndPoints.put("TOTALS_REGION", contextPath + MAPPING_VACCINE_TOTAL_DATA_PER_REGION);
-		vaccinesEndPoints.put("TOTALS_AGE", contextPath + MAPPING_VACCINE_TOTAL_DATA_PER_AGE);
 		map.put("VACCINES", vaccinesEndPoints);
+		
+		Map<String, String> totals = new HashMap<>();
+		totals.put("TOTALS_DELIVER_USED", contextPath + MAPPING_VACCINE_TOTAL_DATA);
+		totals.put("TOTALS_REGION", contextPath + MAPPING_VACCINE_TOTAL_DATA_PER_REGION);
+		totals.put("TOTALS_AGE", contextPath + MAPPING_VACCINE_TOTAL_DATA_PER_AGE);
+		totals.put("TOTALS_DELIVERED", contextPath + MAPPING_VACCINE_TOTAL_DELIVERED_PER_SUPPLIER);
+		map.put("TOTALS", totals);
+		
 
 		return map;
 	}

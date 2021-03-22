@@ -20,7 +20,7 @@ class TotalDeliveredUsedVaccinesPerRegionChart {
 	}
 
 	fetchData(fromToQueryParam) {
-		let url = __URLS.VACCINES.TOTALS_REGION;
+		let url = __URLS.TOTALS.TOTALS_REGION;
 		MarcoUtils.executeAjax({type: "GET", url: url}).then(this.dataRetrieved.bind(this));
 	}
 

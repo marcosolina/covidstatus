@@ -51,6 +51,12 @@ public interface VeccinesDeliveredRepo {
 	 * @return
 	 */
 	public List<VeccinesDeliveredPerSupplier> getDeliveredVaccinesPerSupplierBetween(LocalDate start, LocalDate end);
+	
+	/**
+	 * It returns the total number of delivered vaccines group by Supplier
+	 * @return
+	 */
+	public List<VeccinesDeliveredPerSupplier> getTotalDeliveredVaccinesPerSupplier();
 
 	/**
 	 * It adds the default rows for the days where data are missing

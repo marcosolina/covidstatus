@@ -146,6 +146,7 @@ public class VeccinesDeliveredRepoPostgres implements VeccinesDeliveredRepo {
 
 		/*
 		 * SELECT supplier, sum(doses_delivered) as delivered FROM vaccini_consegne
+		 * where data_date between X and Y
 		 * group by supplier order by supplier
 		 */
 		// @formatter:off
@@ -252,5 +253,31 @@ public class VeccinesDeliveredRepoPostgres implements VeccinesDeliveredRepo {
 		);
 		// @formatter:on
 		em.createQuery(cd).executeUpdate();
+	}
+
+	@Override
+	public List<VeccinesDeliveredPerSupplier> getTotalDeliveredVaccinesPerSupplier() {
+		CriteriaBuilder cb = em.getCriteriaBuilder();
+
+		CriteriaQuery<VeccinesDeliveredPerSupplier> cq = cb.createQuery(VeccinesDeliveredPerSupplier.class);
+		Root<EntityVacciniConsegne> root = cq.from(EntityVacciniConsegne.class);
+
+		/*
+		 * SELECT supplier, sum(doses_delivered) as delivered FROM vaccini_consegne
+		 * group by supplier order by supplier
+		 */
+		// @formatter:off
+		cq.multiselect(
+				root.get(EntityVacciniConsegne_.ID).get(EntityVacciniConsegnePk_.SUPPLIER),
+				cb.sum(root.get(EntityVacciniConsegne_.DOSES_DELIVERED))
+			)
+		.groupBy(
+				root.get(EntityVacciniConsegne_.ID).get(EntityVacciniConsegnePk_.SUPPLIER)
+			)
+		.orderBy(cb.asc(root.get(EntityVacciniConsegne_.ID).get(EntityVacciniConsegnePk_.SUPPLIER)));
+		// @formatter:on
+
+		TypedQuery<VeccinesDeliveredPerSupplier> tq = em.createQuery(cq);
+		return tq.getResultList();
 	}
 }

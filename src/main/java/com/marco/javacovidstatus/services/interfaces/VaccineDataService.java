@@ -32,7 +32,7 @@ public interface VaccineDataService {
 	 *         </ul>
 	 */
 	public Map<String, List<VaccinesDeliveredPerDayDto>> getDeliveredVaccinesPerRegionBetweenDatesPerRegion(
-			LocalDate start, LocalDate end);
+			LocalDate start, LocalDate end) throws MarcoException;
 
 	/**
 	 * It returns the number of vaccines deliverd by the different suppliers
@@ -45,7 +45,18 @@ public interface VaccineDataService {
 	 *         <li>Value -> Total number of vaccines deliver in the date range</li>
 	 *         </ul>
 	 */
-	public Map<String, Long> getDeliveredVaccinesBetweenDatesPerSupplier(LocalDate start, LocalDate end);
+	public Map<String, Long> getDeliveredVaccinesBetweenDatesPerSupplier(LocalDate start, LocalDate end) throws MarcoException;
+	
+	/**
+	 * It returns the total number of vaccines deliverd group by supplier
+	 * 
+	 * @return A map which contains:
+	 *         <ul>
+	 *         <li>Key -> Supplpier Name</li>
+	 *         <li>Value -> Total number of vaccines deliver in the date range</li>
+	 *         </ul>
+	 */
+	public Map<String, Long> getTotalDeliveredVaccinesPerSupplier();
 
 	/**
 	 * It returns the numbers of vaccinated people in the date range.
@@ -54,7 +65,7 @@ public interface VaccineDataService {
 	 * @param end
 	 * @return
 	 */
-	public VaccinatedPeopleTypeDto getVaccinatedPeopleBetweenDates(LocalDate start, LocalDate end);
+	public VaccinatedPeopleTypeDto getVaccinatedPeopleBetweenDates(LocalDate start, LocalDate end) throws MarcoException;
 
 	/**
 	 * It returns the numbers of vaccinated people grouped by age range
@@ -67,7 +78,7 @@ public interface VaccineDataService {
 	 *         <li>Value -> Number of people vaccinated in that age range</li>
 	 *         </ul>
 	 */
-	public Map<String, Long> getVaccinatedAgeRangeBetweenDates(LocalDate start, LocalDate end);
+	public Map<String, Long> getVaccinatedAgeRangeBetweenDates(LocalDate start, LocalDate end) throws MarcoException;
 
 	/**
 	 * It returns the numbers of vaccinated people grouped by age range

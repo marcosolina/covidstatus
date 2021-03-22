@@ -13,11 +13,13 @@ import java.util.function.BiFunction;
 import java.util.function.ToLongFunction;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 
-import com.marco.javacovidstatus.model.dto.VaccinatedPeopleTypeDto;
 import com.marco.javacovidstatus.model.dto.VaccinatedPeopleDto;
-import com.marco.javacovidstatus.model.dto.VaccinesDeliveredPerDayDto;
+import com.marco.javacovidstatus.model.dto.VaccinatedPeopleTypeDto;
 import com.marco.javacovidstatus.model.dto.VaccinesDeliveredDto;
+import com.marco.javacovidstatus.model.dto.VaccinesDeliveredPerDayDto;
 import com.marco.javacovidstatus.model.dto.VaccinesReceivedUsedDto;
 import com.marco.javacovidstatus.model.dto.VacinesTotalDeliveredGivenPerRegionDto;
 import com.marco.javacovidstatus.model.entitites.AgeRangeGivenVaccines;
@@ -48,11 +50,14 @@ public class VaccineDataServiceMarco implements VaccineDataService {
 	private VeccinesDeliveredRepo repoDelivered;
 	@Autowired
 	private GivenVaccinesRepo repoGiven;
+	@Autowired
+	private MessageSource msgSource;
 
 	@Override
 	public Map<String, List<VaccinesDeliveredPerDayDto>> getDeliveredVaccinesPerRegionBetweenDatesPerRegion(
-			LocalDate start, LocalDate end) {
-
+			LocalDate start, LocalDate end) throws MarcoException {
+		checkDates(start, end);
+		
 		Map<String, List<VaccinesDeliveredPerDayDto>> data = new HashMap<>();
 		repoDelivered.getDeliveredVaccinesBetween(start, end).stream()
 				.forEach(entity -> data.compute(entity.getRegionCode(), (k, v) -> {
@@ -68,7 +73,9 @@ public class VaccineDataServiceMarco implements VaccineDataService {
 	}
 
 	@Override
-	public Map<String, Long> getDeliveredVaccinesBetweenDatesPerSupplier(LocalDate start, LocalDate end) {
+	public Map<String, Long> getDeliveredVaccinesBetweenDatesPerSupplier(LocalDate start, LocalDate end) throws MarcoException {
+		checkDates(start, end);
+		
 		Map<String, Long> data = new HashMap<>();
 		repoDelivered.getDeliveredVaccinesPerSupplierBetween(start, end).stream()
 				.forEach(entity -> data.compute(entity.getSupplier(),
@@ -78,7 +85,8 @@ public class VaccineDataServiceMarco implements VaccineDataService {
 	}
 
 	@Override
-	public VaccinatedPeopleTypeDto getVaccinatedPeopleBetweenDates(LocalDate start, LocalDate end) {
+	public VaccinatedPeopleTypeDto getVaccinatedPeopleBetweenDates(LocalDate start, LocalDate end) throws MarcoException {
+		checkDates(start, end);
 
 		VaccinatedPeopleTypeDto vp = new VaccinatedPeopleTypeDto();
 		Set<LocalDate> dateSet = new HashSet<>();
@@ -110,6 +118,8 @@ public class VaccineDataServiceMarco implements VaccineDataService {
 
 	@Override
 	public Map<String, Long> getGiveShotNumberBetweenDates(LocalDate start, LocalDate end) throws MarcoException {
+		checkDates(start, end);
+		
 		List<DoseCounter> list = repoGiven.getDosesCounterVaccinesBetween(start, end);
 		if (list.size() != 1) {
 			throw new MarcoException("Errore calcolo dosi");
@@ -123,7 +133,9 @@ public class VaccineDataServiceMarco implements VaccineDataService {
 	}
 
 	@Override
-	public Map<String, Long> getVaccinatedAgeRangeBetweenDates(LocalDate start, LocalDate end) {
+	public Map<String, Long> getVaccinatedAgeRangeBetweenDates(LocalDate start, LocalDate end) throws MarcoException {
+		checkDates(start, end);
+		
 		List<AgeRangeGivenVaccines> list = repoGiven.getDeliveredVaccinesPerAgeRange(start, end);
 
 		return parseListAgeRangeGivenVaccines(list);
@@ -282,6 +294,22 @@ public class VaccineDataServiceMarco implements VaccineDataService {
 		});
 
 		return map;
+	}
+
+	@Override
+	public Map<String, Long> getTotalDeliveredVaccinesPerSupplier() {
+		Map<String, Long> data = new HashMap<>();
+		repoDelivered.getTotalDeliveredVaccinesPerSupplier().stream()
+				.forEach(entity -> data.compute(entity.getSupplier(),
+						(k, v) -> v == null ? entity.getDosesDelivered() : v + entity.getDosesDelivered()));
+
+		return data;
+	}
+	
+	private void checkDates(LocalDate from, LocalDate to) throws MarcoException {
+		if(from == null || to == null) {
+			throw new MarcoException(msgSource.getMessage("COVID00002", null, LocaleContextHolder.getLocale()));
+		}
 	}
 
 }
