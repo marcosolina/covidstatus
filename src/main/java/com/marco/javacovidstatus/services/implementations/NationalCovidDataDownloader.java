@@ -16,6 +16,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import com.marco.javacovidstatus.model.dto.NationalDailyDataDto;
 import com.marco.javacovidstatus.services.interfaces.CovidDataDownloader;
 import com.marco.javacovidstatus.services.interfaces.CovidDataService;
+import com.marco.utils.MarcoException;
 
 /**
  * It downloads and process the National data
@@ -44,9 +45,10 @@ public class NationalCovidDataDownloader extends CovidDataDownloader {
             start = this.defaultStartData;
         }
 
-        List<Integer> lastWeeknNewInfection = getNationalLastWeeknNewInfection(end);
 
         try {
+        	List<Integer> lastWeeknNewInfection = getNationalLastWeeknNewInfection(end);
+        	
             while (start.isBefore(end)) {
                 start = start.plusDays(1);
                 if (_LOGGER.isDebugEnabled()) {
@@ -92,8 +94,9 @@ public class NationalCovidDataDownloader extends CovidDataDownloader {
      * 
      * @param end
      * @return
+     * @throws MarcoException 
      */
-    private List<Integer> getNationalLastWeeknNewInfection(LocalDate end) {
+    private List<Integer> getNationalLastWeeknNewInfection(LocalDate end) throws MarcoException {
         List<NationalDailyDataDto> list = dataService.getDatesInRangeAscending(end.minusDays(7), end);
         return list.stream().map(NationalDailyDataDto::getNewInfections).collect(Collectors.toList());
     }

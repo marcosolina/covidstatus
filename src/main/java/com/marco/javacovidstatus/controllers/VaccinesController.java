@@ -35,6 +35,7 @@ import com.marco.javacovidstatus.model.rest.vaccines.RespGetVaccinesDosesData;
 import com.marco.javacovidstatus.services.interfaces.VaccineDataService;
 import com.marco.javacovidstatus.utils.CovidUtils;
 import com.marco.utils.MarcoException;
+import com.marco.utils.http.MarcoResponse;
 
 import io.swagger.annotations.ApiOperation;
 
@@ -102,13 +103,15 @@ public class VaccinesController {
 			resp.setDeliveredPerRegion(dataPerRegion);
 			resp.setArrDates(list);
 			resp.setStatus(true);
+		} catch (MarcoException e) {
+			resp.addError(e);
 		} catch (Exception e) {
-			if (LOGGER.isTraceEnabled()) {
+			if(LOGGER.isTraceEnabled()) {
 				e.printStackTrace();
 			}
-			resp.addError(
-					new MarcoException(msgSource.getMessage("COVID00001", null, LocaleContextHolder.getLocale())));
+			addGenericErro(resp);
 		}
+		
 		return resp;
 	}
 
@@ -138,14 +141,15 @@ public class VaccinesController {
 
 			resp.setDeliveredPerSupplier(supplierData);
 			resp.setStatus(true);
+		} catch (MarcoException e) {
+			resp.addError(e);
 		} catch (Exception e) {
-			if (LOGGER.isTraceEnabled()) {
+			if(LOGGER.isTraceEnabled()) {
 				e.printStackTrace();
 			}
-			resp.addError(
-					new MarcoException(msgSource.getMessage("COVID00001", null, LocaleContextHolder.getLocale())));
+			addGenericErro(resp);
 		}
-
+		
 		return resp;
 	}
 
@@ -178,11 +182,14 @@ public class VaccinesController {
 			resp.setStatus(true);
 
 		} catch (MarcoException e) {
-			if (LOGGER.isTraceEnabled()) {
+			resp.addError(e);
+		} catch (Exception e) {
+			if(LOGGER.isTraceEnabled()) {
 				e.printStackTrace();
 			}
-			resp.addError(e);
+			addGenericErro(resp);
 		}
+		
 		return resp;
 	}
 
@@ -213,13 +220,15 @@ public class VaccinesController {
 			resp.setDataVaccinatedPeople(dataVaccinatedPeople.getDataVaccinatedPeople());
 			resp.setArrDates(dataVaccinatedPeople.getDates());
 			resp.setStatus(true);
+		} catch (MarcoException e) {
+			resp.addError(e);
 		} catch (Exception e) {
-			if (LOGGER.isTraceEnabled()) {
+			if(LOGGER.isTraceEnabled()) {
 				e.printStackTrace();
 			}
-			resp.addError(
-					new MarcoException(msgSource.getMessage("COVID00001", null, LocaleContextHolder.getLocale())));
+			addGenericErro(resp);
 		}
+		
 		return resp;
 	}
 
@@ -249,13 +258,15 @@ public class VaccinesController {
 
 			resp.setDataVaccinatedPerAge(dataVaccinatedPerAge);
 			resp.setStatus(true);
+		} catch (MarcoException e) {
+			resp.addError(e);
 		} catch (Exception e) {
-			if (LOGGER.isTraceEnabled()) {
+			if(LOGGER.isTraceEnabled()) {
 				e.printStackTrace();
 			}
-			resp.addError(
-					new MarcoException(msgSource.getMessage("COVID00001", null, LocaleContextHolder.getLocale())));
+			addGenericErro(resp);
 		}
+		
 		return resp;
 	}
 
@@ -278,13 +289,12 @@ public class VaccinesController {
 			resp.setTotalUsedVaccines(dto.getTotalVaccinesUsed());
 			resp.setStatus(true);
 		} catch (Exception e) {
-			if (LOGGER.isTraceEnabled()) {
+			if(LOGGER.isTraceEnabled()) {
 				e.printStackTrace();
 			}
-			resp.addError(
-					new MarcoException(msgSource.getMessage("COVID00001", null, LocaleContextHolder.getLocale())));
+			addGenericErro(resp);
 		}
-
+		
 		return resp;
 	}
 
@@ -304,12 +314,12 @@ public class VaccinesController {
 			resp.setData(service.getVacinesTotalDeliveredGivenPerRegion());
 			resp.setStatus(true);
 		} catch (Exception e) {
-			if (LOGGER.isTraceEnabled()) {
+			if(LOGGER.isTraceEnabled()) {
 				e.printStackTrace();
 			}
-			resp.addError(
-					new MarcoException(msgSource.getMessage("COVID00001", null, LocaleContextHolder.getLocale())));
+			addGenericErro(resp);
 		}
+		
 		return resp;
 	}
 
@@ -331,12 +341,46 @@ public class VaccinesController {
 			resp.setDataVaccinatedPerAge(dataVaccinatedPerAge);
 			resp.setStatus(true);
 		} catch (Exception e) {
-			if (LOGGER.isTraceEnabled()) {
+			if(LOGGER.isTraceEnabled()) {
 				e.printStackTrace();
 			}
-			resp.addError(
-					new MarcoException(msgSource.getMessage("COVID00001", null, LocaleContextHolder.getLocale())));
+			addGenericErro(resp);
 		}
+		
 		return resp;
+	}
+	
+	/**
+	 * It returns the total vaccines delivered group by supplier
+	 * 
+	 * @param request
+	 * @return
+	 */
+	@GetMapping(value = CovidUtils.MAPPING_VACCINE_TOTAL_DELIVERED_PER_SUPPLIER)
+	@ApiOperation(value = "It returns the total number of vaccines delivered group by supplier")
+	@ResponseBody
+	// @formatter:off
+	public RespGetVaccinesDeliveredPerSupplier getTotalVaccinesDeliveredPerSupplier() {
+		// @formatter:on
+		LOGGER.trace("Inside VaccinesController.getVaccinesDeliveredPerSupplier");
+
+		RespGetVaccinesDeliveredPerSupplier resp = new RespGetVaccinesDeliveredPerSupplier();
+		try {
+			Map<String, Long> supplierData = service.getTotalDeliveredVaccinesPerSupplier();
+
+			resp.setDeliveredPerSupplier(supplierData);
+			resp.setStatus(true);
+		} catch (Exception e) {
+			if(LOGGER.isTraceEnabled()) {
+				e.printStackTrace();
+			}
+			addGenericErro(resp);
+		}
+		
+		return resp;
+	}
+	
+	private void addGenericErro(MarcoResponse resp) {
+		resp.addError(new MarcoException(msgSource.getMessage("COVID00001", null, LocaleContextHolder.getLocale())));
 	}
 }

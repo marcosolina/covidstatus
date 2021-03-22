@@ -38,6 +38,7 @@ import com.marco.javacovidstatus.services.interfaces.CovidDataService;
 import com.marco.javacovidstatus.services.interfaces.RegionMapDownloader;
 import com.marco.javacovidstatus.utils.CovidUtils;
 import com.marco.utils.MarcoException;
+import com.marco.utils.http.MarcoResponse;
 
 import io.swagger.annotations.ApiOperation;
 
@@ -131,6 +132,7 @@ public class MainController {
 		// @formatter:on
 		RespGetRegionData resp = new RespGetRegionData();
 		try {
+		
 			List<RegionalDailyDataDto> listData = service.getRegionalDatesInRangeAscending(from, to);
 			List<RegionDto> listRegions = service.getRegionsList();
 
@@ -179,12 +181,15 @@ public class MainController {
 			}
 
 			resp.setStatus(true);
+		} catch (MarcoException e) {
+			resp.addError(e);
 		} catch (Exception e) {
 			if(LOGGER.isTraceEnabled()) {
 				e.printStackTrace();
 			}
-			resp.addError(new MarcoException(msgSource.getMessage("COVID00001", null, LocaleContextHolder.getLocale())));
+			addGenericErro(resp);
 		}
+		
 		return resp;
 	}
 
@@ -239,12 +244,15 @@ public class MainController {
 				resp.setProvinceData(map);
 			}
 			resp.setStatus(true);
+		} catch (MarcoException e) {
+			resp.addError(e);
 		} catch (Exception e) {
 			if(LOGGER.isTraceEnabled()) {
 				e.printStackTrace();
 			}
-			resp.addError(new MarcoException(msgSource.getMessage("COVID00001", null, LocaleContextHolder.getLocale())));
+			addGenericErro(resp);
 		}
+		
 		return resp;
 	}
 
@@ -282,12 +290,19 @@ public class MainController {
 			// @formatter:on
 
 			resp.setStatus(true);
+		} catch (MarcoException e) {
+			resp.addError(e);
 		} catch (Exception e) {
 			if(LOGGER.isTraceEnabled()) {
 				e.printStackTrace();
 			}
-			resp.addError(new MarcoException(msgSource.getMessage("COVID00001", null, LocaleContextHolder.getLocale())));
+			addGenericErro(resp);
 		}
+		
 		return resp;
+	}
+	
+	private void addGenericErro(MarcoResponse resp) {
+		resp.addError(new MarcoException(msgSource.getMessage("COVID00001", null, LocaleContextHolder.getLocale())));
 	}
 }

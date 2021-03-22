@@ -18,6 +18,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import com.marco.javacovidstatus.model.dto.RegionalDailyDataDto;
 import com.marco.javacovidstatus.services.interfaces.CovidDataDownloader;
 import com.marco.javacovidstatus.services.interfaces.CovidDataService;
+import com.marco.utils.MarcoException;
 
 /**
  * It downloads and process the Regions data
@@ -47,9 +48,10 @@ public class RegionCovidDataDownloader extends CovidDataDownloader {
             start = this.defaultStartData;
         }
 
-        Map<String, List<Integer>> mapInfectionLastWeek = getRegionalLastWeeknNewInfection(end);
 
         try {
+        	Map<String, List<Integer>> mapInfectionLastWeek = getRegionalLastWeeknNewInfection(end);
+        	
             while (start.isBefore(end)) {
                 start = start.plusDays(1);
                 _LOGGER.debug(String.format("Looking for regional data at date: %s", start.toString()));
@@ -96,8 +98,9 @@ public class RegionCovidDataDownloader extends CovidDataDownloader {
      * 
      * @param end
      * @return
+     * @throws MarcoException 
      */
-    private Map<String, List<Integer>> getRegionalLastWeeknNewInfection(LocalDate end) {
+    private Map<String, List<Integer>> getRegionalLastWeeknNewInfection(LocalDate end) throws MarcoException {
         List<RegionalDailyDataDto> list = dataService.getRegionalDatesInRangeAscending(end.minusDays(7), end);
         Map<String, List<Integer>> mapInfectionLastWeek = new HashMap<>();
 

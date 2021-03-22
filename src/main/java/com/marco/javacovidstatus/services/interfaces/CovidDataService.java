@@ -7,6 +7,7 @@ import com.marco.javacovidstatus.model.dto.NationalDailyDataDto;
 import com.marco.javacovidstatus.model.dto.ProvinceDailyDataDto;
 import com.marco.javacovidstatus.model.dto.RegionDto;
 import com.marco.javacovidstatus.model.dto.RegionalDailyDataDto;
+import com.marco.utils.MarcoException;
 
 /**
  * This interfaces provides a list of functionalities that you can use to
@@ -46,7 +47,7 @@ public interface CovidDataService {
      * @param to
      * @return
      */
-    public List<NationalDailyDataDto> getDatesInRangeAscending(LocalDate from, LocalDate to);
+    public List<NationalDailyDataDto> getDatesInRangeAscending(LocalDate from, LocalDate to) throws MarcoException;
 
     /**
      * It returns the regional data between the provided dates in ascending order
@@ -55,7 +56,7 @@ public interface CovidDataService {
      * @param to
      * @return
      */
-    public List<RegionalDailyDataDto> getRegionalDatesInRangeAscending(LocalDate from, LocalDate to);
+    public List<RegionalDailyDataDto> getRegionalDatesInRangeAscending(LocalDate from, LocalDate to) throws MarcoException;
 
     /**
      * It stores the {@link RegionalDailyDataDto}
@@ -72,7 +73,7 @@ public interface CovidDataService {
      * @param to
      * @return
      */
-    public List<ProvinceDailyDataDto> getProvinceDataInRangeAscending(LocalDate from, LocalDate to, String regionCode);
+    public List<ProvinceDailyDataDto> getProvinceDataInRangeAscending(LocalDate from, LocalDate to, String regionCode) throws MarcoException;
 
     /**
      * Retrieves the list of provinces for the specific region

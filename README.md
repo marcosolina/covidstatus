@@ -48,6 +48,7 @@ Once the containers are up and runnig open the following links:
 
 ## History
 
+- **20/03/2021 v0.1.13**: Added total vaccines delivered per supplier chart
 - **20/03/2021 v0.1.12**: Bug Fixing, Using appropriate HTTP verb, adding Swagger fro API documentation
 - **20/03/2021 v0.1.11**: UI Improvements for the Dark Mode
 - **19/03/2021 v0.1.10**: Managing empty vaccines tables

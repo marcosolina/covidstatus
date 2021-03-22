@@ -1,7 +1,7 @@
 /**
 	This class will fetch the number of vaccines given grouped by age range and draw the Chart
  */
-class TotalDeliveredUsedVaccinesChart {
+class TotalDeliveredVaccinesPerSupplier {
 	
 	constructor(canvasId, colorPalette) {
 		this.canvasId = canvasId;
@@ -12,7 +12,7 @@ class TotalDeliveredUsedVaccinesChart {
 		this.lastResponse = {};
 		
 		this.chart = new DoughnutChart(document.getElementById(this.canvasId));
-		this.chart.setTitle("Totale Vaccini Consegnati / Usati a livello Nazionale");
+		this.chart.setTitle("Totale Forniture Vaccini");
 	}
 	
 	setDarkMode(darkModeOn){
@@ -20,7 +20,7 @@ class TotalDeliveredUsedVaccinesChart {
 	}
 	
 	fetchData(fromToQueryParam) {
-		let url = __URLS.TOTALS.TOTALS_DELIVER_USED;
+		let url = __URLS.TOTALS.TOTALS_DELIVERED;
 		MarcoUtils.executeAjax({type: "GET", url: url}).then(this.dataRetrieved.bind(this));
 	}
 
@@ -33,18 +33,16 @@ class TotalDeliveredUsedVaccinesChart {
 
 	drawChart() {
 		this.chart.clearDataSets();
-		
-		let arrLabels = ["Totale Vaccini Ricevuti", "Totale Vaccini Utilizzati"];
-		let arrData = [this.lastResponse.totalDeliveredVaccines, this.lastResponse.totalUsedVaccines];
-		
-		arrLabels.forEach(function(key, index) {
-			const dataset = new CovidChartDataset(key);
-			dataset.setData(arrData[index]);
-			dataset.setColor(this.colorPalette[index]);
+
+		var i = 0;
+		var arrLabels = [];
+		for (let supplier in this.lastResponse.deliveredPerSupplier) {
+			const dataset = new CovidChartDataset(supplier);
+			dataset.setData(this.lastResponse.deliveredPerSupplier[supplier]);
+			dataset.setColor(this.colorPalette[i++]);
 			this.chart.addCovidChartDataset(dataset);
-			arrLabels.push(key);
-		}.bind(this));
-		
+			arrLabels.push(supplier);
+		}
 		this.chart.setLabels(arrLabels);
 		this.chart.drawChart(this.darkModeOn);
 	}

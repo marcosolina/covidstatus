@@ -1,5 +1,6 @@
 package com.marco.javacovidstatus.unittest;
 
+import static org.assertj.core.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -20,6 +21,7 @@ import com.marco.javacovidstatus.repositories.interfaces.ProvinceDataRepo;
 import com.marco.javacovidstatus.repositories.interfaces.RegionalDataRepository;
 import com.marco.javacovidstatus.repositories.interfaces.NationallDataRepository;
 import com.marco.javacovidstatus.services.implementations.MarcoNationalDataService;
+import com.marco.utils.MarcoException;
 
 @ExtendWith(MockitoExtension.class)
 class MarcoNationalDataServiceTest {
@@ -94,10 +96,14 @@ class MarcoNationalDataServiceTest {
         LocalDate end = LocalDate.now();
         when(mockRepo.findByDateBetweenOrderByDateAsc(start, end)).thenReturn(list);
         
-        List<NationalDailyDataDto> respList = service.getDatesInRangeAscending(start, end);
-        assertEquals(11, respList.size());
-        assertEquals(start, respList.get(0).getDate());
-        assertEquals(end, respList.get(respList.size() - 1).getDate());
+		try {
+			List<NationalDailyDataDto> respList = service.getDatesInRangeAscending(start, end);
+			assertEquals(11, respList.size());
+			assertEquals(start, respList.get(0).getDate());
+			assertEquals(end, respList.get(respList.size() - 1).getDate());
+		} catch (MarcoException e) {
+			fail(e.getMessage());
+		}
     }
 
 }

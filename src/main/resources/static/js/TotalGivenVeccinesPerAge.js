@@ -20,7 +20,7 @@ class TotalGivenVeccinesPerAge {
 	}
 	
 	fetchData(fromToQueryParam) {
-		let url = __URLS.VACCINES.TOTALS_AGE;
+		let url = __URLS.TOTALS.TOTALS_AGE;
 		MarcoUtils.executeAjax({type: "GET", url: url}).then(this.dataRetrieved.bind(this));
 	}
 
