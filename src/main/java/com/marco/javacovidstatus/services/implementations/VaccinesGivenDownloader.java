@@ -54,7 +54,7 @@ public class VaccinesGivenDownloader extends CovidDataDownloader {
 			try {
 				String[] columns = row.split(",");
 
-				String regionCode = columns[16];
+				String regionCode = columns[17];
 				String areaCode = columns[2];
 				if (areaCode.equals("PAB")) {
 					regionCode = "21";
