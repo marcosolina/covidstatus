@@ -22,16 +22,16 @@ import com.marco.javacovidstatus.model.dto.VaccinesDeliveredDto;
 import com.marco.javacovidstatus.model.dto.VaccinesDeliveredPerDayDto;
 import com.marco.javacovidstatus.model.dto.VaccinesReceivedUsedDto;
 import com.marco.javacovidstatus.model.dto.VacinesTotalDeliveredGivenPerRegionDto;
-import com.marco.javacovidstatus.model.entitites.AgeRangeGivenVaccines;
-import com.marco.javacovidstatus.model.entitites.DailySumGivenVaccines;
-import com.marco.javacovidstatus.model.entitites.DoseCounter;
-import com.marco.javacovidstatus.model.entitites.EntitySomministrazioneVaccini;
-import com.marco.javacovidstatus.model.entitites.EntitySomministrazioneVacciniPk;
-import com.marco.javacovidstatus.model.entitites.EntityVacciniConsegne;
-import com.marco.javacovidstatus.model.entitites.EntityVacciniConsegnePk;
-import com.marco.javacovidstatus.model.entitites.TotalVaccineDeliveredPerRegion;
-import com.marco.javacovidstatus.model.entitites.TotalVaccineGivenPerRegion;
-import com.marco.javacovidstatus.model.entitites.VacciniConsegne;
+import com.marco.javacovidstatus.model.entitites.vaccines.AgeRangeGivenVaccines;
+import com.marco.javacovidstatus.model.entitites.vaccines.DailySumGivenVaccines;
+import com.marco.javacovidstatus.model.entitites.vaccines.DoseCounter;
+import com.marco.javacovidstatus.model.entitites.vaccines.EntitySomministrazioneVaccini;
+import com.marco.javacovidstatus.model.entitites.vaccines.EntitySomministrazioneVacciniPk;
+import com.marco.javacovidstatus.model.entitites.vaccines.EntityVacciniConsegne;
+import com.marco.javacovidstatus.model.entitites.vaccines.EntityVacciniConsegnePk;
+import com.marco.javacovidstatus.model.entitites.vaccines.TotalVaccineDeliveredPerRegion;
+import com.marco.javacovidstatus.model.entitites.vaccines.TotalVaccineGivenPerRegion;
+import com.marco.javacovidstatus.model.entitites.vaccines.VacciniConsegne;
 import com.marco.javacovidstatus.repositories.interfaces.GivenVaccinesRepo;
 import com.marco.javacovidstatus.repositories.interfaces.VeccinesDeliveredRepo;
 import com.marco.javacovidstatus.services.interfaces.VaccineDataService;
@@ -104,6 +104,7 @@ public class VaccineDataServiceMarco implements VaccineDataService {
 			dataMap.compute(Constants.VACCINES_GIVEN_OVER_80,	getAttToArrayBiFunction(DailySumGivenVaccines::getOver80Counter, dto));
 			dataMap.compute(Constants.VACCINES_GIVEN_PUBLIC,	getAttToArrayBiFunction(DailySumGivenVaccines::getPublicOrderCounter, dto));
 			dataMap.compute(Constants.VACCINES_GIVEN_SCHOOLS,	getAttToArrayBiFunction(DailySumGivenVaccines::getSchoolStaffCounter, dto));
+			dataMap.compute(Constants.VACCINES_GIVEN_OTHER,		getAttToArrayBiFunction(DailySumGivenVaccines::getOtherPeopleCounter, dto));
 		});
 		// @formatter:on
 
@@ -269,6 +270,7 @@ public class VaccineDataServiceMarco implements VaccineDataService {
 		entity.setOver80Counter(dto.getOver80Counter());
 		entity.setPublicOrderCounter(dto.getPublicOrderCounter());
 		entity.setSchoolStaffCounter(dto.getSchoolStaffCounter());
+		entity.setOtherPeopleCounter(dto.getOtherPeopleCounter());
 		entity.setFirstDoseCounter(dto.getFirstDoseCounter());
 		entity.setSecondDoseCounter(dto.getSecondDoseCounter());
 

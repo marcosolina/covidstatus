@@ -33,6 +33,13 @@ public class RegionCovidDataDownloader extends CovidDataDownloader {
     @Autowired
     private CovidDataService dataService;
     private String url = "https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-regioni/dpc-covid19-ita-regioni-%s.csv";
+    
+    private static final int COL_NEW_CASUALTIES = 14;
+    private static final int COL_NEW_TESTS = 18;
+    private static final int COL_NEW_INFECTIONS = 12;
+    private static final int COL_NEW_HOSPITALISED = 8;
+    private static final int COL_NEW_INTENSIVE_THERAPY = 7;
+    private static final int COL_NEW_RECOVERED = 13;
 
     public RegionCovidDataDownloader(WebClient webClient) {
         super(webClient);
@@ -137,12 +144,13 @@ public class RegionCovidDataDownloader extends CovidDataDownloader {
             
             data.setDate(date);
             data.setRegionCode(columns.get(2));
-            data.setNewCasualties(Integer.parseInt(columns.get(14)));
-            data.setNewTests(Integer.parseInt(columns.get(18)));
-            data.setNewInfections(Integer.parseInt(columns.get(12)));
-            data.setNewHospitalized(Integer.parseInt(columns.get(8)));
-            data.setNewIntensiveTherapy(Integer.parseInt(columns.get(7)));
-            data.setNewRecovered(Integer.parseInt(columns.get(13)));
+            data.setNewCasualties(Integer.parseInt(columns.get(COL_NEW_CASUALTIES)));
+            data.setNewTests(Integer.parseInt(columns.get(COL_NEW_TESTS)));
+            data.setNewInfections(Integer.parseInt(columns.get(COL_NEW_INFECTIONS)));
+            data.setNewHospitalized(Integer.parseInt(columns.get(COL_NEW_HOSPITALISED)));
+            data.setNewIntensiveTherapy(Integer.parseInt(columns.get(COL_NEW_INTENSIVE_THERAPY)));
+            data.setNewRecovered(Integer.parseInt(columns.get(COL_NEW_RECOVERED)));
+            
             return data;
             })
             .filter(d -> d.getDate() != null)
@@ -177,6 +185,15 @@ public class RegionCovidDataDownloader extends CovidDataDownloader {
         newDailyData.setNewIntensiveTherapy(current.getNewIntensiveTherapy() - previous.getNewIntensiveTherapy());
         newDailyData.setNewRecovered(current.getNewRecovered() - previous.getNewRecovered());
 
+        if (newDailyData.getNewInfections() < 0) {
+        	newDailyData.setNewInfections(0);
+        }
+        if (newDailyData.getInfectionPercentage().compareTo(BigDecimal.ZERO) < 0) {
+        	newDailyData.setInfectionPercentage(BigDecimal.ZERO);
+        }
+        if (newDailyData.getNewTests() < 0) {
+        	newDailyData.setNewTests(0);
+        }
         if (newDailyData.getNewIntensiveTherapy() < 0) {
             newDailyData.setNewIntensiveTherapy(0);
         }

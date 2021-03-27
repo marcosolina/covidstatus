@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.springframework.data.repository.CrudRepository;
 
-import com.marco.javacovidstatus.model.entitites.EntityNationalData;
+import com.marco.javacovidstatus.model.entitites.infections.EntityNationalData;
 
 /**
  * Standard Spring interface to perform CRUD operation on the

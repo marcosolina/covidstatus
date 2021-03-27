@@ -11,6 +11,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import com.marco.javacovidstatus.model.dto.VaccinesDeliveredDto;
 import com.marco.javacovidstatus.services.interfaces.CovidDataDownloader;
+import com.marco.javacovidstatus.services.interfaces.NotificationSenderInterface;
 import com.marco.javacovidstatus.services.interfaces.VaccineDataService;
 import com.marco.utils.DateUtils;
 import com.marco.utils.enums.DateFormats;
@@ -24,10 +25,17 @@ import com.marco.utils.enums.DateFormats;
 public class VaccinesDeliveredDownloader extends CovidDataDownloader {
 	@Autowired
 	private VaccineDataService dataService;
+	@Autowired
+    private NotificationSenderInterface notificationService;
 
 	private static final Logger _LOGGER = LoggerFactory.getLogger(VaccinesDeliveredDownloader.class);
 
 	private static final String CVS_URL = "https://raw.githubusercontent.com/italia/covid19-opendata-vaccini/master/dati/consegne-vaccini-latest.csv";
+	public static final int COL_DATE = 3;
+	public static final int COL_DELIVERED_DOSES = 2;
+	public static final int COL_AREA_CODE = 0;
+	public static final int COL_REGION_CODE = 6;
+	public static final int COL_SUPPLIER = 1;
 
 	public VaccinesDeliveredDownloader(WebClient webClient) {
 		super(webClient);
@@ -38,6 +46,11 @@ public class VaccinesDeliveredDownloader extends CovidDataDownloader {
 		_LOGGER.info("Downloading delivered vaccines data");
 		
 		List<String> rows = this.getCsvRows(CVS_URL);
+		
+		if(rows.get(0).split(",").length != 8) {
+			notificationService.sendEmailMessage("marcosolina@gmail.com", "Marco Solina - Covid Status", "La struttura dei dati delle consegne dei vaccini e' stata modificata...");
+			return;
+		}
 
 		/*
 		 * Forcing the re-loading of all the data. I notice that the government updates
@@ -53,30 +66,32 @@ public class VaccinesDeliveredDownloader extends CovidDataDownloader {
 			try {
 				String[] columns = row.split(",");
 
-				String regionCode = columns[6];
-				String areaCode = columns[0];
+				String regionCode = columns[COL_REGION_CODE];
+				String areaCode = columns[COL_AREA_CODE];
 				if (areaCode.equals("PAB")) {
 					regionCode = "21";
 				} else if (areaCode.equals("PAT")) {
 					regionCode = "22";
 				}
 
-				LocalDate date = DateUtils.fromStringToLocalDate(columns[3], DateFormats.DB_DATE);
+				LocalDate date = DateUtils.fromStringToLocalDate(columns[COL_DATE], DateFormats.DB_DATE);
 				if (!date.isAfter(startDate)) {
 					return;
 				}
 
 				VaccinesDeliveredDto data = new VaccinesDeliveredDto();
 				data.setDate(date);
-				data.setDosesDelivered(Integer.parseInt(columns[2]));
+				data.setDosesDelivered(Integer.parseInt(columns[COL_DELIVERED_DOSES]));
 				data.setRegionCode(("00" + regionCode).substring(regionCode.length()));
-				data.setSupplier(columns[1]);
+				data.setSupplier(columns[COL_SUPPLIER]);
 
 				_LOGGER.trace(String.format("Storing Delivered date for Date: %s Region: %s Supplier: %s",
 						data.getDate(), data.getRegionCode(), data.getSupplier()));
 				dataService.saveVaccinesDeliveredData(data);
 			} catch (Exception e) {
-				_LOGGER.error(String.format("Error while saving: %s", row));
+				String message = String.format("Error while saving: %s", row);
+				_LOGGER.error(message);
+				notificationService.sendEmailMessage("marcosolina@gmail.com", "Marco Solina - Covid Status", message);
 				error.set(true);
 			}
 		});

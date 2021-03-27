@@ -23,6 +23,7 @@ public class VaccinatedPeopleDto implements Serializable {
 	private int over80Counter;
 	private int publicOrderCounter;
 	private int schoolStaffCounter;
+	private int otherPeopleCounter;
 	private int firstDoseCounter;
 	private int secondDoseCounter;
 
@@ -140,6 +141,14 @@ public class VaccinatedPeopleDto implements Serializable {
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;
+	}
+
+	public int getOtherPeopleCounter() {
+		return otherPeopleCounter;
+	}
+
+	public void setOtherPeopleCounter(int otherPeopleCounter) {
+		this.otherPeopleCounter = otherPeopleCounter;
 	}
 
 }

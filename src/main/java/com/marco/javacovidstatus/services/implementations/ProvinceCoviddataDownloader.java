@@ -30,7 +30,14 @@ public class ProvinceCoviddataDownloader extends CovidDataDownloader {
     @Autowired
     private CovidDataService dataService;
     private String url = "https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-province/dpc-covid19-ita-province-%s.csv";
-
+    
+    private static final int COL_PROVINCE_CODE = 4;
+    private static final int COL_REGION_CODE = 2;
+    private static final int COL_REGION_DESC = 3;
+    private static final int COL_DESC = 5;
+    private static final int COL_NEW_INFECTIONS = 9;
+    private static final int COL_SHORT_NAME = 6;
+    
     public ProvinceCoviddataDownloader(WebClient webClient) {
         super(webClient);
     }
@@ -73,6 +80,11 @@ public class ProvinceCoviddataDownloader extends CovidDataDownloader {
                         d.setRegionCode("22");
                     }
                     return d;
+                }).map(dto -> {
+                	if (dto.getNewInfections() < 0) {
+                		dto.setNewInfections(0);
+                	}
+                	return dto;
                 }).forEach(dataService::storeProvinceDailyData);
                 // @formatter:on
             }
@@ -103,13 +115,13 @@ public class ProvinceCoviddataDownloader extends CovidDataDownloader {
             List<String> columns = Arrays.asList(s.split(","));
             ProvinceDailyDataDto data = new ProvinceDailyDataDto();
             data.setDate(date);
-            data.setProvinceCode(columns.get(4));
-            data.setRegionCode(columns.get(2));
+            data.setProvinceCode(columns.get(COL_PROVINCE_CODE));
+            data.setRegionCode(columns.get(COL_REGION_CODE));
             
-            data.setRegionDesc(columns.get(3));
-            data.setDescription(columns.get(5));
-            data.setNewInfections(Integer.parseInt(columns.get(9)));
-            data.setShortName(columns.get(6));
+            data.setRegionDesc(columns.get(COL_REGION_DESC));
+            data.setDescription(columns.get(COL_DESC));
+            data.setNewInfections(Integer.parseInt(columns.get(COL_NEW_INFECTIONS)));
+            data.setShortName(columns.get(COL_SHORT_NAME));
             return data;
             })
             .filter(e -> !e.getShortName().trim().isEmpty())

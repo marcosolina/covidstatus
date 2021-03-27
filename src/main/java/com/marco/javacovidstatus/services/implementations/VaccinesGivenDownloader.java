@@ -11,6 +11,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import com.marco.javacovidstatus.model.dto.VaccinatedPeopleDto;
 import com.marco.javacovidstatus.services.interfaces.CovidDataDownloader;
+import com.marco.javacovidstatus.services.interfaces.NotificationSenderInterface;
 import com.marco.javacovidstatus.services.interfaces.VaccineDataService;
 import com.marco.utils.DateUtils;
 import com.marco.utils.enums.DateFormats;
@@ -25,6 +26,8 @@ import com.marco.utils.enums.DateFormats;
 public class VaccinesGivenDownloader extends CovidDataDownloader {
 	@Autowired
 	private VaccineDataService dataService;
+	@Autowired
+    private NotificationSenderInterface notificationService;
 
 	private static final Logger _LOGGER = LoggerFactory.getLogger(VaccinesGivenDownloader.class);
 
@@ -42,6 +45,7 @@ public class VaccinesGivenDownloader extends CovidDataDownloader {
 	public static final int COL_OVER_80_COUNTER = 9;
 	public static final int COL_PUBLIC_ORDER_COUNTER = 10;
 	public static final int COL_SCHOOL_STAFF_COUNTER = 11;
+	public static final int COL_OTHER_PEOPLE_COUNTER = 12;
 	public static final int COL_FIRST_DOSE_COUNTER = 13;
 	public static final int COL_SECOND_DOSE_COUNTER = 14;
 
@@ -54,6 +58,10 @@ public class VaccinesGivenDownloader extends CovidDataDownloader {
 		_LOGGER.info("Downloading Given vaccines data");
 
 		List<String> rows = this.getCsvRows(CSV_URL);
+		if(rows.get(0).split(",").length != 19) {
+			notificationService.sendEmailMessage("marcosolina@gmail.com", "Marco Solina - Covid Status", "La struttura dei dati vaccini somministrati e' stata modificata...");
+			return;
+		}
 		
 		/*
 		 * Forcing the re-loading of all the data. I notice that the government updates
@@ -96,6 +104,7 @@ public class VaccinesGivenDownloader extends CovidDataDownloader {
 				data.setOver80Counter(Integer.parseInt(columns[COL_OVER_80_COUNTER]));
 				data.setPublicOrderCounter(Integer.parseInt(columns[COL_PUBLIC_ORDER_COUNTER]));
 				data.setSchoolStaffCounter(Integer.parseInt(columns[COL_SCHOOL_STAFF_COUNTER]));
+				data.setOtherPeopleCounter(Integer.parseInt(columns[COL_OTHER_PEOPLE_COUNTER]));
 				data.setFirstDoseCounter(Integer.parseInt(columns[COL_FIRST_DOSE_COUNTER]));
 				data.setSecondDoseCounter(Integer.parseInt(columns[COL_SECOND_DOSE_COUNTER]));
 
@@ -103,7 +112,9 @@ public class VaccinesGivenDownloader extends CovidDataDownloader {
 						data.getDate(), data.getRegionCode(), data.getAgeRange(), data.getSupplier()));
 				dataService.saveGivenVaccinesData(data);
 			} catch (Exception e) {
-				_LOGGER.error(String.format("Error while saving: %s", row));
+				String message = String.format("Error while saving: %s", row);
+				_LOGGER.error(message);
+				notificationService.sendEmailMessage("marcosolina@gmail.com", "Marco Solina - Covid Status", message);
 				error.set(true);
 			}
 		});

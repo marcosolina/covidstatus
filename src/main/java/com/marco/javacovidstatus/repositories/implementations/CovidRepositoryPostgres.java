@@ -12,15 +12,15 @@ import javax.persistence.criteria.Root;
 
 import org.springframework.transaction.annotation.Transactional;
 
-import com.marco.javacovidstatus.model.entitites.EntityNationalData;
-import com.marco.javacovidstatus.model.entitites.EntityNationalData_;
-import com.marco.javacovidstatus.model.entitites.EntityProvinceData;
-import com.marco.javacovidstatus.model.entitites.EntityProvinceDataPk_;
-import com.marco.javacovidstatus.model.entitites.EntityProvinceData_;
-import com.marco.javacovidstatus.model.entitites.EntityRegionalData;
-import com.marco.javacovidstatus.model.entitites.EntityRegionalDataPk_;
-import com.marco.javacovidstatus.model.entitites.EntityRegionalData_;
 import com.marco.javacovidstatus.model.entitites.RegionData;
+import com.marco.javacovidstatus.model.entitites.infections.EntityNationalData;
+import com.marco.javacovidstatus.model.entitites.infections.EntityNationalData_;
+import com.marco.javacovidstatus.model.entitites.infections.EntityProvinceData;
+import com.marco.javacovidstatus.model.entitites.infections.EntityProvinceDataPk_;
+import com.marco.javacovidstatus.model.entitites.infections.EntityProvinceData_;
+import com.marco.javacovidstatus.model.entitites.infections.EntityRegionalData;
+import com.marco.javacovidstatus.model.entitites.infections.EntityRegionalDataPk_;
+import com.marco.javacovidstatus.model.entitites.infections.EntityRegionalData_;
 import com.marco.javacovidstatus.repositories.interfaces.CovidRepository;
 
 /**

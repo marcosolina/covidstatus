@@ -1,4 +1,4 @@
-package com.marco.javacovidstatus.model.entitites;
+package com.marco.javacovidstatus.model.entitites.vaccines;
 
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
@@ -33,6 +33,8 @@ public class EntitySomministrazioneVaccini {
 	private int publicOrderCounter;
 	@Column(name = "SCHOOL_STAFF_COUNTER")
 	private int schoolStaffCounter;
+	@Column(name = "OTHER_PEOPLE_COUNTER")
+	private int otherPeopleCounter;
 	@Column(name = "FIRST_DOSE_COUNTER")
 	private int firstDoseCounter;
 	@Column(name = "SECOND_DOSE_COUNTER")
@@ -126,4 +128,11 @@ public class EntitySomministrazioneVaccini {
 		this.secondDoseCounter = secondDoseCounter;
 	}
 
+	public int getOtherPeopleCounter() {
+		return otherPeopleCounter;
+	}
+
+	public void setOtherPeopleCounter(int otherPeopleCounter) {
+		this.otherPeopleCounter = otherPeopleCounter;
+	}
 }

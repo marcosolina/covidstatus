@@ -18,12 +18,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.marco.javacovidstatus.model.entitites.EntityVacciniConsegne;
-import com.marco.javacovidstatus.model.entitites.EntityVacciniConsegnePk_;
-import com.marco.javacovidstatus.model.entitites.EntityVacciniConsegne_;
-import com.marco.javacovidstatus.model.entitites.TotalVaccineDeliveredPerRegion;
-import com.marco.javacovidstatus.model.entitites.VacciniConsegne;
-import com.marco.javacovidstatus.model.entitites.VeccinesDeliveredPerSupplier;
+import com.marco.javacovidstatus.model.entitites.vaccines.EntityVacciniConsegne;
+import com.marco.javacovidstatus.model.entitites.vaccines.EntityVacciniConsegnePk_;
+import com.marco.javacovidstatus.model.entitites.vaccines.EntityVacciniConsegne_;
+import com.marco.javacovidstatus.model.entitites.vaccines.TotalVaccineDeliveredPerRegion;
+import com.marco.javacovidstatus.model.entitites.vaccines.VacciniConsegne;
+import com.marco.javacovidstatus.model.entitites.vaccines.VeccinesDeliveredPerSupplier;
 import com.marco.javacovidstatus.repositories.interfaces.VeccinesDeliveredRepo;
 
 /**

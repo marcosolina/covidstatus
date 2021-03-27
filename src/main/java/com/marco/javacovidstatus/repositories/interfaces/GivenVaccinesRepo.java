@@ -3,11 +3,11 @@ package com.marco.javacovidstatus.repositories.interfaces;
 import java.time.LocalDate;
 import java.util.List;
 
-import com.marco.javacovidstatus.model.entitites.AgeRangeGivenVaccines;
-import com.marco.javacovidstatus.model.entitites.DailySumGivenVaccines;
-import com.marco.javacovidstatus.model.entitites.DoseCounter;
-import com.marco.javacovidstatus.model.entitites.EntitySomministrazioneVaccini;
-import com.marco.javacovidstatus.model.entitites.TotalVaccineGivenPerRegion;
+import com.marco.javacovidstatus.model.entitites.vaccines.AgeRangeGivenVaccines;
+import com.marco.javacovidstatus.model.entitites.vaccines.DailySumGivenVaccines;
+import com.marco.javacovidstatus.model.entitites.vaccines.DoseCounter;
+import com.marco.javacovidstatus.model.entitites.vaccines.EntitySomministrazioneVaccini;
+import com.marco.javacovidstatus.model.entitites.vaccines.TotalVaccineGivenPerRegion;
 
 /**
  * This interface provides the contract to query the database
