@@ -125,6 +125,7 @@ public class GivenVaccinesRepoPostgres implements GivenVaccinesRepo {
 		sql.append("b.over_80_counter,");
 		sql.append("b.public_order_counter,");
 		sql.append("b.school_staff_counter,");
+		sql.append("b.other_people_counter,");
 		sql.append("b.first_dose_counter,");
 		sql.append("b.second_dose_counter ");
 		sql.append("from cartesian_table as a ");
@@ -146,6 +147,7 @@ public class GivenVaccinesRepoPostgres implements GivenVaccinesRepo {
 		sql.append("over_80_counter = 0,");
 		sql.append("public_order_counter = 0,");
 		sql.append("school_staff_counter = 0,");
+		sql.append("other_people_counter = 0,");
 		sql.append("first_dose_counter = 0,");
 		sql.append("second_dose_counter = 0 ");
 		sql.append("where men_counter is null");
