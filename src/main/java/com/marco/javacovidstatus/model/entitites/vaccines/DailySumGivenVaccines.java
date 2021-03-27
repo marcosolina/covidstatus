@@ -1,4 +1,4 @@
-package com.marco.javacovidstatus.model.entitites;
+package com.marco.javacovidstatus.model.entitites.vaccines;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -21,12 +21,13 @@ public class DailySumGivenVaccines implements Serializable {
 	private long over80Counter;
 	private long publicOrderCounter;
 	private long schoolStaffCounter;
+	private long otherPeopleCounter;
 	private long firstDoseCounter;
 	private long secondDoseCounter;
 
 	public DailySumGivenVaccines(LocalDate date, long menCounter, long womenCounter, long nhsPeopleCounter,
 			long nonNhsPeopleCounter, long nursingHomeCounter, long over80Counter, long publicOrderCounter,
-			long schoolStaffCounter, long firstDoseCounter, long secondDoseCounter) {
+			long schoolStaffCounter, long otherPeopleCounter, long firstDoseCounter, long secondDoseCounter) {
 		super();
 		this.date = date;
 		this.menCounter = menCounter;
@@ -37,6 +38,7 @@ public class DailySumGivenVaccines implements Serializable {
 		this.over80Counter = over80Counter;
 		this.publicOrderCounter = publicOrderCounter;
 		this.schoolStaffCounter = schoolStaffCounter;
+		this.otherPeopleCounter = otherPeopleCounter;
 		this.firstDoseCounter = firstDoseCounter;
 		this.secondDoseCounter = secondDoseCounter;
 	}
@@ -131,6 +133,14 @@ public class DailySumGivenVaccines implements Serializable {
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;
+	}
+
+	public long getOtherPeopleCounter() {
+		return otherPeopleCounter;
+	}
+
+	public void setOtherPeopleCounter(long otherPeopleCounter) {
+		this.otherPeopleCounter = otherPeopleCounter;
 	}
 
 }

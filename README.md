@@ -48,7 +48,8 @@ Once the containers are up and runnig open the following links:
 
 ## History
 
-- **20/03/2021 v0.1.14**: Managing the new CSV structure of the goverment data
+- **27/03/2021 v0.1.15**: Adding to the charts the new info added by the government, small refactoring, sending an email to myself if the government changes the data structure again...
+- **26/03/2021 v0.1.14**: Managing the new CSV structure of the goverment data
 - **20/03/2021 v0.1.13**: Added total vaccines delivered per supplier chart
 - **20/03/2021 v0.1.12**: Bug Fixing, Using appropriate HTTP verb, adding Swagger fro API documentation
 - **20/03/2021 v0.1.11**: UI Improvements for the Dark Mode

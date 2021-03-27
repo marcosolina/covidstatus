@@ -20,6 +20,8 @@ public class EmailNotificationSender implements NotificationSenderInterface {
 
     @Value("${covidstatus.notification.enabled}")
     private boolean notificationEnabled;
+    @Value("${spring.mail.username}")
+    private String emailFrom;
     @Autowired
     private JavaMailSender emailSender;
 
@@ -30,11 +32,12 @@ public class EmailNotificationSender implements NotificationSenderInterface {
             return;
         }
         SimpleMailMessage email = new SimpleMailMessage();
-        email.setFrom("82iknow@gmail.com");
+        email.setFrom(emailFrom);
         email.setTo(to);
         email.setSubject(title);
         email.setText(message);
         emailSender.send(email);
+        logger.debug("Notification sent");
     }
 
 }

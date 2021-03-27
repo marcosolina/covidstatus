@@ -3,9 +3,9 @@ package com.marco.javacovidstatus.repositories.interfaces;
 import java.time.LocalDate;
 import java.util.List;
 
-import com.marco.javacovidstatus.model.entitites.EntityProvinceData;
-import com.marco.javacovidstatus.model.entitites.EntityRegionalData;
 import com.marco.javacovidstatus.model.entitites.RegionData;
+import com.marco.javacovidstatus.model.entitites.infections.EntityProvinceData;
+import com.marco.javacovidstatus.model.entitites.infections.EntityRegionalData;
 
 /**
  * This interface defines more complicated actions which might not be possible

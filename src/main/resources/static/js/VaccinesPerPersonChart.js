@@ -18,7 +18,8 @@ class VaccinesPerPersonChart {
 			riposo: 		{code: "riposo",		desc: "Ospiti RSA"},
 			uomini: 		{code: "uomini",		desc: "Uomini"},
 			ospedali: 		{code: "ospedali",		desc: "Operatori Sanitari Sociosanitari"},
-			donne: 			{code: "donne",			desc: "Donne"}
+			donne: 			{code: "donne",			desc: "Donne"},
+			altri: 			{code: "altri",			desc: "Altro"}
 		};
 		
 		this.chart = new CovidChart(document.getElementById(this.canvasId));

@@ -59,6 +59,10 @@ public class Beans {
 
 	@Value("${covidstatus.version}")
 	private String appVersion;
+	@Value("${spring.mail.username}")
+	private String emailUser;
+	@Value("${spring.mail.password}")
+	private String emailPassw;
 	
 	@Bean
 	public WebClient getWebClient() {
@@ -119,8 +123,8 @@ public class Beans {
 		mailSender.setHost("smtp.gmail.com");
 		mailSender.setPort(587);
 
-		mailSender.setUsername("XXXX");
-		mailSender.setPassword("XXXX");
+		mailSender.setUsername(emailUser);
+		mailSender.setPassword(emailPassw);
 
 		Properties props = mailSender.getJavaMailProperties();
 		props.put("mail.transport.protocol", "smtp");

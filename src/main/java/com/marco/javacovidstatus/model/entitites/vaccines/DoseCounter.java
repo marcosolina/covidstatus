@@ -1,4 +1,4 @@
-package com.marco.javacovidstatus.model.entitites;
+package com.marco.javacovidstatus.model.entitites.vaccines;
 
 /**
  * Custom Query Model used to retrieve the number of given vaccines doses

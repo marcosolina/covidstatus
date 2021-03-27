@@ -17,13 +17,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.marco.javacovidstatus.model.entitites.AgeRangeGivenVaccines;
-import com.marco.javacovidstatus.model.entitites.DailySumGivenVaccines;
-import com.marco.javacovidstatus.model.entitites.DoseCounter;
-import com.marco.javacovidstatus.model.entitites.EntitySomministrazioneVaccini;
-import com.marco.javacovidstatus.model.entitites.EntitySomministrazioneVacciniPk_;
-import com.marco.javacovidstatus.model.entitites.EntitySomministrazioneVaccini_;
-import com.marco.javacovidstatus.model.entitites.TotalVaccineGivenPerRegion;
+import com.marco.javacovidstatus.model.entitites.vaccines.AgeRangeGivenVaccines;
+import com.marco.javacovidstatus.model.entitites.vaccines.DailySumGivenVaccines;
+import com.marco.javacovidstatus.model.entitites.vaccines.DoseCounter;
+import com.marco.javacovidstatus.model.entitites.vaccines.EntitySomministrazioneVaccini;
+import com.marco.javacovidstatus.model.entitites.vaccines.EntitySomministrazioneVacciniPk_;
+import com.marco.javacovidstatus.model.entitites.vaccines.EntitySomministrazioneVaccini_;
+import com.marco.javacovidstatus.model.entitites.vaccines.TotalVaccineGivenPerRegion;
 import com.marco.javacovidstatus.repositories.interfaces.GivenVaccinesRepo;
 
 /**
@@ -82,6 +82,7 @@ public class GivenVaccinesRepoPostgres implements GivenVaccinesRepo {
 				cb.sum(root.get(EntitySomministrazioneVaccini_.OVER80_COUNTER)),
 				cb.sum(root.get(EntitySomministrazioneVaccini_.PUBLIC_ORDER_COUNTER)),
 				cb.sum(root.get(EntitySomministrazioneVaccini_.SCHOOL_STAFF_COUNTER)),
+				cb.sum(root.get(EntitySomministrazioneVaccini_.OTHER_PEOPLE_COUNTER)),
 				cb.sum(root.get(EntitySomministrazioneVaccini_.FIRST_DOSE_COUNTER)),
 				cb.sum(root.get(EntitySomministrazioneVaccini_.SECOND_DOSE_COUNTER))
 				)

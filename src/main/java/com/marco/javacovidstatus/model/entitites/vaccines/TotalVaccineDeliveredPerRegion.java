@@ -1,23 +1,18 @@
-package com.marco.javacovidstatus.model.entitites;
-
-import java.time.LocalDate;
+package com.marco.javacovidstatus.model.entitites.vaccines;
 
 /**
- * Custom Query Model to retrieve the number of delivered vaccines per Region
+ * Entity model used to return the totals of delivered vaccines per region
  * 
  * @author Marco
  *
  */
-public class VacciniConsegne {
-
+public class TotalVaccineDeliveredPerRegion {
 	private String regionCode;
-	private LocalDate date;
 	private Long dosesDelivered;
 
-	public VacciniConsegne(String regionCode, LocalDate date, Long dosesDelivered) {
+	public TotalVaccineDeliveredPerRegion(String regionCode, Long dosesDelivered) {
 		super();
 		this.regionCode = regionCode;
-		this.date = date;
 		this.dosesDelivered = dosesDelivered;
 	}
 
@@ -27,14 +22,6 @@ public class VacciniConsegne {
 
 	public void setRegionCode(String regionCode) {
 		this.regionCode = regionCode;
-	}
-
-	public LocalDate getDate() {
-		return date;
-	}
-
-	public void setDate(LocalDate date) {
-		this.date = date;
 	}
 
 	public Long getDosesDelivered() {

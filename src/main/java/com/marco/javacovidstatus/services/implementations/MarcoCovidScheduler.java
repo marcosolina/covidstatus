@@ -13,7 +13,6 @@ import org.springframework.stereotype.Component;
 
 import com.marco.javacovidstatus.services.interfaces.CovidDataDownloader;
 import com.marco.javacovidstatus.services.interfaces.CovidScheduler;
-import com.marco.javacovidstatus.services.interfaces.NotificationSenderInterface;
 
 /**
  * This is my implementation of the {@link CovidScheduler}
@@ -25,9 +24,6 @@ import com.marco.javacovidstatus.services.interfaces.NotificationSenderInterface
 @EnableScheduling
 public class MarcoCovidScheduler implements CovidScheduler {
     private static final Logger logger = LoggerFactory.getLogger(MarcoCovidScheduler.class);
-
-    @Autowired
-    private NotificationSenderInterface notificationService;
 
     @Autowired
     @Qualifier("National")
@@ -64,7 +60,6 @@ public class MarcoCovidScheduler implements CovidScheduler {
         downloaders.parallelStream().forEach(CovidDataDownloader::downloadData);
         
         logger.info("Update complete");
-        notificationService.sendEmailMessage("marcosolina@gmail.com", "Marco Solina - Covid Status", "Dati aggiornati");
     }
 
 }

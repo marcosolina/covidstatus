@@ -1,5 +1,7 @@
 package com.marco.javacovidstatus.model.entitites;
 
+import com.marco.javacovidstatus.model.entitites.infections.EntityProvinceData;
+
 /**
  * This class represents a subset info of the {@link EntityProvinceData}}
  * 
