@@ -58,7 +58,7 @@ public class VaccinesGivenDownloader extends CovidDataDownloader {
 		_LOGGER.info("Downloading Given vaccines data");
 
 		List<String> rows = this.getCsvRows(CSV_URL);
-		if(rows.get(0).split(",").length != 2) {
+		if(rows.get(0).split(",").length != 19) {
 			notificationService.sendEmailMessage("marcosolina@gmail.com", "Marco Solina - Covid Status", "La struttura dei dati vaccini somministrati e' stata modificata...");
 			return;
 		}
