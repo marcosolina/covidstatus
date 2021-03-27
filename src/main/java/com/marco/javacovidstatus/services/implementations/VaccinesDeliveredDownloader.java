@@ -89,7 +89,9 @@ public class VaccinesDeliveredDownloader extends CovidDataDownloader {
 						data.getDate(), data.getRegionCode(), data.getSupplier()));
 				dataService.saveVaccinesDeliveredData(data);
 			} catch (Exception e) {
-				_LOGGER.error(String.format("Error while saving: %s", row));
+				String message = String.format("Error while saving: %s", row);
+				_LOGGER.error(message);
+				notificationService.sendEmailMessage("marcosolina@gmail.com", "Marco Solina - Covid Status", message);
 				error.set(true);
 			}
 		});
