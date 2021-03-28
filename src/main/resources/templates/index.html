@@ -76,7 +76,7 @@
 			<div class="col">&nbsp;</div>
 		</div>
 	</div>
-	<nav>
+	<nav id="tabsBars">
 		<div class="nav nav-tabs flex-column flex-sm-row" id="nav-tab" role="tablist">
 			<a class="nav-item nav-link active"	id="nav-national-tab"	data-toggle="tab" href="#nav-national"	role="tab" aria-controls="nav-national" 	aria-selected="true">Dati Nazionali</a>
 			<a class="nav-item nav-link"		id="nav-region-tab"		data-toggle="tab" href="#nav-region"	role="tab" aria-controls="nav-region"		aria-selected="false">Regionali</a>
@@ -93,6 +93,8 @@
 		<div th:replace="fragments/tabItalianMap.html::tabItalianMap"></div>
 		<div th:replace="fragments/tabVaccines.html::tabVaccinesBody"></div>
 		<div th:replace="fragments/tabTotals.html::tabTotals"></div>
+	</div>
+	<div class="accordion" id="divAccordion">
 	</div>
 	<div th:replace="fragments/infoModal.html::infoModal"></div>
 	<div class="button-notification alert-info">Clicca i bottoni qui sopra per cambiare i colori o leggere le informazioni</div>

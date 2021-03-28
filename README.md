@@ -48,6 +48,7 @@ Once the containers are up and runnig open the following links:
 
 ## History
 
+- **28/03/2021 v0.1.16**: UI Improvements for small screens (Viewport < 567)
 - **27/03/2021 v0.1.15**: Adding to the charts the new info added by the government, small refactoring, sending an email to myself if the government changes the data structure again...
 - **26/03/2021 v0.1.14**: Managing the new CSV structure of the goverment data
 - **20/03/2021 v0.1.13**: Added total vaccines delivered per supplier chart
