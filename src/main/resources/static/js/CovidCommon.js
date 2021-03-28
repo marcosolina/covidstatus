@@ -9,13 +9,14 @@ var CovidCommon = (function(CovidCommon) {
 	}
 
 
-	var dateFormat = "dd/mm/yy";
-	var darkModeOn = false;
-	var autoRefreshEnabled = true;
-	var refreshInterval;
-	var idRefreshCheckBox = "checkRefresh";
+	let dateFormat = "dd/mm/yy";
+	let darkModeOn = false;
+	let autoRefreshEnabled = true;
+	let refreshInterval;
+	let idRefreshCheckBox = "checkRefresh";
 
-	var charts = {};// It will hold the charts objects instances 
+	let charts = {};// It will hold the charts objects instances
+	let oldPortWidth = window.innerWidth; 
 
 	/*
 		This array stores my color palette
@@ -49,6 +50,8 @@ var CovidCommon = (function(CovidCommon) {
 		Initialise the UI
 	 */
 	CovidCommon.init = function() {
+
+
 
 		/*
 			Setting up some jQuery elements and registering the event listeners
@@ -94,9 +97,15 @@ var CovidCommon = (function(CovidCommon) {
 			i++;
 		}
 
-		/*
-		* Creating an instance of the charts
-		*/
+		CovidCommon.initChartObjects();
+		CovidCommon.switchAccordionOrTabs(true);
+		$(window).resize(function(){CovidCommon.switchAccordionOrTabs(false);});
+	}
+	
+	/**
+	* Creating an instance of the charts
+	*/
+	CovidCommon.initChartObjects = function() {
 		charts.regionsChart = new RegionsChart("chartRegions", "rowRegionsCheckboxes", "covidData", colorPalette);
 		charts.provinceChart = new ProvinceChart("chartProvince", "rowProvince", "region", colorPalette);
 		charts.nationalChart = new NationalChart("chartNational", "nationalDataCheckboxesWrapper", colorPalette);
@@ -108,8 +117,7 @@ var CovidCommon = (function(CovidCommon) {
 		charts.vaccinesDeliveredUsed = new TotalDeliveredUsedVaccinesChart("chartTotalsVaccinesUsedDelivered", colorPalette);
 		charts.vaxDeliveredUsedPerReg = new TotalDeliveredUsedVaccinesPerRegionChart("chartTotalsVaccinesUsedDeliveredPerRegion", colorPalette);
 		charts.vaccinesPerPersonChart = new VaccinesPerPersonChart("chartVaccinesGiven", "vaccinesGivenCheckboxes", colorPalette);
-		charts.vaxTotalDeliveredPerSupplier = new TotalDeliveredVaccinesPerSupplier("chartTotalsVaccinesDeliveredPerSupplier", colorPalette);
-
+		charts.vaxTotalDeliveredPerSupplier = new TotalDeliveredVaccinesPerSupplier("chartTotalsVaccinesDeliveredPerSupplier", colorPalette);		
 	}
 
 	/**
@@ -150,7 +158,7 @@ var CovidCommon = (function(CovidCommon) {
 	*/
 	CovidCommon.changeTheme = function() {
 		darkModeOn = !darkModeOn;
-		var selector = "select, span, input, body, a, .modal-content, .custom-control-label, .navbar";
+		var selector = "select, span, input, body, a, .modal-content, .custom-control-label, .navbar, .card, .btn";
 		var govermentCellSelector = ".cella_rossa *, .cella_rossa *, .cella_rossa *";
 		var className = "dark-background";
 		if (darkModeOn) {
@@ -175,6 +183,66 @@ var CovidCommon = (function(CovidCommon) {
 				clearInterval(refreshInterval);
 			}
 		}
+	}
+	
+	CovidCommon.switchAccordionOrTabs = function(force){
+		
+		
+			let viewPortWidth = window.innerWidth;
+			let minimunSize = 576;
+			let dontDoIt = (viewPortWidth < minimunSize && oldPortWidth < minimunSize) || (viewPortWidth >= minimunSize && oldPortWidth >= minimunSize);
+			
+			oldPortWidth = viewPortWidth;
+			
+			if(dontDoIt && !force){
+				return;
+			}
+			
+			let tabsBar = $("#tabsBars");
+			let tabContent = $("#nav-tabContent");
+			let jContainer = $("#divAccordion");
+			
+			if(viewPortWidth < minimunSize){
+				var strTmpl = 
+					'<div class="card">' +
+	    				'<div class="card-header" id="header-%headerId%">' +
+	      					'<h2 class="mb-0">' +
+	        					'<button class="btn btn-block text-left" type="button" data-toggle="collapse" data-target="#collapse-%headerId%" aria-expanded="true" aria-controls="collapse-%headerId%">' +
+	          						'%title%' +
+	        					'</button>' +
+	      					'</h2>' +
+	    				'</div>' +
+	    				'<div id="collapse-%headerId%" class="collapse" aria-labelledby="header-%headerId%" data-parent="#divAccordion">' +
+	    					'<div class="card-body">' +
+	      					'</div>' +
+	    				'</div>' +
+	  				'</div>';
+				
+				jContainer.empty();
+				$(".nav-link").each(function(i) {
+					let obj = {
+						title: this.innerHTML,
+						headerId: i
+					};
+					
+					jContainer.append(MarcoUtils.template(strTmpl, obj));
+					
+					$("#nav-tabContent .container-fluid:eq(0)").appendTo("#collapse-" + i + " > .card-body");
+				});
+				
+				tabsBar.hide();
+				tabContent.hide();
+			}else{
+				
+				$(".tab-pane").each(function(i){
+					$(".card-body .container-fluid:eq(0)").appendTo(".tab-pane:eq(" + i + ")");
+				});
+				
+				tabsBar.show();
+				tabContent.show();
+				jContainer.empty();
+			}
+		
 	}
 
 	return CovidCommon;
