@@ -183,7 +183,7 @@ public class Beans {
 		return messageSource;
 	}
 	
-	 @Bean
+	@Bean
     public Docket swaggerConfiguration() {
 		 TypeResolver resolver = new TypeResolver();
 		 return new Docket(DocumentationType.SWAGGER_2)
