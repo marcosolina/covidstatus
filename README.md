@@ -48,6 +48,7 @@ Once the containers are up and runnig open the following links:
 
 ## History
 
+- **02/04/2021 v0.1.17**: Work around for an issue on the Goverment Repo [Issue](https://github.com/italia/covid19-opendata-vaccini/issues/128)
 - **28/03/2021 v0.1.16**: UI Improvements for small screens (Viewport < 567)
 - **27/03/2021 v0.1.15**: Adding to the charts the new info added by the government, small refactoring, sending an email to myself if the government changes the data structure again...
 - **26/03/2021 v0.1.14**: Managing the new CSV structure of the goverment data

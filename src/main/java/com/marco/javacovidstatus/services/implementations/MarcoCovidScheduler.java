@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 
 import com.marco.javacovidstatus.services.interfaces.CovidDataDownloader;
 import com.marco.javacovidstatus.services.interfaces.CovidScheduler;
+import com.marco.javacovidstatus.services.interfaces.NotificationSenderInterface;
 
 /**
  * This is my implementation of the {@link CovidScheduler}
@@ -23,43 +24,52 @@ import com.marco.javacovidstatus.services.interfaces.CovidScheduler;
 @Component
 @EnableScheduling
 public class MarcoCovidScheduler implements CovidScheduler {
-    private static final Logger logger = LoggerFactory.getLogger(MarcoCovidScheduler.class);
+	private static final Logger logger = LoggerFactory.getLogger(MarcoCovidScheduler.class);
 
-    @Autowired
-    @Qualifier("National")
-    private CovidDataDownloader nationalDownloader;
-    
-    @Autowired
-    @Qualifier("Region")
-    private CovidDataDownloader regionDownloader;
-    
-    @Autowired
-    @Qualifier("Province")
-    private CovidDataDownloader provinceDownloader;
-    
-    @Autowired
-    @Qualifier("GivenVaccines")
-    private CovidDataDownloader givenVaccinesDownloader;
-    
-    @Autowired
-    @Qualifier("DeliveredVaccines")
-    private CovidDataDownloader deliveredVaccinesDownloader;
-    
-    @Scheduled(cron = "${covidstatus.scheduled.downloadnewdata.cron:0 0 * * * *}") // if not specified it will be every hour
-    @Override
-    public synchronized void downloadNewData() {
+	@Autowired
+	@Qualifier("National")
+	private CovidDataDownloader nationalDownloader;
 
-        logger.info("Updating Data");
-        
-        List<CovidDataDownloader> downloaders = new ArrayList<>();
-        downloaders.add(nationalDownloader);
-        downloaders.add(regionDownloader);
-        downloaders.add(provinceDownloader);
-        downloaders.add(givenVaccinesDownloader);
-        downloaders.add(deliveredVaccinesDownloader);
-        downloaders.parallelStream().forEach(CovidDataDownloader::downloadData);
-        
-        logger.info("Update complete");
-    }
+	@Autowired
+	@Qualifier("Region")
+	private CovidDataDownloader regionDownloader;
+
+	@Autowired
+	@Qualifier("Province")
+	private CovidDataDownloader provinceDownloader;
+
+	@Autowired
+	@Qualifier("GivenVaccines")
+	private CovidDataDownloader givenVaccinesDownloader;
+
+	@Autowired
+	@Qualifier("DeliveredVaccines")
+	private CovidDataDownloader deliveredVaccinesDownloader;
+	
+	@Autowired
+    private NotificationSenderInterface notificationService;
+
+	@Scheduled(cron = "${covidstatus.scheduled.downloadnewdata.cron:0 0 * * * *}") // if not specified it will be every
+																					// hour
+	@Override
+	public synchronized void downloadNewData() {
+
+		logger.info("Updating Data");
+
+		try {
+			List<CovidDataDownloader> downloaders = new ArrayList<>();
+			downloaders.add(nationalDownloader);
+			downloaders.add(regionDownloader);
+			downloaders.add(provinceDownloader);
+			downloaders.add(givenVaccinesDownloader);
+			downloaders.add(deliveredVaccinesDownloader);
+			downloaders.parallelStream().forEach(CovidDataDownloader::downloadData);
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			notificationService.sendEmailMessage("marcosolina@gmail.com", "Marco Solina - Covid Status", e.getMessage());
+		}
+
+		logger.info("Update complete");
+	}
 
 }

@@ -92,7 +92,9 @@ public abstract class CovidDataDownloader {
          */
         String csv = response.bodyToMono(String.class).block();
         List<String> listRows = new ArrayList<>(Arrays.asList(csv.split("\\n")));
-        listRows.remove(0);// remove column names
+        if(!listRows.isEmpty()) {
+        	listRows.remove(0);// remove column names
+        }
 
         return listRows;
     }

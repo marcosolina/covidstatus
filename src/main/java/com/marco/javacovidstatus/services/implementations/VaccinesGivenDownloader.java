@@ -58,6 +58,12 @@ public class VaccinesGivenDownloader extends CovidDataDownloader {
 		_LOGGER.info("Downloading Given vaccines data");
 
 		List<String> rows = this.getCsvRows(CSV_URL);
+		
+		if(rows.isEmpty()) {
+			notificationService.sendEmailMessage("marcosolina@gmail.com", "Marco Solina - Covid Status", "Non ci sono più i dati nel repository");
+			return;
+		}
+		
 		if(rows.get(0).split(",").length != 19) {
 			notificationService.sendEmailMessage("marcosolina@gmail.com", "Marco Solina - Covid Status", "La struttura dei dati vaccini somministrati e' stata modificata...");
 			return;
@@ -114,13 +120,14 @@ public class VaccinesGivenDownloader extends CovidDataDownloader {
 			} catch (Exception e) {
 				String message = String.format("Error while saving: %s", row);
 				_LOGGER.error(message);
-				notificationService.sendEmailMessage("marcosolina@gmail.com", "Marco Solina - Covid Status", message);
 				error.set(true);
 			}
 		});
 
 		if (error.get()) {
-			_LOGGER.error("There was an error with the data, cleaning everything and retrying at the next cron tick");
+			String message = "There was an error with the data, cleaning everything and retrying at the next cron tick"; 
+			_LOGGER.error(message);
+			notificationService.sendEmailMessage("marcosolina@gmail.com", "Marco Solina - Covid Status", message);
 			dataService.deleteAllGivenVaccineData();
 		}
 
