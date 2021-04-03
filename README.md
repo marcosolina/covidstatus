@@ -1,12 +1,17 @@
 # Covid Status
 
 I created this SpringBoot project to display the COVID-19 updates in a way I think is more clear.
-All the data are retrieved from the [Ministero della Salute](https://www.salute.gov.it/), they have made available all the data in a public GitHub Repositories:
+All the data are retrieved from the following public GitHub Repositories:
 
 - [Infections GitHub Repository](https://github.com/pcm-dpc/COVID-19)
 - [Vaccines GitHub Repository](https://github.com/italia/covid19-opendata-vaccini)
 
-## Examples
+## Lincense of the Data
+
+- [Infections Data - License](https://creativecommons.org/licenses/by/4.0/deed.it)
+- [Vaccines Data - License](https://creativecommons.org/licenses/by/4.0/deed.it)
+
+## My Project Examples
 
 - [Live example of my prject](https://marco.selfip.net/Covid19Italy/)
 - [API Documentation](https://marco.selfip.net/Covid19Italy/swagger-ui.html)
