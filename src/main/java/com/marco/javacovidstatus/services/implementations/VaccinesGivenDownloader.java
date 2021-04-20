@@ -42,9 +42,12 @@ public class VaccinesGivenDownloader extends CovidDataDownloader {
 	public static final int COL_NHS_COUNTER = 6;
 	public static final int COL_NON_NHS_COUNTER = 7;
 	public static final int COL_NURSING_COUNTER = 8;
+	public static final int COL_AGE_60_69_COUNTER = 9;
+	public static final int COL_AGE_70_79_COUNTER = 10;
 	public static final int COL_OVER_80_COUNTER = 11;
 	public static final int COL_PUBLIC_ORDER_COUNTER = 12;
 	public static final int COL_SCHOOL_STAFF_COUNTER = 13;
+	public static final int COL_FRAGILE_COUNTER = 14;
 	public static final int COL_OTHER_PEOPLE_COUNTER = 15;
 	public static final int COL_FIRST_DOSE_COUNTER = 16;
 	public static final int COL_SECOND_DOSE_COUNTER = 17;
@@ -107,9 +110,12 @@ public class VaccinesGivenDownloader extends CovidDataDownloader {
 				data.setNhsPeopleCounter(Integer.parseInt(columns[COL_NHS_COUNTER]));
 				data.setNonNhsPeopleCounter(Integer.parseInt(columns[COL_NON_NHS_COUNTER]));
 				data.setNursingHomeCounter(Integer.parseInt(columns[COL_NURSING_COUNTER]));
+				data.setAge6069counter(Integer.parseInt(columns[COL_AGE_60_69_COUNTER]));
+				data.setAge7079counter(Integer.parseInt(columns[COL_AGE_70_79_COUNTER]));
 				data.setOver80Counter(Integer.parseInt(columns[COL_OVER_80_COUNTER]));
 				data.setPublicOrderCounter(Integer.parseInt(columns[COL_PUBLIC_ORDER_COUNTER]));
 				data.setSchoolStaffCounter(Integer.parseInt(columns[COL_SCHOOL_STAFF_COUNTER]));
+				data.setFragilePeopleCounter(Integer.parseInt(columns[COL_FRAGILE_COUNTER]));
 				data.setOtherPeopleCounter(Integer.parseInt(columns[COL_OTHER_PEOPLE_COUNTER]));
 				data.setFirstDoseCounter(Integer.parseInt(columns[COL_FIRST_DOSE_COUNTER]));
 				data.setSecondDoseCounter(Integer.parseInt(columns[COL_SECOND_DOSE_COUNTER]));

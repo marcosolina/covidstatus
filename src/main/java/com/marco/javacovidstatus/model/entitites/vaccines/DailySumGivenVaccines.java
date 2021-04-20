@@ -11,136 +11,167 @@ import java.time.LocalDate;
  *
  */
 public class DailySumGivenVaccines implements Serializable {
-	private static final long serialVersionUID = 1L;
-	private LocalDate date;
-	private long menCounter;
-	private long womenCounter;
-	private long nhsPeopleCounter;
-	private long nonNhsPeopleCounter;
-	private long nursingHomeCounter;
-	private long over80Counter;
-	private long publicOrderCounter;
-	private long schoolStaffCounter;
-	private long otherPeopleCounter;
-	private long firstDoseCounter;
-	private long secondDoseCounter;
+    private static final long serialVersionUID = 1L;
+    private LocalDate date;
+    private long menCounter;
+    private long womenCounter;
+    private long nhsPeopleCounter;
+    private long nonNhsPeopleCounter;
+    private long nursingHomeCounter;
+    private long age6069counter;
+    private long age7079counter;
+    private long over80Counter;
+    private long publicOrderCounter;
+    private long schoolStaffCounter;
+    private long fragilePeopleCounter;
+    private long otherPeopleCounter;
+    private long firstDoseCounter;
+    private long secondDoseCounter;
 
-	public DailySumGivenVaccines(LocalDate date, long menCounter, long womenCounter, long nhsPeopleCounter,
-			long nonNhsPeopleCounter, long nursingHomeCounter, long over80Counter, long publicOrderCounter,
-			long schoolStaffCounter, long otherPeopleCounter, long firstDoseCounter, long secondDoseCounter) {
-		super();
-		this.date = date;
-		this.menCounter = menCounter;
-		this.womenCounter = womenCounter;
-		this.nhsPeopleCounter = nhsPeopleCounter;
-		this.nonNhsPeopleCounter = nonNhsPeopleCounter;
-		this.nursingHomeCounter = nursingHomeCounter;
-		this.over80Counter = over80Counter;
-		this.publicOrderCounter = publicOrderCounter;
-		this.schoolStaffCounter = schoolStaffCounter;
-		this.otherPeopleCounter = otherPeopleCounter;
-		this.firstDoseCounter = firstDoseCounter;
-		this.secondDoseCounter = secondDoseCounter;
-	}
+    public DailySumGivenVaccines(LocalDate date, long menCounter, long womenCounter, long nhsPeopleCounter,
+            long nonNhsPeopleCounter, long nursingHomeCounter, long age6069counter, long age7079counter,
+            long over80Counter, long publicOrderCounter, long schoolStaffCounter, long fragilePeopleCounter,
+            long otherPeopleCounter, long firstDoseCounter, long secondDoseCounter) {
+        super();
+        this.date = date;
+        this.menCounter = menCounter;
+        this.womenCounter = womenCounter;
+        this.nhsPeopleCounter = nhsPeopleCounter;
+        this.nonNhsPeopleCounter = nonNhsPeopleCounter;
+        this.nursingHomeCounter = nursingHomeCounter;
+        this.age6069counter = age6069counter;
+        this.age7079counter = age7079counter;
+        this.over80Counter = over80Counter;
+        this.publicOrderCounter = publicOrderCounter;
+        this.schoolStaffCounter = schoolStaffCounter;
+        this.fragilePeopleCounter = fragilePeopleCounter;
+        this.otherPeopleCounter = otherPeopleCounter;
+        this.firstDoseCounter = firstDoseCounter;
+        this.secondDoseCounter = secondDoseCounter;
+    }
 
-	public LocalDate getDate() {
-		return date;
-	}
+    public LocalDate getDate() {
+        return date;
+    }
 
-	public void setDate(LocalDate date) {
-		this.date = date;
-	}
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
 
-	public long getMenCounter() {
-		return menCounter;
-	}
+    public long getMenCounter() {
+        return menCounter;
+    }
 
-	public void setMenCounter(long menCounter) {
-		this.menCounter = menCounter;
-	}
+    public void setMenCounter(long menCounter) {
+        this.menCounter = menCounter;
+    }
 
-	public long getWomenCounter() {
-		return womenCounter;
-	}
+    public long getWomenCounter() {
+        return womenCounter;
+    }
 
-	public void setWomenCounter(long womenCounter) {
-		this.womenCounter = womenCounter;
-	}
+    public void setWomenCounter(long womenCounter) {
+        this.womenCounter = womenCounter;
+    }
 
-	public long getNhsPeopleCounter() {
-		return nhsPeopleCounter;
-	}
+    public long getNhsPeopleCounter() {
+        return nhsPeopleCounter;
+    }
 
-	public void setNhsPeopleCounter(long nhsPeopleCounter) {
-		this.nhsPeopleCounter = nhsPeopleCounter;
-	}
+    public void setNhsPeopleCounter(long nhsPeopleCounter) {
+        this.nhsPeopleCounter = nhsPeopleCounter;
+    }
 
-	public long getNonNhsPeopleCounter() {
-		return nonNhsPeopleCounter;
-	}
+    public long getNonNhsPeopleCounter() {
+        return nonNhsPeopleCounter;
+    }
 
-	public void setNonNhsPeopleCounter(long nonNhsPeopleCounter) {
-		this.nonNhsPeopleCounter = nonNhsPeopleCounter;
-	}
+    public void setNonNhsPeopleCounter(long nonNhsPeopleCounter) {
+        this.nonNhsPeopleCounter = nonNhsPeopleCounter;
+    }
 
-	public long getNursingHomeCounter() {
-		return nursingHomeCounter;
-	}
+    public long getNursingHomeCounter() {
+        return nursingHomeCounter;
+    }
 
-	public void setNursingHomeCounter(long nursingHomeCounter) {
-		this.nursingHomeCounter = nursingHomeCounter;
-	}
+    public void setNursingHomeCounter(long nursingHomeCounter) {
+        this.nursingHomeCounter = nursingHomeCounter;
+    }
 
-	public long getOver80Counter() {
-		return over80Counter;
-	}
+    public long getAge6069counter() {
+        return age6069counter;
+    }
 
-	public void setOver80Counter(long over80Counter) {
-		this.over80Counter = over80Counter;
-	}
+    public void setAge6069counter(long age6069counter) {
+        this.age6069counter = age6069counter;
+    }
 
-	public long getPublicOrderCounter() {
-		return publicOrderCounter;
-	}
+    public long getAge7079counter() {
+        return age7079counter;
+    }
 
-	public void setPublicOrderCounter(long publicOrderCounter) {
-		this.publicOrderCounter = publicOrderCounter;
-	}
+    public void setAge7079counter(long age7079counter) {
+        this.age7079counter = age7079counter;
+    }
 
-	public long getSchoolStaffCounter() {
-		return schoolStaffCounter;
-	}
+    public long getOver80Counter() {
+        return over80Counter;
+    }
 
-	public void setSchoolStaffCounter(long schoolStaffCounter) {
-		this.schoolStaffCounter = schoolStaffCounter;
-	}
+    public void setOver80Counter(long over80Counter) {
+        this.over80Counter = over80Counter;
+    }
 
-	public long getFirstDoseCounter() {
-		return firstDoseCounter;
-	}
+    public long getPublicOrderCounter() {
+        return publicOrderCounter;
+    }
 
-	public void setFirstDoseCounter(long firstDoseCounter) {
-		this.firstDoseCounter = firstDoseCounter;
-	}
+    public void setPublicOrderCounter(long publicOrderCounter) {
+        this.publicOrderCounter = publicOrderCounter;
+    }
 
-	public long getSecondDoseCounter() {
-		return secondDoseCounter;
-	}
+    public long getSchoolStaffCounter() {
+        return schoolStaffCounter;
+    }
 
-	public void setSecondDoseCounter(long secondDoseCounter) {
-		this.secondDoseCounter = secondDoseCounter;
-	}
+    public void setSchoolStaffCounter(long schoolStaffCounter) {
+        this.schoolStaffCounter = schoolStaffCounter;
+    }
 
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
+    public long getFragilePeopleCounter() {
+        return fragilePeopleCounter;
+    }
 
-	public long getOtherPeopleCounter() {
-		return otherPeopleCounter;
-	}
+    public void setFragilePeopleCounter(long fragilePeopleCounter) {
+        this.fragilePeopleCounter = fragilePeopleCounter;
+    }
 
-	public void setOtherPeopleCounter(long otherPeopleCounter) {
-		this.otherPeopleCounter = otherPeopleCounter;
-	}
+    public long getOtherPeopleCounter() {
+        return otherPeopleCounter;
+    }
+
+    public void setOtherPeopleCounter(long otherPeopleCounter) {
+        this.otherPeopleCounter = otherPeopleCounter;
+    }
+
+    public long getFirstDoseCounter() {
+        return firstDoseCounter;
+    }
+
+    public void setFirstDoseCounter(long firstDoseCounter) {
+        this.firstDoseCounter = firstDoseCounter;
+    }
+
+    public long getSecondDoseCounter() {
+        return secondDoseCounter;
+    }
+
+    public void setSecondDoseCounter(long secondDoseCounter) {
+        this.secondDoseCounter = secondDoseCounter;
+    }
+
+    public static long getSerialversionuid() {
+        return serialVersionUID;
+    }
 
 }

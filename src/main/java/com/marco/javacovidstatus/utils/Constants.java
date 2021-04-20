@@ -20,9 +20,12 @@ public class Constants {
 	public static final String VACCINES_GIVEN_NHS = "ospedali";
 	public static final String VACCINES_GIVEN_NO_NHS = "nonospedali";
 	public static final String VACCINES_GIVEN_NURSING = "riposo";
+	public static final String VACCINES_GIVEN_AGE_60_69 = "altri6069";
+	public static final String VACCINES_GIVEN_AGE_70_79 = "altri7079";
 	public static final String VACCINES_GIVEN_OVER_80 = "over";
 	public static final String VACCINES_GIVEN_PUBLIC = "polizia";
 	public static final String VACCINES_GIVEN_SCHOOLS = "scuole";
+	public static final String VACCINES_GIVEN_FRAGILE = "soggettiFragili";
 	public static final String VACCINES_GIVEN_OTHER = "altri";
 	public static final String VACCINES_GIVEN_FIRST_SHOT = "Prima";
 	public static final String VACCINES_GIVEN_SECOND_SHOT = "Seconda";

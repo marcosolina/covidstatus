@@ -101,9 +101,12 @@ public class VaccineDataServiceMarco implements VaccineDataService {
 			dataMap.compute(Constants.VACCINES_GIVEN_WOMEN,		getAttToArrayBiFunction(DailySumGivenVaccines::getNhsPeopleCounter, dto));
 			dataMap.compute(Constants.VACCINES_GIVEN_NO_NHS,	getAttToArrayBiFunction(DailySumGivenVaccines::getNonNhsPeopleCounter, dto));
 			dataMap.compute(Constants.VACCINES_GIVEN_NURSING,	getAttToArrayBiFunction(DailySumGivenVaccines::getNursingHomeCounter, dto));
+			dataMap.compute(Constants.VACCINES_GIVEN_AGE_60_69, getAttToArrayBiFunction(DailySumGivenVaccines::getAge6069counter, dto));
+			dataMap.compute(Constants.VACCINES_GIVEN_AGE_70_79, getAttToArrayBiFunction(DailySumGivenVaccines::getAge7079counter, dto));
 			dataMap.compute(Constants.VACCINES_GIVEN_OVER_80,	getAttToArrayBiFunction(DailySumGivenVaccines::getOver80Counter, dto));
 			dataMap.compute(Constants.VACCINES_GIVEN_PUBLIC,	getAttToArrayBiFunction(DailySumGivenVaccines::getPublicOrderCounter, dto));
 			dataMap.compute(Constants.VACCINES_GIVEN_SCHOOLS,	getAttToArrayBiFunction(DailySumGivenVaccines::getSchoolStaffCounter, dto));
+			dataMap.compute(Constants.VACCINES_GIVEN_FRAGILE,   getAttToArrayBiFunction(DailySumGivenVaccines::getFragilePeopleCounter, dto));
 			dataMap.compute(Constants.VACCINES_GIVEN_OTHER,		getAttToArrayBiFunction(DailySumGivenVaccines::getOtherPeopleCounter, dto));
 		});
 		// @formatter:on
@@ -267,9 +270,12 @@ public class VaccineDataServiceMarco implements VaccineDataService {
 		entity.setNhsPeopleCounter(dto.getNhsPeopleCounter());
 		entity.setNonNhsPeopleCounter(dto.getNonNhsPeopleCounter());
 		entity.setNursingHomeCounter(dto.getNursingHomeCounter());
+		entity.setAge6069counter(dto.getAge6069counter());
+		entity.setAge7079counter(dto.getAge7079counter());
 		entity.setOver80Counter(dto.getOver80Counter());
 		entity.setPublicOrderCounter(dto.getPublicOrderCounter());
 		entity.setSchoolStaffCounter(dto.getSchoolStaffCounter());
+		entity.setFragilePeopleCounter(dto.getFragilePeopleCounter());
 		entity.setOtherPeopleCounter(dto.getOtherPeopleCounter());
 		entity.setFirstDoseCounter(dto.getFirstDoseCounter());
 		entity.setSecondDoseCounter(dto.getSecondDoseCounter());
