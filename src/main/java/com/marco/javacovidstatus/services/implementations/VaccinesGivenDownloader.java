@@ -33,7 +33,7 @@ public class VaccinesGivenDownloader extends CovidDataDownloader {
 
 	private static final String CSV_URL = "https://raw.githubusercontent.com/italia/covid19-opendata-vaccini/master/dati/somministrazioni-vaccini-latest.csv";
 	public static final int COL_DATE = 0;
-	public static final int COL_REGION_CODE = 17;
+	public static final int COL_REGION_CODE = 20;
 	public static final int COL_AREA_CODE = 2;
 	public static final int COL_SUPPLIER = 1;
 	public static final int COL_AGE_RANGE = 3;
@@ -42,12 +42,12 @@ public class VaccinesGivenDownloader extends CovidDataDownloader {
 	public static final int COL_NHS_COUNTER = 6;
 	public static final int COL_NON_NHS_COUNTER = 7;
 	public static final int COL_NURSING_COUNTER = 8;
-	public static final int COL_OVER_80_COUNTER = 9;
-	public static final int COL_PUBLIC_ORDER_COUNTER = 10;
-	public static final int COL_SCHOOL_STAFF_COUNTER = 11;
-	public static final int COL_OTHER_PEOPLE_COUNTER = 12;
-	public static final int COL_FIRST_DOSE_COUNTER = 13;
-	public static final int COL_SECOND_DOSE_COUNTER = 14;
+	public static final int COL_OVER_80_COUNTER = 11;
+	public static final int COL_PUBLIC_ORDER_COUNTER = 12;
+	public static final int COL_SCHOOL_STAFF_COUNTER = 13;
+	public static final int COL_OTHER_PEOPLE_COUNTER = 15;
+	public static final int COL_FIRST_DOSE_COUNTER = 16;
+	public static final int COL_SECOND_DOSE_COUNTER = 17;
 
 	public VaccinesGivenDownloader(WebClient webClient) {
 		super(webClient);
@@ -64,7 +64,7 @@ public class VaccinesGivenDownloader extends CovidDataDownloader {
 			return;
 		}
 		
-		if(rows.get(0).split(",").length != 19) {
+		if(rows.get(0).split(",").length != 22) {
 			notificationService.sendEmailMessage("marcosolina@gmail.com", "Marco Solina - Covid Status", "La struttura dei dati vaccini somministrati e' stata modificata...");
 			return;
 		}
