@@ -11,15 +11,18 @@ class VaccinesPerPersonChart {
 		this.darkModeOn = false;
 		this.lastResponse = {};
 		this.checkBoxesDesc = {
-			over: 			{code: "over",			desc: "Over 80"},
-			nonospedali: 	{code: "nonospedali",	desc: "Personale non sanitario"},
-			polizia: 		{code: "polizia",		desc: "Forze Armate"},
-			scuole: 		{code: "scuole",		desc: "Personale Scolastico"},
-			riposo: 		{code: "riposo",		desc: "Ospiti RSA"},
-			uomini: 		{code: "uomini",		desc: "Uomini"},
-			ospedali: 		{code: "ospedali",		desc: "Operatori Sanitari Sociosanitari"},
-			donne: 			{code: "donne",			desc: "Donne"},
-			altri: 			{code: "altri",			desc: "Altro"}
+			over:            {code: "over",              desc: "Over 80"},
+            altri6069:       {code: "altri6069",         desc: "Età 60-69 Non prioritati"},
+            altri7079:       {code: "altri7079",         desc: "Età 70-79 Non prioritati"},
+            soggettiFragili: {code: "soggettiFragili",   desc: "Soggetti Fragili e Caregiver"},
+			nonospedali:     {code: "nonospedali",       desc: "Personale non sanitario"},
+			polizia:         {code: "polizia",           desc: "Forze Armate"},
+			scuole:          {code: "scuole",            desc: "Personale Scolastico"},
+			riposo:          {code: "riposo",            desc: "Ospiti RSA"},
+			uomini:          {code: "uomini",            desc: "Uomini"},
+			ospedali:        {code: "ospedali",          desc: "Operatori Sanitari Sociosanitari"},
+			donne:           {code: "donne",             desc: "Donne"},
+			altri:           {code: "altri",             desc: "Altro"}
 		};
 		
 		this.chart = new CovidChart(document.getElementById(this.canvasId));

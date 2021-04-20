@@ -64,8 +64,10 @@ public class GivenVaccinesRepoPostgres implements GivenVaccinesRepo {
 		// @formatter:off
 		/*
 		 * SELECT DATE_DATA, SUM(MEN_COUNTER), SUM(WOMEN_COUNTER), SUM(NHS_PEOPLE_COUNTER), 
-		 * SUM(NON_NHS_PEOPLE_COUNTER), SUM(NURSING_HOME_COUNTER), SUM(OVER_80_COUNTER), 
-		 * SUM(PUBLIC_ORDER_COUNTER), SUM(SCHOOL_STAFF_COUNTER), SUM(FIRST_DOSE_COUNTER), SUM(SECOND_DOSE_COUNTER)
+		 * SUM(NON_NHS_PEOPLE_COUNTER), SUM(NURSING_HOME_COUNTER),
+		 * SUM(AGE_60_69_COUNTER), SUM(AGE_70_79_COUNTER), SUM(OVER_80_COUNTER), 
+		 * SUM(PUBLIC_ORDER_COUNTER), SUM(SCHOOL_STAFF_COUNTER), SUM(FRAGILE_PEOPLE_COUNTER), 
+		 * SUM(OTHER_PEOPLE_COUNTER), SUM(FIRST_DOSE_COUNTER), SUM(SECOND_DOSE_COUNTER)
 		 *  
 		 * FROM SOMMINISTRAZIONI_VACCINI WHERE DATE_DATA BETWEEN X AND Y
 		 * 
@@ -79,9 +81,12 @@ public class GivenVaccinesRepoPostgres implements GivenVaccinesRepo {
 				cb.sum(root.get(EntitySomministrazioneVaccini_.NHS_PEOPLE_COUNTER)),
 				cb.sum(root.get(EntitySomministrazioneVaccini_.NON_NHS_PEOPLE_COUNTER)),
 				cb.sum(root.get(EntitySomministrazioneVaccini_.NURSING_HOME_COUNTER)),
+				cb.sum(root.get(EntitySomministrazioneVaccini_.AGE6069COUNTER)),
+				cb.sum(root.get(EntitySomministrazioneVaccini_.AGE7079COUNTER)),
 				cb.sum(root.get(EntitySomministrazioneVaccini_.OVER80_COUNTER)),
 				cb.sum(root.get(EntitySomministrazioneVaccini_.PUBLIC_ORDER_COUNTER)),
 				cb.sum(root.get(EntitySomministrazioneVaccini_.SCHOOL_STAFF_COUNTER)),
+				cb.sum(root.get(EntitySomministrazioneVaccini_.FRAGILE_PEOPLE_COUNTER)),
 				cb.sum(root.get(EntitySomministrazioneVaccini_.OTHER_PEOPLE_COUNTER)),
 				cb.sum(root.get(EntitySomministrazioneVaccini_.FIRST_DOSE_COUNTER)),
 				cb.sum(root.get(EntitySomministrazioneVaccini_.SECOND_DOSE_COUNTER))
@@ -122,9 +127,12 @@ public class GivenVaccinesRepoPostgres implements GivenVaccinesRepo {
 		sql.append("b.nhs_people_counter,");
 		sql.append("b.non_nhs_people_counter,");
 		sql.append("b.nursing_home_counter,");
+		sql.append("b.age_60_69_counter,");
+		sql.append("b.age_70_79_counter,");
 		sql.append("b.over_80_counter,");
 		sql.append("b.public_order_counter,");
 		sql.append("b.school_staff_counter,");
+		sql.append("b.fragile_people_counter,");
 		sql.append("b.other_people_counter,");
 		sql.append("b.first_dose_counter,");
 		sql.append("b.second_dose_counter ");
@@ -144,9 +152,12 @@ public class GivenVaccinesRepoPostgres implements GivenVaccinesRepo {
 		sql.append("nhs_people_counter = 0,");
 		sql.append("non_nhs_people_counter = 0,");
 		sql.append("nursing_home_counter = 0,");
+		sql.append("age_60_69_counter = 0,");
+		sql.append("age_70_79_counter = 0,");
 		sql.append("over_80_counter = 0,");
 		sql.append("public_order_counter = 0,");
 		sql.append("school_staff_counter = 0,");
+		sql.append("fragile_people_counter = 0,");
 		sql.append("other_people_counter = 0,");
 		sql.append("first_dose_counter = 0,");
 		sql.append("second_dose_counter = 0 ");
