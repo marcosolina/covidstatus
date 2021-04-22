@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -82,6 +83,10 @@ public abstract class CovidDataDownloader {
      * @return
      */
     protected List<String> getCsvRows(String url) {
+        return getCsvRows(url, null);
+    }
+    
+    protected List<String> getCsvRows(String url, Map<String, String> headers) {
         /*
          * Get the CSV file using an GET HTTP call
          */
@@ -93,7 +98,7 @@ public abstract class CovidDataDownloader {
         String csv = response.bodyToMono(String.class).block();
         List<String> listRows = new ArrayList<>(Arrays.asList(csv.split("\\n")));
         if(!listRows.isEmpty()) {
-        	listRows.remove(0);// remove column names
+            listRows.remove(0);// remove column names
         }
 
         return listRows;

@@ -26,6 +26,7 @@ import com.marco.javacovidstatus.repositories.interfaces.VeccinesDeliveredRepo;
 import com.marco.javacovidstatus.services.implementations.EmailNotificationSender;
 import com.marco.javacovidstatus.services.implementations.MarcoNationalDataService;
 import com.marco.javacovidstatus.services.implementations.NationalCovidDataDownloader;
+import com.marco.javacovidstatus.services.implementations.PopulationDownloader;
 import com.marco.javacovidstatus.services.implementations.ProvinceCoviddataDownloader;
 import com.marco.javacovidstatus.services.implementations.RegionCovidDataDownloader;
 import com.marco.javacovidstatus.services.implementations.RegionMapDownloaderFromNationalWebSite;
@@ -164,6 +165,11 @@ public class Beans {
 	public CovidDataDownloader getDeliveredVaccinesDownloader() {
 		return new VaccinesDeliveredDownloader(getWebClient());
 	}
+	
+	@Bean(name = "IstatPopulation")
+    public CovidDataDownloader getPopulationDownloader() {
+        return new PopulationDownloader(getWebClient());
+    }
 
 	@Bean
 	public RegionMapDownloader getRegionMapDownloader() {

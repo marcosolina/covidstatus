@@ -5,6 +5,12 @@ All the data are retrieved from the following public GitHub Repositories:
 
 - [Infections GitHub Repository](https://github.com/pcm-dpc/COVID-19)
 - [Vaccines GitHub Repository](https://github.com/italia/covid19-opendata-vaccini)
+- **Istat Population Information**:
+  - [Web Page](http://dati.istat.it/Index.aspx?QueryId=42869)
+  - [Web Services](https://www.istat.it/it/metodi-e-strumenti/web-service-sdmx)
+  - [Web Services Guide](https://github.com/ondata/guida-api-istat)
+  - [Web Service Data Structure](http://sdmx.istat.it/SDMXWS/rest/datastructure/IT1/DCIS_POPRES1/)
+  - [Web Service Data Info (Eg: Gender Values)](http://sdmx.istat.it/SDMXWS/rest/codelist/IT1/CL_SEXISTAT1)
 
 ## Lincense of the Data
 

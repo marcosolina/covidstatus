@@ -47,6 +47,10 @@ public class MarcoCovidScheduler implements CovidScheduler {
 	private CovidDataDownloader deliveredVaccinesDownloader;
 	
 	@Autowired
+    @Qualifier("IstatPopulation")
+    private CovidDataDownloader istatDownloader;
+	
+	@Autowired
     private NotificationSenderInterface notificationService;
 
 	@Scheduled(cron = "${covidstatus.scheduled.downloadnewdata.cron:0 0 * * * *}") // if not specified it will be every
@@ -63,6 +67,7 @@ public class MarcoCovidScheduler implements CovidScheduler {
 			downloaders.add(provinceDownloader);
 			downloaders.add(givenVaccinesDownloader);
 			downloaders.add(deliveredVaccinesDownloader);
+			downloaders.add(istatDownloader);
 			downloaders.parallelStream().forEach(CovidDataDownloader::downloadData);
 		} catch (Exception e) {
 			logger.error(e.getMessage());
