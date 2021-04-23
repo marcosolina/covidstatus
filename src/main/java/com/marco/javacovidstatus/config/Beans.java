@@ -19,13 +19,16 @@ import org.springframework.web.reactive.function.client.WebClient;
 import com.fasterxml.classmate.TypeResolver;
 import com.marco.javacovidstatus.repositories.implementations.CovidRepositoryPostgres;
 import com.marco.javacovidstatus.repositories.implementations.GivenVaccinesRepoPostgres;
+import com.marco.javacovidstatus.repositories.implementations.PopulationRepoPostgres;
 import com.marco.javacovidstatus.repositories.implementations.VeccinesDeliveredRepoPostgres;
 import com.marco.javacovidstatus.repositories.interfaces.CovidRepository;
 import com.marco.javacovidstatus.repositories.interfaces.GivenVaccinesRepo;
+import com.marco.javacovidstatus.repositories.interfaces.PopulationRepo;
 import com.marco.javacovidstatus.repositories.interfaces.VeccinesDeliveredRepo;
 import com.marco.javacovidstatus.services.implementations.EmailNotificationSender;
 import com.marco.javacovidstatus.services.implementations.MarcoNationalDataService;
 import com.marco.javacovidstatus.services.implementations.NationalCovidDataDownloader;
+import com.marco.javacovidstatus.services.implementations.PopulationDataServiceMarco;
 import com.marco.javacovidstatus.services.implementations.PopulationDownloader;
 import com.marco.javacovidstatus.services.implementations.ProvinceCoviddataDownloader;
 import com.marco.javacovidstatus.services.implementations.RegionCovidDataDownloader;
@@ -36,6 +39,7 @@ import com.marco.javacovidstatus.services.implementations.VaccinesGivenDownloade
 import com.marco.javacovidstatus.services.interfaces.CovidDataDownloader;
 import com.marco.javacovidstatus.services.interfaces.CovidDataService;
 import com.marco.javacovidstatus.services.interfaces.NotificationSenderInterface;
+import com.marco.javacovidstatus.services.interfaces.PopulationDataService;
 import com.marco.javacovidstatus.services.interfaces.RegionMapDownloader;
 import com.marco.javacovidstatus.services.interfaces.VaccineDataService;
 import com.marco.javacovidstatus.utils.CovidUtils;
@@ -58,16 +62,16 @@ import springfox.documentation.spring.web.plugins.Docket;
 @Configuration
 public class Beans {
 
-	@Value("${covidstatus.version}")
-	private String appVersion;
-	@Value("${spring.mail.username}")
-	private String emailUser;
-	@Value("${spring.mail.password}")
-	private String emailPassw;
-	
-	@Bean
-	public WebClient getWebClient() {
-		// @formatter:off
+    @Value("${covidstatus.version}")
+    private String appVersion;
+    @Value("${spring.mail.username}")
+    private String emailUser;
+    @Value("${spring.mail.password}")
+    private String emailPassw;
+
+    @Bean
+    public WebClient getWebClient() {
+        // @formatter:off
     	int megaByteNumber = 50;
         return WebClient.builder()
         		.exchangeStrategies(
@@ -78,137 +82,141 @@ public class Beans {
         		)
         		.build();
         // @formatter:on
-	}
+    }
 
-	@Bean
-	public CovidDataService getNationalDataService() {
-		return new MarcoNationalDataService();
-	}
+    @Bean
+    public CovidDataService getNationalDataService() {
+        return new MarcoNationalDataService();
+    }
 
-	@Bean()
-	public ThreadPoolTaskScheduler taskScheduler() {
-		/*
-		 * Setting a thread pool, so the scheduler can run in a different thread
-		 */
-		ThreadPoolTaskScheduler taskScheduler = new ThreadPoolTaskScheduler();
-		taskScheduler.setPoolSize(20);
-		return taskScheduler;
-	}
+    @Bean()
+    public ThreadPoolTaskScheduler taskScheduler() {
+        /*
+         * Setting a thread pool, so the scheduler can run in a different thread
+         */
+        ThreadPoolTaskScheduler taskScheduler = new ThreadPoolTaskScheduler();
+        taskScheduler.setPoolSize(20);
+        return taskScheduler;
+    }
 
-	@Bean
-	public CovidRepository getCovidRepository() {
-		return new CovidRepositoryPostgres();
-	}
+    @Bean
+    public CovidRepository getCovidRepository() {
+        return new CovidRepositoryPostgres();
+    }
 
-	@Bean
-	public VeccinesDeliveredRepo getVeccinesDeliveredRepo() {
-		return new VeccinesDeliveredRepoPostgres();
-	}
+    @Bean
+    public VeccinesDeliveredRepo getVeccinesDeliveredRepo() {
+        return new VeccinesDeliveredRepoPostgres();
+    }
 
-	@Bean
-	public GivenVaccinesRepo getGivenVaccinesRepo() {
-		return new GivenVaccinesRepoPostgres();
-	}
+    @Bean
+    public GivenVaccinesRepo getGivenVaccinesRepo() {
+        return new GivenVaccinesRepoPostgres();
+    }
 
-	@Bean
-	public VaccineDataService getVaccineDateService() {
-		return new VaccineDataServiceMarco();
-	}
+    @Bean
+    public PopulationRepo getPopulationRepo() {
+        return new PopulationRepoPostgres();
+    }
+    
+    @Bean
+    public PopulationDataService getPopulationDataService() {
+        return new PopulationDataServiceMarco();
+    }
 
-	@Bean
-	public JavaMailSender getJavaMailSender() {
-		/*
-		 * Send email using your GMAIL account
-		 */
-		JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
-		mailSender.setHost("smtp.gmail.com");
-		mailSender.setPort(587);
+    @Bean
+    public VaccineDataService getVaccineDateService() {
+        return new VaccineDataServiceMarco();
+    }
 
-		mailSender.setUsername(emailUser);
-		mailSender.setPassword(emailPassw);
+    @Bean
+    public JavaMailSender getJavaMailSender() {
+        /*
+         * Send email using your GMAIL account
+         */
+        JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
+        mailSender.setHost("smtp.gmail.com");
+        mailSender.setPort(587);
 
-		Properties props = mailSender.getJavaMailProperties();
-		props.put("mail.transport.protocol", "smtp");
-		props.put("mail.smtp.auth", "true");
-		props.put("mail.smtp.starttls.enable", "true");
-		props.put("mail.debug", "true");
+        mailSender.setUsername(emailUser);
+        mailSender.setPassword(emailPassw);
 
-		return mailSender;
-	}
+        Properties props = mailSender.getJavaMailProperties();
+        props.put("mail.transport.protocol", "smtp");
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.debug", "true");
 
-	@Bean
-	public NotificationSenderInterface getNotificationSenderInterface() {
-		return new EmailNotificationSender();
-	}
+        return mailSender;
+    }
 
-	@Bean(name = "National")
-	public CovidDataDownloader getNationalCovidDataDownloader() {
-		return new NationalCovidDataDownloader(getWebClient());
-	}
+    @Bean
+    public NotificationSenderInterface getNotificationSenderInterface() {
+        return new EmailNotificationSender();
+    }
 
-	@Bean(name = "Province")
-	public CovidDataDownloader getProvinceCoviddataDownloader() {
-		return new ProvinceCoviddataDownloader(getWebClient());
-	}
+    @Bean(name = "National")
+    public CovidDataDownloader getNationalCovidDataDownloader() {
+        return new NationalCovidDataDownloader(getWebClient());
+    }
 
-	@Bean(name = "Region")
-	public CovidDataDownloader getRegionCovidDataDownloader() {
-		return new RegionCovidDataDownloader(getWebClient());
-	}
+    @Bean(name = "Province")
+    public CovidDataDownloader getProvinceCoviddataDownloader() {
+        return new ProvinceCoviddataDownloader(getWebClient());
+    }
 
-	@Bean(name = "GivenVaccines")
-	public CovidDataDownloader getGivenVaccinesDownloader() {
-		return new VaccinesGivenDownloader(getWebClient());
-	}
+    @Bean(name = "Region")
+    public CovidDataDownloader getRegionCovidDataDownloader() {
+        return new RegionCovidDataDownloader(getWebClient());
+    }
 
-	@Bean(name = "DeliveredVaccines")
-	public CovidDataDownloader getDeliveredVaccinesDownloader() {
-		return new VaccinesDeliveredDownloader(getWebClient());
-	}
-	
-	@Bean(name = "IstatPopulation")
+    @Bean(name = "GivenVaccines")
+    public CovidDataDownloader getGivenVaccinesDownloader() {
+        return new VaccinesGivenDownloader(getWebClient());
+    }
+
+    @Bean(name = "DeliveredVaccines")
+    public CovidDataDownloader getDeliveredVaccinesDownloader() {
+        return new VaccinesDeliveredDownloader(getWebClient());
+    }
+
+    @Bean(name = "IstatPopulation")
     public CovidDataDownloader getPopulationDownloader() {
         return new PopulationDownloader(getWebClient());
     }
 
-	@Bean
-	public RegionMapDownloader getRegionMapDownloader() {
-		return new RegionMapDownloaderFromNationalWebSite();
-	}
-
-	@Bean
-	public CovidUtils getCovidUtils() {
-		return new CovidUtils();
-	}
-
-	@Bean
-	public MessageSource messageSource() {
-		ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
-		messageSource.setBasenames("classpath:/messages/errorCodes");
-
-		return messageSource;
-	}
-	
-	@Bean
-    public Docket swaggerConfiguration() {
-		 TypeResolver resolver = new TypeResolver();
-		 return new Docket(DocumentationType.SWAGGER_2)
-			 .alternateTypeRules( AlternateTypeRules.newRule(
-					 resolver.resolve(List.class, LocalDate.class),
-					 resolver.resolve(List.class, String.class), Ordered.HIGHEST_PRECEDENCE))
-        	.select()
-            .apis(RequestHandlerSelectors.basePackage("com.marco.javacovidstatus.controllers"))
-            .paths(PathSelectors.regex("/.*"))
-            .build().apiInfo(apiEndPointsInfo());
+    @Bean
+    public RegionMapDownloader getRegionMapDownloader() {
+        return new RegionMapDownloaderFromNationalWebSite();
     }
-    
-    
+
+    @Bean
+    public CovidUtils getCovidUtils() {
+        return new CovidUtils();
+    }
+
+    @Bean
+    public MessageSource messageSource() {
+        ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
+        messageSource.setBasenames("classpath:/messages/errorCodes");
+
+        return messageSource;
+    }
+
+    @Bean
+    public Docket swaggerConfiguration() {
+        TypeResolver resolver = new TypeResolver();
+        return new Docket(DocumentationType.SWAGGER_2)
+                .alternateTypeRules(AlternateTypeRules.newRule(resolver.resolve(List.class, LocalDate.class),
+                        resolver.resolve(List.class, String.class), Ordered.HIGHEST_PRECEDENCE))
+                .select().apis(RequestHandlerSelectors.basePackage("com.marco.javacovidstatus.controllers"))
+                .paths(PathSelectors.regex("/.*")).build().apiInfo(apiEndPointsInfo());
+    }
+
     private ApiInfo apiEndPointsInfo() {
-        return new ApiInfoBuilder().title("Covid 19 Italy")
-            .description("I have created this project to collect the Covid 19 data related to the Italian situation and display them into multiple charts")
-            .contact(new Contact("Marco Solina", "", ""))
-            .version(appVersion)
-            .build();
+        return new ApiInfoBuilder().title("Covid 19 Italy").description(
+                "I have created this project to collect the Covid 19 data related to the Italian situation and display them into multiple charts")
+                .contact(new Contact("Marco Solina", "", "")).version(appVersion).build();
     }
 
 }

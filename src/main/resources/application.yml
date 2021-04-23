@@ -35,4 +35,6 @@ covidstatus:
     enabled: false
   scheduled:
     downloadnewdata:
-      cron: "0 0 * * * *" # Every hour
+      cron:
+        covid: "0 0 * * * *" # Every hour
+        istat: "0 0 0 * * *" # Every day

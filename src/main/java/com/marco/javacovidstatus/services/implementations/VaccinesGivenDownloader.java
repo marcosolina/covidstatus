@@ -24,129 +24,131 @@ import com.marco.utils.enums.DateFormats;
  *
  */
 public class VaccinesGivenDownloader extends CovidDataDownloader {
-	@Autowired
-	private VaccineDataService dataService;
-	@Autowired
+    @Autowired
+    private VaccineDataService dataService;
+    @Autowired
     private NotificationSenderInterface notificationService;
 
-	private static final Logger _LOGGER = LoggerFactory.getLogger(VaccinesGivenDownloader.class);
+    private static final Logger _LOGGER = LoggerFactory.getLogger(VaccinesGivenDownloader.class);
 
-	private static final String CSV_URL = "https://raw.githubusercontent.com/italia/covid19-opendata-vaccini/master/dati/somministrazioni-vaccini-latest.csv";
-	public static final int COL_DATE = 0;
-	public static final int COL_REGION_CODE = 20;
-	public static final int COL_AREA_CODE = 2;
-	public static final int COL_SUPPLIER = 1;
-	public static final int COL_AGE_RANGE = 3;
-	public static final int COL_MEN_COUNTER = 4;
-	public static final int COL_WOMEN_COUNTER = 5;
-	public static final int COL_NHS_COUNTER = 6;
-	public static final int COL_NON_NHS_COUNTER = 7;
-	public static final int COL_NURSING_COUNTER = 8;
-	public static final int COL_AGE_60_69_COUNTER = 9;
-	public static final int COL_AGE_70_79_COUNTER = 10;
-	public static final int COL_OVER_80_COUNTER = 11;
-	public static final int COL_PUBLIC_ORDER_COUNTER = 12;
-	public static final int COL_SCHOOL_STAFF_COUNTER = 13;
-	public static final int COL_FRAGILE_COUNTER = 14;
-	public static final int COL_OTHER_PEOPLE_COUNTER = 15;
-	public static final int COL_FIRST_DOSE_COUNTER = 16;
-	public static final int COL_SECOND_DOSE_COUNTER = 17;
+    private static final String CSV_URL = "https://raw.githubusercontent.com/italia/covid19-opendata-vaccini/master/dati/somministrazioni-vaccini-latest.csv";
+    public static final int COL_DATE = 0;
+    public static final int COL_REGION_CODE = 20;
+    public static final int COL_AREA_CODE = 2;
+    public static final int COL_SUPPLIER = 1;
+    public static final int COL_AGE_RANGE = 3;
+    public static final int COL_MEN_COUNTER = 4;
+    public static final int COL_WOMEN_COUNTER = 5;
+    public static final int COL_NHS_COUNTER = 6;
+    public static final int COL_NON_NHS_COUNTER = 7;
+    public static final int COL_NURSING_COUNTER = 8;
+    public static final int COL_AGE_60_69_COUNTER = 9;
+    public static final int COL_AGE_70_79_COUNTER = 10;
+    public static final int COL_OVER_80_COUNTER = 11;
+    public static final int COL_PUBLIC_ORDER_COUNTER = 12;
+    public static final int COL_SCHOOL_STAFF_COUNTER = 13;
+    public static final int COL_FRAGILE_COUNTER = 14;
+    public static final int COL_OTHER_PEOPLE_COUNTER = 15;
+    public static final int COL_FIRST_DOSE_COUNTER = 16;
+    public static final int COL_SECOND_DOSE_COUNTER = 17;
 
-	public VaccinesGivenDownloader(WebClient webClient) {
-		super(webClient);
-	}
+    public VaccinesGivenDownloader(WebClient webClient) {
+        super(webClient);
+    }
 
-	@Override
-	public void downloadData() {
-		_LOGGER.info("Downloading Given vaccines data");
+    @Override
+    public void downloadData() {
+        _LOGGER.info("Downloading Given vaccines data");
 
-		List<String> rows = this.getCsvRows(CSV_URL);
-		
-		if(rows.isEmpty()) {
-			notificationService.sendEmailMessage("marcosolina@gmail.com", "Marco Solina - Covid Status", "Non ci sono più i dati nel repository");
-			return;
-		}
-		
-		if(rows.get(0).split(",").length != 22) {
-			notificationService.sendEmailMessage("marcosolina@gmail.com", "Marco Solina - Covid Status", "La struttura dei dati vaccini somministrati e' stata modificata...");
-			return;
-		}
-		
-		/*
-		 * Forcing the re-loading of all the data. I notice that the government updates
-		 * the data of the previous days. There is no way for me to understand
-		 * "how much back" they go... so I decided to clear the table at every scan
-		 */
-		dataService.deleteAllGivenVaccineData();
+        List<String> rows = this.getCsvRows(CSV_URL);
 
-		LocalDate startDate = getStartDate();
-		AtomicBoolean error = new AtomicBoolean();
+        if (rows.isEmpty()) {
+            notificationService.sendEmailMessage("marcosolina@gmail.com", "Marco Solina - Covid Status",
+                    "Non ci sono più i dati nel repository");
+            return;
+        }
 
-		rows.stream().forEach(row -> {
-			try {
-				String[] columns = row.split(",");
+        if (rows.get(0).split(",").length != 22) {
+            notificationService.sendEmailMessage("marcosolina@gmail.com", "Marco Solina - Covid Status",
+                    "La struttura dei dati vaccini somministrati e' stata modificata...");
+            return;
+        }
 
-				String regionCode = columns[COL_REGION_CODE];
-				String areaCode = columns[COL_AREA_CODE];
-				if (areaCode.equals("PAB")) {
-					regionCode = "21";
-				} else if (areaCode.equals("PAT")) {
-					regionCode = "22";
-				}
+        /*
+         * Forcing the re-loading of all the data. I notice that the government updates
+         * the data of the previous days. There is no way for me to understand
+         * "how much back" they go... so I decided to clear the table at every scan
+         */
+        dataService.deleteAllGivenVaccineData();
 
-				LocalDate date = DateUtils.fromStringToLocalDate(columns[COL_DATE], DateFormats.DB_DATE);
+        LocalDate startDate = getStartDate();
+        AtomicBoolean error = new AtomicBoolean();
 
-				if (!date.isAfter(startDate)) {
-					return;
-				}
+        rows.stream().forEach(row -> {
+            try {
+                String[] columns = row.split(",");
 
-				VaccinatedPeopleDto data = new VaccinatedPeopleDto();
-				data.setDate(date);
-				data.setRegionCode(("00" + regionCode).substring(regionCode.length()));
-				data.setSupplier(columns[COL_SUPPLIER]);
-				data.setAgeRange(columns[COL_AGE_RANGE]);
-				data.setMenCounter(Integer.parseInt(columns[COL_MEN_COUNTER]));
-				data.setWomenCounter(Integer.parseInt(columns[COL_WOMEN_COUNTER]));
-				data.setNhsPeopleCounter(Integer.parseInt(columns[COL_NHS_COUNTER]));
-				data.setNonNhsPeopleCounter(Integer.parseInt(columns[COL_NON_NHS_COUNTER]));
-				data.setNursingHomeCounter(Integer.parseInt(columns[COL_NURSING_COUNTER]));
-				data.setAge6069counter(Integer.parseInt(columns[COL_AGE_60_69_COUNTER]));
-				data.setAge7079counter(Integer.parseInt(columns[COL_AGE_70_79_COUNTER]));
-				data.setOver80Counter(Integer.parseInt(columns[COL_OVER_80_COUNTER]));
-				data.setPublicOrderCounter(Integer.parseInt(columns[COL_PUBLIC_ORDER_COUNTER]));
-				data.setSchoolStaffCounter(Integer.parseInt(columns[COL_SCHOOL_STAFF_COUNTER]));
-				data.setFragilePeopleCounter(Integer.parseInt(columns[COL_FRAGILE_COUNTER]));
-				data.setOtherPeopleCounter(Integer.parseInt(columns[COL_OTHER_PEOPLE_COUNTER]));
-				data.setFirstDoseCounter(Integer.parseInt(columns[COL_FIRST_DOSE_COUNTER]));
-				data.setSecondDoseCounter(Integer.parseInt(columns[COL_SECOND_DOSE_COUNTER]));
+                String regionCode = columns[COL_REGION_CODE];
+                String areaCode = columns[COL_AREA_CODE];
+                if (areaCode.equals("PAB")) {
+                    regionCode = "21";
+                } else if (areaCode.equals("PAT")) {
+                    regionCode = "22";
+                }
 
-				_LOGGER.trace(String.format("Storing Given vaccine data date: %s Region: %s AgeRange: %s Supplier: %s",
-						data.getDate(), data.getRegionCode(), data.getAgeRange(), data.getSupplier()));
-				dataService.saveGivenVaccinesData(data);
-			} catch (Exception e) {
-				String message = String.format("Error while saving: %s", row);
-				_LOGGER.error(message);
-				error.set(true);
-			}
-		});
+                LocalDate date = DateUtils.fromStringToLocalDate(columns[COL_DATE], DateFormats.DB_DATE);
 
-		if (error.get()) {
-			String message = "There was an error with the data, cleaning everything and retrying at the next cron tick"; 
-			_LOGGER.error(message);
-			notificationService.sendEmailMessage("marcosolina@gmail.com", "Marco Solina - Covid Status", message);
-			dataService.deleteAllGivenVaccineData();
-		}
+                if (!date.isAfter(startDate)) {
+                    return;
+                }
 
-		dataService.addMissingRowsForNoVaccinationDays();
-	}
+                VaccinatedPeopleDto data = new VaccinatedPeopleDto();
+                data.setDate(date);
+                data.setRegionCode(("00" + regionCode).substring(regionCode.length()));
+                data.setSupplier(columns[COL_SUPPLIER]);
+                data.setAgeRange(columns[COL_AGE_RANGE]);
+                data.setMenCounter(Integer.parseInt(columns[COL_MEN_COUNTER]));
+                data.setWomenCounter(Integer.parseInt(columns[COL_WOMEN_COUNTER]));
+                data.setNhsPeopleCounter(Integer.parseInt(columns[COL_NHS_COUNTER]));
+                data.setNonNhsPeopleCounter(Integer.parseInt(columns[COL_NON_NHS_COUNTER]));
+                data.setNursingHomeCounter(Integer.parseInt(columns[COL_NURSING_COUNTER]));
+                data.setAge6069counter(Integer.parseInt(columns[COL_AGE_60_69_COUNTER]));
+                data.setAge7079counter(Integer.parseInt(columns[COL_AGE_70_79_COUNTER]));
+                data.setOver80Counter(Integer.parseInt(columns[COL_OVER_80_COUNTER]));
+                data.setPublicOrderCounter(Integer.parseInt(columns[COL_PUBLIC_ORDER_COUNTER]));
+                data.setSchoolStaffCounter(Integer.parseInt(columns[COL_SCHOOL_STAFF_COUNTER]));
+                data.setFragilePeopleCounter(Integer.parseInt(columns[COL_FRAGILE_COUNTER]));
+                data.setOtherPeopleCounter(Integer.parseInt(columns[COL_OTHER_PEOPLE_COUNTER]));
+                data.setFirstDoseCounter(Integer.parseInt(columns[COL_FIRST_DOSE_COUNTER]));
+                data.setSecondDoseCounter(Integer.parseInt(columns[COL_SECOND_DOSE_COUNTER]));
 
-	@Override
-	public LocalDate getStartDate() {
-		LocalDate date = dataService.getGivenVaccinesLastUpdateDate();
-		if (date == null) {
-			date = this.defaultStartData;
-		}
-		return date;
-	}
+                _LOGGER.trace(String.format("Storing Given vaccine data date: %s Region: %s AgeRange: %s Supplier: %s",
+                        data.getDate(), data.getRegionCode(), data.getAgeRange(), data.getSupplier()));
+                dataService.saveGivenVaccinesData(data);
+            } catch (Exception e) {
+                String message = String.format("Error while saving: %s", row);
+                _LOGGER.error(message);
+                error.set(true);
+            }
+        });
+
+        if (error.get()) {
+            String message = "There was an error with the data, cleaning everything and retrying at the next cron tick";
+            _LOGGER.error(message);
+            notificationService.sendEmailMessage("marcosolina@gmail.com", "Marco Solina - Covid Status", message);
+            dataService.deleteAllGivenVaccineData();
+        }
+
+        dataService.addMissingRowsForNoVaccinationDays();
+    }
+
+    @Override
+    public LocalDate getStartDate() {
+        LocalDate date = dataService.getGivenVaccinesLastUpdateDate();
+        if (date == null) {
+            date = this.defaultStartData;
+        }
+        return date;
+    }
 
 }

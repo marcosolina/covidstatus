@@ -26,9 +26,15 @@ public class JavaCovidStatusApplication {
 	 * Execute some tasks at startup
 	 * @param ctx
 	 * @return
-	 */
 	@Bean
     public CommandLineRunner commandLineRunner(ApplicationContext ctx) {
-        return args -> scheduler.downloadNewData();
+        return new CommandLineRunner() {
+            @Override
+            public void run(String... args) throws Exception {
+                scheduler.downloadIstatData();
+                scheduler.downloadNewData();
+            }
+        };
     }
+	 */
 }
