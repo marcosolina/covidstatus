@@ -47,18 +47,33 @@ class TotalGivenVeccinesPerAge {
 		});
 		
 		let arrLabels = [];
-		let values = [];
+		let valuesPopulation = [];
+        let valuesFirstDose = [];
+        let valuesVaccinated = [];
 		
-		const dataSet = new CovidChartDataset("");
-		dataSet.setColor(this.colorPalette[0]);
+		const datasetPopulation = new CovidChartDataset("Popolazione");
+        const datasetFirstDose = new CovidChartDataset("Prima Dose");
+        const datasetVaccinated = new CovidChartDataset("Vaccinati");
+        
+		datasetPopulation.setColor(this.colorPalette[0]);
+        datasetFirstDose.setColor(this.colorPalette[1]);
+        datasetVaccinated.setColor(this.colorPalette[2]);
 		
 		keysSorted.forEach(function(key){
 			arrLabels.push(key);
-			values.push(data[key]);
+			valuesPopulation.push(data[key].population);
+            valuesFirstDose.push(data[key].firstDose);
+            valuesVaccinated.push(data[key].completeVaccination);
 		}.bind(this));
 		
-		dataSet.setData(values);
-		this.chart.addCovidChartDataset(dataSet);
+		datasetPopulation.setData(valuesPopulation);
+        datasetFirstDose.setData(valuesFirstDose);
+        datasetVaccinated.setData(valuesVaccinated);
+        
+		this.chart.addCovidChartDataset(datasetPopulation);
+        this.chart.addCovidChartDataset(datasetFirstDose);
+        this.chart.addCovidChartDataset(datasetVaccinated);
+        
 		this.chart.setLabels(arrLabels);
 		this.chart.drawChart(this.darkModeOn, "horizontalBar");
 	}
