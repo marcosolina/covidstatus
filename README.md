@@ -59,6 +59,7 @@ Once the containers are up and runnig open the following links:
 
 ## History
 
+- **24/04/2021 v0.1.22**: Workaround for mono-dose vaccines
 - **24/04/2021 v0.1.21**: Small UI improvements
 - **24/04/2021 v0.1.20**: Added additional information to better understand the progress of the vaccination
 - **20/04/2021 v0.1.19**: Added to the charts the new info discoled by the goverment

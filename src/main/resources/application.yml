@@ -33,6 +33,9 @@ covidstatus:
   version: ^project.version^
   notification:
     enabled: false
+  vaccines:
+    monodose:
+      suppliers: Janssen
   istat:
     population:
       year: 2020

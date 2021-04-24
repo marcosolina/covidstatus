@@ -22,6 +22,10 @@ class CovidChartDataset {
 	setColor(stringRgb){
 		this.color = stringRgb;
 	}
+    
+    setBorderColor(stringRgb){
+        this.borderColor = stringRgb;
+    }
 	
 	/**
 		It returns the Chartjs ojbect that represents the data
@@ -30,7 +34,7 @@ class CovidChartDataset {
 		return {
             label: this.label,
             data: this.arrData,
-            borderColor: this.color,
+            borderColor: this.borderColor || this.color,
             backgroundColor: this.color,
             fill: false,
             pointRadius: 0
