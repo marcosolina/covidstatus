@@ -78,7 +78,7 @@ public class MarcoCovidScheduler implements CovidScheduler {
 
 	@Scheduled(cron = "${covidstatus.scheduled.downloadnewdata.cron.istat:0 0 0 * * *}")
     @Override
-    public void downloadIstatData() {
+    public synchronized void downloadIstatData() {
         logger.info("Updating ISTAT Data");
 
         try {
