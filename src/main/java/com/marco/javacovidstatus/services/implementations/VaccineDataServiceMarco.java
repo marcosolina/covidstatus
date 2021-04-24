@@ -142,6 +142,7 @@ public class VaccineDataServiceMarco implements VaccineDataService {
         Map<String, Long> map = new HashMap<>();
         map.put(Constants.VACCINES_GIVEN_FIRST_SHOT, list.get(0).getFirstDoseCounter());
         map.put(Constants.VACCINES_GIVEN_SECOND_SHOT, list.get(0).getSecondDoseCounter());
+        map.put(Constants.VACCINES_GIVEN_MONO_SHOT, list.get(0).getMonoDoseCounter());
 
         return map;
     }
@@ -288,6 +289,7 @@ public class VaccineDataServiceMarco implements VaccineDataService {
         entity.setOtherPeopleCounter(dto.getOtherPeopleCounter());
         entity.setFirstDoseCounter(dto.getFirstDoseCounter());
         entity.setSecondDoseCounter(dto.getSecondDoseCounter());
+        entity.setMonoDoseCounter(dto.getMonoDoseCounter());
 
         return entity;
     }
@@ -326,7 +328,8 @@ public class VaccineDataServiceMarco implements VaccineDataService {
             dto.setAgeRange(ageRange);
             dto.setPopulation(men + women);
             dto.setFirstDose(argv.getFirstDose());
-            dto.setCompleteVaccination(argv.getSecondDose());
+            dto.setSecondDose(argv.getSecondDose());
+            dto.setMonoDose(argv.getMonoDose());
 
             map.put(dto.getAgeRange(), dto);
         });

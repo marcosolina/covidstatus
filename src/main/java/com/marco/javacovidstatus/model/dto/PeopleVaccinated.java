@@ -11,7 +11,8 @@ public class PeopleVaccinated {
     private String ageRange;
     private Long population;
     private Long firstDose;
-    private Long completeVaccination;
+    private Long secondDose;
+    private Long monoDose;
 
     public String getAgeRange() {
         return ageRange;
@@ -37,12 +38,20 @@ public class PeopleVaccinated {
         this.firstDose = firstDose;
     }
 
-    public Long getCompleteVaccination() {
-        return completeVaccination;
+    public Long getSecondDose() {
+        return secondDose;
     }
 
-    public void setCompleteVaccination(Long completeVaccination) {
-        this.completeVaccination = completeVaccination;
+    public void setSecondDose(Long secondDose) {
+        this.secondDose = secondDose;
+    }
+
+    public Long getMonoDose() {
+        return monoDose;
+    }
+
+    public void setMonoDose(Long monoDose) {
+        this.monoDose = monoDose;
     }
 
 }

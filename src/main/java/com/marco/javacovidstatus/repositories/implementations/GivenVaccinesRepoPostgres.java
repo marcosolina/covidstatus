@@ -135,7 +135,8 @@ public class GivenVaccinesRepoPostgres implements GivenVaccinesRepo {
 		sql.append("b.fragile_people_counter,");
 		sql.append("b.other_people_counter,");
 		sql.append("b.first_dose_counter,");
-		sql.append("b.second_dose_counter ");
+		sql.append("b.second_dose_counter, ");
+		sql.append("b.mono_dose_counter ");
 		sql.append("from cartesian_table as a ");
 		sql.append(String.format("left join %s as b ", tableName));
 		sql.append("on a.date_data = b.date_data and ");
@@ -160,7 +161,8 @@ public class GivenVaccinesRepoPostgres implements GivenVaccinesRepo {
 		sql.append("fragile_people_counter = 0,");
 		sql.append("other_people_counter = 0,");
 		sql.append("first_dose_counter = 0,");
-		sql.append("second_dose_counter = 0 ");
+		sql.append("second_dose_counter = 0, ");
+		sql.append("mono_dose_counter = 0 ");
 		sql.append("where men_counter is null");
 
 		sqls.add(sql);
@@ -189,13 +191,14 @@ public class GivenVaccinesRepoPostgres implements GivenVaccinesRepo {
 		Root<EntitySomministrazioneVaccini> root = cq.from(EntitySomministrazioneVaccini.class);
 
 		/*
-		 * SELECT sum(first_dose_counter), sum(second_dose_counter) FROM
+		 * SELECT sum(first_dose_counter), sum(second_dose_counter), sum(mono_dose_counter) FROM
 		 * somministrazioni_vaccini WHERE DATE_DATA BETWEEN X AND Y
 		 */
 		// @formatter:off
 		cq.multiselect(
 				cb.sum(root.get(EntitySomministrazioneVaccini_.FIRST_DOSE_COUNTER)),
-				cb.sum(root.get(EntitySomministrazioneVaccini_.SECOND_DOSE_COUNTER))
+				cb.sum(root.get(EntitySomministrazioneVaccini_.SECOND_DOSE_COUNTER)),
+                cb.sum(root.get(EntitySomministrazioneVaccini_.MONO_DOSE_COUNTER))
 			)
 		.where(
 				cb.between(root.get(EntitySomministrazioneVaccini_.ID).get(EntitySomministrazioneVacciniPk_.DATE), start, end)
@@ -215,15 +218,16 @@ public class GivenVaccinesRepoPostgres implements GivenVaccinesRepo {
 		Root<EntitySomministrazioneVaccini> root = cq.from(EntitySomministrazioneVaccini.class);
 
 		/*
-		 * SELECT age_range, sum(men_counter), sum (women_counter) from
+		 * SELECT age_range, sum(first_dose_counter), sum (second_dose_counter), sum (mono_dose_counter) from
 		 * somministrazioni_vaccini WHERE DATE_DATA BETWEEN X AND Y group by age_range
 		 */
 
 		// @formatter:off
 		cq.multiselect(
 				root.get(EntitySomministrazioneVaccini_.ID).get(EntitySomministrazioneVacciniPk_.AGE_RANGE),
-				cb.sum(root.get(EntitySomministrazioneVaccini_.MEN_COUNTER)),
-				cb.sum(root.get(EntitySomministrazioneVaccini_.WOMEN_COUNTER))
+				cb.sum(root.get(EntitySomministrazioneVaccini_.FIRST_DOSE_COUNTER)),
+				cb.sum(root.get(EntitySomministrazioneVaccini_.SECOND_DOSE_COUNTER)),
+                cb.sum(root.get(EntitySomministrazioneVaccini_.MONO_DOSE_COUNTER))
 			)
 		.where(
 				cb.between(root.get(EntitySomministrazioneVaccini_.ID).get(EntitySomministrazioneVacciniPk_.DATE), start, end)
@@ -268,13 +272,14 @@ public class GivenVaccinesRepoPostgres implements GivenVaccinesRepo {
 		/*
 		 * https://www.postgresql.org/docs/8.1/functions-conditional.html
 		 * 
-		 * SELECT COALESCE(SUM(first_dose_counter), 0), COALESCE(SUM(second_dose_counter), 0) FROM
+		 * SELECT COALESCE(SUM(first_dose_counter), 0), COALESCE(SUM(second_dose_counter), 0), COALESCE(SUM(MONO_dose_counter), 0) FROM
 		 * somministrazioni_vaccini
 		 */
 		// @formatter:off
 		cq.multiselect(
 				cb.coalesce(cb.sum(root.get(EntitySomministrazioneVaccini_.FIRST_DOSE_COUNTER)), 0L),
-				cb.coalesce(cb.sum(root.get(EntitySomministrazioneVaccini_.SECOND_DOSE_COUNTER)), 0L)
+				cb.coalesce(cb.sum(root.get(EntitySomministrazioneVaccini_.SECOND_DOSE_COUNTER)), 0L),
+				cb.coalesce(cb.sum(root.get(EntitySomministrazioneVaccini_.MONO_DOSE_COUNTER)), 0L)
 			);
 		
 		// @formatter:on
@@ -282,7 +287,7 @@ public class GivenVaccinesRepoPostgres implements GivenVaccinesRepo {
 		TypedQuery<DoseCounter> tq = em.createQuery(cq);
 		List<DoseCounter> list = tq.getResultList();
 		if (list.size() == 1) {
-			return list.get(0).getFirstDoseCounter() + list.get(0).getSecondDoseCounter();
+			return list.get(0).getFirstDoseCounter() + list.get(0).getSecondDoseCounter() + list.get(0).getMonoDoseCounter();
 		}
 		return 0L;
 	}
@@ -345,7 +350,7 @@ public class GivenVaccinesRepoPostgres implements GivenVaccinesRepo {
 		Root<EntitySomministrazioneVaccini> root = cq.from(EntitySomministrazioneVaccini.class);
 
 		/*
-		 * SELECT age_range, sum(first_dose_counter), sum (second_dose_counter) from
+		 * SELECT age_range, sum(first_dose_counter), sum (second_dose_counter), sum (mono_dose_counter) from
 		 * somministrazioni_vaccini group by age_range
 		 */
 
@@ -353,7 +358,8 @@ public class GivenVaccinesRepoPostgres implements GivenVaccinesRepo {
 		cq.multiselect(
 				root.get(EntitySomministrazioneVaccini_.ID).get(EntitySomministrazioneVacciniPk_.AGE_RANGE),
 				cb.sum(root.get(EntitySomministrazioneVaccini_.FIRST_DOSE_COUNTER)),
-				cb.sum(root.get(EntitySomministrazioneVaccini_.SECOND_DOSE_COUNTER))
+				cb.sum(root.get(EntitySomministrazioneVaccini_.SECOND_DOSE_COUNTER)),
+                cb.sum(root.get(EntitySomministrazioneVaccini_.MONO_DOSE_COUNTER))
 			)
 		.groupBy(
 				root.get(EntitySomministrazioneVaccini_.ID).get(EntitySomministrazioneVacciniPk_.AGE_RANGE)

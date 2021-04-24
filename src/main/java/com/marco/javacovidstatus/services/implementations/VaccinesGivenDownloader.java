@@ -7,6 +7,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import com.marco.javacovidstatus.model.dto.VaccinatedPeopleDto;
@@ -28,6 +29,8 @@ public class VaccinesGivenDownloader extends CovidDataDownloader {
     private VaccineDataService dataService;
     @Autowired
     private NotificationSenderInterface notificationService;
+    @Value("${covidstatus.vaccines.monodose.suppliers}")
+    private List<String> monodoseSuppliers;
 
     private static final Logger _LOGGER = LoggerFactory.getLogger(VaccinesGivenDownloader.class);
 
@@ -119,8 +122,18 @@ public class VaccinesGivenDownloader extends CovidDataDownloader {
                 data.setSchoolStaffCounter(Integer.parseInt(columns[COL_SCHOOL_STAFF_COUNTER]));
                 data.setFragilePeopleCounter(Integer.parseInt(columns[COL_FRAGILE_COUNTER]));
                 data.setOtherPeopleCounter(Integer.parseInt(columns[COL_OTHER_PEOPLE_COUNTER]));
-                data.setFirstDoseCounter(Integer.parseInt(columns[COL_FIRST_DOSE_COUNTER]));
-                data.setSecondDoseCounter(Integer.parseInt(columns[COL_SECOND_DOSE_COUNTER]));
+                
+                /**
+                 * The goverment put the vaccines which requires just one shot into the "first"
+                 * dose. I decided to move these into the mono dose column
+                 */
+                if(monodoseSuppliers.contains(data.getSupplier())) {
+                    data.setMonoDoseCounter(Integer.parseInt(columns[COL_FIRST_DOSE_COUNTER]));
+                }else {
+                    data.setFirstDoseCounter(Integer.parseInt(columns[COL_FIRST_DOSE_COUNTER]));
+                    data.setSecondDoseCounter(Integer.parseInt(columns[COL_SECOND_DOSE_COUNTER]));
+                }
+                
 
                 _LOGGER.trace(String.format("Storing Given vaccine data date: %s Region: %s AgeRange: %s Supplier: %s",
                         data.getDate(), data.getRegionCode(), data.getAgeRange(), data.getSupplier()));

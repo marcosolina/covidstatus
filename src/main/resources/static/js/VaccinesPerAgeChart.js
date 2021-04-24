@@ -53,7 +53,7 @@ class VaccinesPerAgeChart {
         
         const datasetPopulation = new CovidChartDataset("Popolazione");
         const datasetFirstDose = new CovidChartDataset("Prima Dose");
-        const datasetVaccinated = new CovidChartDataset("Vaccinati");
+        const datasetVaccinated = new CovidChartDataset("Vaccinati (Seconda Dose o Mono Dose)");
         
         datasetPopulation.setColor(this.colorPalette[0]);
         datasetFirstDose.setColor(this.colorPalette[1]);
@@ -63,7 +63,7 @@ class VaccinesPerAgeChart {
             arrLabels.push(key);
             valuesPopulation.push(data[key].population);
             valuesFirstDose.push(data[key].firstDose);
-            valuesVaccinated.push(data[key].completeVaccination);
+            valuesVaccinated.push(data[key].secondDose + data[key].monoDose);
         }.bind(this));
         
         datasetPopulation.setData(valuesPopulation);
