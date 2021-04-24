@@ -55,7 +55,7 @@ class TotalDeliveredUsedVaccinesPerRegionChart {
 		}.bind(this));
 		
 		const deliveredDataSet = new CovidChartDataset("Vaccini Consegnati");
-		const giveDataSet = new CovidChartDataset("Vaccini Somministrati");
+		const giveDataSet = new CovidChartDataset("Vaccini Utilizzati");
 		
 		deliveredDataSet.setColor(this.colorPalette[0]);
 		giveDataSet.setColor(this.colorPalette[1]);
@@ -67,6 +67,6 @@ class TotalDeliveredUsedVaccinesPerRegionChart {
 		this.chart.addCovidChartDataset(giveDataSet);
 		
 		this.chart.setLabels(arrLabels);
-		this.chart.drawChart(this.darkModeOn, "bar");
+		this.chart.drawChart(this.darkModeOn, "bar", true);
 	}
 }

@@ -177,7 +177,7 @@ var CovidCommon = (function(CovidCommon) {
 	CovidCommon.autoRefreshData = function() {
 		autoRefreshEnabled = $("#" + idRefreshCheckBox).prop("checked");
 		if (autoRefreshEnabled) {
-			refreshInterval = setInterval(CovidCommon.changeDates, 60000);
+			refreshInterval = setInterval(CovidCommon.changeDates, 10000);
 		} else {
 			if (refreshInterval) {
 				clearInterval(refreshInterval);

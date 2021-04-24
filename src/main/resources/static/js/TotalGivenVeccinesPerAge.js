@@ -12,7 +12,7 @@ class TotalGivenVeccinesPerAge {
 		this.lastResponse = {};
 		
 		this.chart = new CovidChart(document.getElementById(this.canvasId));
-		this.chart.setTitle("Totale persone vaccinate per fasce ");
+		this.chart.setTitle("Totale persone vaccinate per fasce di età");
 	}
 	
 	setDarkMode(darkModeOn){
@@ -75,6 +75,6 @@ class TotalGivenVeccinesPerAge {
         this.chart.addCovidChartDataset(datasetVaccinated);
         
 		this.chart.setLabels(arrLabels);
-		this.chart.drawChart(this.darkModeOn, "horizontalBar");
+		this.chart.drawChart(this.darkModeOn, "horizontalBar", true);
 	}
 }

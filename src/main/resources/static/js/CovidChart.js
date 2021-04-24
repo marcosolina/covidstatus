@@ -43,7 +43,7 @@ class CovidChart {
 	/**
 		It draws the chart
 	 */
-	drawChart(darkModeOn, type){
+	drawChart(darkModeOn, type, displayLegend){
 		
 		let fontColor = darkModeOn ? "#FFFFFF" : "#666666";
 		let color = darkModeOn ? "rgba(255, 255, 255, 0.5)" : 'rgba(0, 0, 0, 0.1)';
@@ -62,7 +62,7 @@ class CovidChart {
 					fontColor: fontColor,
 				},
 				legend:{
-					display: false
+					display: displayLegend || false
 				},
 				scales: {
 	                yAxes: [{
