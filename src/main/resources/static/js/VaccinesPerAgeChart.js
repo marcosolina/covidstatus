@@ -11,7 +11,7 @@ class VaccinesPerAgeChart {
 		this.darkModeOn = false;
 		this.lastResponse = {};
 		
-		this.chart = new DoughnutChart(document.getElementById(this.canvasId));
+		this.chart = new CovidChart(document.getElementById(this.canvasId));
 		this.chart.setTitle("Fasce di età vaccinate");
 	}
 	
@@ -33,30 +33,48 @@ class VaccinesPerAgeChart {
 
 	drawChart() {
 		this.chart.clearDataSets();
-		
-		let i = 0;
-		
-		let keysSorted = Object.keys(this.lastResponse.dataVaccinatedPerAge).sort(function(a, b) {
-			if (a.charAt(0) < b.charAt(0)) {
-				return -1;
-			}
-			if (a.charAt(0) > b.charAt(0)) {
-				return 1;
-			}
-			return 0;
-		});
-		
-		
-		let arrLabels = [];
-		keysSorted.forEach(function(key) {
-			const dataset = new CovidChartDataset(key);
-			dataset.setData(this.lastResponse.dataVaccinatedPerAge[key]);
-			dataset.setColor(this.colorPalette[i++]);
-			this.chart.addCovidChartDataset(dataset);
-			arrLabels.push(key);
-		}.bind(this));
-		
-		this.chart.setLabels(arrLabels);
-		this.chart.drawChart(this.darkModeOn);
+        
+        let data = this.lastResponse.dataVaccinatedPerAge;
+        
+        let keysSorted = Object.keys(data).sort(function(a, b) {
+            if (a.charAt(0) < b.charAt(0)){
+                return -1;  
+            }
+            if (a.charAt(0) > b.charAt(0)){
+                return 1;   
+            }
+            return 0;
+        });
+        
+        let arrLabels = [];
+        let valuesPopulation = [];
+        let valuesFirstDose = [];
+        let valuesVaccinated = [];
+        
+        const datasetPopulation = new CovidChartDataset("Popolazione");
+        const datasetFirstDose = new CovidChartDataset("Prima Dose");
+        const datasetVaccinated = new CovidChartDataset("Vaccinati");
+        
+        datasetPopulation.setColor(this.colorPalette[0]);
+        datasetFirstDose.setColor(this.colorPalette[1]);
+        datasetVaccinated.setColor(this.colorPalette[2]);
+        
+        keysSorted.forEach(function(key){
+            arrLabels.push(key);
+            valuesPopulation.push(data[key].population);
+            valuesFirstDose.push(data[key].firstDose);
+            valuesVaccinated.push(data[key].completeVaccination);
+        }.bind(this));
+        
+        datasetPopulation.setData(valuesPopulation);
+        datasetFirstDose.setData(valuesFirstDose);
+        datasetVaccinated.setData(valuesVaccinated);
+        
+        this.chart.addCovidChartDataset(datasetPopulation);
+        this.chart.addCovidChartDataset(datasetFirstDose);
+        this.chart.addCovidChartDataset(datasetVaccinated);
+        
+        this.chart.setLabels(arrLabels);
+        this.chart.drawChart(this.darkModeOn, "horizontalBar");
 	}
 }

@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.marco.javacovidstatus.model.dto.PeopleVaccinated;
 import com.marco.javacovidstatus.model.dto.VaccinatedPeopleTypeDto;
 import com.marco.javacovidstatus.model.dto.VaccinesDeliveredPerDayDto;
 import com.marco.javacovidstatus.model.dto.VaccinesReceivedUsedDto;
@@ -254,7 +255,7 @@ public class VaccinesController {
 
 		RespGetVaccinatedPeoplePerAgeData resp = new RespGetVaccinatedPeoplePerAgeData();
 		try {
-			Map<String, Long> dataVaccinatedPerAge = service.getVaccinatedAgeRangeBetweenDates(from, to);
+			Map<String, PeopleVaccinated> dataVaccinatedPerAge = service.getVaccinatedAgeRangeBetweenDates(from, to);
 
 			resp.setDataVaccinatedPerAge(dataVaccinatedPerAge);
 			resp.setStatus(true);
@@ -336,7 +337,7 @@ public class VaccinesController {
 
 		RespGetVaccinatedPeoplePerAgeData resp = new RespGetVaccinatedPeoplePerAgeData();
 		try {
-			Map<String, Long> dataVaccinatedPerAge = service.getVaccinatedAgeRangeTotals();
+			Map<String, PeopleVaccinated> dataVaccinatedPerAge = service.getVaccinatedAgeRangeTotals();
 
 			resp.setDataVaccinatedPerAge(dataVaccinatedPerAge);
 			resp.setStatus(true);

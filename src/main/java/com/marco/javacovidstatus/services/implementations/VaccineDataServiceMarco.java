@@ -13,9 +13,12 @@ import java.util.function.BiFunction;
 import java.util.function.ToLongFunction;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 
+import com.marco.javacovidstatus.enums.Gender;
+import com.marco.javacovidstatus.model.dto.PeopleVaccinated;
 import com.marco.javacovidstatus.model.dto.VaccinatedPeopleDto;
 import com.marco.javacovidstatus.model.dto.VaccinatedPeopleTypeDto;
 import com.marco.javacovidstatus.model.dto.VaccinesDeliveredDto;
@@ -34,6 +37,7 @@ import com.marco.javacovidstatus.model.entitites.vaccines.TotalVaccineGivenPerRe
 import com.marco.javacovidstatus.model.entitites.vaccines.VacciniConsegne;
 import com.marco.javacovidstatus.repositories.interfaces.GivenVaccinesRepo;
 import com.marco.javacovidstatus.repositories.interfaces.VeccinesDeliveredRepo;
+import com.marco.javacovidstatus.services.interfaces.PopulationDataService;
 import com.marco.javacovidstatus.services.interfaces.VaccineDataService;
 import com.marco.javacovidstatus.utils.Constants;
 import com.marco.utils.MarcoException;
@@ -46,55 +50,61 @@ import com.marco.utils.MarcoException;
  */
 public class VaccineDataServiceMarco implements VaccineDataService {
 
-	@Autowired
-	private VeccinesDeliveredRepo repoDelivered;
-	@Autowired
-	private GivenVaccinesRepo repoGiven;
-	@Autowired
-	private MessageSource msgSource;
+    @Autowired
+    private VeccinesDeliveredRepo repoDelivered;
+    @Autowired
+    private GivenVaccinesRepo repoGiven;
+    @Autowired
+    private MessageSource msgSource;
+    @Autowired
+    private PopulationDataService populationService;
+    @Value("${covidstatus.istat.population.year}")
+    private int populationStatisticYear;
 
-	@Override
-	public Map<String, List<VaccinesDeliveredPerDayDto>> getDeliveredVaccinesPerRegionBetweenDatesPerRegion(
-			LocalDate start, LocalDate end) throws MarcoException {
-		checkDates(start, end);
-		
-		Map<String, List<VaccinesDeliveredPerDayDto>> data = new HashMap<>();
-		repoDelivered.getDeliveredVaccinesBetween(start, end).stream()
-				.forEach(entity -> data.compute(entity.getRegionCode(), (k, v) -> {
-					VaccinesDeliveredPerDayDto tmp = fromEntityVacciniConsegneToVaccinesDelivered(entity);
-					if (v == null) {
-						v = new ArrayList<>();
-					}
-					v.add(tmp);
-					return v;
-				}));
+    @Override
+    public Map<String, List<VaccinesDeliveredPerDayDto>> getDeliveredVaccinesPerRegionBetweenDatesPerRegion(
+            LocalDate start, LocalDate end) throws MarcoException {
+        checkDates(start, end);
 
-		return data;
-	}
+        Map<String, List<VaccinesDeliveredPerDayDto>> data = new HashMap<>();
+        repoDelivered.getDeliveredVaccinesBetween(start, end).stream()
+                .forEach(entity -> data.compute(entity.getRegionCode(), (k, v) -> {
+                    VaccinesDeliveredPerDayDto tmp = fromEntityVacciniConsegneToVaccinesDelivered(entity);
+                    if (v == null) {
+                        v = new ArrayList<>();
+                    }
+                    v.add(tmp);
+                    return v;
+                }));
 
-	@Override
-	public Map<String, Long> getDeliveredVaccinesBetweenDatesPerSupplier(LocalDate start, LocalDate end) throws MarcoException {
-		checkDates(start, end);
-		
-		Map<String, Long> data = new HashMap<>();
-		repoDelivered.getDeliveredVaccinesPerSupplierBetween(start, end).stream()
-				.forEach(entity -> data.compute(entity.getSupplier(),
-						(k, v) -> v == null ? entity.getDosesDelivered() : v + entity.getDosesDelivered()));
+        return data;
+    }
 
-		return data;
-	}
+    @Override
+    public Map<String, Long> getDeliveredVaccinesBetweenDatesPerSupplier(LocalDate start, LocalDate end)
+            throws MarcoException {
+        checkDates(start, end);
 
-	@Override
-	public VaccinatedPeopleTypeDto getVaccinatedPeopleBetweenDates(LocalDate start, LocalDate end) throws MarcoException {
-		checkDates(start, end);
+        Map<String, Long> data = new HashMap<>();
+        repoDelivered.getDeliveredVaccinesPerSupplierBetween(start, end).stream()
+                .forEach(entity -> data.compute(entity.getSupplier(),
+                        (k, v) -> v == null ? entity.getDosesDelivered() : v + entity.getDosesDelivered()));
 
-		VaccinatedPeopleTypeDto vp = new VaccinatedPeopleTypeDto();
-		Set<LocalDate> dateSet = new HashSet<>();
-		Map<String, List<Long>> dataMap = new HashMap<>();
+        return data;
+    }
 
-		List<DailySumGivenVaccines> list = repoGiven.getDailySumGivenVaccinesBetween(start, end);
+    @Override
+    public VaccinatedPeopleTypeDto getVaccinatedPeopleBetweenDates(LocalDate start, LocalDate end)
+            throws MarcoException {
+        checkDates(start, end);
 
-		// @formatter:off
+        VaccinatedPeopleTypeDto vp = new VaccinatedPeopleTypeDto();
+        Set<LocalDate> dateSet = new HashSet<>();
+        Map<String, List<Long>> dataMap = new HashMap<>();
+
+        List<DailySumGivenVaccines> list = repoGiven.getDailySumGivenVaccinesBetween(start, end);
+
+        // @formatter:off
 		list.forEach(dto -> {
 			dateSet.add(dto.getDate());
 			dataMap.compute(Constants.VACCINES_GIVEN_MEN,		getAttToArrayBiFunction(DailySumGivenVaccines::getMenCounter, dto));
@@ -111,213 +121,234 @@ public class VaccineDataServiceMarco implements VaccineDataService {
 		});
 		// @formatter:on
 
-		vp.setDataVaccinatedPeople(dataMap);
+        vp.setDataVaccinatedPeople(dataMap);
 
-		List<LocalDate> dateList = Arrays.asList(dateSet.toArray(new LocalDate[0]));
-		Collections.sort(dateList);
-		vp.setDates(dateList);
+        List<LocalDate> dateList = Arrays.asList(dateSet.toArray(new LocalDate[0]));
+        Collections.sort(dateList);
+        vp.setDates(dateList);
 
-		return vp;
-	}
+        return vp;
+    }
 
-	@Override
-	public Map<String, Long> getGiveShotNumberBetweenDates(LocalDate start, LocalDate end) throws MarcoException {
-		checkDates(start, end);
-		
-		List<DoseCounter> list = repoGiven.getDosesCounterVaccinesBetween(start, end);
-		if (list.size() != 1) {
-			throw new MarcoException("Errore calcolo dosi");
-		}
+    @Override
+    public Map<String, Long> getGiveShotNumberBetweenDates(LocalDate start, LocalDate end) throws MarcoException {
+        checkDates(start, end);
 
-		Map<String, Long> map = new HashMap<>();
-		map.put(Constants.VACCINES_GIVEN_FIRST_SHOT, list.get(0).getFirstDoseCounter());
-		map.put(Constants.VACCINES_GIVEN_SECOND_SHOT, list.get(0).getSecondDoseCounter());
+        List<DoseCounter> list = repoGiven.getDosesCounterVaccinesBetween(start, end);
+        if (list.size() != 1) {
+            throw new MarcoException("Errore calcolo dosi");
+        }
 
-		return map;
-	}
+        Map<String, Long> map = new HashMap<>();
+        map.put(Constants.VACCINES_GIVEN_FIRST_SHOT, list.get(0).getFirstDoseCounter());
+        map.put(Constants.VACCINES_GIVEN_SECOND_SHOT, list.get(0).getSecondDoseCounter());
 
-	@Override
-	public Map<String, Long> getVaccinatedAgeRangeBetweenDates(LocalDate start, LocalDate end) throws MarcoException {
-		checkDates(start, end);
-		
-		List<AgeRangeGivenVaccines> list = repoGiven.getDeliveredVaccinesPerAgeRange(start, end);
+        return map;
+    }
 
-		return parseListAgeRangeGivenVaccines(list);
-	}
+    @Override
+    public Map<String, PeopleVaccinated> getVaccinatedAgeRangeBetweenDates(LocalDate start, LocalDate end) throws MarcoException {
+        checkDates(start, end);
 
-	@Override
-	public Map<String, Long> getVaccinatedAgeRangeTotals() {
-		List<AgeRangeGivenVaccines> list = repoGiven.getTotalAgeRangeGivenVaccines();
+        List<AgeRangeGivenVaccines> list = repoGiven.getDeliveredVaccinesPerAgeRange(start, end);
 
-		return parseListAgeRangeGivenVaccines(list);
-	}
+        return parseListAgeRangeGivenVaccines(list);
+    }
 
-	@Override
-	public void deleteAllVaccineDeliveredData() {
-		repoDelivered.deleteAll();
-	}
+    @Override
+    public Map<String, PeopleVaccinated> getVaccinatedAgeRangeTotals() {
+        List<AgeRangeGivenVaccines> list = repoGiven.getTotalAgeRangeGivenVaccines();
+        return parseListAgeRangeGivenVaccines(list);
+    }
 
-	@Override
-	public boolean saveVaccinesDeliveredData(VaccinesDeliveredDto data) {
-		return repoDelivered.saveEntity(fromVaccinesDeliveredDtoToVacciniEntityVacciniConsegne(data));
-	}
+    @Override
+    public void deleteAllVaccineDeliveredData() {
+        repoDelivered.deleteAll();
+    }
 
-	@Override
-	public void addMissingRowsForNoDeliveryDays() {
-		repoDelivered.addMissingRowsForNoDeliveryDays();
-	}
+    @Override
+    public boolean saveVaccinesDeliveredData(VaccinesDeliveredDto data) {
+        return repoDelivered.saveEntity(fromVaccinesDeliveredDtoToVacciniEntityVacciniConsegne(data));
+    }
 
-	@Override
-	public LocalDate getVaccineDeliveredLastUpdateDate() {
-		return repoDelivered.getDataAvailableLastDate();
-	}
+    @Override
+    public void addMissingRowsForNoDeliveryDays() {
+        repoDelivered.addMissingRowsForNoDeliveryDays();
+    }
 
-	@Override
-	public void deleteAllGivenVaccineData() {
-		repoGiven.deleteAll();
-	}
+    @Override
+    public LocalDate getVaccineDeliveredLastUpdateDate() {
+        return repoDelivered.getDataAvailableLastDate();
+    }
 
-	@Override
-	public boolean saveGivenVaccinesData(VaccinatedPeopleDto data) {
-		return repoGiven.saveEntity(fromVaccinatedPeopleDtoToEntitySomministrazioneVaccini(data));
-	}
+    @Override
+    public void deleteAllGivenVaccineData() {
+        repoGiven.deleteAll();
+    }
 
-	@Override
-	public void addMissingRowsForNoVaccinationDays() {
-		repoGiven.addMissingRowsForNoVaccinationDays();
-	}
+    @Override
+    public boolean saveGivenVaccinesData(VaccinatedPeopleDto data) {
+        return repoGiven.saveEntity(fromVaccinatedPeopleDtoToEntitySomministrazioneVaccini(data));
+    }
 
-	@Override
-	public LocalDate getGivenVaccinesLastUpdateDate() {
-		return repoGiven.getDataAvailableLastDate();
-	}
+    @Override
+    public void addMissingRowsForNoVaccinationDays() {
+        repoGiven.addMissingRowsForNoVaccinationDays();
+    }
 
-	@Override
-	public VaccinesReceivedUsedDto getTotlalVaccinesDeliveredUsed() {
-		VaccinesReceivedUsedDto dto = new VaccinesReceivedUsedDto();
-		dto.setTotalVaccinesReceived(repoDelivered.getTotalNumberDeliveedVaccines());
-		dto.setTotalVaccinesUsed(repoGiven.getTotalPeaopleVaccinated());
-		return dto;
-	}
+    @Override
+    public LocalDate getGivenVaccinesLastUpdateDate() {
+        return repoGiven.getDataAvailableLastDate();
+    }
 
-	@Override
-	public Map<String, VacinesTotalDeliveredGivenPerRegionDto> getVacinesTotalDeliveredGivenPerRegion() {
-		Map<String, VacinesTotalDeliveredGivenPerRegionDto> map = new HashMap<>();
-		List<TotalVaccineDeliveredPerRegion> list = repoDelivered.getTotalVaccineDeliveredPerRegion();
-		list.forEach(el -> {
-			VacinesTotalDeliveredGivenPerRegionDto obj = new VacinesTotalDeliveredGivenPerRegionDto();
-			obj.setRegionCode(el.getRegionCode());
-			obj.setDeliveredVaccines(el.getDosesDelivered());
-			map.put(el.getRegionCode(), obj);
-		});
+    @Override
+    public VaccinesReceivedUsedDto getTotlalVaccinesDeliveredUsed() {
+        VaccinesReceivedUsedDto dto = new VaccinesReceivedUsedDto();
+        dto.setTotalVaccinesReceived(repoDelivered.getTotalNumberDeliveedVaccines());
+        dto.setTotalVaccinesUsed(repoGiven.getTotalPeaopleVaccinated());
+        return dto;
+    }
 
-		List<TotalVaccineGivenPerRegion> list2 = repoGiven.getTotalPeaopleVaccinatedPerRegion();
-		list2.forEach(el -> map.compute(el.getRegionCode(), (k, v) -> {
-			if (v == null) {
-				v = new VacinesTotalDeliveredGivenPerRegionDto();
-				v.setRegionCode(k);
-			}
-			v.setGivenVaccines(el.getGivenDoses());
-			return v;
-		}));
+    @Override
+    public Map<String, VacinesTotalDeliveredGivenPerRegionDto> getVacinesTotalDeliveredGivenPerRegion() {
+        Map<String, VacinesTotalDeliveredGivenPerRegionDto> map = new HashMap<>();
+        List<TotalVaccineDeliveredPerRegion> list = repoDelivered.getTotalVaccineDeliveredPerRegion();
+        list.forEach(el -> {
+            VacinesTotalDeliveredGivenPerRegionDto obj = new VacinesTotalDeliveredGivenPerRegionDto();
+            obj.setRegionCode(el.getRegionCode());
+            obj.setDeliveredVaccines(el.getDosesDelivered());
+            map.put(el.getRegionCode(), obj);
+        });
 
-		return map;
-	}
+        List<TotalVaccineGivenPerRegion> list2 = repoGiven.getTotalPeaopleVaccinatedPerRegion();
+        list2.forEach(el -> map.compute(el.getRegionCode(), (k, v) -> {
+            if (v == null) {
+                v = new VacinesTotalDeliveredGivenPerRegionDto();
+                v.setRegionCode(k);
+            }
+            v.setGivenVaccines(el.getGivenDoses());
+            return v;
+        }));
 
-	@Override
-	public void deleteGivenVaccineInformation(LocalDate date) {
-		repoGiven.deleteInformationForDate(date);
-	}
+        return map;
+    }
 
-	@Override
-	public void deleteDeliveredVaccineInformation(LocalDate date) {
-		repoDelivered.deleteInformationForDate(date);
-	}
+    @Override
+    public void deleteGivenVaccineInformation(LocalDate date) {
+        repoGiven.deleteInformationForDate(date);
+    }
 
-	private VaccinesDeliveredPerDayDto fromEntityVacciniConsegneToVaccinesDelivered(VacciniConsegne entity) {
-		VaccinesDeliveredPerDayDto dto = new VaccinesDeliveredPerDayDto();
-		dto.setDate(entity.getDate());
-		dto.setDosesDelivered(entity.getDosesDelivered());
-		return dto;
-	}
+    @Override
+    public void deleteDeliveredVaccineInformation(LocalDate date) {
+        repoDelivered.deleteInformationForDate(date);
+    }
 
-	private EntityVacciniConsegne fromVaccinesDeliveredDtoToVacciniEntityVacciniConsegne(VaccinesDeliveredDto dto) {
-		EntityVacciniConsegnePk key = new EntityVacciniConsegnePk();
-		key.setDate(dto.getDate());
-		key.setRegionCode(dto.getRegionCode());
-		key.setSupplier(dto.getSupplier());
+    private VaccinesDeliveredPerDayDto fromEntityVacciniConsegneToVaccinesDelivered(VacciniConsegne entity) {
+        VaccinesDeliveredPerDayDto dto = new VaccinesDeliveredPerDayDto();
+        dto.setDate(entity.getDate());
+        dto.setDosesDelivered(entity.getDosesDelivered());
+        return dto;
+    }
 
-		EntityVacciniConsegne entity = new EntityVacciniConsegne();
-		entity.setId(key);
-		entity.setDosesDelivered(dto.getDosesDelivered());
+    private EntityVacciniConsegne fromVaccinesDeliveredDtoToVacciniEntityVacciniConsegne(VaccinesDeliveredDto dto) {
+        EntityVacciniConsegnePk key = new EntityVacciniConsegnePk();
+        key.setDate(dto.getDate());
+        key.setRegionCode(dto.getRegionCode());
+        key.setSupplier(dto.getSupplier());
 
-		return entity;
-	}
+        EntityVacciniConsegne entity = new EntityVacciniConsegne();
+        entity.setId(key);
+        entity.setDosesDelivered(dto.getDosesDelivered());
 
-	private EntitySomministrazioneVaccini fromVaccinatedPeopleDtoToEntitySomministrazioneVaccini(
-			VaccinatedPeopleDto dto) {
-		EntitySomministrazioneVaccini entity = new EntitySomministrazioneVaccini();
-		EntitySomministrazioneVacciniPk key = new EntitySomministrazioneVacciniPk();
+        return entity;
+    }
 
-		key.setDate(dto.getDate());
-		key.setRegionCode(dto.getRegionCode());
-		key.setSupplier(dto.getSupplier());
-		key.setAgeRange(dto.getAgeRange());
+    private EntitySomministrazioneVaccini fromVaccinatedPeopleDtoToEntitySomministrazioneVaccini(
+            VaccinatedPeopleDto dto) {
+        EntitySomministrazioneVaccini entity = new EntitySomministrazioneVaccini();
+        EntitySomministrazioneVacciniPk key = new EntitySomministrazioneVacciniPk();
 
-		entity.setId(key);
-		entity.setMenCounter(dto.getMenCounter());
-		entity.setWomenCounter(dto.getWomenCounter());
-		entity.setNhsPeopleCounter(dto.getNhsPeopleCounter());
-		entity.setNonNhsPeopleCounter(dto.getNonNhsPeopleCounter());
-		entity.setNursingHomeCounter(dto.getNursingHomeCounter());
-		entity.setAge6069counter(dto.getAge6069counter());
-		entity.setAge7079counter(dto.getAge7079counter());
-		entity.setOver80Counter(dto.getOver80Counter());
-		entity.setPublicOrderCounter(dto.getPublicOrderCounter());
-		entity.setSchoolStaffCounter(dto.getSchoolStaffCounter());
-		entity.setFragilePeopleCounter(dto.getFragilePeopleCounter());
-		entity.setOtherPeopleCounter(dto.getOtherPeopleCounter());
-		entity.setFirstDoseCounter(dto.getFirstDoseCounter());
-		entity.setSecondDoseCounter(dto.getSecondDoseCounter());
+        key.setDate(dto.getDate());
+        key.setRegionCode(dto.getRegionCode());
+        key.setSupplier(dto.getSupplier());
+        key.setAgeRange(dto.getAgeRange());
 
-		return entity;
-	}
+        entity.setId(key);
+        entity.setMenCounter(dto.getMenCounter());
+        entity.setWomenCounter(dto.getWomenCounter());
+        entity.setNhsPeopleCounter(dto.getNhsPeopleCounter());
+        entity.setNonNhsPeopleCounter(dto.getNonNhsPeopleCounter());
+        entity.setNursingHomeCounter(dto.getNursingHomeCounter());
+        entity.setAge6069counter(dto.getAge6069counter());
+        entity.setAge7079counter(dto.getAge7079counter());
+        entity.setOver80Counter(dto.getOver80Counter());
+        entity.setPublicOrderCounter(dto.getPublicOrderCounter());
+        entity.setSchoolStaffCounter(dto.getSchoolStaffCounter());
+        entity.setFragilePeopleCounter(dto.getFragilePeopleCounter());
+        entity.setOtherPeopleCounter(dto.getOtherPeopleCounter());
+        entity.setFirstDoseCounter(dto.getFirstDoseCounter());
+        entity.setSecondDoseCounter(dto.getSecondDoseCounter());
 
-	private BiFunction<String, List<Long>, List<Long>> getAttToArrayBiFunction(
-			ToLongFunction<DailySumGivenVaccines> function, DailySumGivenVaccines dto) {
-		return (k, v) -> {
-			if (v == null) {
-				v = new ArrayList<>();
-			}
-			v.add(function.applyAsLong(dto));
-			return v;
-		};
-	}
+        return entity;
+    }
 
-	private Map<String, Long> parseListAgeRangeGivenVaccines(List<AgeRangeGivenVaccines> list) {
-		Map<String, Long> map = new HashMap<>();
-		list.forEach(dto -> {
-			Long counter = dto.getMen() + dto.getWomen();
-			map.compute(dto.getAgeRange(), (k, v) -> v == null ? counter : v + counter);
-		});
+    private BiFunction<String, List<Long>, List<Long>> getAttToArrayBiFunction(
+            ToLongFunction<DailySumGivenVaccines> function, DailySumGivenVaccines dto) {
+        return (k, v) -> {
+            if (v == null) {
+                v = new ArrayList<>();
+            }
+            v.add(function.applyAsLong(dto));
+            return v;
+        };
+    }
 
-		return map;
-	}
+    private Map<String, PeopleVaccinated> parseListAgeRangeGivenVaccines(List<AgeRangeGivenVaccines> list) {
+        Map<String, PeopleVaccinated> map = new HashMap<>();
 
-	@Override
-	public Map<String, Long> getTotalDeliveredVaccinesPerSupplier() {
-		Map<String, Long> data = new HashMap<>();
-		repoDelivered.getTotalDeliveredVaccinesPerSupplier().stream()
-				.forEach(entity -> data.compute(entity.getSupplier(),
-						(k, v) -> v == null ? entity.getDosesDelivered() : v + entity.getDosesDelivered()));
+        // @formatter:off
+        list.parallelStream().forEach(argv -> {
+            String ageRange = argv.getAgeRange();
 
-		return data;
-	}
-	
-	private void checkDates(LocalDate from, LocalDate to) throws MarcoException {
-		if(from == null || to == null) {
-			throw new MarcoException(msgSource.getMessage("COVID00002", null, LocaleContextHolder.getLocale()));
-		}
-	}
+            Long men = 0L;
+            Long women = 0L;
+            
+            String[] ages = ageRange.split("-");
+            if (ages.length > 1) {
+                men = populationService.getSumForAgesAndYear(Integer.parseInt(ages[0]), Integer.parseInt(ages[1]), Gender.MEN, populationStatisticYear);
+                women = populationService.getSumForAgesAndYear(Integer.parseInt(ages[0]), Integer.parseInt(ages[1]), Gender.WOMEN, populationStatisticYear);
+            } else {
+                men = populationService.getSumForAgesAndYear(Integer.parseInt(ages[0].replace('+', ' ').trim()), 100, Gender.MEN, populationStatisticYear);
+                women = populationService.getSumForAgesAndYear(Integer.parseInt(ages[0].replace('+', ' ').trim()), 100, Gender.WOMEN, populationStatisticYear);
+            }
+            
+            PeopleVaccinated dto = new PeopleVaccinated();
+            dto.setAgeRange(ageRange);
+            dto.setPopulation(men + women);
+            dto.setFirstDose(argv.getFirstDose());
+            dto.setCompleteVaccination(argv.getSecondDose());
+
+            map.put(dto.getAgeRange(), dto);
+        });
+        // @formatter:on
+
+        return map;
+    }
+
+    @Override
+    public Map<String, Long> getTotalDeliveredVaccinesPerSupplier() {
+        Map<String, Long> data = new HashMap<>();
+        repoDelivered.getTotalDeliveredVaccinesPerSupplier().stream()
+                .forEach(entity -> data.compute(entity.getSupplier(),
+                        (k, v) -> v == null ? entity.getDosesDelivered() : v + entity.getDosesDelivered()));
+
+        return data;
+    }
+
+    private void checkDates(LocalDate from, LocalDate to) throws MarcoException {
+        if (from == null || to == null) {
+            throw new MarcoException(msgSource.getMessage("COVID00002", null, LocaleContextHolder.getLocale()));
+        }
+    }
 
 }

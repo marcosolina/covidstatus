@@ -47,6 +47,10 @@ public class MarcoCovidScheduler implements CovidScheduler {
 	private CovidDataDownloader deliveredVaccinesDownloader;
 	
 	@Autowired
+    @Qualifier("IstatPopulation")
+    private CovidDataDownloader istatDownloader;
+	
+	@Autowired
     private NotificationSenderInterface notificationService;
 
 	@Scheduled(cron = "${covidstatus.scheduled.downloadnewdata.cron:0 0 * * * *}") // if not specified it will be every
@@ -54,7 +58,7 @@ public class MarcoCovidScheduler implements CovidScheduler {
 	@Override
 	public synchronized void downloadNewData() {
 
-		logger.info("Updating Data");
+		logger.info("Updating Covid Data");
 
 		try {
 			List<CovidDataDownloader> downloaders = new ArrayList<>();
@@ -69,7 +73,25 @@ public class MarcoCovidScheduler implements CovidScheduler {
 			notificationService.sendEmailMessage("marcosolina@gmail.com", "Marco Solina - Covid Status", e.getMessage());
 		}
 
-		logger.info("Update complete");
+		logger.info("Update Covid data complete");
 	}
+
+	@Scheduled(cron = "${covidstatus.scheduled.downloadnewdata.cron.istat:0 0 0 * * *}")
+    @Override
+    public void downloadIstatData() {
+        logger.info("Updating ISTAT Data");
+
+        try {
+            List<CovidDataDownloader> downloaders = new ArrayList<>();
+            downloaders.add(istatDownloader);
+            downloaders.parallelStream().forEach(CovidDataDownloader::downloadData);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            notificationService.sendEmailMessage("marcosolina@gmail.com", "Marco Solina - Covid Status", e.getMessage());
+        }
+
+        logger.info("Update ISTAT complete");
+        
+    }
 
 }

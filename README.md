@@ -5,6 +5,12 @@ All the data are retrieved from the following public GitHub Repositories:
 
 - [Infections GitHub Repository](https://github.com/pcm-dpc/COVID-19)
 - [Vaccines GitHub Repository](https://github.com/italia/covid19-opendata-vaccini)
+- **Istat Population Information**:
+  - [Web Page](http://dati.istat.it/Index.aspx?QueryId=42869)
+  - [Web Services](https://www.istat.it/it/metodi-e-strumenti/web-service-sdmx)
+  - [Web Services Guide](https://github.com/ondata/guida-api-istat)
+  - [Web Service Data Structure](http://sdmx.istat.it/SDMXWS/rest/datastructure/IT1/DCIS_POPRES1/)
+  - [Web Service Data Info (Eg: Gender Values)](http://sdmx.istat.it/SDMXWS/rest/codelist/IT1/CL_SEXISTAT1)
 
 ## Lincense of the Data
 
@@ -53,6 +59,7 @@ Once the containers are up and runnig open the following links:
 
 ## History
 
+- **24/04/2021 v0.1.20**: Added additional information to better understand the progress of the vaccination
 - **20/04/2021 v0.1.19**: Added to the charts the new info discoled by the goverment
 - **20/04/2021 v0.1.18**: Quick fix to allign with the new data scructure adopted by the goverment
 - **02/04/2021 v0.1.17**: Work around for an issue on the Goverment Repo [Issue](https://github.com/italia/covid19-opendata-vaccini/issues/128)

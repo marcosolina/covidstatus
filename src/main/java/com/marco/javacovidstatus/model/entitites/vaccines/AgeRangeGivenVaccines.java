@@ -7,39 +7,39 @@ package com.marco.javacovidstatus.model.entitites.vaccines;
  *
  */
 public class AgeRangeGivenVaccines {
-	private String ageRange;
-	private Long men;
-	private Long women;
+    private String ageRange;
+    private Long firstDose;
+    private Long secondDose;
 
-	public AgeRangeGivenVaccines(String ageRange, Long men, Long women) {
-		super();
-		this.ageRange = ageRange;
-		this.men = men;
-		this.women = women;
-	}
+    public AgeRangeGivenVaccines(String ageRange, Long firstDose, Long secondDose) {
+        super();
+        this.ageRange = ageRange;
+        this.firstDose = firstDose;
+        this.secondDose = secondDose;
+    }
 
-	public String getAgeRange() {
-		return ageRange;
-	}
+    public String getAgeRange() {
+        return ageRange;
+    }
 
-	public void setAgeRange(String ageRange) {
-		this.ageRange = ageRange;
-	}
+    public void setAgeRange(String ageRange) {
+        this.ageRange = ageRange;
+    }
 
-	public Long getMen() {
-		return men;
-	}
+    public Long getFirstDose() {
+        return firstDose;
+    }
 
-	public void setMen(Long men) {
-		this.men = men;
-	}
+    public void setFirstDose(Long firstDose) {
+        this.firstDose = firstDose;
+    }
 
-	public Long getWomen() {
-		return women;
-	}
+    public Long getSecondDose() {
+        return secondDose;
+    }
 
-	public void setWomen(Long women) {
-		this.women = women;
-	}
+    public void setSecondDose(Long secondDose) {
+        this.secondDose = secondDose;
+    }
 
 }

@@ -9,7 +9,12 @@ package com.marco.javacovidstatus.services.interfaces;
 public interface CovidScheduler {
 
     /**
-     * It downloads new data
+     * It downloads new data related to the Covid situation
      */
     public void downloadNewData();
+
+    /**
+     * It donwload the data from the ISTAT agency
+     */
+    public void downloadIstatData();
 }

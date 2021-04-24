@@ -345,15 +345,15 @@ public class GivenVaccinesRepoPostgres implements GivenVaccinesRepo {
 		Root<EntitySomministrazioneVaccini> root = cq.from(EntitySomministrazioneVaccini.class);
 
 		/*
-		 * SELECT age_range, sum(men_counter), sum (women_counter) from
+		 * SELECT age_range, sum(first_dose_counter), sum (second_dose_counter) from
 		 * somministrazioni_vaccini group by age_range
 		 */
 
 		// @formatter:off
 		cq.multiselect(
 				root.get(EntitySomministrazioneVaccini_.ID).get(EntitySomministrazioneVacciniPk_.AGE_RANGE),
-				cb.sum(root.get(EntitySomministrazioneVaccini_.MEN_COUNTER)),
-				cb.sum(root.get(EntitySomministrazioneVaccini_.WOMEN_COUNTER))
+				cb.sum(root.get(EntitySomministrazioneVaccini_.FIRST_DOSE_COUNTER)),
+				cb.sum(root.get(EntitySomministrazioneVaccini_.SECOND_DOSE_COUNTER))
 			)
 		.groupBy(
 				root.get(EntitySomministrazioneVaccini_.ID).get(EntitySomministrazioneVacciniPk_.AGE_RANGE)

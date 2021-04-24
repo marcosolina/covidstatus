@@ -33,6 +33,11 @@ covidstatus:
   version: ^project.version^
   notification:
     enabled: false
+  istat:
+    population:
+      year: 2020
   scheduled:
     downloadnewdata:
-      cron: "0 0 * * * *" # Every hour
+      cron:
+        covid: "0 0 * * * *" # Every hour
+        istat: "0 0 0 * * *" # Every day
