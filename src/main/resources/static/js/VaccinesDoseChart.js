@@ -10,8 +10,28 @@ class VaccinesDoseChart {
 		this.darkModeOn = false;
 		this.lastResponse = {};
 
-		this.chart = new DoughnutChart(document.getElementById(this.canvasId));
+		//this.chart = new DoughnutChart(document.getElementById(this.canvasId));
+        this.chart = new CovidChart(document.getElementById(this.canvasId));
 		this.chart.setTitle("Dosi somministrate");
+        
+        this.arrBackGroundColors = [
+            "rgba(255, 99, 132, 0.2)",
+            "rgba(255, 159, 64, 0.2)",
+            "rgba(255, 205, 86, 0.2)",
+            "rgba(75, 192, 192, 0.2)",
+            "rgba(54, 162, 235, 0.2)",
+            "rgba(153, 102, 255, 0.2)",
+            "rgba(201, 203, 207, 0.2)"
+           ];
+        this.arrBorderColor = [
+            "rgb(255, 99, 132)", 
+            "rgb(255, 159, 64)", 
+            "rgb(255, 205, 86)", 
+            "rgb(75, 192, 192)", 
+            "rgb(54, 162, 235)", 
+            "rgb(153, 102, 255)", 
+            "rgb(201, 203, 207)"
+            ];
 	}
 	
 	setDarkMode(darkModeOn){
@@ -35,14 +55,21 @@ class VaccinesDoseChart {
 
 		let i = 0;
 		let arrLabels = [];
-		for (let shotNumber in this.lastResponse.dataShotNumber) {
-			const dataset = new CovidChartDataset(shotNumber);
-			dataset.setData(this.lastResponse.dataShotNumber[shotNumber]);
-			dataset.setColor(this.colorPalette[i++]);
-			this.chart.addCovidChartDataset(dataset);
-			arrLabels.push(shotNumber);
+        let data = [];
+        let arrColors = [];
+		
+        for (let shotNumber in this.lastResponse.dataShotNumber) {
+            data.push(this.lastResponse.dataShotNumber[shotNumber]);    
+    		arrLabels.push(shotNumber);
+            arrColors.push(this.colorPalette[i++]);
 		}
+		const dataset = new CovidChartDataset("");
+		dataset.setData(data);
+		dataset.setColor(arrColors);
+        
+		this.chart.addCovidChartDataset(dataset);
 		this.chart.setLabels(arrLabels);
-		this.chart.drawChart(this.darkModeOn);
+		//this.chart.drawChart(this.darkModeOn);
+        this.chart.drawChart(this.darkModeOn, "horizontalBar");
 	}
 }
