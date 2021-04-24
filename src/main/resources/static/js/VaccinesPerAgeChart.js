@@ -75,6 +75,6 @@ class VaccinesPerAgeChart {
         this.chart.addCovidChartDataset(datasetVaccinated);
         
         this.chart.setLabels(arrLabels);
-        this.chart.drawChart(this.darkModeOn, "horizontalBar");
+        this.chart.drawChart(this.darkModeOn, "horizontalBar", true);
 	}
 }
