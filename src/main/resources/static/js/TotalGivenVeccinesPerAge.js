@@ -53,7 +53,7 @@ class TotalGivenVeccinesPerAge {
 		
 		const datasetPopulation = new CovidChartDataset("Popolazione");
         const datasetFirstDose = new CovidChartDataset("Prima Dose");
-        const datasetVaccinated = new CovidChartDataset("Vaccinati (Seconda Dose o Mono Dose)");
+        const datasetVaccinated = new CovidChartDataset("Vaccinati (Seconda Dose + Mono Dose)");
         
 		datasetPopulation.setColor(this.colorPalette[0]);
         datasetFirstDose.setColor(this.colorPalette[1]);
