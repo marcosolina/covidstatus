@@ -43,7 +43,7 @@ public class PopulationDownloader extends CovidDataDownloader {
 
     @Override
     public void downloadData() {
-        _LOGGER.debug("Downloading ISTAT data");
+        _LOGGER.info("Downloading ISTAT data");
         
         Map<String, String> headers = new HashMap<>();
         headers.put("Accept", "application/vnd.sdmx.data+csv;version=1.0.0");
@@ -103,6 +103,8 @@ public class PopulationDownloader extends CovidDataDownloader {
             String message = "There was an error while downloading the ISTAT data"; 
             _LOGGER.error(message);
             notificationService.sendEmailMessage("marcosolina@gmail.com", "Marco Solina - Covid Status", message);
+        }else {
+            _LOGGER.info("Downloading ISTAT data complete");
         }
     }
 

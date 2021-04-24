@@ -33,6 +33,9 @@ covidstatus:
   version: ^project.version^
   notification:
     enabled: false
+  istat:
+    population:
+      year: 2020
   scheduled:
     downloadnewdata:
       cron:

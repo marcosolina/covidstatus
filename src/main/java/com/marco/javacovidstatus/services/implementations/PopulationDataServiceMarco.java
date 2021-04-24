@@ -5,11 +5,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.marco.javacovidstatus.enums.Gender;
 import com.marco.javacovidstatus.model.dto.PopulationDto;
 import com.marco.javacovidstatus.model.entitites.italianpopulation.EntityItalianPopulation;
-import com.marco.javacovidstatus.model.entitites.italianpopulation.ItalianPopulationPk;
+import com.marco.javacovidstatus.model.entitites.italianpopulation.EntityItalianPopulationPk;
 import com.marco.javacovidstatus.repositories.interfaces.PopulationRepo;
 import com.marco.javacovidstatus.services.interfaces.PopulationDataService;
 import com.marco.utils.MarcoException;
 
+/**
+ * My implementation of this interface
+ * 
+ * @author Marco
+ *
+ */
 public class PopulationDataServiceMarco implements PopulationDataService {
     @Autowired
     private PopulationRepo repo;
@@ -21,7 +27,7 @@ public class PopulationDataServiceMarco implements PopulationDataService {
 
     private EntityItalianPopulation fromPopulationDtoToEntityItalianPopulation(PopulationDto dto) {
         EntityItalianPopulation entity = new EntityItalianPopulation();
-        ItalianPopulationPk pk = new ItalianPopulationPk();
+        EntityItalianPopulationPk pk = new EntityItalianPopulationPk();
         entity.setId(pk);
 
         pk.setAge(dto.getAge());
@@ -30,17 +36,6 @@ public class PopulationDataServiceMarco implements PopulationDataService {
         entity.setCounter(dto.getCounter());
 
         return entity;
-    }
-
-    private PopulationDto fromPopulationDtoToEntityItalianPopulation(EntityItalianPopulation entity) {
-        PopulationDto dto = new PopulationDto();
-
-        dto.setAge(entity.getId().getAge());
-        dto.setGender(entity.getId().getGender());
-        dto.setYear(entity.getId().getYear());
-        dto.setCounter(entity.getCounter());
-
-        return dto;
     }
 
     @Override

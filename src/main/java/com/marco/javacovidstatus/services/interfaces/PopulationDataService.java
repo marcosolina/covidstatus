@@ -13,7 +13,23 @@ public interface PopulationDataService {
      * @throws MarcoException
      */
     public boolean storeNewPopulationDto(PopulationDto dto) throws MarcoException;
-    
+
+    /**
+     * It clear the existing data
+     * 
+     * @return
+     * @throws MarcoException
+     */
     public boolean deleteAll() throws MarcoException;
+
+    /**
+     * It will return the number of population matching the provided parameters
+     * 
+     * @param ageFrom
+     * @param ageTo
+     * @param gender
+     * @param year
+     * @return
+     */
     public Long getSumForAgesAndYear(int ageFrom, int ageTo, Gender gender, int year);
 }

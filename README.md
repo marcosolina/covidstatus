@@ -59,6 +59,7 @@ Once the containers are up and runnig open the following links:
 
 ## History
 
+- **24/04/2021 v0.1.20**: Added additional information to better understand the progress of the vaccination
 - **20/04/2021 v0.1.19**: Added to the charts the new info discoled by the goverment
 - **20/04/2021 v0.1.18**: Quick fix to allign with the new data scructure adopted by the goverment
 - **02/04/2021 v0.1.17**: Work around for an issue on the Goverment Repo [Issue](https://github.com/italia/covid19-opendata-vaccini/issues/128)

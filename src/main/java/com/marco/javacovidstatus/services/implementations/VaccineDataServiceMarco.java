@@ -13,11 +13,12 @@ import java.util.function.BiFunction;
 import java.util.function.ToLongFunction;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 
 import com.marco.javacovidstatus.enums.Gender;
-import com.marco.javacovidstatus.model.dto.TotalPeopleVaccinated;
+import com.marco.javacovidstatus.model.dto.PeopleVaccinated;
 import com.marco.javacovidstatus.model.dto.VaccinatedPeopleDto;
 import com.marco.javacovidstatus.model.dto.VaccinatedPeopleTypeDto;
 import com.marco.javacovidstatus.model.dto.VaccinesDeliveredDto;
@@ -57,6 +58,8 @@ public class VaccineDataServiceMarco implements VaccineDataService {
     private MessageSource msgSource;
     @Autowired
     private PopulationDataService populationService;
+    @Value("${covidstatus.istat.population.year}")
+    private int populationStatisticYear;
 
     @Override
     public Map<String, List<VaccinesDeliveredPerDayDto>> getDeliveredVaccinesPerRegionBetweenDatesPerRegion(
@@ -144,7 +147,7 @@ public class VaccineDataServiceMarco implements VaccineDataService {
     }
 
     @Override
-    public Map<String, TotalPeopleVaccinated> getVaccinatedAgeRangeBetweenDates(LocalDate start, LocalDate end) throws MarcoException {
+    public Map<String, PeopleVaccinated> getVaccinatedAgeRangeBetweenDates(LocalDate start, LocalDate end) throws MarcoException {
         checkDates(start, end);
 
         List<AgeRangeGivenVaccines> list = repoGiven.getDeliveredVaccinesPerAgeRange(start, end);
@@ -153,7 +156,7 @@ public class VaccineDataServiceMarco implements VaccineDataService {
     }
 
     @Override
-    public Map<String, TotalPeopleVaccinated> getVaccinatedAgeRangeTotals() {
+    public Map<String, PeopleVaccinated> getVaccinatedAgeRangeTotals() {
         List<AgeRangeGivenVaccines> list = repoGiven.getTotalAgeRangeGivenVaccines();
         return parseListAgeRangeGivenVaccines(list);
     }
@@ -300,26 +303,26 @@ public class VaccineDataServiceMarco implements VaccineDataService {
         };
     }
 
-    private Map<String, TotalPeopleVaccinated> parseListAgeRangeGivenVaccines(List<AgeRangeGivenVaccines> list) {
-        Map<String, TotalPeopleVaccinated> map = new HashMap<>();
+    private Map<String, PeopleVaccinated> parseListAgeRangeGivenVaccines(List<AgeRangeGivenVaccines> list) {
+        Map<String, PeopleVaccinated> map = new HashMap<>();
 
         // @formatter:off
-        list.stream().forEach(argv -> {
+        list.parallelStream().forEach(argv -> {
             String ageRange = argv.getAgeRange();
 
             Long men = 0L;
             Long women = 0L;
+            
             String[] ages = ageRange.split("-");
-            int year = 2020;
             if (ages.length > 1) {
-                men = populationService.getSumForAgesAndYear(Integer.parseInt(ages[0]), Integer.parseInt(ages[1]), Gender.MEN, year);
-                women = populationService.getSumForAgesAndYear(Integer.parseInt(ages[0]), Integer.parseInt(ages[1]), Gender.WOMEN, year);
+                men = populationService.getSumForAgesAndYear(Integer.parseInt(ages[0]), Integer.parseInt(ages[1]), Gender.MEN, populationStatisticYear);
+                women = populationService.getSumForAgesAndYear(Integer.parseInt(ages[0]), Integer.parseInt(ages[1]), Gender.WOMEN, populationStatisticYear);
             } else {
-                men = populationService.getSumForAgesAndYear(Integer.parseInt(ages[0].replace('+', ' ').trim()), 100, Gender.MEN, year);
-                women = populationService.getSumForAgesAndYear(Integer.parseInt(ages[0].replace('+', ' ').trim()), 100, Gender.WOMEN, year);
+                men = populationService.getSumForAgesAndYear(Integer.parseInt(ages[0].replace('+', ' ').trim()), 100, Gender.MEN, populationStatisticYear);
+                women = populationService.getSumForAgesAndYear(Integer.parseInt(ages[0].replace('+', ' ').trim()), 100, Gender.WOMEN, populationStatisticYear);
             }
             
-            TotalPeopleVaccinated dto = new TotalPeopleVaccinated();
+            PeopleVaccinated dto = new PeopleVaccinated();
             dto.setAgeRange(ageRange);
             dto.setPopulation(men + women);
             dto.setFirstDose(argv.getFirstDose());

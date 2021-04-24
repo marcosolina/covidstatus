@@ -26,6 +26,7 @@ public class JavaCovidStatusApplication {
 	 * Execute some tasks at startup
 	 * @param ctx
 	 * @return
+	 */
 	@Bean
     public CommandLineRunner commandLineRunner(ApplicationContext ctx) {
         return new CommandLineRunner() {
@@ -36,5 +37,4 @@ public class JavaCovidStatusApplication {
             }
         };
     }
-	 */
 }

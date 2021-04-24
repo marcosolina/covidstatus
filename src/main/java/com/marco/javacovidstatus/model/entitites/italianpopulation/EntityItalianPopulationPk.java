@@ -9,8 +9,13 @@ import javax.persistence.Enumerated;
 
 import com.marco.javacovidstatus.enums.Gender;
 
+/**
+ * Primary key for {@link EntityItalianPopulation}
+ * @author Marco
+ *
+ */
 @Embeddable
-public class ItalianPopulationPk implements Serializable {
+public class EntityItalianPopulationPk implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Column(name = "YEAR")
@@ -67,7 +72,7 @@ public class ItalianPopulationPk implements Serializable {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        ItalianPopulationPk other = (ItalianPopulationPk) obj;
+        EntityItalianPopulationPk other = (EntityItalianPopulationPk) obj;
         if (age != other.age)
             return false;
         if (gender != other.gender)

@@ -2,6 +2,12 @@ package com.marco.javacovidstatus.model.dto;
 
 import com.marco.javacovidstatus.enums.Gender;
 
+/**
+ * This model is used to pass the information related to the Italian population
+ * 
+ * @author Marco
+ *
+ */
 public class PopulationDto {
     private int year;
     private int age;

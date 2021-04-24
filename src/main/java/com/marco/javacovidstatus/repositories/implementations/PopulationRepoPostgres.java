@@ -17,9 +17,15 @@ import org.springframework.transaction.annotation.Transactional;
 import com.marco.javacovidstatus.enums.Gender;
 import com.marco.javacovidstatus.model.entitites.italianpopulation.EntityItalianPopulation;
 import com.marco.javacovidstatus.model.entitites.italianpopulation.EntityItalianPopulation_;
-import com.marco.javacovidstatus.model.entitites.italianpopulation.ItalianPopulationPk_;
+import com.marco.javacovidstatus.model.entitites.italianpopulation.EntityItalianPopulationPk_;
 import com.marco.javacovidstatus.repositories.interfaces.PopulationRepo;
 
+/**
+ * PostgreSQL implementation of the {@link PopulationRepo}
+ * 
+ * @author Marco
+ *
+ */
 @Transactional
 public class PopulationRepoPostgres implements PopulationRepo {
     private static final Logger _LOGGER = LoggerFactory.getLogger(PopulationRepoPostgres.class);
@@ -62,9 +68,9 @@ public class PopulationRepoPostgres implements PopulationRepo {
             )
         .where(
             cb.and(
-                    cb.between(root.get(EntityItalianPopulation_.ID).get(ItalianPopulationPk_.AGE), ageFrom, ageTo),
-                    cb.equal(root.get(EntityItalianPopulation_.ID).get(ItalianPopulationPk_.GENDER), gender),
-                    cb.equal(root.get(EntityItalianPopulation_.ID).get(ItalianPopulationPk_.YEAR), year)
+                    cb.between(root.get(EntityItalianPopulation_.ID).get(EntityItalianPopulationPk_.AGE), ageFrom, ageTo),
+                    cb.equal(root.get(EntityItalianPopulation_.ID).get(EntityItalianPopulationPk_.GENDER), gender),
+                    cb.equal(root.get(EntityItalianPopulation_.ID).get(EntityItalianPopulationPk_.YEAR), year)
                 )
             );
 

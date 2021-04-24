@@ -1,6 +1,13 @@
 package com.marco.javacovidstatus.model.dto;
 
-public class TotalPeopleVaccinated {
+/**
+ * This model is use to carry the information about the vaccines given to the
+ * different age rang
+ * 
+ * @author Marco
+ *
+ */
+public class PeopleVaccinated {
     private String ageRange;
     private Long population;
     private Long firstDose;

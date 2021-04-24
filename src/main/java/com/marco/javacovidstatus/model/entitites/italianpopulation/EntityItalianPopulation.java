@@ -5,19 +5,25 @@ import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
+/**
+ * Entity which stores the population info retrieved from the ISTAT
+ * 
+ * @author Marco
+ *
+ */
 @Entity
 @Table(name = "ITALIAN_POPULATION")
 public class EntityItalianPopulation {
     @EmbeddedId
-    private ItalianPopulationPk id;
+    private EntityItalianPopulationPk id;
     @Column(name = "COUNTER")
     private int counter;
 
-    public ItalianPopulationPk getId() {
+    public EntityItalianPopulationPk getId() {
         return id;
     }
 
-    public void setId(ItalianPopulationPk id) {
+    public void setId(EntityItalianPopulationPk id) {
         this.id = id;
     }
 
