@@ -62,7 +62,10 @@ class CovidChart {
 					fontColor: fontColor,
 				},
 				legend:{
-					display: displayLegend || false
+					display: displayLegend || false,
+                    labels:{
+                        fontColor: fontColor
+                    }
 				},
 				scales: {
 	                yAxes: [{
