@@ -13,6 +13,7 @@ class TotalDeliveredUsedVaccinesPerRegionChart {
 		
 		this.chart = new CovidChart(document.getElementById(this.canvasId));
 		this.chart.setTitle("Totale Vaccini Consegnati / Usati Per regione");
+        this.chart.setHideTextFromTooltip(true);
 	}
 	
 	setDarkMode(darkModeOn){

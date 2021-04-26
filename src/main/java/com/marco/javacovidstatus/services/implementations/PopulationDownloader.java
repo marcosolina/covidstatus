@@ -59,7 +59,7 @@ public class PopulationDownloader extends CovidDataDownloader {
             years.parallelStream().forEach(i -> {
                 String url = String.format("http://sdmx.istat.it/SDMXWS/rest/data/22_289/.Y%d.IT.1+2.99.JAN/", i);
                 _LOGGER.debug(String.format("Downloading ISTAT: %s", url));
-                List<String> rows = getCsvRows(url, headers);
+                List<String> rows = getCsvRows(url, headers, true);
                 for (int j = 0; j < rows.size(); j++) {
                     String row = rows.get(j);
                     String[] cols = row.split(",");
@@ -79,7 +79,7 @@ public class PopulationDownloader extends CovidDataDownloader {
             
             String url = "http://sdmx.istat.it/SDMXWS/rest/data/22_289/.Y_GE100.IT.1+2.99.JAN/";
             _LOGGER.debug(String.format("Downloading ISTAT: %s", url));
-            List<String> rows = getCsvRows(url, headers);
+            List<String> rows = getCsvRows(url, headers, true);
             for (int j = 0; j < rows.size(); j++) {
                 String row = rows.get(j);
                 String[] cols = row.split(",");

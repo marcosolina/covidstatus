@@ -1,5 +1,7 @@
 package com.marco.javacovidstatus.services.implementations;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -330,6 +332,19 @@ public class VaccineDataServiceMarco implements VaccineDataService {
             dto.setFirstDose(argv.getFirstDose());
             dto.setSecondDose(argv.getSecondDose());
             dto.setMonoDose(argv.getMonoDose());
+            
+            // @formatter:off
+            BigDecimal first = BigDecimal.valueOf(dto.getFirstDose())
+                                .divide(BigDecimal.valueOf(dto.getPopulation()), 4, RoundingMode.DOWN)
+                                .multiply(BigDecimal.valueOf(100)).setScale(2, RoundingMode.DOWN);
+            BigDecimal vaccinadted = BigDecimal.valueOf(dto.getSecondDose())
+                                        .add(BigDecimal.valueOf(dto.getMonoDose()))
+                                        .divide(BigDecimal.valueOf(dto.getPopulation()), 4, RoundingMode.DOWN)
+                                        .multiply(BigDecimal.valueOf(100)).setScale(2, RoundingMode.DOWN);
+            // @formatter:on
+            
+            dto.setFirstDosePerc(first);
+            dto.setVaccinatedPerc(vaccinadted);
 
             map.put(dto.getAgeRange(), dto);
         });
