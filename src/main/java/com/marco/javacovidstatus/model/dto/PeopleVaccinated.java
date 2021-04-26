@@ -1,5 +1,7 @@
 package com.marco.javacovidstatus.model.dto;
 
+import java.math.BigDecimal;
+
 /**
  * This model is use to carry the information about the vaccines given to the
  * different age rang
@@ -13,6 +15,8 @@ public class PeopleVaccinated {
     private Long firstDose;
     private Long secondDose;
     private Long monoDose;
+    private BigDecimal firstDosePerc;
+    private BigDecimal vaccinatedPerc;
 
     public String getAgeRange() {
         return ageRange;
@@ -52,6 +56,22 @@ public class PeopleVaccinated {
 
     public void setMonoDose(Long monoDose) {
         this.monoDose = monoDose;
+    }
+
+    public BigDecimal getFirstDosePerc() {
+        return firstDosePerc;
+    }
+
+    public void setFirstDosePerc(BigDecimal firstDosePerc) {
+        this.firstDosePerc = firstDosePerc;
+    }
+
+    public BigDecimal getVaccinatedPerc() {
+        return vaccinatedPerc;
+    }
+
+    public void setVaccinatedPerc(BigDecimal vaccinatedPerc) {
+        this.vaccinatedPerc = vaccinatedPerc;
     }
 
 }

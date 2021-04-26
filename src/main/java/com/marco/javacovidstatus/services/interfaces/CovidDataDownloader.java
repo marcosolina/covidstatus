@@ -75,18 +75,26 @@ public abstract class CovidDataDownloader {
     }
 
     /**
-     * It connects to the Ministry of Health Repository, reads the CSV file and it
-     * returns the list of rows included in the file. It will skip the columns
-     * labels row
+     * Simplified call to {@link CovidDataDownloader#getCsvRows}
      * 
      * @param url
      * @return
      */
     protected List<String> getCsvRows(String url) {
-        return getCsvRows(url, null);
+        return getCsvRows(url, null, true);
     }
 
-    protected List<String> getCsvRows(String url, Map<String, String> headers) {
+    /**
+     * It connects to the Ministry of Health Repository, reads the CSV file and it
+     * returns the list of rows included in the file. It will skip the columns
+     * labels row
+     * 
+     * @param url
+     * @param headers
+     * @param removeColumnNamesLine
+     * @return
+     */
+    protected List<String> getCsvRows(String url, Map<String, String> headers, boolean removeColumnNamesLine) {
         /*
          * Get the CSV file using an GET HTTP call
          */
@@ -102,7 +110,7 @@ public abstract class CovidDataDownloader {
          */
         String csv = response.bodyToMono(String.class).block();
         List<String> listRows = new ArrayList<>(Arrays.asList(csv.split("\\n")));
-        if (!listRows.isEmpty()) {
+        if (removeColumnNamesLine && !listRows.isEmpty()) {
             listRows.remove(0);// remove column names
         }
 

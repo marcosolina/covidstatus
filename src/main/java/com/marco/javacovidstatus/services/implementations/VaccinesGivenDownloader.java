@@ -1,7 +1,9 @@
 package com.marco.javacovidstatus.services.implementations;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.slf4j.Logger;
@@ -35,25 +37,28 @@ public class VaccinesGivenDownloader extends CovidDataDownloader {
     private static final Logger _LOGGER = LoggerFactory.getLogger(VaccinesGivenDownloader.class);
 
     private static final String CSV_URL = "https://raw.githubusercontent.com/italia/covid19-opendata-vaccini/master/dati/somministrazioni-vaccini-latest.csv";
-    public static final int COL_DATE = 0;
-    public static final int COL_REGION_CODE = 20;
-    public static final int COL_AREA_CODE = 2;
-    public static final int COL_SUPPLIER = 1;
-    public static final int COL_AGE_RANGE = 3;
-    public static final int COL_MEN_COUNTER = 4;
-    public static final int COL_WOMEN_COUNTER = 5;
-    public static final int COL_NHS_COUNTER = 6;
-    public static final int COL_NON_NHS_COUNTER = 7;
-    public static final int COL_NURSING_COUNTER = 8;
-    public static final int COL_AGE_60_69_COUNTER = 9;
-    public static final int COL_AGE_70_79_COUNTER = 10;
-    public static final int COL_OVER_80_COUNTER = 11;
-    public static final int COL_PUBLIC_ORDER_COUNTER = 12;
-    public static final int COL_SCHOOL_STAFF_COUNTER = 13;
-    public static final int COL_FRAGILE_COUNTER = 14;
-    public static final int COL_OTHER_PEOPLE_COUNTER = 15;
-    public static final int COL_FIRST_DOSE_COUNTER = 16;
-    public static final int COL_SECOND_DOSE_COUNTER = 17;
+    
+    // @formatter:off
+    public static final String COL_DATE                     = "data_somministrazione";
+    public static final String COL_REGION_CODE              = "codice_regione_ISTAT";
+    public static final String COL_AREA_CODE                = "area";
+    public static final String COL_SUPPLIER                 = "fornitore";
+    public static final String COL_AGE_RANGE                = "fascia_anagrafica";
+    public static final String COL_MEN_COUNTER              = "sesso_maschile";
+    public static final String COL_WOMEN_COUNTER            = "sesso_femminile";
+    public static final String COL_NHS_COUNTER              = "categoria_operatori_sanitari_sociosanitari";
+    public static final String COL_NON_NHS_COUNTER          = "categoria_personale_non_sanitario";
+    public static final String COL_NURSING_COUNTER          = "categoria_ospiti_rsa";
+    public static final String COL_AGE_60_69_COUNTER        = "categoria_60_69";
+    public static final String COL_AGE_70_79_COUNTER        = "categoria_70_79";
+    public static final String COL_OVER_80_COUNTER          = "categoria_over80";
+    public static final String COL_PUBLIC_ORDER_COUNTER     = "categoria_forze_armate";
+    public static final String COL_SCHOOL_STAFF_COUNTER     = "categoria_personale_scolastico";
+    public static final String COL_FRAGILE_COUNTER          = "categoria_soggetti_fragili";
+    public static final String COL_OTHER_PEOPLE_COUNTER     = "categoria_altro";
+    public static final String COL_FIRST_DOSE_COUNTER       = "prima_dose";
+    public static final String COL_SECOND_DOSE_COUNTER      = "seconda_dose";
+    // @formatter:on
 
     public VaccinesGivenDownloader(WebClient webClient) {
         super(webClient);
@@ -63,7 +68,7 @@ public class VaccinesGivenDownloader extends CovidDataDownloader {
     public void downloadData() {
         _LOGGER.info("Downloading Given vaccines data");
 
-        List<String> rows = this.getCsvRows(CSV_URL);
+        List<String> rows = this.getCsvRows(CSV_URL, null, false);
 
         if (rows.isEmpty()) {
             notificationService.sendEmailMessage("marcosolina@gmail.com", "Marco Solina - Covid Status",
@@ -76,6 +81,9 @@ public class VaccinesGivenDownloader extends CovidDataDownloader {
                     "La struttura dei dati vaccini somministrati e' stata modificata...");
             return;
         }
+        
+        Map<String, Integer> columnsPositions = getColumnsIndex(rows.get(0));
+        rows.remove(0);
 
         /*
          * Forcing the re-loading of all the data. I notice that the government updates
@@ -91,15 +99,15 @@ public class VaccinesGivenDownloader extends CovidDataDownloader {
             try {
                 String[] columns = row.split(",");
 
-                String regionCode = columns[COL_REGION_CODE];
-                String areaCode = columns[COL_AREA_CODE];
+                String regionCode = columns[columnsPositions.get(COL_REGION_CODE)];
+                String areaCode = columns[columnsPositions.get(COL_AREA_CODE)];
                 if (areaCode.equals("PAB")) {
                     regionCode = "21";
                 } else if (areaCode.equals("PAT")) {
                     regionCode = "22";
                 }
 
-                LocalDate date = DateUtils.fromStringToLocalDate(columns[COL_DATE], DateFormats.DB_DATE);
+                LocalDate date = DateUtils.fromStringToLocalDate(columns[columnsPositions.get(COL_DATE)], DateFormats.DB_DATE);
 
                 if (!date.isAfter(startDate)) {
                     return;
@@ -108,30 +116,30 @@ public class VaccinesGivenDownloader extends CovidDataDownloader {
                 VaccinatedPeopleDto data = new VaccinatedPeopleDto();
                 data.setDate(date);
                 data.setRegionCode(("00" + regionCode).substring(regionCode.length()));
-                data.setSupplier(columns[COL_SUPPLIER]);
-                data.setAgeRange(columns[COL_AGE_RANGE]);
-                data.setMenCounter(Integer.parseInt(columns[COL_MEN_COUNTER]));
-                data.setWomenCounter(Integer.parseInt(columns[COL_WOMEN_COUNTER]));
-                data.setNhsPeopleCounter(Integer.parseInt(columns[COL_NHS_COUNTER]));
-                data.setNonNhsPeopleCounter(Integer.parseInt(columns[COL_NON_NHS_COUNTER]));
-                data.setNursingHomeCounter(Integer.parseInt(columns[COL_NURSING_COUNTER]));
-                data.setAge6069counter(Integer.parseInt(columns[COL_AGE_60_69_COUNTER]));
-                data.setAge7079counter(Integer.parseInt(columns[COL_AGE_70_79_COUNTER]));
-                data.setOver80Counter(Integer.parseInt(columns[COL_OVER_80_COUNTER]));
-                data.setPublicOrderCounter(Integer.parseInt(columns[COL_PUBLIC_ORDER_COUNTER]));
-                data.setSchoolStaffCounter(Integer.parseInt(columns[COL_SCHOOL_STAFF_COUNTER]));
-                data.setFragilePeopleCounter(Integer.parseInt(columns[COL_FRAGILE_COUNTER]));
-                data.setOtherPeopleCounter(Integer.parseInt(columns[COL_OTHER_PEOPLE_COUNTER]));
+                data.setSupplier(columns[columnsPositions.get(COL_SUPPLIER)]);
+                data.setAgeRange(columns[columnsPositions.get(COL_AGE_RANGE)]);
+                data.setMenCounter(Integer.parseInt(columns[columnsPositions.get(COL_MEN_COUNTER)]));
+                data.setWomenCounter(Integer.parseInt(columns[columnsPositions.get(COL_WOMEN_COUNTER)]));
+                data.setNhsPeopleCounter(Integer.parseInt(columns[columnsPositions.get(COL_NHS_COUNTER)]));
+                data.setNonNhsPeopleCounter(Integer.parseInt(columns[columnsPositions.get(COL_NON_NHS_COUNTER)]));
+                data.setNursingHomeCounter(Integer.parseInt(columns[columnsPositions.get(COL_NURSING_COUNTER)]));
+                data.setAge6069counter(Integer.parseInt(columns[columnsPositions.get(COL_AGE_60_69_COUNTER)]));
+                data.setAge7079counter(Integer.parseInt(columns[columnsPositions.get(COL_AGE_70_79_COUNTER)]));
+                data.setOver80Counter(Integer.parseInt(columns[columnsPositions.get(COL_OVER_80_COUNTER)]));
+                data.setPublicOrderCounter(Integer.parseInt(columns[columnsPositions.get(COL_PUBLIC_ORDER_COUNTER)]));
+                data.setSchoolStaffCounter(Integer.parseInt(columns[columnsPositions.get(COL_SCHOOL_STAFF_COUNTER)]));
+                data.setFragilePeopleCounter(Integer.parseInt(columns[columnsPositions.get(COL_FRAGILE_COUNTER)]));
+                data.setOtherPeopleCounter(Integer.parseInt(columns[columnsPositions.get(COL_OTHER_PEOPLE_COUNTER)]));
                 
                 /**
                  * The goverment put the vaccines which requires just one shot into the "first"
                  * dose. I decided to move these into the mono dose column
                  */
                 if(monodoseSuppliers.contains(data.getSupplier())) {
-                    data.setMonoDoseCounter(Integer.parseInt(columns[COL_FIRST_DOSE_COUNTER]));
+                    data.setMonoDoseCounter(Integer.parseInt(columns[columnsPositions.get(COL_FIRST_DOSE_COUNTER)]));
                 }else {
-                    data.setFirstDoseCounter(Integer.parseInt(columns[COL_FIRST_DOSE_COUNTER]));
-                    data.setSecondDoseCounter(Integer.parseInt(columns[COL_SECOND_DOSE_COUNTER]));
+                    data.setFirstDoseCounter(Integer.parseInt(columns[columnsPositions.get(COL_FIRST_DOSE_COUNTER)]));
+                    data.setSecondDoseCounter(Integer.parseInt(columns[columnsPositions.get(COL_SECOND_DOSE_COUNTER)]));
                 }
                 
 
@@ -162,6 +170,17 @@ public class VaccinesGivenDownloader extends CovidDataDownloader {
             date = this.defaultStartData;
         }
         return date;
+    }
+    
+    private Map<String, Integer> getColumnsIndex(String columnsRow){
+        Map<String, Integer> map = new HashMap<>();
+        String [] columnsNames = columnsRow.split(",");
+        
+        for(int i = 0; i < columnsNames.length; i++) {
+            map.put(columnsNames[i], i);
+        }
+        
+        return map;
     }
 
 }

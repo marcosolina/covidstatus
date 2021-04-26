@@ -13,6 +13,7 @@ class VaccinesPerAgeChart {
 		
 		this.chart = new CovidChart(document.getElementById(this.canvasId));
 		this.chart.setTitle("Fasce di età vaccinate");
+        this.chart.setHideTextFromTooltip(true);
 	}
 	
 	setDarkMode(darkModeOn){

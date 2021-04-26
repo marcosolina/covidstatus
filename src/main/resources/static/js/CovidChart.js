@@ -10,6 +10,7 @@ class CovidChart {
 		this.arrDataSets = [];
 		this.invertedAxes = false;
 		this.oldDarkMode = false;
+        this.hideTextFromTooltip = false;
 	}
 	
 	/**
@@ -18,6 +19,10 @@ class CovidChart {
 	setLabels(arrLabels){
 		this.arrLabels = arrLabels;
 	}
+    
+    setHideTextFromTooltip(boolHide){
+        this.hideTextFromTooltip = boolHide;
+    }
 	
 	/**
 		Param: CovidChartDataset -> It adds the dataset to the list of data to draw
@@ -123,16 +128,22 @@ class CovidChart {
 	}
 	
 	formatToolTip(toolTip, data){
-		let tmp = data.datasets[toolTip.datasetIndex].label;
+		let tmp = this.hideTextFromTooltip ? "" : data.datasets[toolTip.datasetIndex].label;
 		
 		let label = this.invertedAxes ? toolTip.xLabel : toolTip.yLabel;
 		
 		// If it is an Integer
 		if(label % 1 === 0){
-			return tmp + ": " + label.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+			tmp += ": " + label.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 		}else{
-			return tmp + ": " + label;
+			tmp += ": " + label;
 		}
+        
+        if(this.hideTextFromTooltip){
+            tmp = tmp.substring(1);
+        }
+        
+        return tmp;
 	}
 	
 	/**
