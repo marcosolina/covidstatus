@@ -29,7 +29,7 @@ import com.marco.javacovidstatus.services.implementations.EmailNotificationSende
 import com.marco.javacovidstatus.services.implementations.MarcoNationalDataService;
 import com.marco.javacovidstatus.services.implementations.NationalCovidDataDownloader;
 import com.marco.javacovidstatus.services.implementations.PopulationDataServiceMarco;
-import com.marco.javacovidstatus.services.implementations.PopulationDownloader;
+import com.marco.javacovidstatus.services.implementations.PopulationDownloaderExcel;
 import com.marco.javacovidstatus.services.implementations.ProvinceCoviddataDownloader;
 import com.marco.javacovidstatus.services.implementations.RegionCovidDataDownloader;
 import com.marco.javacovidstatus.services.implementations.RegionMapDownloaderFromNationalWebSite;
@@ -182,7 +182,8 @@ public class Beans {
 
     @Bean(name = "IstatPopulation")
     public CovidDataDownloader getPopulationDownloader() {
-        return new PopulationDownloader(getWebClient());
+        //return new PopulationDownloader(getWebClient());
+        return new PopulationDownloaderExcel(getWebClient());
     }
 
     @Bean
