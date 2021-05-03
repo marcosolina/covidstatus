@@ -334,13 +334,18 @@ public class VaccineDataServiceMarco implements VaccineDataService {
             dto.setMonoDose(argv.getMonoDose());
             
             // @formatter:off
-            BigDecimal first = BigDecimal.valueOf(dto.getFirstDose())
-                                .divide(BigDecimal.valueOf(dto.getPopulation()), 4, RoundingMode.DOWN)
-                                .multiply(BigDecimal.valueOf(100)).setScale(2, RoundingMode.DOWN);
-            BigDecimal vaccinadted = BigDecimal.valueOf(dto.getSecondDose())
-                                        .add(BigDecimal.valueOf(dto.getMonoDose()))
-                                        .divide(BigDecimal.valueOf(dto.getPopulation()), 4, RoundingMode.DOWN)
-                                        .multiply(BigDecimal.valueOf(100)).setScale(2, RoundingMode.DOWN);
+            BigDecimal first = BigDecimal.ZERO;
+            BigDecimal vaccinadted = BigDecimal.ZERO;
+            
+            if(men + women > 0) {
+                first = BigDecimal.valueOf(dto.getFirstDose())
+                        .divide(BigDecimal.valueOf(dto.getPopulation()), 4, RoundingMode.DOWN)
+                        .multiply(BigDecimal.valueOf(100)).setScale(2, RoundingMode.DOWN);
+                vaccinadted = BigDecimal.valueOf(dto.getSecondDose())
+                        .add(BigDecimal.valueOf(dto.getMonoDose()))
+                        .divide(BigDecimal.valueOf(dto.getPopulation()), 4, RoundingMode.DOWN)
+                        .multiply(BigDecimal.valueOf(100)).setScale(2, RoundingMode.DOWN);
+            }
             // @formatter:on
             
             dto.setFirstDosePerc(first);

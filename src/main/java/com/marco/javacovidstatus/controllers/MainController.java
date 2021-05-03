@@ -184,6 +184,7 @@ public class MainController {
 		} catch (MarcoException e) {
 			resp.addError(e);
 		} catch (Exception e) {
+		    LOGGER.error(e.getMessage());
 			if(LOGGER.isTraceEnabled()) {
 				e.printStackTrace();
 			}
@@ -247,6 +248,7 @@ public class MainController {
 		} catch (MarcoException e) {
 			resp.addError(e);
 		} catch (Exception e) {
+		    LOGGER.error(e.getMessage());
 			if(LOGGER.isTraceEnabled()) {
 				e.printStackTrace();
 			}
@@ -293,6 +295,7 @@ public class MainController {
 		} catch (MarcoException e) {
 			resp.addError(e);
 		} catch (Exception e) {
+		    LOGGER.error(e.getMessage());
 			if(LOGGER.isTraceEnabled()) {
 				e.printStackTrace();
 			}

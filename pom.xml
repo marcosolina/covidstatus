@@ -11,7 +11,7 @@
 	</parent>
 	<groupId>com.marco</groupId>
 	<artifactId>covidstatus</artifactId>
-	<version>0.1.23</version>
+	<version>0.1.24</version>
 	<name>CovidStatus</name>
 	<description>Demo project for Spring Boot</description>
 
@@ -20,9 +20,15 @@
 		<resource.delimiter>^</resource.delimiter>
 		<postgresql.version>42.2.19</postgresql.version>
 		<swagger.version>2.9.2</swagger.version>
+		<spring-cloud.version>Hoxton.SR11</spring-cloud.version>
 	</properties>
 
 	<dependencies>
+		<!-- Spring cloud -->
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-config</artifactId>
+		</dependency>
 		<!-- Standard Springboot dependency to create Web Applications -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -71,19 +77,19 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-mail</artifactId>
 		</dependency>
-		<!-- PostgreSQL JDBC  -->
+		<!-- PostgreSQL JDBC -->
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
 		</dependency>
-		
+
 		<!-- To parse HTML -->
 		<dependency>
-		    <groupId>org.jsoup</groupId>
-		    <artifactId>jsoup</artifactId>
-		    <version>1.13.1</version>
+			<groupId>org.jsoup</groupId>
+			<artifactId>jsoup</artifactId>
+			<version>1.13.1</version>
 		</dependency>
-		
+
 		<!--Start Swagger Dependencies https://www.baeldung.com/swagger-2-documentation-for-spring-rest-api -->
 		<dependency>
 			<groupId>io.springfox</groupId>
@@ -97,11 +103,9 @@
 			<version>${swagger.version}</version>
 		</dependency>
 		<!-- End swagger dependencies -->
-		
-		<!-- My custom libraries. You can find the source code on my GitHub
-			https://github.com/marcosolina/WebJar		
-			https://github.com/marcosolina/javautils
-		 -->
+
+		<!-- My custom libraries. You can find the source code on my GitHub https://github.com/marcosolina/WebJar 
+			https://github.com/marcosolina/javautils -->
 		<dependency>
 			<groupId>com.marco</groupId>
 			<artifactId>WebJar</artifactId>
@@ -112,7 +116,19 @@
 			<artifactId>Utils</artifactId>
 			<version>0.0.2</version>
 		</dependency>
+
 	</dependencies>
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-dependencies</artifactId>
+				<version>${spring-cloud.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 
 	<build>
 		<plugins>

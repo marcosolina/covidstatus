@@ -107,6 +107,7 @@ public class VaccinesController {
 		} catch (MarcoException e) {
 			resp.addError(e);
 		} catch (Exception e) {
+		    LOGGER.error(e.getMessage());
 			if(LOGGER.isTraceEnabled()) {
 				e.printStackTrace();
 			}
@@ -145,6 +146,7 @@ public class VaccinesController {
 		} catch (MarcoException e) {
 			resp.addError(e);
 		} catch (Exception e) {
+		    LOGGER.error(e.getMessage());
 			if(LOGGER.isTraceEnabled()) {
 				e.printStackTrace();
 			}
@@ -185,6 +187,7 @@ public class VaccinesController {
 		} catch (MarcoException e) {
 			resp.addError(e);
 		} catch (Exception e) {
+		    LOGGER.error(e.getMessage());
 			if(LOGGER.isTraceEnabled()) {
 				e.printStackTrace();
 			}
@@ -224,6 +227,7 @@ public class VaccinesController {
 		} catch (MarcoException e) {
 			resp.addError(e);
 		} catch (Exception e) {
+		    LOGGER.error(e.getMessage());
 			if(LOGGER.isTraceEnabled()) {
 				e.printStackTrace();
 			}
@@ -262,6 +266,7 @@ public class VaccinesController {
 		} catch (MarcoException e) {
 			resp.addError(e);
 		} catch (Exception e) {
+		    LOGGER.error(e.getMessage());
 			if(LOGGER.isTraceEnabled()) {
 				e.printStackTrace();
 			}
@@ -290,6 +295,7 @@ public class VaccinesController {
 			resp.setTotalUsedVaccines(dto.getTotalVaccinesUsed());
 			resp.setStatus(true);
 		} catch (Exception e) {
+		    LOGGER.error(e.getMessage());
 			if(LOGGER.isTraceEnabled()) {
 				e.printStackTrace();
 			}
@@ -315,6 +321,7 @@ public class VaccinesController {
 			resp.setData(service.getVacinesTotalDeliveredGivenPerRegion());
 			resp.setStatus(true);
 		} catch (Exception e) {
+		    LOGGER.error(e.getMessage());
 			if(LOGGER.isTraceEnabled()) {
 				e.printStackTrace();
 			}
@@ -342,6 +349,7 @@ public class VaccinesController {
 			resp.setDataVaccinatedPerAge(dataVaccinatedPerAge);
 			resp.setStatus(true);
 		} catch (Exception e) {
+		    LOGGER.error(e.getMessage());
 			if(LOGGER.isTraceEnabled()) {
 				e.printStackTrace();
 			}
@@ -372,6 +380,7 @@ public class VaccinesController {
 			resp.setDeliveredPerSupplier(supplierData);
 			resp.setStatus(true);
 		} catch (Exception e) {
+		    LOGGER.error(e.getMessage());
 			if(LOGGER.isTraceEnabled()) {
 				e.printStackTrace();
 			}
