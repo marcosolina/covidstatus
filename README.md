@@ -59,6 +59,7 @@ Once the containers are up and runnig open the following links:
 
 ## History
 
+- **03/05/2021 v0.1.24**: The ISTAT has changed something, I placed this workaround while investigating on what they have changed
 - **26/04/2021 v0.1.23**: Adding % vaccinated people chart
 - **24/04/2021 v0.1.22**: Workaround for mono-dose vaccines
 - **24/04/2021 v0.1.21**: Small UI improvements
