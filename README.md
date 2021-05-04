@@ -5,14 +5,15 @@ All the data are retrieved from the following public GitHub Repositories:
 
 - [Infections GitHub Repository](https://github.com/pcm-dpc/COVID-19)
 - [Vaccines GitHub Repository](https://github.com/italia/covid19-opendata-vaccini)
-- **Istat Population Information**:
-  - [Geo Demo Istat](http://demo.istat.it/index_e.php)
-  - **Deprecated**: Se datails in the change history below (v0.1.25):
+- **Istat Population Information**: Se datails in the change history below (v0.1.25)
+  - **Main Soruce**:
     - [Web Page](http://dati.istat.it/Index.aspx?QueryId=42869)
     - [Web Services](https://www.istat.it/it/metodi-e-strumenti/web-service-sdmx)
     - [Web Services Guide](https://github.com/ondata/guida-api-istat)
     - [Web Service Data Structure](http://sdmx.istat.it/SDMXWS/rest/datastructure/IT1/DCIS_POPRES1/)
     - [Web Service Data Info (Eg: Gender Values)](http://sdmx.istat.it/SDMXWS/rest/codelist/IT1/CL_SEXISTAT1)
+  - **Backup Source**:
+    - [Geo Demo Istat](http://demo.istat.it/index_e.php)
 
 ## Lincense of the Data
 
@@ -61,7 +62,7 @@ Once the containers are up and runnig open the following links:
 
 ## History
 
-- **04/05/2021 v0.1.25**: The ISTAT has does not provide anymore public access to the webservices that I was using to retrieve the Italian population info. I've switch to [Geo Demo Istat](http://demo.istat.it/index_e.php) but I have configured the app to try anyway once per day to download the data from the ISTAT WS, in case they change their mind :)
+- **04/05/2021 v0.1.25**: Yesterday the ISTAT was not providing public access to the webservices that I was using to retrieve the Italian population info, but today the access had been restored. I've decided to add a backup source for the Italina population data, [Geo Demo Istat](http://demo.istat.it/index_e.php), so I can have a fallback option if the ISTAT WS goes down again.
 - **03/05/2021 v0.1.24**: The ISTAT has changed something, I placed this workaround while investigating on what they have changed
 - **26/04/2021 v0.1.23**: Adding % vaccinated people chart
 - **24/04/2021 v0.1.22**: Workaround for mono-dose vaccines

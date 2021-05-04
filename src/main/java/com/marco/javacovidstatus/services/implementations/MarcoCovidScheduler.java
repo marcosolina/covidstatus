@@ -86,7 +86,7 @@ public class MarcoCovidScheduler implements CovidScheduler {
         logger.info("Updating ISTAT Data");
 
         try {
-            if (true || !istatDownloader.downloadData()) {
+            if (!istatDownloader.downloadData()) {
                 notificationService.sendEmailMessage("marcosolina@gmail.com", "Marco Solina - Covid Status", "No dati dall'istat");
                 csvDownloader.downloadData();
             }

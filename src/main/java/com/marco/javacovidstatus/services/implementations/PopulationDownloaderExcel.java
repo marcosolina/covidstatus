@@ -1,21 +1,12 @@
 package com.marco.javacovidstatus.services.implementations;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.system.ApplicationHome;
-import org.springframework.util.ResourceUtils;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import com.marco.javacovidstatus.enums.Gender;
@@ -23,12 +14,12 @@ import com.marco.javacovidstatus.model.dto.PopulationDto;
 import com.marco.javacovidstatus.services.interfaces.CovidDataDownloader;
 import com.marco.javacovidstatus.services.interfaces.NotificationSenderInterface;
 import com.marco.javacovidstatus.services.interfaces.PopulationDataService;
-import com.marco.utils.MarcoException;
 
 public class PopulationDownloaderExcel extends CovidDataDownloader {
     
     private static final Logger _LOGGER = LoggerFactory.getLogger(PopulationDownloaderExcel.class);
-
+    private String url = "https://raw.githubusercontent.com/marcosolina/covidstatus/main/Misc/population.csv";
+    
     @Autowired
     private PopulationDataService service;
     @Autowired
@@ -43,13 +34,9 @@ public class PopulationDownloaderExcel extends CovidDataDownloader {
         
         AtomicBoolean error = new AtomicBoolean();
         try{
-            List<String> rows = new ArrayList<>();
-            String line = null;
-            while((line = bf.readLine()) != null) {
-                rows.add(line);
-            }
-            
+            List<String> rows = this.getCsvRows(url);
             rows.remove(0);
+            service.deleteAll();
             
             for (int j = 0; j < rows.size(); j++) {
                 String row = rows.get(j);
@@ -65,17 +52,12 @@ public class PopulationDownloaderExcel extends CovidDataDownloader {
                 female.setCounter(Integer.parseInt(cols[2]));
                 female.setYear(2020);
                 female.setGender(Gender.WOMEN);
-                try {
-                    service.storeNewPopulationDto(male);
-                    service.storeNewPopulationDto(female);
-                } catch (MarcoException e) {
-                    error.set(true);
-                    e.printStackTrace();
-                }
+                service.storeNewPopulationDto(male);
+                service.storeNewPopulationDto(female);
             }
             
             
-        } catch (IOException e) {
+        } catch (Exception e) {
             error.set(true);
             e.printStackTrace();
         }
