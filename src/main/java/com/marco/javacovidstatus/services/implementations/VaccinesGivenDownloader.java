@@ -65,21 +65,19 @@ public class VaccinesGivenDownloader extends CovidDataDownloader {
     }
 
     @Override
-    public void downloadData() {
+    public boolean downloadData() {
         _LOGGER.info("Downloading Given vaccines data");
 
         List<String> rows = this.getCsvRows(CSV_URL, null, false);
 
         if (rows.isEmpty()) {
-            notificationService.sendEmailMessage("marcosolina@gmail.com", "Marco Solina - Covid Status",
-                    "Non ci sono più i dati nel repository");
-            return;
+            notificationService.sendEmailMessage("marcosolina@gmail.com", "Marco Solina - Covid Status", "Non ci sono più i dati nel repository");
+            return false;
         }
 
         if (rows.get(0).split(",").length != 22) {
-            notificationService.sendEmailMessage("marcosolina@gmail.com", "Marco Solina - Covid Status",
-                    "La struttura dei dati vaccini somministrati e' stata modificata...");
-            return;
+            notificationService.sendEmailMessage("marcosolina@gmail.com", "Marco Solina - Covid Status", "La struttura dei dati vaccini somministrati e' stata modificata...");
+            return false;
         }
         
         Map<String, Integer> columnsPositions = getColumnsIndex(rows.get(0));
@@ -161,6 +159,7 @@ public class VaccinesGivenDownloader extends CovidDataDownloader {
         }
 
         dataService.addMissingRowsForNoVaccinationDays();
+        return !error.get();
     }
 
     @Override

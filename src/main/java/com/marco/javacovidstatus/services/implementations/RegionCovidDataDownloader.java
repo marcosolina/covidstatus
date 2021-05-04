@@ -46,7 +46,7 @@ public class RegionCovidDataDownloader extends CovidDataDownloader {
     }
 
     @Override
-    public void downloadData() {
+    public boolean downloadData() {
         _LOGGER.info("Downloading Regions Data");
 
         LocalDate end = LocalDate.now();
@@ -55,6 +55,7 @@ public class RegionCovidDataDownloader extends CovidDataDownloader {
             start = this.defaultStartData;
         }
 
+        boolean error = false;
 
         try {
         	Map<String, List<Integer>> mapInfectionLastWeek = getRegionalLastWeeknNewInfection(end);
@@ -91,8 +92,10 @@ public class RegionCovidDataDownloader extends CovidDataDownloader {
             }
         } catch (Exception e) {
             _LOGGER.error(e.getMessage());
+            error = true;
         }
 
+        return !error;
     }
 
     @Override

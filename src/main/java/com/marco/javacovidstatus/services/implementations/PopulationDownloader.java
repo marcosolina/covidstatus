@@ -42,7 +42,7 @@ public class PopulationDownloader extends CovidDataDownloader {
     }
 
     @Override
-    public void downloadData() {
+    public boolean downloadData() {
         _LOGGER.info("Downloading ISTAT data");
         
         Map<String, String> headers = new HashMap<>();
@@ -60,6 +60,9 @@ public class PopulationDownloader extends CovidDataDownloader {
                 String url = String.format("http://sdmx.istat.it/SDMXWS/rest/data/22_289/.Y%d.IT.1+2.99.JAN/", i);
                 _LOGGER.debug(String.format("Downloading ISTAT: %s", url));
                 List<String> rows = getCsvRows(url, headers, true);
+                if(rows.isEmpty()) {
+                    error.set(true);
+                }
                 for (int j = 0; j < rows.size(); j++) {
                     String row = rows.get(j);
                     String[] cols = row.split(",");
@@ -80,6 +83,9 @@ public class PopulationDownloader extends CovidDataDownloader {
             String url = "http://sdmx.istat.it/SDMXWS/rest/data/22_289/.Y_GE100.IT.1+2.99.JAN/";
             _LOGGER.debug(String.format("Downloading ISTAT: %s", url));
             List<String> rows = getCsvRows(url, headers, true);
+            if(rows.isEmpty()) {
+                error.set(true);
+            }
             for (int j = 0; j < rows.size(); j++) {
                 String row = rows.get(j);
                 String[] cols = row.split(",");
@@ -106,6 +112,7 @@ public class PopulationDownloader extends CovidDataDownloader {
         }else {
             _LOGGER.info("Downloading ISTAT data complete");
         }
+        return !error.get();
     }
 
     @Override

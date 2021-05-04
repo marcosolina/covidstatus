@@ -43,7 +43,7 @@ public class NationalCovidDataDownloader extends CovidDataDownloader {
     }
 
     @Override
-    public void downloadData() {
+    public boolean downloadData() {
         _LOGGER.info("Downloading National Data");
 
         LocalDate end = LocalDate.now();
@@ -52,6 +52,7 @@ public class NationalCovidDataDownloader extends CovidDataDownloader {
             start = this.defaultStartData;
         }
 
+        boolean status = true;
 
         try {
         	List<Integer> lastWeeknNewInfection = getNationalLastWeeknNewInfection(end);
@@ -87,8 +88,9 @@ public class NationalCovidDataDownloader extends CovidDataDownloader {
             }
         } catch (Exception e) {
             _LOGGER.error(e.getMessage());
+            status = false;
         }
-
+        return status;
     }
 
     @Override

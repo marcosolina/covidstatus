@@ -43,7 +43,7 @@ public class ProvinceCoviddataDownloader extends CovidDataDownloader {
     }
 
     @Override
-    public void downloadData() {
+    public boolean downloadData() {
         _LOGGER.info("Downloading Province Data");
 
         LocalDate end = LocalDate.now();
@@ -51,6 +51,8 @@ public class ProvinceCoviddataDownloader extends CovidDataDownloader {
         if (start == null) {
             start = this.defaultStartData;
         }
+        
+        boolean error = false;
 
         try {
             while (start.isBefore(end)) {
@@ -90,7 +92,10 @@ public class ProvinceCoviddataDownloader extends CovidDataDownloader {
             }
         } catch (Exception e) {
             _LOGGER.error(e.getMessage());
+            error = true;
         }
+        
+        return !error;
     }
 
     @Override
