@@ -19,7 +19,8 @@ class TotalGivenVeccinesPerAge {
         this.chart2.setHideTextFromTooltip(true);
         
 		this.chart.setTitle("Totale persone vaccinate per fasce di età");
-        this.chart2.setTitle("Percentuale Vaccinazione");
+        this.chart2.setTitle("% Popolazione Vaccinata");
+        this.chart2.setLabelSuffix(" %");
 	}
 	
 	setDarkMode(darkModeOn){
@@ -58,26 +59,26 @@ class TotalGivenVeccinesPerAge {
         let valuesFirstDose = [];
         let valuesVaccinated = [];
         
-        const datasetPopulation = new CovidChartDataset("Popolazione");
+        //const datasetPopulation = new CovidChartDataset("Popolazione");
         const datasetFirstDose = new CovidChartDataset("% 1a dose");
         const datasetVaccinated = new CovidChartDataset("% 2a Dose o Mono Dose");
         
-        datasetPopulation.setColor(this.colorPalette[3]);
+        //datasetPopulation.setColor(this.colorPalette[3]);
         datasetFirstDose.setColor(this.colorPalette[1]);
         datasetVaccinated.setColor(this.colorPalette[2]);
         
         keysSorted.forEach(function(key){
             arrLabels.push(key);
-            valuesPopulation.push(100);
+            //valuesPopulation.push(100);
             valuesFirstDose.push(data[key].firstDosePerc);
             valuesVaccinated.push(data[key].vaccinatedPerc);
         }.bind(this));
         
-        datasetPopulation.setData(valuesPopulation);
+        //datasetPopulation.setData(valuesPopulation);
         datasetFirstDose.setData(valuesFirstDose);
         datasetVaccinated.setData(valuesVaccinated);
         
-        this.chart2.addCovidChartDataset(datasetPopulation);
+        //this.chart2.addCovidChartDataset(datasetPopulation);
         this.chart2.addCovidChartDataset(datasetFirstDose);
         this.chart2.addCovidChartDataset(datasetVaccinated);
         
