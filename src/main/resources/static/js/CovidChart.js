@@ -11,6 +11,7 @@ class CovidChart {
 		this.invertedAxes = false;
 		this.oldDarkMode = false;
         this.hideTextFromTooltip = false;
+        this.labelSuffix = "";
 	}
 	
 	/**
@@ -44,6 +45,10 @@ class CovidChart {
 	setTitle(stringTitle){
 		this.title = stringTitle;
 	}
+    
+    setLabelSuffix(stringSuffix){
+        this.labelSuffix = stringSuffix;
+    }
 	
 	/**
 		It draws the chart
@@ -143,7 +148,7 @@ class CovidChart {
             tmp = tmp.substring(1);
         }
         
-        return tmp;
+        return tmp + this.labelSuffix;
 	}
 	
 	/**
