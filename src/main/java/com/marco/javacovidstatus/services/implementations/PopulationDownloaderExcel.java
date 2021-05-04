@@ -41,7 +41,7 @@ public class PopulationDownloaderExcel extends CovidDataDownloader {
     public void downloadData() {
         File f = null;
         try {
-            f = ResourceUtils.getFile("classpath:population.csv");
+            f = ResourceUtils.getFile("population.csv");
             service.deleteAll();
         } catch (FileNotFoundException | MarcoException e1) {
             e1.printStackTrace();
