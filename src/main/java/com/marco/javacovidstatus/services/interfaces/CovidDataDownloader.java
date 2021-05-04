@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -29,8 +30,10 @@ public abstract class CovidDataDownloader {
 
     /**
      * It downloads the data
+     * 
+     * @return
      */
-    public abstract void downloadData();
+    public abstract boolean downloadData();
 
     /**
      * It returns the start date from when to start to download the data. This date
@@ -102,7 +105,12 @@ public abstract class CovidDataDownloader {
         if (headers == null) {
             response = webClient.get().uri(url).exchange().block();
         } else {
-            response = webClient.get().uri(url).headers(httpHeaders -> headers.forEach(httpHeaders::set)).exchange().block();
+            response = webClient.get().uri(url).headers(httpHeaders -> headers.forEach(httpHeaders::set)).exchange()
+                    .block();
+        }
+        
+        if(response.statusCode() != HttpStatus.OK) {
+            return new ArrayList<>();
         }
 
         /*

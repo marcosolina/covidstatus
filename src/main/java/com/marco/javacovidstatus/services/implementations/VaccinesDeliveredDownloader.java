@@ -42,19 +42,19 @@ public class VaccinesDeliveredDownloader extends CovidDataDownloader {
 	}
 
 	@Override
-	public void downloadData() {
+	public boolean downloadData() {
 		_LOGGER.info("Downloading delivered vaccines data");
 		
 		List<String> rows = this.getCsvRows(CVS_URL);
 		
 		if(rows.isEmpty()) {
 			notificationService.sendEmailMessage("marcosolina@gmail.com", "Marco Solina - Covid Status", "Non ci sono più i dati nel repository");
-			return;
+			return false;
 		}
 		
 		if(rows.get(0).split(",").length != 8) {
 			notificationService.sendEmailMessage("marcosolina@gmail.com", "Marco Solina - Covid Status", "La struttura dei dati delle consegne dei vaccini e' stata modificata...");
-			return;
+			return false;
 		}
 
 		/*
@@ -108,6 +108,7 @@ public class VaccinesDeliveredDownloader extends CovidDataDownloader {
 		}
 
 		dataService.addMissingRowsForNoDeliveryDays();
+		return !error.get();
 	}
 
 	@Override

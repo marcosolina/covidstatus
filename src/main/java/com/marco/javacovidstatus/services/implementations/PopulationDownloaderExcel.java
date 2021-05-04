@@ -14,6 +14,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.system.ApplicationHome;
 import org.springframework.util.ResourceUtils;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -38,16 +39,10 @@ public class PopulationDownloaderExcel extends CovidDataDownloader {
     }
 
     @Override
-    public void downloadData() {
-        File f = null;
-        try {
-            f = ResourceUtils.getFile("population.csv");
-            service.deleteAll();
-        } catch (FileNotFoundException | MarcoException e1) {
-            e1.printStackTrace();
-        }
+    public boolean downloadData() {
+        
         AtomicBoolean error = new AtomicBoolean();
-        try(BufferedReader bf = new BufferedReader(new InputStreamReader(new FileInputStream(f)))){
+        try{
             List<String> rows = new ArrayList<>();
             String line = null;
             while((line = bf.readLine()) != null) {
@@ -80,9 +75,6 @@ public class PopulationDownloaderExcel extends CovidDataDownloader {
             }
             
             
-        } catch (FileNotFoundException e) {
-            error.set(true);
-            e.printStackTrace();
         } catch (IOException e) {
             error.set(true);
             e.printStackTrace();
@@ -95,6 +87,7 @@ public class PopulationDownloaderExcel extends CovidDataDownloader {
         }else {
             _LOGGER.info("Downloading ISTAT data complete");
         }
+        return !error.get();
     }
 
     @Override
