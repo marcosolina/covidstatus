@@ -46,6 +46,9 @@ public class VaccinesGivenDownloader extends CovidDataDownloader {
     public static final String COL_AGE_RANGE                = "fascia_anagrafica";
     public static final String COL_MEN_COUNTER              = "sesso_maschile";
     public static final String COL_WOMEN_COUNTER            = "sesso_femminile";
+    /*
+     * They have removed these columns from the CSV file. I will comment them out
+     * but keep them just for reference... Just in case they restore them...
     public static final String COL_NHS_COUNTER              = "categoria_operatori_sanitari_sociosanitari";
     public static final String COL_NON_NHS_COUNTER          = "categoria_personale_non_sanitario";
     public static final String COL_NURSING_COUNTER          = "categoria_ospiti_rsa";
@@ -56,6 +59,7 @@ public class VaccinesGivenDownloader extends CovidDataDownloader {
     public static final String COL_SCHOOL_STAFF_COUNTER     = "categoria_personale_scolastico";
     public static final String COL_FRAGILE_COUNTER          = "categoria_soggetti_fragili";
     public static final String COL_OTHER_PEOPLE_COUNTER     = "categoria_altro";
+    */
     public static final String COL_FIRST_DOSE_COUNTER       = "prima_dose";
     public static final String COL_SECOND_DOSE_COUNTER      = "seconda_dose";
     // @formatter:on
@@ -75,7 +79,7 @@ public class VaccinesGivenDownloader extends CovidDataDownloader {
             return false;
         }
 
-        if (rows.get(0).split(",").length != 22) {
+        if (rows.get(0).split(",").length != 12) {
             notificationService.sendEmailMessage("marcosolina@gmail.com", "Marco Solina - Covid Status", "La struttura dei dati vaccini somministrati e' stata modificata...");
             return false;
         }
@@ -118,6 +122,7 @@ public class VaccinesGivenDownloader extends CovidDataDownloader {
                 data.setAgeRange(columns[columnsPositions.get(COL_AGE_RANGE)]);
                 data.setMenCounter(Integer.parseInt(columns[columnsPositions.get(COL_MEN_COUNTER)]));
                 data.setWomenCounter(Integer.parseInt(columns[columnsPositions.get(COL_WOMEN_COUNTER)]));
+                /*
                 data.setNhsPeopleCounter(Integer.parseInt(columns[columnsPositions.get(COL_NHS_COUNTER)]));
                 data.setNonNhsPeopleCounter(Integer.parseInt(columns[columnsPositions.get(COL_NON_NHS_COUNTER)]));
                 data.setNursingHomeCounter(Integer.parseInt(columns[columnsPositions.get(COL_NURSING_COUNTER)]));
@@ -128,6 +133,7 @@ public class VaccinesGivenDownloader extends CovidDataDownloader {
                 data.setSchoolStaffCounter(Integer.parseInt(columns[columnsPositions.get(COL_SCHOOL_STAFF_COUNTER)]));
                 data.setFragilePeopleCounter(Integer.parseInt(columns[columnsPositions.get(COL_FRAGILE_COUNTER)]));
                 data.setOtherPeopleCounter(Integer.parseInt(columns[columnsPositions.get(COL_OTHER_PEOPLE_COUNTER)]));
+                */
                 
                 /**
                  * The goverment put the vaccines which requires just one shot into the "first"
