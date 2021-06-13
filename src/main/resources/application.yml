@@ -38,7 +38,7 @@ covidstatus:
       suppliers: Janssen
   istat:
     population:
-      year: 2020
+      year: 2021
   scheduled:
     downloadnewdata:
       cron:
