@@ -145,8 +145,8 @@ public class VaccinesGivenDownloader extends CovidDataDownloader {
                 }else {
                     data.setFirstDoseCounter(Integer.parseInt(columns[columnsPositions.get(COL_FIRST_DOSE_COUNTER)]));
                     data.setSecondDoseCounter(Integer.parseInt(columns[columnsPositions.get(COL_SECOND_DOSE_COUNTER)]));
-                    data.setDoseAfterInfectCounter(Integer.parseInt(columns[columnsPositions.get(COL_VACCINE_AFTER_INFECT)]));
                 }
+                data.setDoseAfterInfectCounter(Integer.parseInt(columns[columnsPositions.get(COL_VACCINE_AFTER_INFECT)]));
                 
 
                 _LOGGER.trace(String.format("Storing Given vaccine data date: %s Region: %s AgeRange: %s Supplier: %s",

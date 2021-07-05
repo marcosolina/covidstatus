@@ -118,7 +118,7 @@ class TotalGivenVeccinesPerAge {
 			arrLabels.push(key);
 			valuesPopulation.push(data[key].population);
             valuesFirstDose.push(data[key].firstDose);
-            valuesVaccinated.push(data[key].secondDose + data[key].monoDose);
+            valuesVaccinated.push(data[key].secondDose + data[key].monoDose + data[key].doseAfterInfection);
 		}.bind(this));
 		
 		datasetPopulation.setData(valuesPopulation);

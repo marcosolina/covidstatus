@@ -15,6 +15,7 @@ public class PeopleVaccinated {
     private Long firstDose;
     private Long secondDose;
     private Long monoDose;
+    private Long doseAfterInfection;
     private BigDecimal firstDosePerc;
     private BigDecimal vaccinatedPerc;
 
@@ -72,6 +73,14 @@ public class PeopleVaccinated {
 
     public void setVaccinatedPerc(BigDecimal vaccinatedPerc) {
         this.vaccinatedPerc = vaccinatedPerc;
+    }
+
+    public Long getDoseAfterInfection() {
+        return doseAfterInfection;
+    }
+
+    public void setDoseAfterInfection(Long doseAfterInfection) {
+        this.doseAfterInfection = doseAfterInfection;
     }
 
 }
