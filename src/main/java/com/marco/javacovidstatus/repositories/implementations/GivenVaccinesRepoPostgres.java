@@ -136,7 +136,8 @@ public class GivenVaccinesRepoPostgres implements GivenVaccinesRepo {
 		sql.append("b.other_people_counter,");
 		sql.append("b.first_dose_counter,");
 		sql.append("b.second_dose_counter, ");
-		sql.append("b.mono_dose_counter ");
+		sql.append("b.mono_dose_counter, ");
+		sql.append("b.dose_after_infect_counter ");
 		sql.append("from cartesian_table as a ");
 		sql.append(String.format("left join %s as b ", tableName));
 		sql.append("on a.date_data = b.date_data and ");
@@ -162,7 +163,8 @@ public class GivenVaccinesRepoPostgres implements GivenVaccinesRepo {
 		sql.append("other_people_counter = 0,");
 		sql.append("first_dose_counter = 0,");
 		sql.append("second_dose_counter = 0, ");
-		sql.append("mono_dose_counter = 0 ");
+		sql.append("mono_dose_counter = 0, ");
+		sql.append("dose_after_infect_counter = 0 ");
 		sql.append("where men_counter is null");
 
 		sqls.add(sql);
@@ -227,7 +229,8 @@ public class GivenVaccinesRepoPostgres implements GivenVaccinesRepo {
 				root.get(EntitySomministrazioneVaccini_.ID).get(EntitySomministrazioneVacciniPk_.AGE_RANGE),
 				cb.sum(root.get(EntitySomministrazioneVaccini_.FIRST_DOSE_COUNTER)),
 				cb.sum(root.get(EntitySomministrazioneVaccini_.SECOND_DOSE_COUNTER)),
-                cb.sum(root.get(EntitySomministrazioneVaccini_.MONO_DOSE_COUNTER))
+                cb.sum(root.get(EntitySomministrazioneVaccini_.MONO_DOSE_COUNTER)),
+                cb.sum(root.get(EntitySomministrazioneVaccini_.DOSE_AFTER_INFECT_COUNTER))
 			)
 		.where(
 				cb.between(root.get(EntitySomministrazioneVaccini_.ID).get(EntitySomministrazioneVacciniPk_.DATE), start, end)
@@ -359,7 +362,8 @@ public class GivenVaccinesRepoPostgres implements GivenVaccinesRepo {
 				root.get(EntitySomministrazioneVaccini_.ID).get(EntitySomministrazioneVacciniPk_.AGE_RANGE),
 				cb.sum(root.get(EntitySomministrazioneVaccini_.FIRST_DOSE_COUNTER)),
 				cb.sum(root.get(EntitySomministrazioneVaccini_.SECOND_DOSE_COUNTER)),
-                cb.sum(root.get(EntitySomministrazioneVaccini_.MONO_DOSE_COUNTER))
+                cb.sum(root.get(EntitySomministrazioneVaccini_.MONO_DOSE_COUNTER)),
+                cb.sum(root.get(EntitySomministrazioneVaccini_.DOSE_AFTER_INFECT_COUNTER))
 			)
 		.groupBy(
 				root.get(EntitySomministrazioneVaccini_.ID).get(EntitySomministrazioneVacciniPk_.AGE_RANGE)

@@ -292,6 +292,7 @@ public class VaccineDataServiceMarco implements VaccineDataService {
         entity.setFirstDoseCounter(dto.getFirstDoseCounter());
         entity.setSecondDoseCounter(dto.getSecondDoseCounter());
         entity.setMonoDoseCounter(dto.getMonoDoseCounter());
+        entity.setDoseAfterInfectCounter(dto.getDoseAfterInfectCounter());
 
         return entity;
     }
@@ -332,6 +333,7 @@ public class VaccineDataServiceMarco implements VaccineDataService {
             dto.setFirstDose(argv.getFirstDose());
             dto.setSecondDose(argv.getSecondDose());
             dto.setMonoDose(argv.getMonoDose());
+            dto.setDoseAfterInfection(argv.getDoseAfterInfection());
             
             // @formatter:off
             BigDecimal first = BigDecimal.ZERO;
@@ -343,6 +345,7 @@ public class VaccineDataServiceMarco implements VaccineDataService {
                         .multiply(BigDecimal.valueOf(100)).setScale(2, RoundingMode.DOWN);
                 vaccinadted = BigDecimal.valueOf(dto.getSecondDose())
                         .add(BigDecimal.valueOf(dto.getMonoDose()))
+                        .add(BigDecimal.valueOf(dto.getDoseAfterInfection()))
                         .divide(BigDecimal.valueOf(dto.getPopulation()), 4, RoundingMode.DOWN)
                         .multiply(BigDecimal.valueOf(100)).setScale(2, RoundingMode.DOWN);
             }
