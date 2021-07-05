@@ -292,6 +292,7 @@ public class VaccineDataServiceMarco implements VaccineDataService {
         entity.setFirstDoseCounter(dto.getFirstDoseCounter());
         entity.setSecondDoseCounter(dto.getSecondDoseCounter());
         entity.setMonoDoseCounter(dto.getMonoDoseCounter());
+        entity.setDoseAfterInfectCounter(dto.getDoseAfterInfectCounter());
 
         return entity;
     }
