@@ -31,4 +31,7 @@ public class Constants {
 	public static final String VACCINES_GIVEN_SECOND_SHOT = "Seconda";
 	public static final String VACCINES_GIVEN_MONO_SHOT = "Mono";
 	public static final String VACCINES_GIVEN_AFTER_INFECTION = "Dose dopo Infezione";
+	
+	
+	public static final String LABEL_VACCINES_GIVEN_TOTAL = "Totale";
 }

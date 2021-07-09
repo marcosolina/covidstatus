@@ -32,4 +32,12 @@ public interface PopulationDataService {
      * @return
      */
     public Long getSumForAgesAndYear(int ageFrom, int ageTo, Gender gender, int year);
+    
+    /**
+     * It will return the number of population matching the provided parameters
+     * @param gender
+     * @param year
+     * @return
+     */
+    public Long getSumForYear(Gender gender, int year);
 }

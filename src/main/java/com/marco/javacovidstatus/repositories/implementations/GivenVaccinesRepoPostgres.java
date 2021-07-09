@@ -25,6 +25,7 @@ import com.marco.javacovidstatus.model.entitites.vaccines.EntitySomministrazione
 import com.marco.javacovidstatus.model.entitites.vaccines.EntitySomministrazioneVaccini_;
 import com.marco.javacovidstatus.model.entitites.vaccines.TotalVaccineGivenPerRegion;
 import com.marco.javacovidstatus.repositories.interfaces.GivenVaccinesRepo;
+import com.marco.javacovidstatus.utils.Constants;
 
 /**
  * My implementation of the interface
@@ -408,11 +409,10 @@ public class GivenVaccinesRepoPostgres implements GivenVaccinesRepo {
         TypedQuery<DoseCounter> tq = em.createQuery(cq);
         List<DoseCounter> list = tq.getResultList();
         
-        String range = "Total";
         if (list.size() == 1) {
-            new AgeRangeGivenVaccines(range, list.get(0).getFirstDoseCounter(), list.get(0).getSecondDoseCounter(), list.get(0).getMonoDoseCounter(), list.get(0).getDoseAfterInfectCounter());
+            return new AgeRangeGivenVaccines(Constants.LABEL_VACCINES_GIVEN_TOTAL, list.get(0).getFirstDoseCounter(), list.get(0).getSecondDoseCounter(), list.get(0).getMonoDoseCounter(), list.get(0).getDoseAfterInfectCounter());
         }
-        return new AgeRangeGivenVaccines(range, 0L, 0L, 0L, 0L);
+        return new AgeRangeGivenVaccines(Constants.LABEL_VACCINES_GIVEN_TOTAL, 0L, 0L, 0L, 0L);
     }
 
 }

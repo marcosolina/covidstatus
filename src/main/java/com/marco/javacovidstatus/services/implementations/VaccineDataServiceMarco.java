@@ -320,13 +320,18 @@ public class VaccineDataServiceMarco implements VaccineDataService {
             Long men = 0L;
             Long women = 0L;
             
-            String[] ages = ageRange.split("-");
-            if (ages.length > 1) {
-                men = populationService.getSumForAgesAndYear(Integer.parseInt(ages[0]), Integer.parseInt(ages[1]), Gender.MEN, populationStatisticYear);
-                women = populationService.getSumForAgesAndYear(Integer.parseInt(ages[0]), Integer.parseInt(ages[1]), Gender.WOMEN, populationStatisticYear);
+            if(!ageRange.equals(Constants.LABEL_VACCINES_GIVEN_TOTAL)) {
+                String[] ages = ageRange.split("-");
+                if (ages.length > 1) {
+                    men = populationService.getSumForAgesAndYear(Integer.parseInt(ages[0]), Integer.parseInt(ages[1]), Gender.MEN, populationStatisticYear);
+                    women = populationService.getSumForAgesAndYear(Integer.parseInt(ages[0]), Integer.parseInt(ages[1]), Gender.WOMEN, populationStatisticYear);
+                } else {
+                    men = populationService.getSumForAgesAndYear(Integer.parseInt(ages[0].replace('+', ' ').trim()), 100, Gender.MEN, populationStatisticYear);
+                    women = populationService.getSumForAgesAndYear(Integer.parseInt(ages[0].replace('+', ' ').trim()), 100, Gender.WOMEN, populationStatisticYear);
+                }
             } else {
-                men = populationService.getSumForAgesAndYear(Integer.parseInt(ages[0].replace('+', ' ').trim()), 100, Gender.MEN, populationStatisticYear);
-                women = populationService.getSumForAgesAndYear(Integer.parseInt(ages[0].replace('+', ' ').trim()), 100, Gender.WOMEN, populationStatisticYear);
+                men = populationService.getSumForYear(Gender.MEN, populationStatisticYear);
+                women = populationService.getSumForYear(Gender.WOMEN, populationStatisticYear);
             }
             
             PeopleVaccinated dto = new PeopleVaccinated();
