@@ -145,6 +145,7 @@ public class VaccineDataServiceMarco implements VaccineDataService {
         map.put(Constants.VACCINES_GIVEN_FIRST_SHOT, list.get(0).getFirstDoseCounter());
         map.put(Constants.VACCINES_GIVEN_SECOND_SHOT, list.get(0).getSecondDoseCounter());
         map.put(Constants.VACCINES_GIVEN_MONO_SHOT, list.get(0).getMonoDoseCounter());
+        map.put(Constants.VACCINES_GIVEN_AFTER_INFECTION, list.get(0).getDoseAfterInfectCounter());
 
         return map;
     }
@@ -161,6 +162,7 @@ public class VaccineDataServiceMarco implements VaccineDataService {
     @Override
     public Map<String, PeopleVaccinated> getVaccinatedAgeRangeTotals() {
         List<AgeRangeGivenVaccines> list = repoGiven.getTotalAgeRangeGivenVaccines();
+        list.add(repoGiven.getTotalPeolpleVaccinated());
         return parseListAgeRangeGivenVaccines(list);
     }
 
@@ -208,7 +210,7 @@ public class VaccineDataServiceMarco implements VaccineDataService {
     public VaccinesReceivedUsedDto getTotlalVaccinesDeliveredUsed() {
         VaccinesReceivedUsedDto dto = new VaccinesReceivedUsedDto();
         dto.setTotalVaccinesReceived(repoDelivered.getTotalNumberDeliveedVaccines());
-        dto.setTotalVaccinesUsed(repoGiven.getTotalPeaopleVaccinated());
+        dto.setTotalVaccinesUsed(repoGiven.getTotalPeopleVaccinated());
         return dto;
     }
 
@@ -318,13 +320,18 @@ public class VaccineDataServiceMarco implements VaccineDataService {
             Long men = 0L;
             Long women = 0L;
             
-            String[] ages = ageRange.split("-");
-            if (ages.length > 1) {
-                men = populationService.getSumForAgesAndYear(Integer.parseInt(ages[0]), Integer.parseInt(ages[1]), Gender.MEN, populationStatisticYear);
-                women = populationService.getSumForAgesAndYear(Integer.parseInt(ages[0]), Integer.parseInt(ages[1]), Gender.WOMEN, populationStatisticYear);
+            if(!ageRange.equals(Constants.LABEL_VACCINES_GIVEN_TOTAL)) {
+                String[] ages = ageRange.split("-");
+                if (ages.length > 1) {
+                    men = populationService.getSumForAgesAndYear(Integer.parseInt(ages[0]), Integer.parseInt(ages[1]), Gender.MEN, populationStatisticYear);
+                    women = populationService.getSumForAgesAndYear(Integer.parseInt(ages[0]), Integer.parseInt(ages[1]), Gender.WOMEN, populationStatisticYear);
+                } else {
+                    men = populationService.getSumForAgesAndYear(Integer.parseInt(ages[0].replace('+', ' ').trim()), 100, Gender.MEN, populationStatisticYear);
+                    women = populationService.getSumForAgesAndYear(Integer.parseInt(ages[0].replace('+', ' ').trim()), 100, Gender.WOMEN, populationStatisticYear);
+                }
             } else {
-                men = populationService.getSumForAgesAndYear(Integer.parseInt(ages[0].replace('+', ' ').trim()), 100, Gender.MEN, populationStatisticYear);
-                women = populationService.getSumForAgesAndYear(Integer.parseInt(ages[0].replace('+', ' ').trim()), 100, Gender.WOMEN, populationStatisticYear);
+                men = populationService.getSumForYear(Gender.MEN, populationStatisticYear);
+                women = populationService.getSumForYear(Gender.WOMEN, populationStatisticYear);
             }
             
             PeopleVaccinated dto = new PeopleVaccinated();

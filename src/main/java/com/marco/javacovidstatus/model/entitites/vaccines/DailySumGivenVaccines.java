@@ -27,11 +27,14 @@ public class DailySumGivenVaccines implements Serializable {
     private long otherPeopleCounter;
     private long firstDoseCounter;
     private long secondDoseCounter;
+    private long monoDoseCounter;
+    private long doseAfterInfectCounter;
 
     public DailySumGivenVaccines(LocalDate date, long menCounter, long womenCounter, long nhsPeopleCounter,
             long nonNhsPeopleCounter, long nursingHomeCounter, long age6069counter, long age7079counter,
             long over80Counter, long publicOrderCounter, long schoolStaffCounter, long fragilePeopleCounter,
-            long otherPeopleCounter, long firstDoseCounter, long secondDoseCounter) {
+            long otherPeopleCounter, long firstDoseCounter, long secondDoseCounter, long monoDoseCounter,
+            long doseAfterInfectCounter) {
         super();
         this.date = date;
         this.menCounter = menCounter;
@@ -48,6 +51,8 @@ public class DailySumGivenVaccines implements Serializable {
         this.otherPeopleCounter = otherPeopleCounter;
         this.firstDoseCounter = firstDoseCounter;
         this.secondDoseCounter = secondDoseCounter;
+        this.monoDoseCounter = monoDoseCounter;
+        this.doseAfterInfectCounter = doseAfterInfectCounter;
     }
 
     public LocalDate getDate() {
@@ -172,6 +177,22 @@ public class DailySumGivenVaccines implements Serializable {
 
     public static long getSerialversionuid() {
         return serialVersionUID;
+    }
+
+    public long getMonoDoseCounter() {
+        return monoDoseCounter;
+    }
+
+    public void setMonoDoseCounter(long monoDoseCounter) {
+        this.monoDoseCounter = monoDoseCounter;
+    }
+
+    public long getDoseAfterInfectCounter() {
+        return doseAfterInfectCounter;
+    }
+
+    public void setDoseAfterInfectCounter(long doseAfterInfectCounter) {
+        this.doseAfterInfectCounter = doseAfterInfectCounter;
     }
 
 }

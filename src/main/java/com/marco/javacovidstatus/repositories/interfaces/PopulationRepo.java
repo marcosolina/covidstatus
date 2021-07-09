@@ -36,4 +36,12 @@ public interface PopulationRepo {
      * @return
      */
     public Long getSumForAgesAndYear(int ageFrom, int ageTo, Gender gender, int year);
+    
+    /**
+     * It returns the SUM of people matching the specified parameters.
+     * @param gender
+     * @param year
+     * @return
+     */
+    public Long getSumForYear(Gender gender, int year);
 }

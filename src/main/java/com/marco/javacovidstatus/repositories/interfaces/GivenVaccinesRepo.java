@@ -81,7 +81,7 @@ public interface GivenVaccinesRepo {
      * 
      * @return
      */
-    public Long getTotalPeaopleVaccinated();
+    public Long getTotalPeopleVaccinated();
 
     /**
      * It returns the number of vaccination (first + second shot) listed per region
@@ -103,4 +103,10 @@ public interface GivenVaccinesRepo {
      * @return
      */
     public List<AgeRangeGivenVaccines> getTotalAgeRangeGivenVaccines();
+    
+    /**
+     * It returns the total number of people vaccinated.
+     * @return
+     */
+    public AgeRangeGivenVaccines getTotalPeolpleVaccinated();
 }
