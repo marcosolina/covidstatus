@@ -89,7 +89,9 @@ public class GivenVaccinesRepoPostgres implements GivenVaccinesRepo {
 				cb.sum(root.get(EntitySomministrazioneVaccini_.FRAGILE_PEOPLE_COUNTER)),
 				cb.sum(root.get(EntitySomministrazioneVaccini_.OTHER_PEOPLE_COUNTER)),
 				cb.sum(root.get(EntitySomministrazioneVaccini_.FIRST_DOSE_COUNTER)),
-				cb.sum(root.get(EntitySomministrazioneVaccini_.SECOND_DOSE_COUNTER))
+				cb.sum(root.get(EntitySomministrazioneVaccini_.SECOND_DOSE_COUNTER)),
+                cb.sum(root.get(EntitySomministrazioneVaccini_.MONO_DOSE_COUNTER)),
+                cb.sum(root.get(EntitySomministrazioneVaccini_.DOSE_AFTER_INFECT_COUNTER))
 				)
 			.where(
 				cb.between(root.get(EntitySomministrazioneVaccini_.ID).get(EntitySomministrazioneVacciniPk_.DATE), start, end)
@@ -377,5 +379,40 @@ public class GivenVaccinesRepoPostgres implements GivenVaccinesRepo {
 		TypedQuery<AgeRangeGivenVaccines> tq = em.createQuery(cq);
 		return tq.getResultList();
 	}
+
+    @Override
+    public AgeRangeGivenVaccines getTotalPeolpleVaccinated() {
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+
+        CriteriaQuery<DoseCounter> cq = cb.createQuery(DoseCounter.class);
+        Root<EntitySomministrazioneVaccini> root = cq.from(EntitySomministrazioneVaccini.class);
+
+        /*
+         * https://www.postgresql.org/docs/8.1/functions-conditional.html
+         * 
+         * SELECT COALESCE(SUM(first_dose_counter), 0), COALESCE(SUM(second_dose_counter), 0), COALESCE(SUM(MONO_dose_counter), 0)
+         * , COALESCE(SUM(DOSE_AFTER_INFECT_COUNTER), 0) 
+         * FROM
+         * somministrazioni_vaccini
+         */
+        // @formatter:off
+        cq.multiselect(
+                cb.coalesce(cb.sum(root.get(EntitySomministrazioneVaccini_.FIRST_DOSE_COUNTER)), 0L),
+                cb.coalesce(cb.sum(root.get(EntitySomministrazioneVaccini_.SECOND_DOSE_COUNTER)), 0L),
+                cb.coalesce(cb.sum(root.get(EntitySomministrazioneVaccini_.MONO_DOSE_COUNTER)), 0L),
+                cb.coalesce(cb.sum(root.get(EntitySomministrazioneVaccini_.DOSE_AFTER_INFECT_COUNTER)), 0L)
+            );
+        
+        // @formatter:on
+
+        TypedQuery<DoseCounter> tq = em.createQuery(cq);
+        List<DoseCounter> list = tq.getResultList();
+        
+        String range = "Total";
+        if (list.size() == 1) {
+            new AgeRangeGivenVaccines(range, list.get(0).getFirstDoseCounter(), list.get(0).getSecondDoseCounter(), list.get(0).getMonoDoseCounter(), list.get(0).getDoseAfterInfectCounter());
+        }
+        return new AgeRangeGivenVaccines(range, 0L, 0L, 0L, 0L);
+    }
 
 }

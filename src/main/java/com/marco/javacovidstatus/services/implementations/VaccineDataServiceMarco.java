@@ -162,6 +162,7 @@ public class VaccineDataServiceMarco implements VaccineDataService {
     @Override
     public Map<String, PeopleVaccinated> getVaccinatedAgeRangeTotals() {
         List<AgeRangeGivenVaccines> list = repoGiven.getTotalAgeRangeGivenVaccines();
+        list.add(repoGiven.getTotalPeolpleVaccinated());
         return parseListAgeRangeGivenVaccines(list);
     }
 

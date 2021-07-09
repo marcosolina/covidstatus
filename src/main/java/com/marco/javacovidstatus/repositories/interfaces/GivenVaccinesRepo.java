@@ -103,4 +103,10 @@ public interface GivenVaccinesRepo {
      * @return
      */
     public List<AgeRangeGivenVaccines> getTotalAgeRangeGivenVaccines();
+    
+    /**
+     * It returns the total number of people vaccinated.
+     * @return
+     */
+    public AgeRangeGivenVaccines getTotalPeolpleVaccinated();
 }
