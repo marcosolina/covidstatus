@@ -27,22 +27,23 @@ import com.marco.javacovidstatus.repositories.interfaces.PopulationRepo;
 import com.marco.javacovidstatus.repositories.interfaces.VeccinesDeliveredRepo;
 import com.marco.javacovidstatus.services.implementations.EmailNotificationSender;
 import com.marco.javacovidstatus.services.implementations.MarcoNationalDataService;
-import com.marco.javacovidstatus.services.implementations.NationalCovidDataDownloader;
 import com.marco.javacovidstatus.services.implementations.PopulationDataServiceMarco;
-import com.marco.javacovidstatus.services.implementations.PopulationDownloader;
-import com.marco.javacovidstatus.services.implementations.PopulationDownloaderExcel;
-import com.marco.javacovidstatus.services.implementations.ProvinceCoviddataDownloader;
-import com.marco.javacovidstatus.services.implementations.RegionCovidDataDownloader;
-import com.marco.javacovidstatus.services.implementations.RegionMapDownloaderFromNationalWebSite;
 import com.marco.javacovidstatus.services.implementations.VaccineDataServiceMarco;
-import com.marco.javacovidstatus.services.implementations.VaccinesDeliveredDownloader;
-import com.marco.javacovidstatus.services.implementations.VaccinesGivenDownloader;
-import com.marco.javacovidstatus.services.interfaces.CovidDataDownloader;
+import com.marco.javacovidstatus.services.implementations.downloaders.NationalCovidDataDownloader;
+import com.marco.javacovidstatus.services.implementations.downloaders.ProvinceCoviddataDownloader;
+import com.marco.javacovidstatus.services.implementations.downloaders.RegionCovidDataDownloader;
+import com.marco.javacovidstatus.services.implementations.downloaders.RegionMapDownloaderFromNationalWebSite;
+import com.marco.javacovidstatus.services.implementations.downloaders.VaccinesDeliveredDownloader;
+import com.marco.javacovidstatus.services.implementations.downloaders.VaccinesGivenDownloader;
+import com.marco.javacovidstatus.services.implementations.downloaders.population.PopulationIstatDownloader;
+import com.marco.javacovidstatus.services.implementations.downloaders.population.PopulationDownloaderExcel;
+import com.marco.javacovidstatus.services.implementations.downloaders.population.PopulationGovernmentDownloader;
 import com.marco.javacovidstatus.services.interfaces.CovidDataService;
 import com.marco.javacovidstatus.services.interfaces.NotificationSenderInterface;
 import com.marco.javacovidstatus.services.interfaces.PopulationDataService;
-import com.marco.javacovidstatus.services.interfaces.RegionMapDownloader;
 import com.marco.javacovidstatus.services.interfaces.VaccineDataService;
+import com.marco.javacovidstatus.services.interfaces.downloaders.CovidDataDownloader;
+import com.marco.javacovidstatus.services.interfaces.downloaders.RegionMapDownloader;
 import com.marco.javacovidstatus.utils.CovidUtils;
 
 import springfox.documentation.builders.ApiInfoBuilder;
@@ -183,12 +184,17 @@ public class Beans {
 
     @Bean(name = "IstatPopulation")
     public CovidDataDownloader getPopulationDownloader() {
-        return new PopulationDownloader(getWebClient());
+        return new PopulationIstatDownloader(getWebClient());
     }
     
     @Bean(name = "CsvPopulation")
     public CovidDataDownloader getPopulationLoader() {
         return new PopulationDownloaderExcel(getWebClient());
+    }
+    
+    @Bean(name = "GovernmentPopulation")
+    public CovidDataDownloader getGovernmentPopulation() {
+        return new PopulationGovernmentDownloader(getWebClient());
     }
 
     @Bean

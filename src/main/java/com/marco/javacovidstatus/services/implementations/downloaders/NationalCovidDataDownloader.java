@@ -1,4 +1,4 @@
-package com.marco.javacovidstatus.services.implementations;
+package com.marco.javacovidstatus.services.implementations.downloaders;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -14,8 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import com.marco.javacovidstatus.model.dto.NationalDailyDataDto;
-import com.marco.javacovidstatus.services.interfaces.CovidDataDownloader;
 import com.marco.javacovidstatus.services.interfaces.CovidDataService;
+import com.marco.javacovidstatus.services.interfaces.downloaders.CovidDataDownloader;
 import com.marco.utils.MarcoException;
 
 /**

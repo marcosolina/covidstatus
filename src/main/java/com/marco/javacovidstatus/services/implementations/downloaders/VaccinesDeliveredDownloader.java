@@ -1,4 +1,4 @@
-package com.marco.javacovidstatus.services.implementations;
+package com.marco.javacovidstatus.services.implementations.downloaders;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -10,9 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import com.marco.javacovidstatus.model.dto.VaccinesDeliveredDto;
-import com.marco.javacovidstatus.services.interfaces.CovidDataDownloader;
 import com.marco.javacovidstatus.services.interfaces.NotificationSenderInterface;
 import com.marco.javacovidstatus.services.interfaces.VaccineDataService;
+import com.marco.javacovidstatus.services.interfaces.downloaders.CovidDataDownloader;
 import com.marco.utils.DateUtils;
 import com.marco.utils.enums.DateFormats;
 

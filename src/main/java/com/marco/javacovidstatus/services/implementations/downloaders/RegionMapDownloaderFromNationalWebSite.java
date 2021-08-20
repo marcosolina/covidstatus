@@ -1,4 +1,4 @@
-package com.marco.javacovidstatus.services.implementations;
+package com.marco.javacovidstatus.services.implementations.downloaders;
 
 import java.io.IOException;
 
@@ -9,7 +9,7 @@ import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.marco.javacovidstatus.services.interfaces.RegionMapDownloader;
+import com.marco.javacovidstatus.services.interfaces.downloaders.RegionMapDownloader;
 
 /**
  * It retrieves the SVG from the national web site

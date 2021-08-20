@@ -35,7 +35,7 @@ import com.marco.javacovidstatus.model.rest.infections.RespGetRegionData;
 import com.marco.javacovidstatus.model.rest.infections.RespProvinceChartData;
 import com.marco.javacovidstatus.model.rest.infections.RespRegionChartData;
 import com.marco.javacovidstatus.services.interfaces.CovidDataService;
-import com.marco.javacovidstatus.services.interfaces.RegionMapDownloader;
+import com.marco.javacovidstatus.services.interfaces.downloaders.RegionMapDownloader;
 import com.marco.javacovidstatus.utils.CovidUtils;
 import com.marco.utils.MarcoException;
 import com.marco.utils.http.MarcoResponse;
