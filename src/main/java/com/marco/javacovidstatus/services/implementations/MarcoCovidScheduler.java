@@ -7,13 +7,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import com.marco.javacovidstatus.services.interfaces.CovidDataDownloader;
+import com.marco.javacovidstatus.enums.PopulationSource;
 import com.marco.javacovidstatus.services.interfaces.CovidScheduler;
 import com.marco.javacovidstatus.services.interfaces.NotificationSenderInterface;
+import com.marco.javacovidstatus.services.interfaces.downloaders.CovidDataDownloader;
 
 /**
  * This is my implementation of the {@link CovidScheduler}
@@ -53,6 +55,13 @@ public class MarcoCovidScheduler implements CovidScheduler {
     @Autowired
     @Qualifier("CsvPopulation")
     private CovidDataDownloader csvDownloader;
+    
+    @Autowired
+    @Qualifier("GovernmentPopulation")
+    private CovidDataDownloader govDownloader;
+    
+    @Value("${covidstatus.populationdownloader.implementation}")
+    private PopulationSource populationDownloader;
 
     @Autowired
     private NotificationSenderInterface notificationService;
@@ -83,10 +92,12 @@ public class MarcoCovidScheduler implements CovidScheduler {
     @Scheduled(cron = "${covidstatus.scheduled.downloadnewdata.cron.istat:0 0 0 * * *}")
     @Override
     public synchronized void downloadIstatData() {
-        logger.info("Updating ISTAT Data");
+        logger.info("Updating Population Data");
 
         try {
-            if (!istatDownloader.downloadData()) {
+        	if(populationDownloader == PopulationSource.GOVERNMENT) {
+        		govDownloader.downloadData();
+        	} else if (!istatDownloader.downloadData()) {
                 notificationService.sendEmailMessage("marcosolina@gmail.com", "Marco Solina - Covid Status", "No dati dall'istat");
                 csvDownloader.downloadData();
             }
@@ -95,7 +106,7 @@ public class MarcoCovidScheduler implements CovidScheduler {
             notificationService.sendEmailMessage("marcosolina@gmail.com", "Marco Solina - Covid Status", e.getMessage());
         }
 
-        logger.info("Update ISTAT complete");
+        logger.info("Update Population complete");
 
     }
 

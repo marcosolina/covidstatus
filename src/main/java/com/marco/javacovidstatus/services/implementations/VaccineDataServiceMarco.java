@@ -20,6 +20,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 
 import com.marco.javacovidstatus.enums.Gender;
+import com.marco.javacovidstatus.enums.PopulationSource;
 import com.marco.javacovidstatus.model.dto.PeopleVaccinated;
 import com.marco.javacovidstatus.model.dto.VaccinatedPeopleDto;
 import com.marco.javacovidstatus.model.dto.VaccinatedPeopleTypeDto;
@@ -60,8 +61,10 @@ public class VaccineDataServiceMarco implements VaccineDataService {
     private MessageSource msgSource;
     @Autowired
     private PopulationDataService populationService;
-    @Value("${covidstatus.istat.population.year}")
+    @Value("${covidstatus.populationdownloader.istat.population.year}")
     private int populationStatisticYear;
+    @Value("${covidstatus.populationdownloader.implementation}")
+    private PopulationSource populationDownloader;
 
     @Override
     public Map<String, List<VaccinesDeliveredPerDayDto>> getDeliveredVaccinesPerRegionBetweenDatesPerRegion(
@@ -364,7 +367,35 @@ public class VaccineDataServiceMarco implements VaccineDataService {
             map.put(dto.getAgeRange(), dto);
         });
         // @formatter:on
-
+        
+        if(populationDownloader == PopulationSource.GOVERNMENT) {
+        	String f1 = "80-89";
+        	String f2 = "90+";
+        	PeopleVaccinated dto = map.get(f1);
+        	PeopleVaccinated dto2 = map.get(f2);
+        	dto.setPopulation(dto.getPopulation() + dto2.getPopulation());
+        	dto.setFirstDose(dto.getFirstDose() + dto2.getFirstDose());
+        	dto.setSecondDose(dto.getSecondDose() + dto2.getSecondDose());
+        	dto.setMonoDose(dto.getMonoDose() + dto2.getMonoDose());
+        	dto.setDoseAfterInfection(dto.getDoseAfterInfection() + dto2.getDoseAfterInfection());
+        	if(dto.getPopulation() > 0) {
+        		BigDecimal first = BigDecimal.valueOf(dto.getFirstDose())
+                        .divide(BigDecimal.valueOf(dto.getPopulation()), 4, RoundingMode.DOWN)
+                        .multiply(BigDecimal.valueOf(100)).setScale(2, RoundingMode.DOWN);
+        		BigDecimal vaccinadted = BigDecimal.valueOf(dto.getSecondDose())
+                        .add(BigDecimal.valueOf(dto.getMonoDose()))
+                        .add(BigDecimal.valueOf(dto.getDoseAfterInfection()))
+                        .divide(BigDecimal.valueOf(dto.getPopulation()), 4, RoundingMode.DOWN)
+                        .multiply(BigDecimal.valueOf(100)).setScale(2, RoundingMode.DOWN);
+        		
+        		dto.setFirstDosePerc(first);
+                dto.setVaccinatedPerc(vaccinadted);
+        	}
+        	
+        	map.remove(f1);
+        	map.remove(f2);
+        	map.put("80+", dto);
+        }
         return map;
     }
 

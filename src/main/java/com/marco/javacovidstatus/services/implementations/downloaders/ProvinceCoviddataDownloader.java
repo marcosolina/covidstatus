@@ -1,4 +1,4 @@
-package com.marco.javacovidstatus.services.implementations;
+package com.marco.javacovidstatus.services.implementations.downloaders;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -14,8 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import com.marco.javacovidstatus.model.dto.ProvinceDailyDataDto;
-import com.marco.javacovidstatus.services.interfaces.CovidDataDownloader;
 import com.marco.javacovidstatus.services.interfaces.CovidDataService;
+import com.marco.javacovidstatus.services.interfaces.downloaders.CovidDataDownloader;
 
 /**
  * It downloads and process the Provinces data

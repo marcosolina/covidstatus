@@ -1,4 +1,4 @@
-package com.marco.javacovidstatus.services.implementations;
+package com.marco.javacovidstatus.services.implementations.downloaders.population;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -11,9 +11,9 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import com.marco.javacovidstatus.enums.Gender;
 import com.marco.javacovidstatus.model.dto.PopulationDto;
-import com.marco.javacovidstatus.services.interfaces.CovidDataDownloader;
 import com.marco.javacovidstatus.services.interfaces.NotificationSenderInterface;
 import com.marco.javacovidstatus.services.interfaces.PopulationDataService;
+import com.marco.javacovidstatus.services.interfaces.downloaders.CovidDataDownloader;
 
 public class PopulationDownloaderExcel extends CovidDataDownloader {
     

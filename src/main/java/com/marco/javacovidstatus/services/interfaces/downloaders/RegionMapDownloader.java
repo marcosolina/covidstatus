@@ -1,4 +1,4 @@
-package com.marco.javacovidstatus.services.interfaces;
+package com.marco.javacovidstatus.services.interfaces.downloaders;
 
 /**
  * The interface provides a way to retrieve the map of Italy with the color of

@@ -62,6 +62,7 @@ Once the containers are up and runnig open the following links:
 
 ## History
 
+- **20/08/2021 v0.1.29**: Added an additional implementation to download the population data from the GIT repo were I retrieve the "Vaccine" data
 - **09/07/2021 v0.1.28**: Enhancing the % of people vaccinated chart
 - **05/07/2021 v0.1.27**: Small changes to allign with the new data scructure adopted by the goverment
 - **28/05/2021 v0.1.26**: Small changes to allign with the new data scructure adopted by the goverment (They have removed the different categories "of people", Military, Hospital, over 80 etc)

@@ -1,4 +1,4 @@
-package com.marco.javacovidstatus.services.implementations;
+package com.marco.javacovidstatus.services.implementations.downloaders.population;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -14,9 +14,9 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import com.marco.javacovidstatus.enums.Gender;
 import com.marco.javacovidstatus.model.dto.PopulationDto;
-import com.marco.javacovidstatus.services.interfaces.CovidDataDownloader;
 import com.marco.javacovidstatus.services.interfaces.NotificationSenderInterface;
 import com.marco.javacovidstatus.services.interfaces.PopulationDataService;
+import com.marco.javacovidstatus.services.interfaces.downloaders.CovidDataDownloader;
 import com.marco.utils.MarcoException;
 
 /**
@@ -26,8 +26,8 @@ import com.marco.utils.MarcoException;
  * @author Marco
  *
  */
-public class PopulationDownloader extends CovidDataDownloader {
-    private static final Logger _LOGGER = LoggerFactory.getLogger(PopulationDownloader.class);
+public class PopulationIstatDownloader extends CovidDataDownloader {
+    private static final Logger _LOGGER = LoggerFactory.getLogger(PopulationIstatDownloader.class);
     private static final int COL_GENDER = 4;
     private static final int COL_YEAR = 7;
     private static final int COL_COUNT = 8;
@@ -37,7 +37,7 @@ public class PopulationDownloader extends CovidDataDownloader {
     @Autowired
     private NotificationSenderInterface notificationService;
 
-    public PopulationDownloader(WebClient webClient) {
+    public PopulationIstatDownloader(WebClient webClient) {
         super(webClient);
     }
 

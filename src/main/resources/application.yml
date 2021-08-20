@@ -36,9 +36,11 @@ covidstatus:
   vaccines:
     monodose:
       suppliers: Janssen
-  istat:
-    population:
-      year: 2020
+  populationdownloader:
+    implementation: GOVERNMENT # GOVERNMENT, ISTAT
+    istat:
+      population:
+        year: 2021
   scheduled:
     downloadnewdata:
       cron:
