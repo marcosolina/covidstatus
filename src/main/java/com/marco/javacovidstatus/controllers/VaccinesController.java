@@ -13,8 +13,6 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
-import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 import org.springframework.stereotype.Controller;
@@ -36,7 +34,6 @@ import com.marco.javacovidstatus.model.rest.vaccines.RespGetVaccinesDosesData;
 import com.marco.javacovidstatus.services.interfaces.VaccineDataService;
 import com.marco.javacovidstatus.utils.CovidUtils;
 import com.marco.utils.MarcoException;
-import com.marco.utils.http.MarcoResponse;
 
 import io.swagger.annotations.ApiOperation;
 
@@ -53,14 +50,12 @@ public class VaccinesController {
 	@Autowired
 	private VaccineDataService service;
 
-	@Autowired
-	private MessageSource msgSource;
-
 	/**
 	 * It returns the delivered vaccines per Region
 	 * 
 	 * @param request
 	 * @return
+	 * @throws MarcoException 
 	 */
 	@GetMapping(value = CovidUtils.MAPPING_VACCINE_DELIVERED_PER_REGION)
 	@ResponseBody
@@ -72,47 +67,37 @@ public class VaccinesController {
 			LocalDate from, 
 			@RequestParam("to")
 			@DateTimeFormat(iso = ISO.DATE)
-			LocalDate to) {
+			LocalDate to) throws MarcoException {
 		// @formatter:on
 
 		LOGGER.trace("Inside VaccinesController.getVaccinesDeliveredPerRegionData");
 
 		RespGetVaccinesDeliveredPerRegion resp = new RespGetVaccinesDeliveredPerRegion();
-		try {
-			/*
-			 * The Key of the map is the Region Code
-			 */
-			Map<String, List<VaccinesDeliveredPerDayDto>> regionData = service
-					.getDeliveredVaccinesPerRegionBetweenDatesPerRegion(from, to);
+		/*
+		 * The Key of the map is the Region Code
+		 */
+		Map<String, List<VaccinesDeliveredPerDayDto>> regionData = service
+				.getDeliveredVaccinesPerRegionBetweenDatesPerRegion(from, to);
 
-			/*
-			 * Createing a map with: Key -> Region Code Value -> List of number of delivered
-			 * vaccines
-			 */
-			Map<String, List<Long>> dataPerRegion = new HashMap<>();
-			regionData.forEach((k, v) -> dataPerRegion.put(k,
-					v.stream().map(VaccinesDeliveredPerDayDto::getDosesDelivered).collect(Collectors.toList())));
+		/*
+		 * Createing a map with: Key -> Region Code Value -> List of number of delivered
+		 * vaccines
+		 */
+		Map<String, List<Long>> dataPerRegion = new HashMap<>();
+		regionData.forEach((k, v) -> dataPerRegion.put(k,
+				v.stream().map(VaccinesDeliveredPerDayDto::getDosesDelivered).collect(Collectors.toList())));
 
-			/*
-			 * Creating the list of Dates for which I have the data
-			 */
-			Set<LocalDate> dates = new HashSet<>();
-			regionData.forEach((k, v) -> v.stream().forEach(o -> dates.add(o.getDate())));
-			List<LocalDate> list = Arrays.asList(dates.toArray(new LocalDate[0]));
-			Collections.sort(list);
+		/*
+		 * Creating the list of Dates for which I have the data
+		 */
+		Set<LocalDate> dates = new HashSet<>();
+		regionData.forEach((k, v) -> v.stream().forEach(o -> dates.add(o.getDate())));
+		List<LocalDate> list = Arrays.asList(dates.toArray(new LocalDate[0]));
+		Collections.sort(list);
 
-			resp.setDeliveredPerRegion(dataPerRegion);
-			resp.setArrDates(list);
-			resp.setStatus(true);
-		} catch (MarcoException e) {
-			resp.addError(e);
-		} catch (Exception e) {
-		    LOGGER.error(e.getMessage());
-			if(LOGGER.isTraceEnabled()) {
-				e.printStackTrace();
-			}
-			addGenericErro(resp);
-		}
+		resp.setDeliveredPerRegion(dataPerRegion);
+		resp.setArrDates(list);
+		resp.setStatus(true);
 		
 		return resp;
 	}
@@ -122,6 +107,7 @@ public class VaccinesController {
 	 * 
 	 * @param request
 	 * @return
+	 * @throws MarcoException 
 	 */
 	@GetMapping(value = CovidUtils.MAPPING_VACCINE_DELIVERED_PER_SUPPLIER)
 	@ApiOperation(value = "It returns the number of vaccines delivered by the different suppliers")
@@ -133,25 +119,15 @@ public class VaccinesController {
 			LocalDate from, 
 			@RequestParam("to")
 			@DateTimeFormat(iso = ISO.DATE)
-			LocalDate to) {
+			LocalDate to) throws MarcoException {
 		// @formatter:on
 		LOGGER.trace("Inside VaccinesController.getVaccinesDeliveredPerSupplier");
 
 		RespGetVaccinesDeliveredPerSupplier resp = new RespGetVaccinesDeliveredPerSupplier();
-		try {
-			Map<String, Long> supplierData = service.getDeliveredVaccinesBetweenDatesPerSupplier(from, to);
+		Map<String, Long> supplierData = service.getDeliveredVaccinesBetweenDatesPerSupplier(from, to);
 
-			resp.setDeliveredPerSupplier(supplierData);
-			resp.setStatus(true);
-		} catch (MarcoException e) {
-			resp.addError(e);
-		} catch (Exception e) {
-		    LOGGER.error(e.getMessage());
-			if(LOGGER.isTraceEnabled()) {
-				e.printStackTrace();
-			}
-			addGenericErro(resp);
-		}
+		resp.setDeliveredPerSupplier(supplierData);
+		resp.setStatus(true);
 		
 		return resp;
 	}
@@ -162,6 +138,7 @@ public class VaccinesController {
 	 * 
 	 * @param request
 	 * @return
+	 * @throws MarcoException 
 	 */
 	@GetMapping(value = CovidUtils.MAPPING_VACCINE_DOSES_DATA)
 	@ApiOperation(value = "It returns the number of given doses group by \"Shot\" (First or Second)")
@@ -173,26 +150,15 @@ public class VaccinesController {
 			LocalDate from, 
 			@RequestParam("to")
 			@DateTimeFormat(iso = ISO.DATE)
-			LocalDate to) {
+			LocalDate to) throws MarcoException {
 		// @formatter:on
 		LOGGER.trace("Inside VaccinesController.getVaccinesDosesData");
 
 		RespGetVaccinesDosesData resp = new RespGetVaccinesDosesData();
 
-		try {
-			Map<String, Long> dataShotNumber = service.getGiveShotNumberBetweenDates(from, to);
-			resp.setDataShotNumber(dataShotNumber);
-			resp.setStatus(true);
-
-		} catch (MarcoException e) {
-			resp.addError(e);
-		} catch (Exception e) {
-		    LOGGER.error(e.getMessage());
-			if(LOGGER.isTraceEnabled()) {
-				e.printStackTrace();
-			}
-			addGenericErro(resp);
-		}
+		Map<String, Long> dataShotNumber = service.getGiveShotNumberBetweenDates(from, to);
+		resp.setDataShotNumber(dataShotNumber);
+		resp.setStatus(true);
 		
 		return resp;
 	}
@@ -202,6 +168,7 @@ public class VaccinesController {
 	 * 
 	 * @param request
 	 * @return
+	 * @throws MarcoException 
 	 */
 	@GetMapping(value = CovidUtils.MAPPING_VACCINE_VACCINATED_PEOPLE)
 	@ApiOperation(value = "It returns the number of vaccinated people group by category")
@@ -213,26 +180,16 @@ public class VaccinesController {
 			LocalDate from, 
 			@RequestParam("to")
 			@DateTimeFormat(iso = ISO.DATE)
-			LocalDate to) {
+			LocalDate to) throws MarcoException {
 		// @formatter:on
 		LOGGER.trace("Inside VaccinesController.getVaccinatedPeople");
 
 		RespGetVaccinatedPeopleData resp = new RespGetVaccinatedPeopleData();
-		try {
-			VaccinatedPeopleTypeDto dataVaccinatedPeople = service.getVaccinatedPeopleBetweenDates(from, to);
+		VaccinatedPeopleTypeDto dataVaccinatedPeople = service.getVaccinatedPeopleBetweenDates(from, to);
 
-			resp.setDataVaccinatedPeople(dataVaccinatedPeople.getDataVaccinatedPeople());
-			resp.setArrDates(dataVaccinatedPeople.getDates());
-			resp.setStatus(true);
-		} catch (MarcoException e) {
-			resp.addError(e);
-		} catch (Exception e) {
-		    LOGGER.error(e.getMessage());
-			if(LOGGER.isTraceEnabled()) {
-				e.printStackTrace();
-			}
-			addGenericErro(resp);
-		}
+		resp.setDataVaccinatedPeople(dataVaccinatedPeople.getDataVaccinatedPeople());
+		resp.setArrDates(dataVaccinatedPeople.getDates());
+		resp.setStatus(true);
 		
 		return resp;
 	}
@@ -242,6 +199,7 @@ public class VaccinesController {
 	 * 
 	 * @param request
 	 * @return
+	 * @throws MarcoException 
 	 */
 	@GetMapping(value = CovidUtils.MAPPING_VACCINE_VACCINATED_PER_AGE)
 	@ApiOperation(value = "It returns the number of vaccinated people grouped by age")
@@ -253,25 +211,15 @@ public class VaccinesController {
 			LocalDate from, 
 			@RequestParam("to")
 			@DateTimeFormat(iso = ISO.DATE)
-			LocalDate to) {
+			LocalDate to) throws MarcoException {
 		// @formatter:on
 		LOGGER.trace("Inside VaccinesController.getVaccinesPerAgeData");
 
 		RespGetVaccinatedPeoplePerAgeData resp = new RespGetVaccinatedPeoplePerAgeData();
-		try {
-			Map<String, PeopleVaccinated> dataVaccinatedPerAge = service.getVaccinatedAgeRangeBetweenDates(from, to);
+		Map<String, PeopleVaccinated> dataVaccinatedPerAge = service.getVaccinatedAgeRangeBetweenDates(from, to);
 
-			resp.setDataVaccinatedPerAge(dataVaccinatedPerAge);
-			resp.setStatus(true);
-		} catch (MarcoException e) {
-			resp.addError(e);
-		} catch (Exception e) {
-		    LOGGER.error(e.getMessage());
-			if(LOGGER.isTraceEnabled()) {
-				e.printStackTrace();
-			}
-			addGenericErro(resp);
-		}
+		resp.setDataVaccinatedPerAge(dataVaccinatedPerAge);
+		resp.setStatus(true);
 		
 		return resp;
 	}
@@ -289,18 +237,10 @@ public class VaccinesController {
 		LOGGER.trace("Inside VaccinesController.getTotlaVaccinesDeliveredUsed");
 
 		RespGetTotalDelivereUsedVaccineData resp = new RespGetTotalDelivereUsedVaccineData();
-		try {
-			VaccinesReceivedUsedDto dto = service.getTotlalVaccinesDeliveredUsed();
-			resp.setTotalDeliveredVaccines(dto.getTotalVaccinesReceived());
-			resp.setTotalUsedVaccines(dto.getTotalVaccinesUsed());
-			resp.setStatus(true);
-		} catch (Exception e) {
-		    LOGGER.error(e.getMessage());
-			if(LOGGER.isTraceEnabled()) {
-				e.printStackTrace();
-			}
-			addGenericErro(resp);
-		}
+		VaccinesReceivedUsedDto dto = service.getTotlalVaccinesDeliveredUsed();
+		resp.setTotalDeliveredVaccines(dto.getTotalVaccinesReceived());
+		resp.setTotalUsedVaccines(dto.getTotalVaccinesUsed());
+		resp.setStatus(true);
 		
 		return resp;
 	}
@@ -317,16 +257,8 @@ public class VaccinesController {
 		LOGGER.trace("Inside VaccinesController.getTotlaVaccinesDeliveredUsedPerRegion");
 
 		RespGetTotalDelivereUsedVaccineDataPerRegion resp = new RespGetTotalDelivereUsedVaccineDataPerRegion();
-		try {
-			resp.setData(service.getVacinesTotalDeliveredGivenPerRegion());
-			resp.setStatus(true);
-		} catch (Exception e) {
-		    LOGGER.error(e.getMessage());
-			if(LOGGER.isTraceEnabled()) {
-				e.printStackTrace();
-			}
-			addGenericErro(resp);
-		}
+		resp.setData(service.getVacinesTotalDeliveredGivenPerRegion());
+		resp.setStatus(true);
 		
 		return resp;
 	}
@@ -343,18 +275,10 @@ public class VaccinesController {
 		LOGGER.trace("Inside VaccinesController.getVaccinesPerAgeData");
 
 		RespGetVaccinatedPeoplePerAgeData resp = new RespGetVaccinatedPeoplePerAgeData();
-		try {
-			Map<String, PeopleVaccinated> dataVaccinatedPerAge = service.getVaccinatedAgeRangeTotals();
+		Map<String, PeopleVaccinated> dataVaccinatedPerAge = service.getVaccinatedAgeRangeTotals();
 
-			resp.setDataVaccinatedPerAge(dataVaccinatedPerAge);
-			resp.setStatus(true);
-		} catch (Exception e) {
-		    LOGGER.error(e.getMessage());
-			if(LOGGER.isTraceEnabled()) {
-				e.printStackTrace();
-			}
-			addGenericErro(resp);
-		}
+		resp.setDataVaccinatedPerAge(dataVaccinatedPerAge);
+		resp.setStatus(true);
 		
 		return resp;
 	}
@@ -374,23 +298,11 @@ public class VaccinesController {
 		LOGGER.trace("Inside VaccinesController.getVaccinesDeliveredPerSupplier");
 
 		RespGetVaccinesDeliveredPerSupplier resp = new RespGetVaccinesDeliveredPerSupplier();
-		try {
-			Map<String, Long> supplierData = service.getTotalDeliveredVaccinesPerSupplier();
+		Map<String, Long> supplierData = service.getTotalDeliveredVaccinesPerSupplier();
 
-			resp.setDeliveredPerSupplier(supplierData);
-			resp.setStatus(true);
-		} catch (Exception e) {
-		    LOGGER.error(e.getMessage());
-			if(LOGGER.isTraceEnabled()) {
-				e.printStackTrace();
-			}
-			addGenericErro(resp);
-		}
+		resp.setDeliveredPerSupplier(supplierData);
+		resp.setStatus(true);
 		
 		return resp;
-	}
-	
-	private void addGenericErro(MarcoResponse resp) {
-		resp.addError(new MarcoException(msgSource.getMessage("COVID00001", null, LocaleContextHolder.getLocale())));
 	}
 }

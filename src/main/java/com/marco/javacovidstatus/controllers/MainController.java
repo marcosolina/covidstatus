@@ -14,8 +14,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.MessageSource;
-import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 import org.springframework.stereotype.Controller;
@@ -38,7 +36,6 @@ import com.marco.javacovidstatus.services.interfaces.CovidDataService;
 import com.marco.javacovidstatus.services.interfaces.downloaders.RegionMapDownloader;
 import com.marco.javacovidstatus.utils.CovidUtils;
 import com.marco.utils.MarcoException;
-import com.marco.utils.http.MarcoResponse;
 
 import io.swagger.annotations.ApiOperation;
 
@@ -54,9 +51,6 @@ public class MainController {
 
 	@Value("${covidstatus.version}")
 	private String appVersion;
-
-	@Autowired
-    private MessageSource msgSource;
 	
 	@Autowired
 	private CovidUtils covidUtils;
@@ -115,6 +109,7 @@ public class MainController {
 	 * 
 	 * @param request
 	 * @return
+	 * @throws MarcoException 
 	 */
 	@GetMapping(value = CovidUtils.MAPPING_REGION_DATA)
 	@ResponseBody
@@ -128,68 +123,58 @@ public class MainController {
 			@DateTimeFormat(iso = ISO.DATE)
 			LocalDate to,
 			@RequestParam("dataType")
-			CovidDataType dataType) {
+			CovidDataType dataType) throws MarcoException {
 		// @formatter:on
 		RespGetRegionData resp = new RespGetRegionData();
-		try {
 		
-			List<RegionalDailyDataDto> listData = service.getRegionalDatesInRangeAscending(from, to);
-			List<RegionDto> listRegions = service.getRegionsList();
+		List<RegionalDailyDataDto> listData = service.getRegionalDatesInRangeAscending(from, to);
+		List<RegionDto> listRegions = service.getRegionsList();
 
-			if (!listData.isEmpty()) {
-				listRegions.stream().forEach(r -> {
-					RespRegionChartData chartData = new RespRegionChartData();
-					chartData.setLabel(r.getDesc());
+		if (!listData.isEmpty()) {
+			listRegions.stream().forEach(r -> {
+				RespRegionChartData chartData = new RespRegionChartData();
+				chartData.setLabel(r.getDesc());
 
-					Function<RegionalDailyDataDto, Object> mapper = null;
+				Function<RegionalDailyDataDto, Object> mapper = null;
 
-					switch (dataType) {
-					case NEW_TESTS:
-						mapper = RegionalDailyDataDto::getNewTests;
-						break;
-					case CASUALTIES:
-						mapper = RegionalDailyDataDto::getNewCasualties;
-						break;
-					case NEW_HOSPITALISED:
-						mapper = RegionalDailyDataDto::getNewHospitalized;
-						break;
-					case NEW_INFECTIONS:
-						mapper = RegionalDailyDataDto::getNewInfections;
-						break;
-					case NEW_INTENSIVE_THERAPY:
-						mapper = RegionalDailyDataDto::getNewIntensiveTherapy;
-						break;
-					case NEW_RECOVER:
-						mapper = RegionalDailyDataDto::getNewRecovered;
-						break;
-					case PERC_CASUALTIES:
-						mapper = RegionalDailyDataDto::getCasualtiesPercentage;
-						break;
-					case PERC_INFECTIONS:
-						mapper = RegionalDailyDataDto::getInfectionPercentage;
-						break;
-					}
+				switch (dataType) {
+				case NEW_TESTS:
+					mapper = RegionalDailyDataDto::getNewTests;
+					break;
+				case CASUALTIES:
+					mapper = RegionalDailyDataDto::getNewCasualties;
+					break;
+				case NEW_HOSPITALISED:
+					mapper = RegionalDailyDataDto::getNewHospitalized;
+					break;
+				case NEW_INFECTIONS:
+					mapper = RegionalDailyDataDto::getNewInfections;
+					break;
+				case NEW_INTENSIVE_THERAPY:
+					mapper = RegionalDailyDataDto::getNewIntensiveTherapy;
+					break;
+				case NEW_RECOVER:
+					mapper = RegionalDailyDataDto::getNewRecovered;
+					break;
+				case PERC_CASUALTIES:
+					mapper = RegionalDailyDataDto::getCasualtiesPercentage;
+					break;
+				case PERC_INFECTIONS:
+					mapper = RegionalDailyDataDto::getInfectionPercentage;
+					break;
+				}
 
-					chartData.setData(listData.stream().filter(data -> data.getRegionCode().equals(r.getCode()))
-							.map(mapper).collect(Collectors.toList()));
-					resp.getRegionData().put(r.getCode(), chartData);
-				});
+				chartData.setData(listData.stream().filter(data -> data.getRegionCode().equals(r.getCode()))
+						.map(mapper).collect(Collectors.toList()));
+				resp.getRegionData().put(r.getCode(), chartData);
+			});
 
-				RegionDto region = listRegions.get(0);
-				resp.setArrDates(listData.stream().filter(r -> r.getRegionCode().equals(region.getCode()))
-						.map(RegionalDailyDataDto::getDate).collect(Collectors.toList()));
-			}
-
-			resp.setStatus(true);
-		} catch (MarcoException e) {
-			resp.addError(e);
-		} catch (Exception e) {
-		    LOGGER.error(e.getMessage());
-			if(LOGGER.isTraceEnabled()) {
-				e.printStackTrace();
-			}
-			addGenericErro(resp);
+			RegionDto region = listRegions.get(0);
+			resp.setArrDates(listData.stream().filter(r -> r.getRegionCode().equals(region.getCode()))
+					.map(RegionalDailyDataDto::getDate).collect(Collectors.toList()));
 		}
+
+		resp.setStatus(true);
 		
 		return resp;
 	}
@@ -199,6 +184,7 @@ public class MainController {
 	 * 
 	 * @param request
 	 * @return
+	 * @throws MarcoException 
 	 */
 	@GetMapping(value = CovidUtils.MAPPING_PROVINCE_DATA)
 	@ResponseBody
@@ -212,48 +198,38 @@ public class MainController {
 			@DateTimeFormat(iso = ISO.DATE)
 			LocalDate to,
 			@RequestParam("regionCode")
-			String regionCode) {
+			String regionCode) throws MarcoException {
 		// @formatter:on
 		RespGetProvinceData resp = new RespGetProvinceData();
-		try {
-			/*
-			 * Get all the data for the provinces of the specific region
-			 */
-			List<ProvinceDailyDataDto> listData = service.getProvinceDataInRangeAscending(from, to, regionCode);
-			List<String> provinces = service.getProfinceListForRegion(regionCode);
+		/*
+		 * Get all the data for the provinces of the specific region
+		 */
+		List<ProvinceDailyDataDto> listData = service.getProvinceDataInRangeAscending(from, to, regionCode);
+		List<String> provinces = service.getProfinceListForRegion(regionCode);
 
-			Map<String, RespProvinceChartData> map = new HashMap<>();
-			if (!listData.isEmpty()) {
-			// @formatter:off
+		Map<String, RespProvinceChartData> map = new HashMap<>();
+		if (!listData.isEmpty()) {
+		// @formatter:off
+        
+        provinces.stream().forEach(codiceProvincia -> {
+            /*
+             * Get the data for the specific province
+             */
+            List<ProvinceDailyDataDto> provinceData = listData.stream().filter(data -> data.getProvinceCode().equals(codiceProvincia)).collect(Collectors.toList());
             
-            provinces.stream().forEach(codiceProvincia -> {
-                /*
-                 * Get the data for the specific province
-                 */
-                List<ProvinceDailyDataDto> provinceData = listData.stream().filter(data -> data.getProvinceCode().equals(codiceProvincia)).collect(Collectors.toList());
-                
-                RespProvinceChartData data = new RespProvinceChartData();
-                data.setLabel(provinceData.get(0).getDescription());
-                data.setNewInfections(provinceData.stream().map(ProvinceDailyDataDto::getNewInfections).collect(Collectors.toList()));
-                
-                map.put(codiceProvincia, data);
-            });
-            // @formatter:on
-				String province = provinces.get(0);
-				resp.setArrDates(listData.stream().filter(p -> p.getProvinceCode().equals(province))
-						.map(ProvinceDailyDataDto::getDate).collect(Collectors.toList()));
-				resp.setProvinceData(map);
-			}
-			resp.setStatus(true);
-		} catch (MarcoException e) {
-			resp.addError(e);
-		} catch (Exception e) {
-		    LOGGER.error(e.getMessage());
-			if(LOGGER.isTraceEnabled()) {
-				e.printStackTrace();
-			}
-			addGenericErro(resp);
+            RespProvinceChartData data = new RespProvinceChartData();
+            data.setLabel(provinceData.get(0).getDescription());
+            data.setNewInfections(provinceData.stream().map(ProvinceDailyDataDto::getNewInfections).collect(Collectors.toList()));
+            
+            map.put(codiceProvincia, data);
+        });
+        // @formatter:on
+			String province = provinces.get(0);
+			resp.setArrDates(listData.stream().filter(p -> p.getProvinceCode().equals(province))
+					.map(ProvinceDailyDataDto::getDate).collect(Collectors.toList()));
+			resp.setProvinceData(map);
 		}
+		resp.setStatus(true);
 		
 		return resp;
 	}
@@ -263,6 +239,7 @@ public class MainController {
 	 * 
 	 * @param request
 	 * @return
+	 * @throws MarcoException 
 	 */
 	@GetMapping(value = CovidUtils.MAPPING_NATIONAL_DATA)
 	@ApiOperation(value = "It returns the National situation")
@@ -274,38 +251,24 @@ public class MainController {
 			LocalDate from, 
 			@RequestParam("to")
 			@DateTimeFormat(iso = ISO.DATE)
-			LocalDate to) {
+			LocalDate to) throws MarcoException {
 		// @formatter:on
 		RespGetNationalData resp = new RespGetNationalData();
-		try {
-			List<NationalDailyDataDto> listData = service.getDatesInRangeAscending(from, to);
-			// @formatter:off
-			resp.setArrDates(				listData.stream().map(NationalDailyDataDto::getDate)				.collect(Collectors.toList()));
-			resp.setArrNewCasualties(		listData.stream().map(NationalDailyDataDto::getNewCasualties)		.collect(Collectors.toList()));
-			resp.setArrNewHospitalized(		listData.stream().map(NationalDailyDataDto::getNewHospitalized)		.collect(Collectors.toList()));
-			resp.setArrNewInfections(		listData.stream().map(NationalDailyDataDto::getNewInfections)		.collect(Collectors.toList()));
-			resp.setArrNewIntensiveTherapy(	listData.stream().map(NationalDailyDataDto::getNewIntensiveTherapy)	.collect(Collectors.toList()));
-			resp.setArrNewRecovered(		listData.stream().map(NationalDailyDataDto::getNewRecovered)		.collect(Collectors.toList()));
-			resp.setArrNewTests(			listData.stream().map(NationalDailyDataDto::getNewTests)			.collect(Collectors.toList()));
-			resp.setArrPercCasualties(		listData.stream().map(NationalDailyDataDto::getCasualtiesPercentage).collect(Collectors.toList()));
-			resp.setArrPercInfections(		listData.stream().map(NationalDailyDataDto::getInfectionPercentage)	.collect(Collectors.toList()));
-			// @formatter:on
+		List<NationalDailyDataDto> listData = service.getDatesInRangeAscending(from, to);
+		// @formatter:off
+		resp.setArrDates(				listData.stream().map(NationalDailyDataDto::getDate)				.collect(Collectors.toList()));
+		resp.setArrNewCasualties(		listData.stream().map(NationalDailyDataDto::getNewCasualties)		.collect(Collectors.toList()));
+		resp.setArrNewHospitalized(		listData.stream().map(NationalDailyDataDto::getNewHospitalized)		.collect(Collectors.toList()));
+		resp.setArrNewInfections(		listData.stream().map(NationalDailyDataDto::getNewInfections)		.collect(Collectors.toList()));
+		resp.setArrNewIntensiveTherapy(	listData.stream().map(NationalDailyDataDto::getNewIntensiveTherapy)	.collect(Collectors.toList()));
+		resp.setArrNewRecovered(		listData.stream().map(NationalDailyDataDto::getNewRecovered)		.collect(Collectors.toList()));
+		resp.setArrNewTests(			listData.stream().map(NationalDailyDataDto::getNewTests)			.collect(Collectors.toList()));
+		resp.setArrPercCasualties(		listData.stream().map(NationalDailyDataDto::getCasualtiesPercentage).collect(Collectors.toList()));
+		resp.setArrPercInfections(		listData.stream().map(NationalDailyDataDto::getInfectionPercentage)	.collect(Collectors.toList()));
+		// @formatter:on
 
-			resp.setStatus(true);
-		} catch (MarcoException e) {
-			resp.addError(e);
-		} catch (Exception e) {
-		    LOGGER.error(e.getMessage());
-			if(LOGGER.isTraceEnabled()) {
-				e.printStackTrace();
-			}
-			addGenericErro(resp);
-		}
+		resp.setStatus(true);
 		
 		return resp;
-	}
-	
-	private void addGenericErro(MarcoResponse resp) {
-		resp.addError(new MarcoException(msgSource.getMessage("COVID00001", null, LocaleContextHolder.getLocale())));
 	}
 }
