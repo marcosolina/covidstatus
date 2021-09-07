@@ -33,6 +33,7 @@ public class PopulationDataServiceMarco implements PopulationDataService {
         pk.setAge(dto.getAge());
         pk.setGender(dto.getGender());
         pk.setYear(dto.getYear());
+        pk.setRegionCode(dto.getRegionCode());
         entity.setCounter(dto.getCounter());
 
         return entity;
@@ -52,5 +53,10 @@ public class PopulationDataServiceMarco implements PopulationDataService {
     public Long getSumForYear(Gender gender, int year) {
         return repo.getSumForYear(gender, year);
     }
+
+	@Override
+	public Long getSumForYearAndRegionCode(Gender gender, int year, String regionCode) {
+		return repo.getSumForYearPerRegion(gender, year, regionCode);
+	}
 
 }

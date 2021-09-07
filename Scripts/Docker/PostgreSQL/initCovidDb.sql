@@ -91,8 +91,40 @@ CREATE TABLE SOMMINISTRAZIONI_VACCINI (
 
 CREATE TABLE ITALIAN_POPULATION (
     YEAR                        NUMERIC( 4, 0)  DEFAULT 0   NOT NULL,
+    REGION_CODE                 VARCHAR(3)      DEFAULT ''  NOT NULL,
     AGE                         NUMERIC( 3, 0)  DEFAULT 0   NOT NULL,
     GENDER                      VARCHAR(10)     DEFAULT ''  NOT NULL,
     COUNTER                     INTEGER         DEFAULT 0   NOT NULL,
-    PRIMARY KEY(YEAR, AGE, GENDER)
+    PRIMARY KEY(YEAR, REGION_CODE, AGE, GENDER)
 );
+
+CREATE TABLE CODICI_REGIONI (
+    AREA                        VARCHAR(3)      DEFAULT ''  NOT NULL,
+    REGION_CODE                 VARCHAR(3)      DEFAULT ''  NOT NULL,
+    DESCR                       VARCHAR(50)     DEFAULT ''  NOT NULL,
+    PRIMARY KEY(AREA)
+);
+
+INSERT INTO CODICI_REGIONI VALUES
+('PIE', '01', 'Piemonte'),
+('VDA', '02', 'Valle d''Aosta'),
+('LOM', '03', 'Lombardia'),
+('VEN', '05', 'Veneto'),
+('FVG', '06', 'Friuli Venezia Giulia'),
+('LIG', '07', 'Liguria'),
+('EMR', '08', 'Emilia-Romagna'),
+('TOS', '09', 'Toscana'),
+('UMB', '10', 'Umbria'),
+('MAR', '11', 'Marche'),
+('LAZ', '12', 'Lazio'),
+('ABR', '13', 'Abruzzo'),
+('MOL', '14', 'Molise'),
+('CAM', '15', 'Campania'),
+('PUG', '16', 'Puglia'),
+('BAS', '17', 'Basilicata'),
+('CAL', '18', 'Calabria'),
+('SIC', '19', 'Sicilia'),
+('SAR', '20', 'Sardegna'),
+('PAB', '21', 'P.A. Bolzano'),
+('PAT', '22', 'P.A. Trento')
+;

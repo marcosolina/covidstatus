@@ -22,6 +22,7 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import com.marco.javacovidstatus.enums.Gender;
 import com.marco.javacovidstatus.enums.PopulationSource;
 import com.marco.javacovidstatus.model.dto.PeopleVaccinated;
+import com.marco.javacovidstatus.model.dto.PeopleVaccinatedPerRegion;
 import com.marco.javacovidstatus.model.dto.VaccinatedPeopleDto;
 import com.marco.javacovidstatus.model.dto.VaccinatedPeopleTypeDto;
 import com.marco.javacovidstatus.model.dto.VaccinesDeliveredDto;
@@ -37,6 +38,7 @@ import com.marco.javacovidstatus.model.entitites.vaccines.EntityVacciniConsegne;
 import com.marco.javacovidstatus.model.entitites.vaccines.EntityVacciniConsegnePk;
 import com.marco.javacovidstatus.model.entitites.vaccines.TotalVaccineDeliveredPerRegion;
 import com.marco.javacovidstatus.model.entitites.vaccines.TotalVaccineGivenPerRegion;
+import com.marco.javacovidstatus.model.entitites.vaccines.VaccinesGivenPerRegion;
 import com.marco.javacovidstatus.model.entitites.vaccines.VacciniConsegne;
 import com.marco.javacovidstatus.repositories.interfaces.GivenVaccinesRepo;
 import com.marco.javacovidstatus.repositories.interfaces.VeccinesDeliveredRepo;
@@ -368,7 +370,7 @@ public class VaccineDataServiceMarco implements VaccineDataService {
         });
         // @formatter:on
         
-        if(populationDownloader == PopulationSource.GOVERNMENT) {
+        if(!map.isEmpty() && populationDownloader == PopulationSource.GOVERNMENT) {
         	String f1 = "80-89";
         	String f2 = "90+";
         	PeopleVaccinated dto = map.get(f1);
@@ -414,5 +416,50 @@ public class VaccineDataServiceMarco implements VaccineDataService {
             throw new MarcoException(msgSource.getMessage("COVID00002", null, LocaleContextHolder.getLocale()));
         }
     }
+
+	@Override
+	public List<PeopleVaccinatedPerRegion> getVaccinatedPeoplePerRegion() {
+		List<PeopleVaccinatedPerRegion> list = new ArrayList<>();
+		
+		List<VaccinesGivenPerRegion> vgpr = repoGiven.getTotalPeolpleVaccinatedPerRegion();
+		vgpr.stream().forEach(entity -> {
+			
+			Long men = populationService.getSumForYearAndRegionCode(Gender.MEN, populationStatisticYear, entity.getRegionCode());
+            Long women = populationService.getSumForYearAndRegionCode(Gender.WOMEN, populationStatisticYear, entity.getRegionCode());
+			
+			
+			PeopleVaccinatedPerRegion dto = new PeopleVaccinatedPerRegion();
+			dto.setRegionCode(entity.getRegionCode());
+            dto.setPopulation(men + women);
+            dto.setFirstDose(entity.getFirstDose());
+            dto.setSecondDose(entity.getSecondDose());
+            dto.setMonoDose(entity.getMonoDose());
+            dto.setDoseAfterInfection(entity.getDoseAfterInfection());
+            
+            // @formatter:off
+            BigDecimal first = BigDecimal.ZERO;
+            BigDecimal vaccinadted = BigDecimal.ZERO;
+            
+            if(men + women > 0) {
+                first = BigDecimal.valueOf(dto.getFirstDose())
+                        .divide(BigDecimal.valueOf(dto.getPopulation()), 4, RoundingMode.DOWN)
+                        .multiply(BigDecimal.valueOf(100)).setScale(2, RoundingMode.DOWN);
+                vaccinadted = BigDecimal.valueOf(dto.getSecondDose())
+                        .add(BigDecimal.valueOf(dto.getMonoDose()))
+                        .add(BigDecimal.valueOf(dto.getDoseAfterInfection()))
+                        .divide(BigDecimal.valueOf(dto.getPopulation()), 4, RoundingMode.DOWN)
+                        .multiply(BigDecimal.valueOf(100)).setScale(2, RoundingMode.DOWN);
+            }
+            // @formatter:on
+            
+            dto.setFirstDosePerc(first);
+            dto.setVaccinatedPerc(vaccinadted);
+            list.add(dto);
+		});
+		
+		list.sort((o1, o2) -> o1.getRegionCode().compareTo(o2.getRegionCode()));
+		
+		return list;
+	}
 
 }

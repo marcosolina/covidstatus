@@ -24,6 +24,7 @@ import com.marco.javacovidstatus.model.entitites.vaccines.EntitySomministrazione
 import com.marco.javacovidstatus.model.entitites.vaccines.EntitySomministrazioneVacciniPk_;
 import com.marco.javacovidstatus.model.entitites.vaccines.EntitySomministrazioneVaccini_;
 import com.marco.javacovidstatus.model.entitites.vaccines.TotalVaccineGivenPerRegion;
+import com.marco.javacovidstatus.model.entitites.vaccines.VaccinesGivenPerRegion;
 import com.marco.javacovidstatus.repositories.interfaces.GivenVaccinesRepo;
 import com.marco.javacovidstatus.utils.Constants;
 
@@ -414,5 +415,34 @@ public class GivenVaccinesRepoPostgres implements GivenVaccinesRepo {
         }
         return new AgeRangeGivenVaccines(Constants.LABEL_VACCINES_GIVEN_TOTAL, 0L, 0L, 0L, 0L);
     }
+
+	@Override
+	public List<VaccinesGivenPerRegion> getTotalPeolpleVaccinatedPerRegion() {
+		
+		CriteriaBuilder cb = em.getCriteriaBuilder();
+
+		CriteriaQuery<VaccinesGivenPerRegion> cq = cb.createQuery(VaccinesGivenPerRegion.class);
+		Root<EntitySomministrazioneVaccini> root = cq.from(EntitySomministrazioneVaccini.class);
+		/*
+		 * SELECT REGION_CODE, sum(first_dose_counter), sum (second_dose_counter), sum (mono_dose_counter), sum(dose_fater_infect_counter) from
+		 * somministrazioni_vaccini group by REGION_CODE
+		 */
+
+		// @formatter:off
+		cq.multiselect(
+				root.get(EntitySomministrazioneVaccini_.ID).get(EntitySomministrazioneVacciniPk_.REGION_CODE),
+				cb.sum(root.get(EntitySomministrazioneVaccini_.FIRST_DOSE_COUNTER)),
+				cb.sum(root.get(EntitySomministrazioneVaccini_.SECOND_DOSE_COUNTER)),
+                cb.sum(root.get(EntitySomministrazioneVaccini_.MONO_DOSE_COUNTER)),
+                cb.sum(root.get(EntitySomministrazioneVaccini_.DOSE_AFTER_INFECT_COUNTER))
+			)
+		.groupBy(
+				root.get(EntitySomministrazioneVaccini_.ID).get(EntitySomministrazioneVacciniPk_.REGION_CODE)
+		);
+		// @formatter:on
+
+		TypedQuery<VaccinesGivenPerRegion> tq = em.createQuery(cq);
+		return tq.getResultList();
+	}
 
 }

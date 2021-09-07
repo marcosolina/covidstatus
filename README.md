@@ -20,6 +20,10 @@ All the data are retrieved from the following public GitHub Repositories:
 - [Infections Data - License](https://creativecommons.org/licenses/by/4.0/deed.it)
 - [Vaccines Data - License](https://creativecommons.org/licenses/by/4.0/deed.it)
 
+## TODO
+
+- Update the ISTAT downloader implementation to include in the downloaded data the region code
+
 ## My Project Examples
 
 - [Live example of my prject](https://marco.selfip.net/Covid19Italy/)
@@ -62,6 +66,7 @@ Once the containers are up and runnig open the following links:
 
 ## History
 
+- **07/09/2021 v0.1.31**: Adding chart: vaccinated per region
 - **30/08/2021 v0.1.30**: Adding error filter
 - **20/08/2021 v0.1.29**: Added an additional implementation to download the population data from the GIT repo were I retrieve the "Vaccine" data
 - **09/07/2021 v0.1.28**: Enhancing the % of people vaccinated chart

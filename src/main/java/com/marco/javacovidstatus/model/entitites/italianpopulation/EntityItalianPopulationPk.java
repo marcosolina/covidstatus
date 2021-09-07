@@ -1,6 +1,7 @@
 package com.marco.javacovidstatus.model.entitites.italianpopulation;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
@@ -11,75 +12,75 @@ import com.marco.javacovidstatus.enums.Gender;
 
 /**
  * Primary key for {@link EntityItalianPopulation}
+ * 
  * @author Marco
  *
  */
 @Embeddable
 public class EntityItalianPopulationPk implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-    @Column(name = "YEAR")
-    private int year;
-    @Column(name = "AGE")
-    private int age;
-    @Column(name = "GENDER")
-    @Enumerated(EnumType.STRING)
-    private Gender gender;
+	private static final long serialVersionUID = 1L;
+	@Column(name = "YEAR")
+	private int year;
+	@Column(name = "REGION_CODE")
+	private String regionCode;
+	@Column(name = "AGE")
+	private int age;
+	@Column(name = "GENDER")
+	@Enumerated(EnumType.STRING)
+	private Gender gender;
 
-    public int getYear() {
-        return year;
-    }
+	public int getYear() {
+		return year;
+	}
 
-    public void setYear(int year) {
-        this.year = year;
-    }
+	public void setYear(int year) {
+		this.year = year;
+	}
 
-    public int getAge() {
-        return age;
-    }
+	public String getRegionCode() {
+		return regionCode;
+	}
 
-    public void setAge(int age) {
-        this.age = age;
-    }
+	public void setRegionCode(String regionCode) {
+		this.regionCode = regionCode;
+	}
 
-    public Gender getGender() {
-        return gender;
-    }
+	public int getAge() {
+		return age;
+	}
 
-    public void setGender(Gender gender) {
-        this.gender = gender;
-    }
+	public void setAge(int age) {
+		this.age = age;
+	}
 
-    public static long getSerialversionuid() {
-        return serialVersionUID;
-    }
+	public Gender getGender() {
+		return gender;
+	}
 
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + age;
-        result = prime * result + ((gender == null) ? 0 : gender.hashCode());
-        result = prime * result + year;
-        return result;
-    }
+	public void setGender(Gender gender) {
+		this.gender = gender;
+	}
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        EntityItalianPopulationPk other = (EntityItalianPopulationPk) obj;
-        if (age != other.age)
-            return false;
-        if (gender != other.gender)
-            return false;
-        if (year != other.year)
-            return false;
-        return true;
-    }
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(age, gender, regionCode, year);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		EntityItalianPopulationPk other = (EntityItalianPopulationPk) obj;
+		return age == other.age && gender == other.gender && Objects.equals(regionCode, other.regionCode) && year == other.year;
+	}
 
 }

@@ -14,7 +14,7 @@ import com.marco.javacovidstatus.model.dto.NationalDailyDataDto;
 import com.marco.javacovidstatus.model.dto.ProvinceDailyDataDto;
 import com.marco.javacovidstatus.model.dto.RegionDto;
 import com.marco.javacovidstatus.model.dto.RegionalDailyDataDto;
-import com.marco.javacovidstatus.model.entitites.RegionData;
+import com.marco.javacovidstatus.model.entitites.EntityRegionCode;
 import com.marco.javacovidstatus.model.entitites.infections.EntityNationalData;
 import com.marco.javacovidstatus.model.entitites.infections.EntityProvinceData;
 import com.marco.javacovidstatus.model.entitites.infections.EntityProvinceDataPk;
@@ -91,8 +91,14 @@ public class MarcoNationalDataService implements CovidDataService {
 
     @Override
     public List<RegionDto> getRegionsList() {
-        List<RegionData> list = repoCovidCustom.getRegionList(); 
-        return list.stream().map(rd -> new RegionDto(rd.getRegionCode(), rd.getRegionDesc())).collect(Collectors.toList());
+        List<EntityRegionCode> list = repoCovidCustom.getRegionList(); 
+        return list.stream().map(rd -> {
+        	RegionDto dto = new RegionDto();
+        	dto.setArea(rd.getArea());
+        	dto.setCode(rd.getRegionCode());
+        	dto.setDesc(rd.getDesc());
+        	return dto;
+        	}).collect(Collectors.toList());
     }
 
     @Override
