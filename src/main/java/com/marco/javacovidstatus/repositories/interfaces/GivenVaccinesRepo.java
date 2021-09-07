@@ -8,6 +8,7 @@ import com.marco.javacovidstatus.model.entitites.vaccines.DailySumGivenVaccines;
 import com.marco.javacovidstatus.model.entitites.vaccines.DoseCounter;
 import com.marco.javacovidstatus.model.entitites.vaccines.EntitySomministrazioneVaccini;
 import com.marco.javacovidstatus.model.entitites.vaccines.TotalVaccineGivenPerRegion;
+import com.marco.javacovidstatus.model.entitites.vaccines.VaccinesGivenPerRegion;
 
 /**
  * This interface provides the contract to query the database
@@ -109,4 +110,10 @@ public interface GivenVaccinesRepo {
      * @return
      */
     public AgeRangeGivenVaccines getTotalPeolpleVaccinated();
+    
+    /**
+     * It returns the total number of people vaccinated grouped by region.
+     * @return
+     */
+    public List<VaccinesGivenPerRegion> getTotalPeolpleVaccinatedPerRegion();
 }

@@ -3,7 +3,7 @@ package com.marco.javacovidstatus.repositories.interfaces;
 import java.time.LocalDate;
 import java.util.List;
 
-import com.marco.javacovidstatus.model.entitites.RegionData;
+import com.marco.javacovidstatus.model.entitites.EntityRegionCode;
 import com.marco.javacovidstatus.model.entitites.infections.EntityProvinceData;
 import com.marco.javacovidstatus.model.entitites.infections.EntityRegionalData;
 
@@ -21,7 +21,7 @@ public interface CovidRepository {
      * 
      * @return
      */
-    public List<RegionData> getRegionList();
+    public List<EntityRegionCode> getRegionList();
 
     /**
      * Returns the province data for the specified region

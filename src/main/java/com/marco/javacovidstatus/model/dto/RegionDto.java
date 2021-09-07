@@ -8,32 +8,36 @@ package com.marco.javacovidstatus.model.dto;
  */
 public class RegionDto {
 
-    private String code;
-    private String desc;
+	private String area;
+	private String code;
+	private String desc;
 
-    public RegionDto() {
+	public RegionDto() {
 
-    }
+	}
 
-    public RegionDto(String code, String desc) {
-        this.code = code;
-        this.desc = desc;
-    }
+	public String getArea() {
+		return area;
+	}
 
-    public String getCode() {
-        return code;
-    }
+	public void setArea(String area) {
+		this.area = area;
+	}
 
-    public void setCode(String code) {
-        this.code = code;
-    }
+	public String getCode() {
+		return code;
+	}
 
-    public String getDesc() {
-        return desc;
-    }
+	public void setCode(String code) {
+		this.code = code;
+	}
 
-    public void setDesc(String desc) {
-        this.desc = desc;
-    }
+	public String getDesc() {
+		return desc;
+	}
+
+	public void setDesc(String desc) {
+		this.desc = desc;
+	}
 
 }

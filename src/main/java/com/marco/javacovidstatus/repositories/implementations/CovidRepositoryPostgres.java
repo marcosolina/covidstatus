@@ -12,7 +12,8 @@ import javax.persistence.criteria.Root;
 
 import org.springframework.transaction.annotation.Transactional;
 
-import com.marco.javacovidstatus.model.entitites.RegionData;
+import com.marco.javacovidstatus.model.entitites.EntityRegionCode;
+import com.marco.javacovidstatus.model.entitites.EntityRegionCode_;
 import com.marco.javacovidstatus.model.entitites.infections.EntityNationalData;
 import com.marco.javacovidstatus.model.entitites.infections.EntityNationalData_;
 import com.marco.javacovidstatus.model.entitites.infections.EntityProvinceData;
@@ -36,28 +37,23 @@ public class CovidRepositoryPostgres implements CovidRepository {
     private EntityManager em;
 
     @Override
-    public List<RegionData> getRegionList() {
+    public List<EntityRegionCode> getRegionList() {
         /*
          * Thanks to: https://wiki.eclipse.org/EclipseLink/UserGuide/JPA/Basic_JPA_Development/Querying/Criteria#Constructors
          * 
-         * SELECT REGION_CODE, REGION_DESC FROM PROVINCE_DATA GROUP BY REGION_CODE, REGION_DESC ORDER BY REGION_DESC
+         * SELECT REGION_CODE, DESCR FROM CODICI_REGIONI ORDER BY DESCR
          */
         
         CriteriaBuilder cb = em.getCriteriaBuilder();
-        CriteriaQuery<RegionData> cq = cb.createQuery(RegionData.class);
-        Root<EntityProvinceData> root = cq.from(EntityProvinceData.class);
+        CriteriaQuery<EntityRegionCode> cq = cb.createQuery(EntityRegionCode.class);
+        Root<EntityRegionCode> root = cq.from(EntityRegionCode.class);
         // @formatter:off
-        cq.multiselect(
-                root.get(EntityProvinceData_.ID).get(EntityProvinceDataPk_.REGION_CODE), root.get(EntityProvinceData_.REGION_DESC)
-            )
-            .groupBy(
-                root.get(EntityProvinceData_.ID).get(EntityProvinceDataPk_.REGION_CODE), root.get(EntityProvinceData_.REGION_DESC)
-            )
+        cq.select(root)
             .orderBy(
-                cb.asc(root.get(EntityProvinceData_.REGION_DESC))
+                cb.asc(root.get(EntityRegionCode_.DESC))
             );
         // @formatter:on
-        TypedQuery<RegionData> tq = em.createQuery(cq);
+        TypedQuery<EntityRegionCode> tq = em.createQuery(cq);
         return tq.getResultList();
     }
 

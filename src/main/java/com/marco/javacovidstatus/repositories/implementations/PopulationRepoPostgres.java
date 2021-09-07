@@ -117,4 +117,38 @@ public class PopulationRepoPostgres implements PopulationRepo {
         return 0L;
     }
 
+	@Override
+	public Long getSumForYearPerRegion(Gender gender, int year, String regionCode) {
+		CriteriaBuilder cb = em.getCriteriaBuilder();
+
+        CriteriaQuery<Long> cq = cb.createQuery(Long.class);
+        Root<EntityItalianPopulation> root = cq.from(EntityItalianPopulation.class);
+
+        /*
+         * https://www.postgresql.org/docs/8.1/functions-conditional.html
+         * 
+         * SELECT sum(counter) FROM italian_population where year = X and gender = 'Y' and region code = 'Z'
+         */
+        // @formatter:off
+        cq.multiselect(
+                cb.coalesce(cb.sum(root.get(EntityItalianPopulation_.COUNTER)), 0L)
+            )
+        .where(
+            cb.and(
+                    cb.equal(root.get(EntityItalianPopulation_.ID).get(EntityItalianPopulationPk_.GENDER), gender),
+                    cb.equal(root.get(EntityItalianPopulation_.ID).get(EntityItalianPopulationPk_.YEAR), year),
+                    cb.equal(root.get(EntityItalianPopulation_.ID).get(EntityItalianPopulationPk_.REGION_CODE), regionCode)
+                )
+            );
+
+        // @formatter:on
+
+        TypedQuery<Long> tq = em.createQuery(cq);
+        List<Long> list = tq.getResultList();
+        if (list.size() == 1) {
+            return list.get(0);
+        }
+        return 0L;
+	}
+
 }

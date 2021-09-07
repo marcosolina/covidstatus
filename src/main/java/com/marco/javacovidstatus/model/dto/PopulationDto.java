@@ -9,40 +9,50 @@ import com.marco.javacovidstatus.enums.Gender;
  *
  */
 public class PopulationDto {
-    private int year;
-    private int age;
-    private Gender gender;
-    private int counter;
+	private int year;
+	private String regionCode;
+	private int age;
+	private Gender gender;
+	private int counter;
 
-    public int getYear() {
-        return year;
-    }
+	public int getYear() {
+		return year;
+	}
 
-    public void setYear(int year) {
-        this.year = year;
-    }
+	public void setYear(int year) {
+		this.year = year;
+	}
 
-    public int getAge() {
-        return age;
-    }
+	public String getRegionCode() {
+		return regionCode;
+	}
 
-    public void setAge(int age) {
-        this.age = age;
-    }
+	public void setRegionCode(String regionCode) {
+		this.regionCode = regionCode;
+	}
 
-    public Gender getGender() {
-        return gender;
-    }
+	public int getAge() {
+		return age;
+	}
 
-    public void setGender(Gender gender) {
-        this.gender = gender;
-    }
+	public void setAge(int age) {
+		this.age = age;
+	}
 
-    public int getCounter() {
-        return counter;
-    }
+	public Gender getGender() {
+		return gender;
+	}
 
-    public void setCounter(int counter) {
-        this.counter = counter;
-    }
+	public void setGender(Gender gender) {
+		this.gender = gender;
+	}
+
+	public int getCounter() {
+		return counter;
+	}
+
+	public void setCounter(int counter) {
+		this.counter = counter;
+	}
+
 }

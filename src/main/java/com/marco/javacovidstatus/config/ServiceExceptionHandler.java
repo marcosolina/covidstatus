@@ -28,7 +28,7 @@ public class ServiceExceptionHandler extends ResponseEntityExceptionHandler {
 		SimpleResponse httpResponse = new SimpleResponse();
 		httpResponse.addError(ex);
 
-		if (LOGGER.isTraceEnabled()) {
+		if (LOGGER.isDebugEnabled()) {
 			ex.printStackTrace();
 		}
 
@@ -40,7 +40,7 @@ public class ServiceExceptionHandler extends ResponseEntityExceptionHandler {
 		SimpleResponse httpResponse = new SimpleResponse();
 		httpResponse.addError(new MarcoException(msgSource.getMessage("COVID00001", null, LocaleContextHolder.getLocale())));
 
-		if (LOGGER.isTraceEnabled()) {
+		if (LOGGER.isDebugEnabled()) {
 			ex.printStackTrace();
 		}
 

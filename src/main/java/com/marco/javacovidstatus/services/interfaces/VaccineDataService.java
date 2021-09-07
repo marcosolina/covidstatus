@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.marco.javacovidstatus.model.dto.PeopleVaccinated;
+import com.marco.javacovidstatus.model.dto.PeopleVaccinatedPerRegion;
 import com.marco.javacovidstatus.model.dto.VaccinatedPeopleDto;
 import com.marco.javacovidstatus.model.dto.VaccinatedPeopleTypeDto;
 import com.marco.javacovidstatus.model.dto.VaccinesDeliveredDto;
@@ -32,8 +33,7 @@ public interface VaccineDataService {
 	 *         <li>Value -> Delivered Vaccines to the region grouped by date</li>
 	 *         </ul>
 	 */
-	public Map<String, List<VaccinesDeliveredPerDayDto>> getDeliveredVaccinesPerRegionBetweenDatesPerRegion(
-			LocalDate start, LocalDate end) throws MarcoException;
+	public Map<String, List<VaccinesDeliveredPerDayDto>> getDeliveredVaccinesPerRegionBetweenDatesPerRegion(LocalDate start, LocalDate end) throws MarcoException;
 
 	/**
 	 * It returns the number of vaccines deliverd by the different suppliers
@@ -47,7 +47,7 @@ public interface VaccineDataService {
 	 *         </ul>
 	 */
 	public Map<String, Long> getDeliveredVaccinesBetweenDatesPerSupplier(LocalDate start, LocalDate end) throws MarcoException;
-	
+
 	/**
 	 * It returns the total number of vaccines deliverd group by supplier
 	 * 
@@ -87,6 +87,13 @@ public interface VaccineDataService {
 	 * @return
 	 */
 	public Map<String, PeopleVaccinated> getVaccinatedAgeRangeTotals();
+
+	/**
+	 * It returns the number of total people vaccinated per region.
+	 * 
+	 * @return
+	 */
+	public List<PeopleVaccinatedPerRegion> getVaccinatedPeoplePerRegion();
 
 	/**
 	 * It returns the number of people who has received the vaccine shot

@@ -28,6 +28,7 @@ import com.marco.javacovidstatus.model.rest.vaccines.RespGetTotalDelivereUsedVac
 import com.marco.javacovidstatus.model.rest.vaccines.RespGetTotalDelivereUsedVaccineDataPerRegion;
 import com.marco.javacovidstatus.model.rest.vaccines.RespGetVaccinatedPeopleData;
 import com.marco.javacovidstatus.model.rest.vaccines.RespGetVaccinatedPeoplePerAgeData;
+import com.marco.javacovidstatus.model.rest.vaccines.RespGetVaccinatedPeoplePerRegion;
 import com.marco.javacovidstatus.model.rest.vaccines.RespGetVaccinesDeliveredPerRegion;
 import com.marco.javacovidstatus.model.rest.vaccines.RespGetVaccinesDeliveredPerSupplier;
 import com.marco.javacovidstatus.model.rest.vaccines.RespGetVaccinesDosesData;
@@ -305,4 +306,28 @@ public class VaccinesController {
 		
 		return resp;
 	}
+	
+	
+	/**
+	 * It returns the number of people vaccinated grouped per region
+	 * 
+	 * @param request
+	 * @return
+	 * @throws MarcoException 
+	 */
+	@GetMapping(value = CovidUtils.MAPPING_VACCINE_VACCINATED_PER_REGION)
+	@ApiOperation(value = "It returns the number of vaccinated people grouped region")
+	@ResponseBody
+	// @formatter:off
+	public RespGetVaccinatedPeoplePerRegion getVaccinatedPeoplePerRegion() throws MarcoException {
+		// @formatter:on
+		LOGGER.trace("Inside VaccinesController.getVaccinatedPeoplePerRegion");
+
+		RespGetVaccinatedPeoplePerRegion resp = new RespGetVaccinatedPeoplePerRegion();
+		resp.setVaccinatedPeople(service.getVaccinatedPeoplePerRegion());
+		resp.setStatus(true);
+		
+		return resp;
+	}
+	
 }

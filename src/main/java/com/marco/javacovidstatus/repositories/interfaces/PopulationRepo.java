@@ -44,4 +44,6 @@ public interface PopulationRepo {
      * @return
      */
     public Long getSumForYear(Gender gender, int year);
+    
+    public Long getSumForYearPerRegion(Gender gender, int year, String regionCode);
 }
