@@ -48,11 +48,11 @@ class TotalGivenVeccinesPerRegion {
         datasetFirstDose.setColor(this.colorPalette[1]);
         datasetVaccinated.setColor(this.colorPalette[2]);
         
-        data.forEach(function(entry){
-            arrLabels.push(__REGIONS_MAP[entry.regionCode].desc);
-            valuesFirstDose.push(entry.firstDosePerc);
-            valuesVaccinated.push(entry.vaccinatedPerc);
-        }.bind(this));
+		$.each(__REGIONS_LIST, function(i, el){
+			arrLabels.push(el.desc);
+			valuesFirstDose.push(data[el.code].firstDosePerc);
+            valuesVaccinated.push(data[el.code].vaccinatedPerc);
+		});
         
         datasetFirstDose.setData(valuesFirstDose);
         datasetVaccinated.setData(valuesVaccinated);

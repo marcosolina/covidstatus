@@ -418,8 +418,8 @@ public class VaccineDataServiceMarco implements VaccineDataService {
     }
 
 	@Override
-	public List<PeopleVaccinatedPerRegion> getVaccinatedPeoplePerRegion() {
-		List<PeopleVaccinatedPerRegion> list = new ArrayList<>();
+	public Map<String, PeopleVaccinatedPerRegion> getVaccinatedPeoplePerRegion() {
+		Map<String, PeopleVaccinatedPerRegion> map = new HashMap<>();
 		
 		List<VaccinesGivenPerRegion> vgpr = repoGiven.getTotalPeolpleVaccinatedPerRegion();
 		vgpr.stream().forEach(entity -> {
@@ -454,12 +454,10 @@ public class VaccineDataServiceMarco implements VaccineDataService {
             
             dto.setFirstDosePerc(first);
             dto.setVaccinatedPerc(vaccinadted);
-            list.add(dto);
+            map.put(dto.getRegionCode(), dto);
 		});
 		
-		list.sort((o1, o2) -> o1.getRegionCode().compareTo(o2.getRegionCode()));
-		
-		return list;
+		return map;
 	}
 
 }

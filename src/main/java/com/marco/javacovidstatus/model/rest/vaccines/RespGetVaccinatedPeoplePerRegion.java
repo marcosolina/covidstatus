@@ -1,18 +1,18 @@
 package com.marco.javacovidstatus.model.rest.vaccines;
 
-import java.util.List;
+import java.util.Map;
 
 import com.marco.javacovidstatus.model.dto.PeopleVaccinatedPerRegion;
 import com.marco.javacovidstatus.model.rest.RespDataSets;
 
 public class RespGetVaccinatedPeoplePerRegion extends RespDataSets {
-	private List<PeopleVaccinatedPerRegion> vaccinatedPeople;
+	private Map<String, PeopleVaccinatedPerRegion> vaccinatedPeople;
 
-	public List<PeopleVaccinatedPerRegion> getVaccinatedPeople() {
+	public Map<String, PeopleVaccinatedPerRegion> getVaccinatedPeople() {
 		return vaccinatedPeople;
 	}
 
-	public void setVaccinatedPeople(List<PeopleVaccinatedPerRegion> vaccinatedPeople) {
+	public void setVaccinatedPeople(Map<String, PeopleVaccinatedPerRegion> vaccinatedPeople) {
 		this.vaccinatedPeople = vaccinatedPeople;
 	}
 
