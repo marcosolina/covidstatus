@@ -50,7 +50,7 @@ public class PopulationGovernmentDownloader extends CovidDataDownloader {
 
 			Map<String, String> regionsCodes = new HashMap<>();
 
-			covidDataService.getRegionsList().forEach(r -> {
+			covidDataService.getRegionsListOrderedByDescription().forEach(r -> {
 				regionsCodes.put(r.getArea(), r.getCode());
 			});
 

@@ -68,21 +68,21 @@ public interface VeccinesDeliveredRepo {
 	 * 
 	 * @return
 	 */
-	public LocalDate getDataAvailableLastDate();
+	public LocalDate getDateOfLastAvailableData();
 
 	/**
 	 * It returns the total number of vaccines delivered
 	 * 
 	 * @return
 	 */
-	public Long getTotalNumberDeliveedVaccines();
+	public Long getTotalNumberOfDeliveredVaccines();
 
 	/**
 	 * It returns the total of delivered vaccines per region
 	 * 
 	 * @return
 	 */
-	public List<TotalVaccineDeliveredPerRegion> getTotalVaccineDeliveredPerRegion();
+	public List<TotalVaccineDeliveredPerRegion> getListOfTotalVaccineDeliveredPerRegion();
 
 	/**
 	 * It removes the informations stored for the specific date

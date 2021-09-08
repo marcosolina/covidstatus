@@ -17,9 +17,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.marco.javacovidstatus.model.dto.NationalDailyDataDto;
 import com.marco.javacovidstatus.model.entitites.infections.EntityNationalData;
-import com.marco.javacovidstatus.repositories.interfaces.ProvinceDataRepo;
-import com.marco.javacovidstatus.repositories.interfaces.RegionalDataRepository;
-import com.marco.javacovidstatus.repositories.interfaces.NationallDataRepository;
+import com.marco.javacovidstatus.repositories.interfaces.ProvinceInfectionDataRepo;
+import com.marco.javacovidstatus.repositories.interfaces.RegionalInfectionDataRepository;
+import com.marco.javacovidstatus.repositories.interfaces.NationalInfectionDataRepository;
 import com.marco.javacovidstatus.services.implementations.MarcoNationalDataService;
 import com.marco.utils.MarcoException;
 
@@ -27,18 +27,18 @@ import com.marco.utils.MarcoException;
 class MarcoNationalDataServiceTest {
 
     @Mock
-    private NationallDataRepository mockRepo;
+    private NationalInfectionDataRepository mockRepo;
     @Mock
-    private ProvinceDataRepo mockEntityProvRepo;
+    private ProvinceInfectionDataRepo mockEntityProvRepo;
     @Mock
-    private RegionalDataRepository mockRegionalData;
+    private RegionalInfectionDataRepository mockRegionalData;
 
     @InjectMocks
     private MarcoNationalDataService service = new MarcoNationalDataService();
 
     @Test
     void deleteAllDataTest() {
-        boolean result = service.deleteAllData();
+        boolean result = service.deleteAllNationalRegionalProvinceData();
         assertTrue(result);
     }
 
@@ -53,7 +53,7 @@ class MarcoNationalDataServiceTest {
 
         when(mockRepo.findAllByOrderByDateDesc()).thenReturn(list);
 
-        List<NationalDailyDataDto> respList = service.getAllDataDescending();
+        List<NationalDailyDataDto> respList = service.getListAllNationalDailyDataOrderByDateDesc();
         assertEquals(10, respList.size());
         assertEquals(LocalDate.now(), respList.get(0).getDate());
         assertEquals(LocalDate.now().minusDays(9), respList.get(respList.size() - 1).getDate());
@@ -71,7 +71,7 @@ class MarcoNationalDataServiceTest {
 
         when(mockRepo.findAllByOrderByDateAsc()).thenReturn(list);
 
-        List<NationalDailyDataDto> respList = service.getAllDataAscending();
+        List<NationalDailyDataDto> respList = service.getListAllNationalDailyDataOrderByDateAscending();
         assertEquals(11, respList.size());
         assertEquals(LocalDate.now().minusDays(10), respList.get(0).getDate());
         assertEquals(LocalDate.now(), respList.get(respList.size() - 1).getDate());
@@ -79,7 +79,7 @@ class MarcoNationalDataServiceTest {
     
     @Test
     void storeDataTest() {
-        boolean result = service.storeData(new NationalDailyDataDto());
+        boolean result = service.saveNationalDailyData(new NationalDailyDataDto());
         assertTrue(result);
     }
     
@@ -97,7 +97,7 @@ class MarcoNationalDataServiceTest {
         when(mockRepo.findByDateBetweenOrderByDateAsc(start, end)).thenReturn(list);
         
 		try {
-			List<NationalDailyDataDto> respList = service.getDatesInRangeAscending(start, end);
+			List<NationalDailyDataDto> respList = service.getListNationalDailyDataBetweenDatesOrderByDateAscending(start, end);
 			assertEquals(11, respList.size());
 			assertEquals(start, respList.get(0).getDate());
 			assertEquals(end, respList.get(respList.size() - 1).getDate());

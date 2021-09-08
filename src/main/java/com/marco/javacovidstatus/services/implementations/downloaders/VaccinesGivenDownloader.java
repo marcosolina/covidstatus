@@ -172,7 +172,7 @@ public class VaccinesGivenDownloader extends CovidDataDownloader {
 
     @Override
     public LocalDate getStartDate() {
-        LocalDate date = dataService.getGivenVaccinesLastUpdateDate();
+        LocalDate date = dataService.getLastDateOfAvailableDataForGivenVaccines();
         if (date == null) {
             date = this.defaultStartData;
         }

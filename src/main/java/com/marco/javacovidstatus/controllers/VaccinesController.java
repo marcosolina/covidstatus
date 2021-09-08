@@ -78,7 +78,7 @@ public class VaccinesController {
 		 * The Key of the map is the Region Code
 		 */
 		Map<String, List<VaccinesDeliveredPerDayDto>> regionData = service
-				.getDeliveredVaccinesPerRegionBetweenDatesPerRegion(from, to);
+				.getDeliveredVaccinesBetweenDatesPerRegion(from, to);
 
 		/*
 		 * Createing a map with: Key -> Region Code Value -> List of number of delivered
@@ -157,7 +157,7 @@ public class VaccinesController {
 
 		RespGetVaccinesDosesData resp = new RespGetVaccinesDosesData();
 
-		Map<String, Long> dataShotNumber = service.getGiveShotNumberBetweenDates(from, to);
+		Map<String, Long> dataShotNumber = service.getGivenShotsCountBetweenDates(from, to);
 		resp.setDataShotNumber(dataShotNumber);
 		resp.setStatus(true);
 		
@@ -186,7 +186,7 @@ public class VaccinesController {
 		LOGGER.trace("Inside VaccinesController.getVaccinatedPeople");
 
 		RespGetVaccinatedPeopleData resp = new RespGetVaccinatedPeopleData();
-		VaccinatedPeopleTypeDto dataVaccinatedPeople = service.getVaccinatedPeopleBetweenDates(from, to);
+		VaccinatedPeopleTypeDto dataVaccinatedPeople = service.getVaccinatedPeopleBetweenDatesGroupByCategoryDistinctByDate(from, to);
 
 		resp.setDataVaccinatedPeople(dataVaccinatedPeople.getDataVaccinatedPeople());
 		resp.setArrDates(dataVaccinatedPeople.getDates());
@@ -217,7 +217,7 @@ public class VaccinesController {
 		LOGGER.trace("Inside VaccinesController.getVaccinesPerAgeData");
 
 		RespGetVaccinatedPeoplePerAgeData resp = new RespGetVaccinatedPeoplePerAgeData();
-		Map<String, PeopleVaccinated> dataVaccinatedPerAge = service.getVaccinatedAgeRangeBetweenDates(from, to);
+		Map<String, PeopleVaccinated> dataVaccinatedPerAge = service.getVaccinatedPeopleBetweenDatesGroupByAge(from, to);
 
 		resp.setDataVaccinatedPerAge(dataVaccinatedPerAge);
 		resp.setStatus(true);
@@ -258,7 +258,7 @@ public class VaccinesController {
 		LOGGER.trace("Inside VaccinesController.getTotlaVaccinesDeliveredUsedPerRegion");
 
 		RespGetTotalDelivereUsedVaccineDataPerRegion resp = new RespGetTotalDelivereUsedVaccineDataPerRegion();
-		resp.setData(service.getVacinesTotalDeliveredGivenPerRegion());
+		resp.setData(service.getTotalGivenUsedVaccinesCounterPerRegion());
 		resp.setStatus(true);
 		
 		return resp;
@@ -276,7 +276,7 @@ public class VaccinesController {
 		LOGGER.trace("Inside VaccinesController.getVaccinesPerAgeData");
 
 		RespGetVaccinatedPeoplePerAgeData resp = new RespGetVaccinatedPeoplePerAgeData();
-		Map<String, PeopleVaccinated> dataVaccinatedPerAge = service.getVaccinatedAgeRangeTotals();
+		Map<String, PeopleVaccinated> dataVaccinatedPerAge = service.getTotalVaccinatedPeopleGroupByAge();
 
 		resp.setDataVaccinatedPerAge(dataVaccinatedPerAge);
 		resp.setStatus(true);
@@ -324,7 +324,7 @@ public class VaccinesController {
 		LOGGER.trace("Inside VaccinesController.getVaccinatedPeoplePerRegion");
 
 		RespGetVaccinatedPeoplePerRegion resp = new RespGetVaccinatedPeoplePerRegion();
-		resp.setVaccinatedPeople(service.getVaccinatedPeoplePerRegion());
+		resp.setVaccinatedPeople(service.getTotalVaccinatedPeopleGroupByRegion());
 		resp.setStatus(true);
 		
 		return resp;

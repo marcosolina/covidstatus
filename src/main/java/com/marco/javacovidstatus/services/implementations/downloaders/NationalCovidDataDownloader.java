@@ -84,7 +84,7 @@ public class NationalCovidDataDownloader extends CovidDataDownloader {
                 /*
                  * Store the info
                  */
-                dataService.storeData(dataToSave);
+                dataService.saveNationalDailyData(dataToSave);
             }
         } catch (Exception e) {
             _LOGGER.error(e.getMessage());
@@ -95,7 +95,7 @@ public class NationalCovidDataDownloader extends CovidDataDownloader {
 
     @Override
     public LocalDate getStartDate() {
-        return dataService.getNationalMaxDateAvailable();
+        return dataService.getLastDateOfAvailableNationalData();
     }
 
     /**
@@ -106,7 +106,7 @@ public class NationalCovidDataDownloader extends CovidDataDownloader {
      * @throws MarcoException 
      */
     private List<Integer> getNationalLastWeeknNewInfection(LocalDate end) throws MarcoException {
-        List<NationalDailyDataDto> list = dataService.getDatesInRangeAscending(end.minusDays(7), end);
+        List<NationalDailyDataDto> list = dataService.getListNationalDailyDataBetweenDatesOrderByDateAscending(end.minusDays(7), end);
         return list.stream().map(NationalDailyDataDto::getNewInfections).collect(Collectors.toList());
     }
 

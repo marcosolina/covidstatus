@@ -17,7 +17,7 @@ import com.marco.javacovidstatus.model.entitites.vaccines.VaccinesGivenPerRegion
  * @author Marco
  *
  */
-public interface GivenVaccinesRepo {
+public interface VaccinesGivenRepo {
     /**
      * It stores the data in the database
      * 
@@ -31,7 +31,7 @@ public interface GivenVaccinesRepo {
      * 
      * @return
      */
-    public boolean deleteAll();
+    public boolean deleteAllData();
 
     /**
      * It returns an array with total vaccines given between the provided dates
@@ -41,7 +41,7 @@ public interface GivenVaccinesRepo {
      * @param end
      * @return
      */
-    public List<DoseCounter> getDosesCounterVaccinesBetween(LocalDate start, LocalDate end);
+    public List<DoseCounter> getListOfGivenDosesBetween(LocalDate start, LocalDate end);
 
     /**
      * It returns an array with total vaccines given between the provided dates to
@@ -51,7 +51,7 @@ public interface GivenVaccinesRepo {
      * @param end
      * @return
      */
-    public List<DailySumGivenVaccines> getDailySumGivenVaccinesBetween(LocalDate start, LocalDate end);
+    public List<DailySumGivenVaccines> getDailyReportOfGivenVaccinesBetween(LocalDate start, LocalDate end);
 
     /**
      * It performs some queries to add empty rows for the days where the data are
@@ -67,29 +67,29 @@ public interface GivenVaccinesRepo {
      * @param end
      * @return
      */
-    public List<AgeRangeGivenVaccines> getDeliveredVaccinesPerAgeRange(LocalDate start, LocalDate end);
+    public List<AgeRangeGivenVaccines> getListOfGivenVaccinesBetweenDatesGroupByAgeRange(LocalDate start, LocalDate end);
 
     /**
      * It returns the last date of available data, null if none are available
      * 
      * @return
      */
-    public LocalDate getDataAvailableLastDate();
+    public LocalDate getLastDateForAvailableData();
 
     /**
      * It returns the total number of people who received the vaccine, first +
-     * second shot
+     * second shot + mono dose
      * 
      * @return
      */
-    public Long getTotalPeopleVaccinated();
+    public Long getTotalGivenVaccines();
 
     /**
-     * It returns the number of vaccination (first + second shot) listed per region
+     * It returns the number of vaccination (mono dose or full cycle) listed per region
      * 
      * @return
      */
-    public List<TotalVaccineGivenPerRegion> getTotalPeaopleVaccinatedPerRegion();
+    public List<TotalVaccineGivenPerRegion> getListTotalVaccinatedPeoplePerRegion();
 
     /**
      * It removes the informations stored for the specific date
@@ -103,7 +103,7 @@ public interface GivenVaccinesRepo {
      * 
      * @return
      */
-    public List<AgeRangeGivenVaccines> getTotalAgeRangeGivenVaccines();
+    public List<AgeRangeGivenVaccines> getListOfTotalGivenVaccinesGorupByAgeRange();
     
     /**
      * It returns the total number of people vaccinated.
@@ -115,5 +115,5 @@ public interface GivenVaccinesRepo {
      * It returns the total number of people vaccinated grouped by region.
      * @return
      */
-    public List<VaccinesGivenPerRegion> getTotalPeolpleVaccinatedPerRegion();
+    public List<VaccinesGivenPerRegion> getListOfTotalGivenVaccinesGorupByRegion();
 }

@@ -13,7 +13,7 @@ import com.marco.javacovidstatus.model.entitites.infections.EntityNationalData;
  * @author Marco
  *
  */
-public interface NationallDataRepository extends CrudRepository<EntityNationalData, LocalDate> {
+public interface NationalInfectionDataRepository extends CrudRepository<EntityNationalData, LocalDate> {
 
     public List<EntityNationalData> findAllByOrderByDateDesc();
     

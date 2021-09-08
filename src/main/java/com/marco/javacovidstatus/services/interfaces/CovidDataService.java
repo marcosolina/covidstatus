@@ -23,21 +23,21 @@ public interface CovidDataService {
      * 
      * @return
      */
-    public List<NationalDailyDataDto> getAllDataDescending();
+    public List<NationalDailyDataDto> getListAllNationalDailyDataOrderByDateDesc();
 
     /**
      * It returns a list of regions
      * 
      * @return
      */
-    public List<RegionDto> getRegionsList();
+    public List<RegionDto> getRegionsListOrderedByDescription();
 
     /**
      * It returns the list of the national data in an ascending order
      * 
      * @return
      */
-    public List<NationalDailyDataDto> getAllDataAscending();
+    public List<NationalDailyDataDto> getListAllNationalDailyDataOrderByDateAscending();
 
     /**
      * It returns the list of the national data of the specific range in a ascending
@@ -47,7 +47,7 @@ public interface CovidDataService {
      * @param to
      * @return
      */
-    public List<NationalDailyDataDto> getDatesInRangeAscending(LocalDate from, LocalDate to) throws MarcoException;
+    public List<NationalDailyDataDto> getListNationalDailyDataBetweenDatesOrderByDateAscending(LocalDate from, LocalDate to) throws MarcoException;
 
     /**
      * It returns the regional data between the provided dates in ascending order
@@ -56,7 +56,7 @@ public interface CovidDataService {
      * @param to
      * @return
      */
-    public List<RegionalDailyDataDto> getRegionalDatesInRangeAscending(LocalDate from, LocalDate to) throws MarcoException;
+    public List<RegionalDailyDataDto> getListRegionalDailyDataBetweenDatesOrderByDateAscending(LocalDate from, LocalDate to) throws MarcoException;
 
     /**
      * It stores the {@link RegionalDailyDataDto}
@@ -73,7 +73,7 @@ public interface CovidDataService {
      * @param to
      * @return
      */
-    public List<ProvinceDailyDataDto> getProvinceDataInRangeAscending(LocalDate from, LocalDate to, String regionCode) throws MarcoException;
+    public List<ProvinceDailyDataDto> getListProvicesDailyDataForRegionBetweenDatesOrderByDateAscending(LocalDate from, LocalDate to, String regionCode) throws MarcoException;
 
     /**
      * Retrieves the list of provinces for the specific region
@@ -81,7 +81,7 @@ public interface CovidDataService {
      * @param region
      * @return
      */
-    public List<String> getProfinceListForRegion(String region);
+    public List<String> getListOfProvincesForRegion(String region);
 
     /**
      * Store the data
@@ -89,14 +89,14 @@ public interface CovidDataService {
      * @param dto
      * @return
      */
-    public boolean storeData(NationalDailyDataDto dto);
+    public boolean saveNationalDailyData(NationalDailyDataDto dto);
 
     /**
      * It deletes all the data
      * 
      * @return
      */
-    public boolean deleteAllData();
+    public boolean deleteAllNationalRegionalProvinceData();
 
     /**
      * It stores the {@link ProvinceDailyDataDto}
@@ -111,19 +111,19 @@ public interface CovidDataService {
      * 
      * @return
      */
-    public LocalDate getNationalMaxDateAvailable();
+    public LocalDate getLastDateOfAvailableNationalData();
 
     /**
      * It returns the last date for the available regions data
      * 
      * @return
      */
-    public LocalDate getRegionMaxDateAvailable();
+    public LocalDate getLastDateOfAvailableRegionalData();
     
     /**
      * It returns the last date for the available provinces data
      * 
      * @return
      */
-    public LocalDate getProvinceMaxDateAvailable();
+    public LocalDate getLastDateOfAvailableProvinceData();
 }

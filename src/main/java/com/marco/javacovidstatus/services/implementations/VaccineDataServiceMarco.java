@@ -40,7 +40,7 @@ import com.marco.javacovidstatus.model.entitites.vaccines.TotalVaccineDeliveredP
 import com.marco.javacovidstatus.model.entitites.vaccines.TotalVaccineGivenPerRegion;
 import com.marco.javacovidstatus.model.entitites.vaccines.VaccinesGivenPerRegion;
 import com.marco.javacovidstatus.model.entitites.vaccines.VacciniConsegne;
-import com.marco.javacovidstatus.repositories.interfaces.GivenVaccinesRepo;
+import com.marco.javacovidstatus.repositories.interfaces.VaccinesGivenRepo;
 import com.marco.javacovidstatus.repositories.interfaces.VeccinesDeliveredRepo;
 import com.marco.javacovidstatus.services.interfaces.PopulationDataService;
 import com.marco.javacovidstatus.services.interfaces.VaccineDataService;
@@ -58,7 +58,7 @@ public class VaccineDataServiceMarco implements VaccineDataService {
     @Autowired
     private VeccinesDeliveredRepo repoDelivered;
     @Autowired
-    private GivenVaccinesRepo repoGiven;
+    private VaccinesGivenRepo repoGiven;
     @Autowired
     private MessageSource msgSource;
     @Autowired
@@ -69,7 +69,7 @@ public class VaccineDataServiceMarco implements VaccineDataService {
     private PopulationSource populationDownloader;
 
     @Override
-    public Map<String, List<VaccinesDeliveredPerDayDto>> getDeliveredVaccinesPerRegionBetweenDatesPerRegion(
+    public Map<String, List<VaccinesDeliveredPerDayDto>> getDeliveredVaccinesBetweenDatesPerRegion(
             LocalDate start, LocalDate end) throws MarcoException {
         checkDates(start, end);
 
@@ -101,7 +101,7 @@ public class VaccineDataServiceMarco implements VaccineDataService {
     }
 
     @Override
-    public VaccinatedPeopleTypeDto getVaccinatedPeopleBetweenDates(LocalDate start, LocalDate end)
+    public VaccinatedPeopleTypeDto getVaccinatedPeopleBetweenDatesGroupByCategoryDistinctByDate(LocalDate start, LocalDate end)
             throws MarcoException {
         checkDates(start, end);
 
@@ -109,7 +109,7 @@ public class VaccineDataServiceMarco implements VaccineDataService {
         Set<LocalDate> dateSet = new HashSet<>();
         Map<String, List<Long>> dataMap = new HashMap<>();
 
-        List<DailySumGivenVaccines> list = repoGiven.getDailySumGivenVaccinesBetween(start, end);
+        List<DailySumGivenVaccines> list = repoGiven.getDailyReportOfGivenVaccinesBetween(start, end);
 
         // @formatter:off
 		list.forEach(dto -> {
@@ -138,10 +138,10 @@ public class VaccineDataServiceMarco implements VaccineDataService {
     }
 
     @Override
-    public Map<String, Long> getGiveShotNumberBetweenDates(LocalDate start, LocalDate end) throws MarcoException {
+    public Map<String, Long> getGivenShotsCountBetweenDates(LocalDate start, LocalDate end) throws MarcoException {
         checkDates(start, end);
 
-        List<DoseCounter> list = repoGiven.getDosesCounterVaccinesBetween(start, end);
+        List<DoseCounter> list = repoGiven.getListOfGivenDosesBetween(start, end);
         if (list.size() != 1) {
             throw new MarcoException("Errore calcolo dosi");
         }
@@ -156,23 +156,23 @@ public class VaccineDataServiceMarco implements VaccineDataService {
     }
 
     @Override
-    public Map<String, PeopleVaccinated> getVaccinatedAgeRangeBetweenDates(LocalDate start, LocalDate end) throws MarcoException {
+    public Map<String, PeopleVaccinated> getVaccinatedPeopleBetweenDatesGroupByAge(LocalDate start, LocalDate end) throws MarcoException {
         checkDates(start, end);
 
-        List<AgeRangeGivenVaccines> list = repoGiven.getDeliveredVaccinesPerAgeRange(start, end);
+        List<AgeRangeGivenVaccines> list = repoGiven.getListOfGivenVaccinesBetweenDatesGroupByAgeRange(start, end);
 
         return parseListAgeRangeGivenVaccines(list);
     }
 
     @Override
-    public Map<String, PeopleVaccinated> getVaccinatedAgeRangeTotals() {
-        List<AgeRangeGivenVaccines> list = repoGiven.getTotalAgeRangeGivenVaccines();
+    public Map<String, PeopleVaccinated> getTotalVaccinatedPeopleGroupByAge() {
+        List<AgeRangeGivenVaccines> list = repoGiven.getListOfTotalGivenVaccinesGorupByAgeRange();
         list.add(repoGiven.getTotalPeolpleVaccinated());
         return parseListAgeRangeGivenVaccines(list);
     }
 
     @Override
-    public void deleteAllVaccineDeliveredData() {
+    public void deleteAllVaccinesDeliveredData() {
         repoDelivered.deleteAll();
     }
 
@@ -187,13 +187,13 @@ public class VaccineDataServiceMarco implements VaccineDataService {
     }
 
     @Override
-    public LocalDate getVaccineDeliveredLastUpdateDate() {
-        return repoDelivered.getDataAvailableLastDate();
+    public LocalDate getLastDateOfAvailableDataForDeliveredVaccines() {
+        return repoDelivered.getDateOfLastAvailableData();
     }
 
     @Override
     public void deleteAllGivenVaccineData() {
-        repoGiven.deleteAll();
+        repoGiven.deleteAllData();
     }
 
     @Override
@@ -207,22 +207,22 @@ public class VaccineDataServiceMarco implements VaccineDataService {
     }
 
     @Override
-    public LocalDate getGivenVaccinesLastUpdateDate() {
-        return repoGiven.getDataAvailableLastDate();
+    public LocalDate getLastDateOfAvailableDataForGivenVaccines() {
+        return repoGiven.getLastDateForAvailableData();
     }
 
     @Override
     public VaccinesReceivedUsedDto getTotlalVaccinesDeliveredUsed() {
         VaccinesReceivedUsedDto dto = new VaccinesReceivedUsedDto();
-        dto.setTotalVaccinesReceived(repoDelivered.getTotalNumberDeliveedVaccines());
-        dto.setTotalVaccinesUsed(repoGiven.getTotalPeopleVaccinated());
+        dto.setTotalVaccinesReceived(repoDelivered.getTotalNumberOfDeliveredVaccines());
+        dto.setTotalVaccinesUsed(repoGiven.getTotalGivenVaccines());
         return dto;
     }
 
     @Override
-    public Map<String, VacinesTotalDeliveredGivenPerRegionDto> getVacinesTotalDeliveredGivenPerRegion() {
+    public Map<String, VacinesTotalDeliveredGivenPerRegionDto> getTotalGivenUsedVaccinesCounterPerRegion() {
         Map<String, VacinesTotalDeliveredGivenPerRegionDto> map = new HashMap<>();
-        List<TotalVaccineDeliveredPerRegion> list = repoDelivered.getTotalVaccineDeliveredPerRegion();
+        List<TotalVaccineDeliveredPerRegion> list = repoDelivered.getListOfTotalVaccineDeliveredPerRegion();
         list.forEach(el -> {
             VacinesTotalDeliveredGivenPerRegionDto obj = new VacinesTotalDeliveredGivenPerRegionDto();
             obj.setRegionCode(el.getRegionCode());
@@ -230,7 +230,7 @@ public class VaccineDataServiceMarco implements VaccineDataService {
             map.put(el.getRegionCode(), obj);
         });
 
-        List<TotalVaccineGivenPerRegion> list2 = repoGiven.getTotalPeaopleVaccinatedPerRegion();
+        List<TotalVaccineGivenPerRegion> list2 = repoGiven.getListTotalVaccinatedPeoplePerRegion();
         list2.forEach(el -> map.compute(el.getRegionCode(), (k, v) -> {
             if (v == null) {
                 v = new VacinesTotalDeliveredGivenPerRegionDto();
@@ -328,15 +328,15 @@ public class VaccineDataServiceMarco implements VaccineDataService {
             if(!ageRange.equals(Constants.LABEL_VACCINES_GIVEN_TOTAL)) {
                 String[] ages = ageRange.split("-");
                 if (ages.length > 1) {
-                    men = populationService.getSumForAgesAndYear(Integer.parseInt(ages[0]), Integer.parseInt(ages[1]), Gender.MEN, populationStatisticYear);
-                    women = populationService.getSumForAgesAndYear(Integer.parseInt(ages[0]), Integer.parseInt(ages[1]), Gender.WOMEN, populationStatisticYear);
+                    men = populationService.getTotalPopulationBetweenAgesForSpecificGenderAndYear(Integer.parseInt(ages[0]), Integer.parseInt(ages[1]), Gender.MEN, populationStatisticYear);
+                    women = populationService.getTotalPopulationBetweenAgesForSpecificGenderAndYear(Integer.parseInt(ages[0]), Integer.parseInt(ages[1]), Gender.WOMEN, populationStatisticYear);
                 } else {
-                    men = populationService.getSumForAgesAndYear(Integer.parseInt(ages[0].replace('+', ' ').trim()), 100, Gender.MEN, populationStatisticYear);
-                    women = populationService.getSumForAgesAndYear(Integer.parseInt(ages[0].replace('+', ' ').trim()), 100, Gender.WOMEN, populationStatisticYear);
+                    men = populationService.getTotalPopulationBetweenAgesForSpecificGenderAndYear(Integer.parseInt(ages[0].replace('+', ' ').trim()), 100, Gender.MEN, populationStatisticYear);
+                    women = populationService.getTotalPopulationBetweenAgesForSpecificGenderAndYear(Integer.parseInt(ages[0].replace('+', ' ').trim()), 100, Gender.WOMEN, populationStatisticYear);
                 }
             } else {
-                men = populationService.getSumForYear(Gender.MEN, populationStatisticYear);
-                women = populationService.getSumForYear(Gender.WOMEN, populationStatisticYear);
+                men = populationService.getTotalPopulationForSpecificGenderAndYear(Gender.MEN, populationStatisticYear);
+                women = populationService.getTotalPopulationForSpecificGenderAndYear(Gender.WOMEN, populationStatisticYear);
             }
             
             PeopleVaccinated dto = new PeopleVaccinated();
@@ -418,14 +418,14 @@ public class VaccineDataServiceMarco implements VaccineDataService {
     }
 
 	@Override
-	public Map<String, PeopleVaccinatedPerRegion> getVaccinatedPeoplePerRegion() {
+	public Map<String, PeopleVaccinatedPerRegion> getTotalVaccinatedPeopleGroupByRegion() {
 		Map<String, PeopleVaccinatedPerRegion> map = new HashMap<>();
 		
-		List<VaccinesGivenPerRegion> vgpr = repoGiven.getTotalPeolpleVaccinatedPerRegion();
+		List<VaccinesGivenPerRegion> vgpr = repoGiven.getListOfTotalGivenVaccinesGorupByRegion();
 		vgpr.stream().forEach(entity -> {
 			
-			Long men = populationService.getSumForYearAndRegionCode(Gender.MEN, populationStatisticYear, entity.getRegionCode());
-            Long women = populationService.getSumForYearAndRegionCode(Gender.WOMEN, populationStatisticYear, entity.getRegionCode());
+			Long men = populationService.getTotalPopulationForSpecificGenderYearAndRegion(Gender.MEN, populationStatisticYear, entity.getRegionCode());
+            Long women = populationService.getTotalPopulationForSpecificGenderYearAndRegion(Gender.WOMEN, populationStatisticYear, entity.getRegionCode());
 			
 			
 			PeopleVaccinatedPerRegion dto = new PeopleVaccinatedPerRegion();

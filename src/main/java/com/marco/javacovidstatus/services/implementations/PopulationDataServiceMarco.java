@@ -45,17 +45,17 @@ public class PopulationDataServiceMarco implements PopulationDataService {
     }
 
     @Override
-    public Long getSumForAgesAndYear(int ageFrom, int ageTo, Gender gender, int year) {
+    public Long getTotalPopulationBetweenAgesForSpecificGenderAndYear(int ageFrom, int ageTo, Gender gender, int year) {
         return repo.getSumForAgesAndYear(ageFrom, ageTo, gender, year);
     }
 
     @Override
-    public Long getSumForYear(Gender gender, int year) {
+    public Long getTotalPopulationForSpecificGenderAndYear(Gender gender, int year) {
         return repo.getSumForYear(gender, year);
     }
 
 	@Override
-	public Long getSumForYearAndRegionCode(Gender gender, int year, String regionCode) {
+	public Long getTotalPopulationForSpecificGenderYearAndRegion(Gender gender, int year, String regionCode) {
 		return repo.getSumForYearPerRegion(gender, year, regionCode);
 	}
 

@@ -100,7 +100,7 @@ public class ProvinceCoviddataDownloader extends CovidDataDownloader {
 
     @Override
     public LocalDate getStartDate() {
-        return dataService.getProvinceMaxDateAvailable();
+        return dataService.getLastDateOfAvailableProvinceData();
     }
 
     /**

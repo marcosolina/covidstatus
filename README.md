@@ -66,6 +66,7 @@ Once the containers are up and runnig open the following links:
 
 ## History
 
+- **07/09/2021 v0.2.00**: Small Refactoring
 - **07/09/2021 v0.1.31**: Adding chart: vaccinated per region
 - **30/08/2021 v0.1.30**: Adding error filter
 - **20/08/2021 v0.1.29**: Added an additional implementation to download the population data from the GIT repo were I retrieve the "Vaccine" data
