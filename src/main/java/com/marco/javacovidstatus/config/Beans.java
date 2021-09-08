@@ -17,12 +17,12 @@ import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import com.fasterxml.classmate.TypeResolver;
-import com.marco.javacovidstatus.repositories.implementations.CovidRepositoryPostgres;
-import com.marco.javacovidstatus.repositories.implementations.GivenVaccinesRepoPostgres;
-import com.marco.javacovidstatus.repositories.implementations.PopulationRepoPostgres;
-import com.marco.javacovidstatus.repositories.implementations.VeccinesDeliveredRepoPostgres;
-import com.marco.javacovidstatus.repositories.interfaces.CovidRepository;
-import com.marco.javacovidstatus.repositories.interfaces.GivenVaccinesRepo;
+import com.marco.javacovidstatus.repositories.implementations.DataRepositoryImpPostgres;
+import com.marco.javacovidstatus.repositories.implementations.VaccinesGivenRepoImpPostgres;
+import com.marco.javacovidstatus.repositories.implementations.PopulationRepoImpPostgres;
+import com.marco.javacovidstatus.repositories.implementations.VeccinesDeliveredRepoImpPostgres;
+import com.marco.javacovidstatus.repositories.interfaces.DataRepository;
+import com.marco.javacovidstatus.repositories.interfaces.VaccinesGivenRepo;
 import com.marco.javacovidstatus.repositories.interfaces.PopulationRepo;
 import com.marco.javacovidstatus.repositories.interfaces.VeccinesDeliveredRepo;
 import com.marco.javacovidstatus.services.implementations.EmailNotificationSender;
@@ -102,23 +102,23 @@ public class Beans {
     }
 
     @Bean
-    public CovidRepository getCovidRepository() {
-        return new CovidRepositoryPostgres();
+    public DataRepository getCovidRepository() {
+        return new DataRepositoryImpPostgres();
     }
 
     @Bean
     public VeccinesDeliveredRepo getVeccinesDeliveredRepo() {
-        return new VeccinesDeliveredRepoPostgres();
+        return new VeccinesDeliveredRepoImpPostgres();
     }
 
     @Bean
-    public GivenVaccinesRepo getGivenVaccinesRepo() {
-        return new GivenVaccinesRepoPostgres();
+    public VaccinesGivenRepo getGivenVaccinesRepo() {
+        return new VaccinesGivenRepoImpPostgres();
     }
 
     @Bean
     public PopulationRepo getPopulationRepo() {
-        return new PopulationRepoPostgres();
+        return new PopulationRepoImpPostgres();
     }
     
     @Bean

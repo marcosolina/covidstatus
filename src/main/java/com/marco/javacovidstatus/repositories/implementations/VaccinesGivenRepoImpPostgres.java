@@ -25,7 +25,7 @@ import com.marco.javacovidstatus.model.entitites.vaccines.EntitySomministrazione
 import com.marco.javacovidstatus.model.entitites.vaccines.EntitySomministrazioneVaccini_;
 import com.marco.javacovidstatus.model.entitites.vaccines.TotalVaccineGivenPerRegion;
 import com.marco.javacovidstatus.model.entitites.vaccines.VaccinesGivenPerRegion;
-import com.marco.javacovidstatus.repositories.interfaces.GivenVaccinesRepo;
+import com.marco.javacovidstatus.repositories.interfaces.VaccinesGivenRepo;
 import com.marco.javacovidstatus.utils.Constants;
 
 /**
@@ -35,8 +35,8 @@ import com.marco.javacovidstatus.utils.Constants;
  *
  */
 @Transactional
-public class GivenVaccinesRepoPostgres implements GivenVaccinesRepo {
-	private static final Logger _LOGGER = LoggerFactory.getLogger(GivenVaccinesRepoPostgres.class);
+public class VaccinesGivenRepoImpPostgres implements VaccinesGivenRepo {
+	private static final Logger _LOGGER = LoggerFactory.getLogger(VaccinesGivenRepoImpPostgres.class);
 	@PersistenceContext
 	private EntityManager em;
 
@@ -47,7 +47,7 @@ public class GivenVaccinesRepoPostgres implements GivenVaccinesRepo {
 	}
 
 	@Override
-	public boolean deleteAll() {
+	public boolean deleteAllData() {
 		// Truncate from table
 		CriteriaBuilder cb = em.getCriteriaBuilder();
 		CriteriaDelete<EntitySomministrazioneVaccini> query = cb
@@ -58,7 +58,7 @@ public class GivenVaccinesRepoPostgres implements GivenVaccinesRepo {
 	}
 
 	@Override
-	public List<DailySumGivenVaccines> getDailySumGivenVaccinesBetween(LocalDate start, LocalDate end) {
+	public List<DailySumGivenVaccines> getDailyReportOfGivenVaccinesBetween(LocalDate start, LocalDate end) {
 		CriteriaBuilder cb = em.getCriteriaBuilder();
 		CriteriaQuery<DailySumGivenVaccines> cq = cb.createQuery(DailySumGivenVaccines.class);
 		Root<EntitySomministrazioneVaccini> root = cq.from(EntitySomministrazioneVaccini.class);
@@ -190,7 +190,7 @@ public class GivenVaccinesRepoPostgres implements GivenVaccinesRepo {
 	}
 
 	@Override
-	public List<DoseCounter> getDosesCounterVaccinesBetween(LocalDate start, LocalDate end) {
+	public List<DoseCounter> getListOfGivenDosesBetween(LocalDate start, LocalDate end) {
 		CriteriaBuilder cb = em.getCriteriaBuilder();
 
 		CriteriaQuery<DoseCounter> cq = cb.createQuery(DoseCounter.class);
@@ -218,7 +218,7 @@ public class GivenVaccinesRepoPostgres implements GivenVaccinesRepo {
 	}
 
 	@Override
-	public List<AgeRangeGivenVaccines> getDeliveredVaccinesPerAgeRange(LocalDate start, LocalDate end) {
+	public List<AgeRangeGivenVaccines> getListOfGivenVaccinesBetweenDatesGroupByAgeRange(LocalDate start, LocalDate end) {
 		CriteriaBuilder cb = em.getCriteriaBuilder();
 
 		CriteriaQuery<AgeRangeGivenVaccines> cq = cb.createQuery(AgeRangeGivenVaccines.class);
@@ -250,7 +250,7 @@ public class GivenVaccinesRepoPostgres implements GivenVaccinesRepo {
 	}
 
 	@Override
-	public LocalDate getDataAvailableLastDate() {
+	public LocalDate getLastDateForAvailableData() {
 		/*
 		 * SELECT MAX(DATE_DATA) AS DATE_DATA FROM SOMMINISTRAZIONI_VACCINI
 		 */
@@ -271,7 +271,7 @@ public class GivenVaccinesRepoPostgres implements GivenVaccinesRepo {
 	}
 
 	@Override
-	public Long getTotalPeopleVaccinated() {
+	public Long getTotalGivenVaccines() {
 		CriteriaBuilder cb = em.getCriteriaBuilder();
 
 		CriteriaQuery<DoseCounter> cq = cb.createQuery(DoseCounter.class);
@@ -304,14 +304,14 @@ public class GivenVaccinesRepoPostgres implements GivenVaccinesRepo {
 	}
 
 	@Override
-	public List<TotalVaccineGivenPerRegion> getTotalPeaopleVaccinatedPerRegion() {
+	public List<TotalVaccineGivenPerRegion> getListTotalVaccinatedPeoplePerRegion() {
 		CriteriaBuilder cb = em.getCriteriaBuilder();
 
 		CriteriaQuery<TotalVaccineGivenPerRegion> cq = cb.createQuery(TotalVaccineGivenPerRegion.class);
 		Root<EntitySomministrazioneVaccini> root = cq.from(EntitySomministrazioneVaccini.class);
 
 		/*
-		 * SELECT region_code, sum(first_dose_counter + second_dose_counter)
+		 * SELECT region_code, sum(first_dose_counter + second_dose_counter + MONO_DOSE_COUNTER + DOSE_AFTER_INFECT_COUNTER)
   		 * FROM somministrazioni_vaccini group by region_code order by region_code
 		 */
 		
@@ -319,8 +319,14 @@ public class GivenVaccinesRepoPostgres implements GivenVaccinesRepo {
 		cq.multiselect(
 				root.get(EntitySomministrazioneVaccini_.ID).get(EntitySomministrazioneVacciniPk_.REGION_CODE),
 				cb.sum(
-					cb.sum(root.get(EntitySomministrazioneVaccini_.FIRST_DOSE_COUNTER)),
-					cb.sum(root.get(EntitySomministrazioneVaccini_.SECOND_DOSE_COUNTER))
+					cb.sum(
+							cb.sum(root.get(EntitySomministrazioneVaccini_.FIRST_DOSE_COUNTER)),
+							cb.sum(root.get(EntitySomministrazioneVaccini_.SECOND_DOSE_COUNTER))
+						),
+					cb.sum(
+							cb.sum(root.get(EntitySomministrazioneVaccini_.MONO_DOSE_COUNTER)),
+							cb.sum(root.get(EntitySomministrazioneVaccini_.DOSE_AFTER_INFECT_COUNTER))
+						)
 				)
 			)
 		.groupBy(
@@ -354,7 +360,7 @@ public class GivenVaccinesRepoPostgres implements GivenVaccinesRepo {
 	}
 
 	@Override
-	public List<AgeRangeGivenVaccines> getTotalAgeRangeGivenVaccines() {
+	public List<AgeRangeGivenVaccines> getListOfTotalGivenVaccinesGorupByAgeRange() {
 		CriteriaBuilder cb = em.getCriteriaBuilder();
 
 		CriteriaQuery<AgeRangeGivenVaccines> cq = cb.createQuery(AgeRangeGivenVaccines.class);
@@ -417,7 +423,7 @@ public class GivenVaccinesRepoPostgres implements GivenVaccinesRepo {
     }
 
 	@Override
-	public List<VaccinesGivenPerRegion> getTotalPeolpleVaccinatedPerRegion() {
+	public List<VaccinesGivenPerRegion> getListOfTotalGivenVaccinesGorupByRegion() {
 		
 		CriteriaBuilder cb = em.getCriteriaBuilder();
 

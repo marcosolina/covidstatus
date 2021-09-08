@@ -22,22 +22,21 @@ import com.marco.javacovidstatus.model.entitites.infections.EntityProvinceData_;
 import com.marco.javacovidstatus.model.entitites.infections.EntityRegionalData;
 import com.marco.javacovidstatus.model.entitites.infections.EntityRegionalDataPk_;
 import com.marco.javacovidstatus.model.entitites.infections.EntityRegionalData_;
-import com.marco.javacovidstatus.repositories.interfaces.CovidRepository;
+import com.marco.javacovidstatus.repositories.interfaces.DataRepository;
 
 /**
- * With this implementation I wanted to provide different examples of how to use
- * JPA
+ * Postgres + JPA implementation of the DataRepository Interface
  * 
  * @author Marco
  *
  */
 @Transactional
-public class CovidRepositoryPostgres implements CovidRepository {
+public class DataRepositoryImpPostgres implements DataRepository {
     @PersistenceContext
     private EntityManager em;
 
     @Override
-    public List<EntityRegionCode> getRegionList() {
+    public List<EntityRegionCode> getRegionListOrderedByDescription() {
         /*
          * Thanks to: https://wiki.eclipse.org/EclipseLink/UserGuide/JPA/Basic_JPA_Development/Querying/Criteria#Constructors
          * 
@@ -87,7 +86,7 @@ public class CovidRepositoryPostgres implements CovidRepository {
     }
 
     @Override
-    public List<String> getProvincesForRegion(String regionCode) {
+    public List<String> getProvincesListForRegion(String regionCode) {
 
         CriteriaBuilder cb = em.getCriteriaBuilder();
 
@@ -111,7 +110,7 @@ public class CovidRepositoryPostgres implements CovidRepository {
     }
 
     @Override
-    public LocalDate getNationalMaxDateAvailable() {
+    public LocalDate getLastDateAvailableForNationalData() {
         /*
          * SELECT MAX(DATE_DATA) AS DATE_DATA FROM NATIONAL_DATA
          */
@@ -125,7 +124,7 @@ public class CovidRepositoryPostgres implements CovidRepository {
     }
 
     @Override
-    public LocalDate getRegionMaxDateAvailable() {
+    public LocalDate getLastDateAvailableFroRegionalData() {
         /*
          * SELECT MAX(DATE_DATA) AS DATE_DATA FROM REGIONAL_DATA
          */
@@ -139,7 +138,7 @@ public class CovidRepositoryPostgres implements CovidRepository {
     }
 
     @Override
-    public LocalDate getProvinceMaxDateAvailable() {
+    public LocalDate getLastDateAvailableForProvincesData() {
         /*
          * SELECT MAX(DATE_DATA) AS DATE_DATA FROM PROVINCE_DATA
          */
@@ -153,7 +152,7 @@ public class CovidRepositoryPostgres implements CovidRepository {
     }
 
     @Override
-    public List<EntityRegionalData> getRegionalDataAscending(LocalDate from, LocalDate to) {
+    public List<EntityRegionalData> getRegionalDataListOrderedByDateAsc(LocalDate from, LocalDate to) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
 
         CriteriaQuery<EntityRegionalData> cq = cb.createQuery(EntityRegionalData.class);

@@ -33,8 +33,8 @@ import com.marco.javacovidstatus.repositories.interfaces.VeccinesDeliveredRepo;
  *
  */
 @Transactional
-public class VeccinesDeliveredRepoPostgres implements VeccinesDeliveredRepo {
-	private static final Logger _LOGGER = LoggerFactory.getLogger(VeccinesDeliveredRepoPostgres.class);
+public class VeccinesDeliveredRepoImpPostgres implements VeccinesDeliveredRepo {
+	private static final Logger _LOGGER = LoggerFactory.getLogger(VeccinesDeliveredRepoImpPostgres.class);
 
 	@PersistenceContext
 	private EntityManager em;
@@ -169,7 +169,7 @@ public class VeccinesDeliveredRepoPostgres implements VeccinesDeliveredRepo {
 	}
 
 	@Override
-	public LocalDate getDataAvailableLastDate() {
+	public LocalDate getDateOfLastAvailableData() {
 		/*
 		 * SELECT MAX(DATE_DATA) AS DATE_DATA FROM VACCINI_CONSEGNE
 		 */
@@ -184,7 +184,7 @@ public class VeccinesDeliveredRepoPostgres implements VeccinesDeliveredRepo {
 	}
 
 	@Override
-	public Long getTotalNumberDeliveedVaccines() {
+	public Long getTotalNumberOfDeliveredVaccines() {
 		CriteriaBuilder cb = em.getCriteriaBuilder();
 
 		CriteriaQuery<Long> cq = cb.createQuery(Long.class);
@@ -211,7 +211,7 @@ public class VeccinesDeliveredRepoPostgres implements VeccinesDeliveredRepo {
 	}
 
 	@Override
-	public List<TotalVaccineDeliveredPerRegion> getTotalVaccineDeliveredPerRegion() {
+	public List<TotalVaccineDeliveredPerRegion> getListOfTotalVaccineDeliveredPerRegion() {
 		CriteriaBuilder cb = em.getCriteriaBuilder();
 
 		CriteriaQuery<TotalVaccineDeliveredPerRegion> cq = cb.createQuery(TotalVaccineDeliveredPerRegion.class);

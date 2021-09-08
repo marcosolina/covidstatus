@@ -33,7 +33,7 @@ public interface VaccineDataService {
 	 *         <li>Value -> Delivered Vaccines to the region grouped by date</li>
 	 *         </ul>
 	 */
-	public Map<String, List<VaccinesDeliveredPerDayDto>> getDeliveredVaccinesPerRegionBetweenDatesPerRegion(LocalDate start, LocalDate end) throws MarcoException;
+	public Map<String, List<VaccinesDeliveredPerDayDto>> getDeliveredVaccinesBetweenDatesPerRegion(LocalDate start, LocalDate end) throws MarcoException;
 
 	/**
 	 * It returns the number of vaccines deliverd by the different suppliers
@@ -66,7 +66,7 @@ public interface VaccineDataService {
 	 * @param end
 	 * @return
 	 */
-	public VaccinatedPeopleTypeDto getVaccinatedPeopleBetweenDates(LocalDate start, LocalDate end) throws MarcoException;
+	public VaccinatedPeopleTypeDto getVaccinatedPeopleBetweenDatesGroupByCategoryDistinctByDate(LocalDate start, LocalDate end) throws MarcoException;
 
 	/**
 	 * It returns the numbers of vaccinated people grouped by age range
@@ -79,21 +79,21 @@ public interface VaccineDataService {
 	 *         <li>Value -> Number of people vaccinated in that age range</li>
 	 *         </ul>
 	 */
-	public Map<String, PeopleVaccinated> getVaccinatedAgeRangeBetweenDates(LocalDate start, LocalDate end) throws MarcoException;
+	public Map<String, PeopleVaccinated> getVaccinatedPeopleBetweenDatesGroupByAge(LocalDate start, LocalDate end) throws MarcoException;
 
 	/**
 	 * It returns the numbers of vaccinated people grouped by age range
 	 * 
 	 * @return
 	 */
-	public Map<String, PeopleVaccinated> getVaccinatedAgeRangeTotals();
+	public Map<String, PeopleVaccinated> getTotalVaccinatedPeopleGroupByAge();
 
 	/**
 	 * It returns the number of total people vaccinated per region.
 	 * 
 	 * @return
 	 */
-	public Map<String, PeopleVaccinatedPerRegion> getVaccinatedPeoplePerRegion();
+	public Map<String, PeopleVaccinatedPerRegion> getTotalVaccinatedPeopleGroupByRegion();
 
 	/**
 	 * It returns the number of people who has received the vaccine shot
@@ -107,12 +107,12 @@ public interface VaccineDataService {
 	 *         </ul>
 	 * @throws MarcoException
 	 */
-	public Map<String, Long> getGiveShotNumberBetweenDates(LocalDate start, LocalDate end) throws MarcoException;
+	public Map<String, Long> getGivenShotsCountBetweenDates(LocalDate start, LocalDate end) throws MarcoException;
 
 	/**
 	 * It removes all the data related to the vaccines delivered
 	 */
-	public void deleteAllVaccineDeliveredData();
+	public void deleteAllVaccinesDeliveredData();
 
 	/**
 	 * It stores the data in the database
@@ -132,7 +132,7 @@ public interface VaccineDataService {
 	 * 
 	 * @return
 	 */
-	public LocalDate getVaccineDeliveredLastUpdateDate();
+	public LocalDate getLastDateOfAvailableDataForDeliveredVaccines();
 
 	/**
 	 * It removes all the data related to the given vaccines
@@ -157,7 +157,7 @@ public interface VaccineDataService {
 	 * 
 	 * @return
 	 */
-	public LocalDate getGivenVaccinesLastUpdateDate();
+	public LocalDate getLastDateOfAvailableDataForGivenVaccines();
 
 	/**
 	 * It returns the total number of vaccines delivered, and total number of used
@@ -173,7 +173,7 @@ public interface VaccineDataService {
 	 * 
 	 * @return
 	 */
-	public Map<String, VacinesTotalDeliveredGivenPerRegionDto> getVacinesTotalDeliveredGivenPerRegion();
+	public Map<String, VacinesTotalDeliveredGivenPerRegionDto> getTotalGivenUsedVaccinesCounterPerRegion();
 
 	/**
 	 * It deletes the data from the given vaccines repo for the specified date

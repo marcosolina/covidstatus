@@ -12,6 +12,6 @@ import com.marco.javacovidstatus.model.entitites.infections.EntityRegionalDataPk
  * @author Marco
  *
  */
-public interface RegionalDataRepository extends CrudRepository<EntityRegionalData, EntityRegionalDataPk> {
+public interface RegionalInfectionDataRepository extends CrudRepository<EntityRegionalData, EntityRegionalDataPk> {
 
 }

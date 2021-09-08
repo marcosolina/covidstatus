@@ -31,7 +31,7 @@ public interface PopulationDataService {
 	 * @param year
 	 * @return
 	 */
-	public Long getSumForAgesAndYear(int ageFrom, int ageTo, Gender gender, int year);
+	public Long getTotalPopulationBetweenAgesForSpecificGenderAndYear(int ageFrom, int ageTo, Gender gender, int year);
 
 	/**
 	 * It will return the number of population matching the provided parameters
@@ -40,7 +40,7 @@ public interface PopulationDataService {
 	 * @param year
 	 * @return
 	 */
-	public Long getSumForYear(Gender gender, int year);
+	public Long getTotalPopulationForSpecificGenderAndYear(Gender gender, int year);
 
 	/**
 	 * It will return the number of population matching the provided parameters
@@ -50,5 +50,5 @@ public interface PopulationDataService {
 	 * @param regionCode
 	 * @return
 	 */
-	public Long getSumForYearAndRegionCode(Gender gender, int year, String regionCode);
+	public Long getTotalPopulationForSpecificGenderYearAndRegion(Gender gender, int year, String regionCode);
 }

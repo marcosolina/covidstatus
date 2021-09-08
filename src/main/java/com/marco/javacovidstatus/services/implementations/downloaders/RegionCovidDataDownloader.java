@@ -100,7 +100,7 @@ public class RegionCovidDataDownloader extends CovidDataDownloader {
 
     @Override
     public LocalDate getStartDate() {
-        return dataService.getRegionMaxDateAvailable();
+        return dataService.getLastDateOfAvailableRegionalData();
     }
 
     /**
@@ -111,7 +111,7 @@ public class RegionCovidDataDownloader extends CovidDataDownloader {
      * @throws MarcoException 
      */
     private Map<String, List<Integer>> getRegionalLastWeeknNewInfection(LocalDate end) throws MarcoException {
-        List<RegionalDailyDataDto> list = dataService.getRegionalDatesInRangeAscending(end.minusDays(7), end);
+        List<RegionalDailyDataDto> list = dataService.getListRegionalDailyDataBetweenDatesOrderByDateAscending(end.minusDays(7), end);
         Map<String, List<Integer>> mapInfectionLastWeek = new HashMap<>();
 
         list.stream().forEach(rdd -> mapInfectionLastWeek.computeIfAbsent(rdd.getRegionCode(), k -> new ArrayList<>())

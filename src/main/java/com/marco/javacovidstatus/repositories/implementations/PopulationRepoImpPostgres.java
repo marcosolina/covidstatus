@@ -27,8 +27,8 @@ import com.marco.javacovidstatus.repositories.interfaces.PopulationRepo;
  *
  */
 @Transactional
-public class PopulationRepoPostgres implements PopulationRepo {
-    private static final Logger _LOGGER = LoggerFactory.getLogger(PopulationRepoPostgres.class);
+public class PopulationRepoImpPostgres implements PopulationRepo {
+    private static final Logger _LOGGER = LoggerFactory.getLogger(PopulationRepoImpPostgres.class);
     @PersistenceContext
     private EntityManager em;
 

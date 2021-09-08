@@ -62,7 +62,7 @@ public class VaccinesDeliveredDownloader extends CovidDataDownloader {
 		 * the data of the previous days. There is no way for me to understand
 		 * "how much back" they go... so I decided to clear the table at every scan
 		 */
-		dataService.deleteAllVaccineDeliveredData();
+		dataService.deleteAllVaccinesDeliveredData();
 		
 		LocalDate startDate = getStartDate();
 		AtomicBoolean error = new AtomicBoolean();
@@ -104,7 +104,7 @@ public class VaccinesDeliveredDownloader extends CovidDataDownloader {
 			String message = "There was an error with the data, cleaning everything and retrying at the next cron tick";
 			_LOGGER.error(message);
 			notificationService.sendEmailMessage("marcosolina@gmail.com", "Marco Solina - Covid Status", message);
-			dataService.deleteAllVaccineDeliveredData();
+			dataService.deleteAllVaccinesDeliveredData();
 		}
 
 		dataService.addMissingRowsForNoDeliveryDays();
@@ -113,7 +113,7 @@ public class VaccinesDeliveredDownloader extends CovidDataDownloader {
 
 	@Override
 	public LocalDate getStartDate() {
-		LocalDate date = dataService.getVaccineDeliveredLastUpdateDate();
+		LocalDate date = dataService.getLastDateOfAvailableDataForDeliveredVaccines();
 		if (date == null) {
 			date = this.defaultStartData;
 		}

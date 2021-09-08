@@ -14,14 +14,14 @@ import com.marco.javacovidstatus.model.entitites.infections.EntityRegionalData;
  * @author Marco
  *
  */
-public interface CovidRepository {
+public interface DataRepository {
 
     /**
      * Returns the list of the region
      * 
      * @return
      */
-    public List<EntityRegionCode> getRegionList();
+    public List<EntityRegionCode> getRegionListOrderedByDescription();
 
     /**
      * Returns the province data for the specified region
@@ -40,28 +40,28 @@ public interface CovidRepository {
      * @param regionCode
      * @return
      */
-    public List<String> getProvincesForRegion(String regionCode);
+    public List<String> getProvincesListForRegion(String regionCode);
 
     /**
      * Returns the last available date of the download data
      * 
      * @return
      */
-    public LocalDate getNationalMaxDateAvailable();
+    public LocalDate getLastDateAvailableForNationalData();
 
     /**
      * It returns the last date for the available regions data
      * 
      * @return
      */
-    public LocalDate getRegionMaxDateAvailable();
+    public LocalDate getLastDateAvailableFroRegionalData();
 
     /**
      * It returns the last date for the available provinces data
      * 
      * @return
      */
-    public LocalDate getProvinceMaxDateAvailable();
+    public LocalDate getLastDateAvailableForProvincesData();
 
     /**
      * Returns the Regional data between the from date and to data
@@ -70,5 +70,5 @@ public interface CovidRepository {
      * @param to
      * @return
      */
-    public List<EntityRegionalData> getRegionalDataAscending(LocalDate from, LocalDate to);
+    public List<EntityRegionalData> getRegionalDataListOrderedByDateAsc(LocalDate from, LocalDate to);
 }
