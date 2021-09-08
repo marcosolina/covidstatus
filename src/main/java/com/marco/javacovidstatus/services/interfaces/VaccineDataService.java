@@ -93,7 +93,7 @@ public interface VaccineDataService {
 	 * 
 	 * @return
 	 */
-	public List<PeopleVaccinatedPerRegion> getVaccinatedPeoplePerRegion();
+	public Map<String, PeopleVaccinatedPerRegion> getVaccinatedPeoplePerRegion();
 
 	/**
 	 * It returns the number of people who has received the vaccine shot
