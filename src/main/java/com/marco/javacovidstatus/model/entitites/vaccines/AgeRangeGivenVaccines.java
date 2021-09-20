@@ -12,15 +12,16 @@ public class AgeRangeGivenVaccines {
     private Long secondDose;
     private Long monoDose;
     private Long doseAfterInfection;
+    private Long thirdDoseCounter;
 
-    public AgeRangeGivenVaccines(String ageRange, Long firstDose, Long secondDose, Long monoDose,
-            Long doseAfterInfection) {
+    public AgeRangeGivenVaccines(String ageRange, Long firstDose, Long secondDose, Long monoDose, Long doseAfterInfection, Long thirdDoseCounter) {
         super();
         this.ageRange = ageRange;
         this.firstDose = firstDose;
         this.secondDose = secondDose;
         this.monoDose = monoDose;
         this.doseAfterInfection = doseAfterInfection;
+        this.thirdDoseCounter = thirdDoseCounter;
     }
 
     public String getAgeRange() {
@@ -61,6 +62,14 @@ public class AgeRangeGivenVaccines {
 
     public void setDoseAfterInfection(Long doseAfterInfection) {
         this.doseAfterInfection = doseAfterInfection;
+    }
+
+    public Long getThirdDoseCounter() {
+        return thirdDoseCounter;
+    }
+
+    public void setThirdDoseCounter(Long thirdDoseCounter) {
+        this.thirdDoseCounter = thirdDoseCounter;
     }
 
 }
