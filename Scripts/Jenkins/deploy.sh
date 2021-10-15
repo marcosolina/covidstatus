@@ -2,7 +2,7 @@
 
 APP_FOLDER=/opt/covid
 START_STOP_SCR=$APP_FOLDER/startStop.sh
-WORK_SPACE_FOLDER=/home/pi/.jenkins/workspace/Covid
+WORK_SPACE_FOLDER=$1
 
 mkdir -p $APP_FOLDER
 cp $WORK_SPACE_FOLDER/Scripts/startStop.sh $APP_FOLDER
