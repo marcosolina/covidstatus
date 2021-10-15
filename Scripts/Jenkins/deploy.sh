@@ -15,4 +15,4 @@ psql -w -U postgres -f $WORK_SPACE_FOLDER/Scripts/Docker/PostgreSQL/initCovidDb.
 
 mv target/covidstatus*.jar $APP_FOLDER/Covidstatus.jar
 echo "" > $APP_FOLDER/covid.log
-$START_STOP_SCR stop
+$START_STOP_SCR start
