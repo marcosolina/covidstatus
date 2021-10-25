@@ -102,7 +102,7 @@ public class VeccinesDeliveredRepoImpPostgres implements VeccinesDeliveredRepo {
 
 	@Override
 	public void addMissingRowsForNoDeliveryDays() {
-		_LOGGER.debug("Adding mepty rows");
+		_LOGGER.debug("Adding mepty rows: addMissingRowsForNoDeliveryDays");
 
 		String tableName = "vaccini_consegne";
 
@@ -135,6 +135,8 @@ public class VeccinesDeliveredRepoImpPostgres implements VeccinesDeliveredRepo {
 			Query query = em.createNativeQuery(sb.toString());
 			query.executeUpdate();
 		});
+		
+		_LOGGER.debug("Finish adding mepty rows: addMissingRowsForNoDeliveryDays");
 	}
 
 	@Override

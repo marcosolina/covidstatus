@@ -152,6 +152,7 @@ public class VaccineDataServiceMarco implements VaccineDataService {
         map.put(Constants.VACCINES_GIVEN_MONO_SHOT, list.get(0).getMonoDoseCounter());
         map.put(Constants.VACCINES_GIVEN_AFTER_INFECTION, list.get(0).getDoseAfterInfectCounter());
         map.put(Constants.VACCINES_GIVEN_THIRD_SHOT, list.get(0).getThirdDoseCounter());
+        map.put(Constants.VACCINES_GIVEN_BOOSTER_SHOT, list.get(0).getBoosterDoseCounter());
 
         return map;
     }
@@ -302,6 +303,7 @@ public class VaccineDataServiceMarco implements VaccineDataService {
         entity.setMonoDoseCounter(dto.getMonoDoseCounter());
         entity.setDoseAfterInfectCounter(dto.getDoseAfterInfectCounter());
         entity.setThirdDoseCounter(dto.getThirdDoseCounter());
+        entity.setBoosterDoseCounter(dto.getBoosterDoseCounter());
 
         return entity;
     }

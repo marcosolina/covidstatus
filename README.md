@@ -66,6 +66,7 @@ Once the containers are up and runnig open the following links:
 
 ## History
 
+- **25/10/2021 v2.0.1**: Managing new government data structure
 - **07/09/2021 v0.2.00**: Small Refactoring
 - **07/09/2021 v0.1.31**: Adding chart: vaccinated per region
 - **30/08/2021 v0.1.30**: Adding error filter

@@ -113,7 +113,7 @@ public class VaccinesGivenRepoImpPostgres implements VaccinesGivenRepo {
 
 	@Override
 	public void addMissingRowsForNoVaccinationDays() {
-		_LOGGER.debug("Adding mepty rows");
+		_LOGGER.debug("Adding mepty rows: addMissingRowsForNoVaccinationDays");
 
 		String tableName = "somministrazioni_vaccini";
 
@@ -143,7 +143,8 @@ public class VaccinesGivenRepoImpPostgres implements VaccinesGivenRepo {
 		sql.append("b.second_dose_counter, ");
 		sql.append("b.mono_dose_counter, ");
 		sql.append("b.dose_after_infect_counter, ");
-		sql.append("b.third_dose_counter ");
+		sql.append("b.third_dose_counter, ");
+		sql.append("b.booster_dose_counter ");
 		sql.append("from cartesian_table as a ");
 		sql.append(String.format("left join %s as b ", tableName));
 		sql.append("on a.date_data = b.date_data and ");
@@ -171,7 +172,8 @@ public class VaccinesGivenRepoImpPostgres implements VaccinesGivenRepo {
 		sql.append("second_dose_counter = 0, ");
 		sql.append("mono_dose_counter = 0, ");
 		sql.append("dose_after_infect_counter = 0, ");
-		sql.append("third_dose_counter = 0 ");
+		sql.append("third_dose_counter = 0, ");
+		sql.append("booster_dose_counter = 0 ");
 		sql.append("where men_counter is null");
 
 		sqls.add(sql);
@@ -190,6 +192,8 @@ public class VaccinesGivenRepoImpPostgres implements VaccinesGivenRepo {
 			Query query = em.createNativeQuery(sb.toString());
 			query.executeUpdate();
 		});
+		
+		_LOGGER.debug("Finish adding mepty rows: addMissingRowsForNoVaccinationDays");
 	}
 
 	@Override
@@ -310,6 +314,7 @@ public class VaccinesGivenRepoImpPostgres implements VaccinesGivenRepo {
 		    counter += dc.getMonoDoseCounter();
 		    counter += dc.getDoseAfterInfectCounter();
 		    counter += dc.getThirdDoseCounter();
+		    counter += dc.getBoosterDoseCounter();
 			return counter;
 		}
 		return 0L;
@@ -433,9 +438,16 @@ public class VaccinesGivenRepoImpPostgres implements VaccinesGivenRepo {
         
         if (list.size() == 1) {
             DoseCounter dc = list.get(0);
-            return new AgeRangeGivenVaccines(Constants.LABEL_VACCINES_GIVEN_TOTAL, dc.getFirstDoseCounter(), dc.getSecondDoseCounter(), dc.getMonoDoseCounter(), dc.getDoseAfterInfectCounter(), dc.getThirdDoseCounter());
+            return new AgeRangeGivenVaccines(
+                    Constants.LABEL_VACCINES_GIVEN_TOTAL,
+                    dc.getFirstDoseCounter(),
+                    dc.getSecondDoseCounter(),
+                    dc.getMonoDoseCounter(),
+                    dc.getDoseAfterInfectCounter(),
+                    dc.getThirdDoseCounter(),
+                    dc.getBoosterDoseCounter());
         }
-        return new AgeRangeGivenVaccines(Constants.LABEL_VACCINES_GIVEN_TOTAL, 0L, 0L, 0L, 0L, 0L);
+        return new AgeRangeGivenVaccines(Constants.LABEL_VACCINES_GIVEN_TOTAL, 0L, 0L, 0L, 0L, 0L, 0L);
     }
 
 	@Override
