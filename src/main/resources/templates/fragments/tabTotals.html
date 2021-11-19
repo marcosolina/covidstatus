@@ -5,7 +5,7 @@
 ****************************************************************************
 -->
 
-<div class="tab-pane fade" id="nav-totals" role="tabpanel" aria-labelledby="nav-totals-tab">
+<div class="tab-pane fade show active" id="nav-totals" role="tabpanel" aria-labelledby="nav-totals-tab">
 	<div class="container-fluid">
 		<div th:replace="fragments/generic.html::emptyBootstrapRow"></div>
 		<div class="row">
@@ -15,11 +15,11 @@
 		</div>
 		<div th:replace="fragments/generic.html::emptyBootstrapRow"></div>
 		<div class="row">
-			<div class="col-md-12 col-lg-12 col-xl-6">
-                <canvas id="vaccinatedPerRegion"></canvas>
-            </div>
 		    <div class="col-md-12 col-lg-12 col-xl-6">
                 <canvas id="firstDosePerc"></canvas>
+            </div>
+			<div class="col-md-12 col-lg-12 col-xl-6">
+                <canvas id="vaccinatedPerRegion"></canvas>
             </div>
 			<div class="col-md-12 col-lg-12 col-xl-6">
 				<canvas id="chartTotalsVaccinesGivenPerAge"></canvas>
