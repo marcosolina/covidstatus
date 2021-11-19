@@ -16,8 +16,10 @@ public class PeopleVaccinated {
     private Long secondDose;
     private Long monoDose;
     private Long doseAfterInfection;
+    private Long thirdDose;
     private BigDecimal firstDosePerc;
     private BigDecimal vaccinatedPerc;
+    private BigDecimal thirdDosePerc;
 
     public String getAgeRange() {
         return ageRange;
@@ -83,4 +85,19 @@ public class PeopleVaccinated {
         this.doseAfterInfection = doseAfterInfection;
     }
 
+    public Long getThirdDose() {
+        return thirdDose;
+    }
+
+    public void setThirdDose(Long thirdDose) {
+        this.thirdDose = thirdDose;
+    }
+
+    public BigDecimal getThirdDosePerc() {
+        return thirdDosePerc;
+    }
+
+    public void setThirdDosePerc(BigDecimal thirdDosePerc) {
+        this.thirdDosePerc = thirdDosePerc;
+    }
 }

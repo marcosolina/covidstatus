@@ -332,12 +332,16 @@ public class VaccineDataServiceMarco implements VaccineDataService {
             if(!ageRange.equals(Constants.LABEL_VACCINES_GIVEN_TOTAL)) {
                 String[] ages = ageRange.split("-");
                 if (ages.length > 1) {
-                    men = populationService.getTotalPopulationBetweenAgesForSpecificGenderAndYear(Integer.parseInt(ages[0]), Integer.parseInt(ages[1]), Gender.MEN, populationStatisticYear);
-                    women = populationService.getTotalPopulationBetweenAgesForSpecificGenderAndYear(Integer.parseInt(ages[0]), Integer.parseInt(ages[1]), Gender.WOMEN, populationStatisticYear);
+                    int start = Integer.parseInt(ages[0]);
+                    int end = Integer.parseInt(ages[1]);
+                    men = populationService.getTotalPopulationBetweenAgesForSpecificGenderAndYear(start, end, Gender.MEN, populationStatisticYear);
+                    women = populationService.getTotalPopulationBetweenAgesForSpecificGenderAndYear(start, end, Gender.WOMEN, populationStatisticYear);
                 } else {
-                    men = populationService.getTotalPopulationBetweenAgesForSpecificGenderAndYear(Integer.parseInt(ages[0].replace('+', ' ').trim()), 100, Gender.MEN, populationStatisticYear);
-                    women = populationService.getTotalPopulationBetweenAgesForSpecificGenderAndYear(Integer.parseInt(ages[0].replace('+', ' ').trim()), 100, Gender.WOMEN, populationStatisticYear);
+                    int start = Integer.parseInt(ages[0].replace('+', ' ').trim());
+                    men = populationService.getTotalPopulationBetweenAgesForSpecificGenderAndYear(start, 100, Gender.MEN, populationStatisticYear);
+                    women = populationService.getTotalPopulationBetweenAgesForSpecificGenderAndYear(start, 100, Gender.WOMEN, populationStatisticYear);
                 }
+                
             } else {
                 men = populationService.getTotalPopulationForSpecificGenderAndYear(Gender.MEN, populationStatisticYear);
                 women = populationService.getTotalPopulationForSpecificGenderAndYear(Gender.WOMEN, populationStatisticYear);
@@ -351,9 +355,13 @@ public class VaccineDataServiceMarco implements VaccineDataService {
             dto.setMonoDose(argv.getMonoDose());
             dto.setDoseAfterInfection(argv.getDoseAfterInfection());
             
+            Long totalThirdDose = argv.getThirdDoseCounter() + argv.getBoosterDoseCounter(); 
+            dto.setThirdDose(totalThirdDose);
+            
             // @formatter:off
             BigDecimal first = BigDecimal.ZERO;
             BigDecimal vaccinadted = BigDecimal.ZERO;
+            BigDecimal third = BigDecimal.ZERO;
             // TODO cosa fare per la terza doses
             if(men + women > 0) {
                 first = BigDecimal.valueOf(dto.getFirstDose())
@@ -364,11 +372,15 @@ public class VaccineDataServiceMarco implements VaccineDataService {
                         .add(BigDecimal.valueOf(dto.getDoseAfterInfection()))
                         .divide(BigDecimal.valueOf(dto.getPopulation()), 4, RoundingMode.DOWN)
                         .multiply(BigDecimal.valueOf(100)).setScale(2, RoundingMode.DOWN);
+                third = BigDecimal.valueOf(totalThirdDose)
+                        .divide(BigDecimal.valueOf(dto.getPopulation()), 4, RoundingMode.DOWN)
+                        .multiply(BigDecimal.valueOf(100)).setScale(2, RoundingMode.DOWN);
             }
             // @formatter:on
             
             dto.setFirstDosePerc(first);
             dto.setVaccinatedPerc(vaccinadted);
+            dto.setThirdDosePerc(third);
 
             map.put(dto.getAgeRange(), dto);
         });
@@ -384,6 +396,8 @@ public class VaccineDataServiceMarco implements VaccineDataService {
         	dto.setSecondDose(dto.getSecondDose() + dto2.getSecondDose());
         	dto.setMonoDose(dto.getMonoDose() + dto2.getMonoDose());
         	dto.setDoseAfterInfection(dto.getDoseAfterInfection() + dto2.getDoseAfterInfection());
+        	dto.setThirdDose(dto.getThirdDose() + dto2.getThirdDose());
+        	
         	if(dto.getPopulation() > 0) {
         		BigDecimal first = BigDecimal.valueOf(dto.getFirstDose())
                         .divide(BigDecimal.valueOf(dto.getPopulation()), 4, RoundingMode.DOWN)
@@ -393,9 +407,13 @@ public class VaccineDataServiceMarco implements VaccineDataService {
                         .add(BigDecimal.valueOf(dto.getDoseAfterInfection()))
                         .divide(BigDecimal.valueOf(dto.getPopulation()), 4, RoundingMode.DOWN)
                         .multiply(BigDecimal.valueOf(100)).setScale(2, RoundingMode.DOWN);
+        		BigDecimal third = BigDecimal.valueOf(dto.getThirdDose())
+                        .divide(BigDecimal.valueOf(dto.getPopulation()), 4, RoundingMode.DOWN)
+                        .multiply(BigDecimal.valueOf(100)).setScale(2, RoundingMode.DOWN);
         		
         		dto.setFirstDosePerc(first);
                 dto.setVaccinatedPerc(vaccinadted);
+                dto.setThirdDosePerc(third);
         	}
         	
         	map.remove(f1);
