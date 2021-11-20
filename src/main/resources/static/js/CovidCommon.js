@@ -156,7 +156,23 @@ var CovidCommon = (function(CovidCommon) {
 				charts[chartProp].fetchData(fromToQueryParam);
 			}
 		}
+		CovidCommon.checkSyncStatus();
 	}
+	
+	CovidCommon.checkSyncStatus = function (){
+		let url = __URLS.UTILS.REFRESH_STATUS;
+		MarcoUtils.executeAjax({type: "GET", url: url})
+			.then(function(resp){
+				if(resp.status){
+					if(resp.refreshingData){
+						$("#divRefreshWarning").fadeIn();
+					} else {
+						$("#divRefreshWarning").fadeOut();
+					}
+					$("#lastUpdateTime").html(resp.lastUpdate);
+				}
+			});
+	}	
 
 	/**
 	* Switching the Themes

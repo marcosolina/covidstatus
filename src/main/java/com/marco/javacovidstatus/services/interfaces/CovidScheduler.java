@@ -17,4 +17,17 @@ public interface CovidScheduler {
      * It donwload the data from the ISTAT agency
      */
     public void downloadIstatData();
+    
+    /**
+     * It indicates whether the app is currently checking for new
+     * data or not. 
+     * @return
+     */
+    public boolean isRefreshing();
+    
+    /**
+     * It returns the time when the last successful refresh data occurred
+     * @return
+     */
+    public String getLastUpdateTime();
 }
