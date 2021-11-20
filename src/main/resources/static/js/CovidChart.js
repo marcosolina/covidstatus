@@ -53,7 +53,7 @@ class CovidChart {
 	/**
 		It draws the chart
 	 */
-	drawChart(darkModeOn, type, displayLegend){
+	drawChart(darkModeOn, type, displayLegend, keepAspectRatio){
 		
 		let fontColor = darkModeOn ? "#FFFFFF" : "#666666";
 		let color = darkModeOn ? "rgba(255, 255, 255, 0.5)" : 'rgba(0, 0, 0, 0.1)';
@@ -66,6 +66,7 @@ class CovidChart {
 		        datasets: this.arrDataSets
 		    },
 		    options:{
+				maintainAspectRatio: keepAspectRatio == undefined ? true : keepAspectRatio,
 				title: {
 					display: this.title != undefined ? true : false,
 					text: this.title || '',

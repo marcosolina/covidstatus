@@ -82,6 +82,6 @@ class VaccinesPerAgeChart {
 		this.chart.addCovidChartDataset(datasetThirdDose);
         
         this.chart.setLabels(arrLabels);
-        this.chart.drawChart(this.darkModeOn, "horizontalBar", true);
+        this.chart.drawChart(this.darkModeOn, "horizontalBar", true, false);
 	}
 }

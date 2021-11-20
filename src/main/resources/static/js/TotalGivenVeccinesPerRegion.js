@@ -67,6 +67,6 @@ class TotalGivenVeccinesPerRegion {
 		this.chart.addCovidChartDataset(datasetThirdDose);
         
         this.chart.setLabels(arrLabels);
-        this.chart.drawChart(this.darkModeOn, "bar", true);
+        this.chart.drawChart(this.darkModeOn, "bar", true, false);
     }
 }

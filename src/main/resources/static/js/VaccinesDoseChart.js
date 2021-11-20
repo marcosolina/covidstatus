@@ -69,7 +69,6 @@ class VaccinesDoseChart {
         
 		this.chart.addCovidChartDataset(dataset);
 		this.chart.setLabels(arrLabels);
-		//this.chart.drawChart(this.darkModeOn);
-        this.chart.drawChart(this.darkModeOn, "horizontalBar");
+        this.chart.drawChart(this.darkModeOn, "horizontalBar", undefined, false);
 	}
 }

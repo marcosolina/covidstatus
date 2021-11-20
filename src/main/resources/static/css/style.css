@@ -154,6 +154,10 @@
   line-height: 1em;
 }
 
+.chart-min-height {
+	min-height: 400px;
+}
+
 /*
 	END - Style from goverment Web Site
 */
