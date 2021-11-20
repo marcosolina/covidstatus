@@ -362,7 +362,7 @@ public class VaccineDataServiceMarco implements VaccineDataService {
             BigDecimal first = BigDecimal.ZERO;
             BigDecimal vaccinadted = BigDecimal.ZERO;
             BigDecimal third = BigDecimal.ZERO;
-            // TODO cosa fare per la terza doses
+            
             if(men + women > 0) {
                 first = BigDecimal.valueOf(dto.getFirstDose())
                         .divide(BigDecimal.valueOf(dto.getPopulation()), 4, RoundingMode.DOWN)
@@ -391,34 +391,38 @@ public class VaccineDataServiceMarco implements VaccineDataService {
         	String f2 = "90+";
         	PeopleVaccinated dto = map.get(f1);
         	PeopleVaccinated dto2 = map.get(f2);
-        	dto.setPopulation(dto.getPopulation() + dto2.getPopulation());
-        	dto.setFirstDose(dto.getFirstDose() + dto2.getFirstDose());
-        	dto.setSecondDose(dto.getSecondDose() + dto2.getSecondDose());
-        	dto.setMonoDose(dto.getMonoDose() + dto2.getMonoDose());
-        	dto.setDoseAfterInfection(dto.getDoseAfterInfection() + dto2.getDoseAfterInfection());
-        	dto.setThirdDose(dto.getThirdDose() + dto2.getThirdDose());
         	
-        	if(dto.getPopulation() > 0) {
-        		BigDecimal first = BigDecimal.valueOf(dto.getFirstDose())
-                        .divide(BigDecimal.valueOf(dto.getPopulation()), 4, RoundingMode.DOWN)
-                        .multiply(BigDecimal.valueOf(100)).setScale(2, RoundingMode.DOWN);
-        		BigDecimal vaccinadted = BigDecimal.valueOf(dto.getSecondDose())
-                        .add(BigDecimal.valueOf(dto.getMonoDose()))
-                        .add(BigDecimal.valueOf(dto.getDoseAfterInfection()))
-                        .divide(BigDecimal.valueOf(dto.getPopulation()), 4, RoundingMode.DOWN)
-                        .multiply(BigDecimal.valueOf(100)).setScale(2, RoundingMode.DOWN);
-        		BigDecimal third = BigDecimal.valueOf(dto.getThirdDose())
-                        .divide(BigDecimal.valueOf(dto.getPopulation()), 4, RoundingMode.DOWN)
-                        .multiply(BigDecimal.valueOf(100)).setScale(2, RoundingMode.DOWN);
-        		
-        		dto.setFirstDosePerc(first);
-                dto.setVaccinatedPerc(vaccinadted);
-                dto.setThirdDosePerc(third);
+        	if(dto != null && dto2 != null) {
+        	    dto.setPopulation(dto.getPopulation() + dto2.getPopulation());
+        	    dto.setFirstDose(dto.getFirstDose() + dto2.getFirstDose());
+        	    dto.setSecondDose(dto.getSecondDose() + dto2.getSecondDose());
+        	    dto.setMonoDose(dto.getMonoDose() + dto2.getMonoDose());
+        	    dto.setDoseAfterInfection(dto.getDoseAfterInfection() + dto2.getDoseAfterInfection());
+        	    dto.setThirdDose(dto.getThirdDose() + dto2.getThirdDose());
+        	    
+        	    if(dto.getPopulation() > 0) {
+        	        BigDecimal first = BigDecimal.valueOf(dto.getFirstDose())
+        	                .divide(BigDecimal.valueOf(dto.getPopulation()), 4, RoundingMode.DOWN)
+        	                .multiply(BigDecimal.valueOf(100)).setScale(2, RoundingMode.DOWN);
+        	        BigDecimal vaccinadted = BigDecimal.valueOf(dto.getSecondDose())
+        	                .add(BigDecimal.valueOf(dto.getMonoDose()))
+        	                .add(BigDecimal.valueOf(dto.getDoseAfterInfection()))
+        	                .divide(BigDecimal.valueOf(dto.getPopulation()), 4, RoundingMode.DOWN)
+        	                .multiply(BigDecimal.valueOf(100)).setScale(2, RoundingMode.DOWN);
+        	        BigDecimal third = BigDecimal.valueOf(dto.getThirdDose())
+        	                .divide(BigDecimal.valueOf(dto.getPopulation()), 4, RoundingMode.DOWN)
+        	                .multiply(BigDecimal.valueOf(100)).setScale(2, RoundingMode.DOWN);
+        	        
+        	        dto.setFirstDosePerc(first);
+        	        dto.setVaccinatedPerc(vaccinadted);
+        	        dto.setThirdDosePerc(third);
+        	    }
+        	    
+        	    map.remove(f1);
+        	    map.remove(f2);
+        	    map.put("80+", dto);
         	}
         	
-        	map.remove(f1);
-        	map.remove(f2);
-        	map.put("80+", dto);
         }
         return map;
     }
