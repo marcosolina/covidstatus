@@ -165,11 +165,17 @@ var CovidCommon = (function(CovidCommon) {
 			.then(function(resp){
 				if(resp.status){
 					if(resp.refreshingData){
-						$("#divRefreshWarning").fadeIn();
+						let html = '<div class="alert alert-warning" role="alert">' +
+									'Aggiornament dati in corso' +
+									'&nbsp;<i class="fa fa-refresh fa-spin"></i>' +
+								  '</div>'; 									
+						$("#divLastUpdate").html(html);
 					} else {
-						$("#divRefreshWarning").fadeOut();
+						let html = '<label>Ultimo Aggiornamento: ' + 
+									resp.lastUpdate + '</label>'; 
+						
+						$("#divLastUpdate").html(html);
 					}
-					$("#lastUpdateTime").html(resp.lastUpdate);
 				}
 			});
 	}	
