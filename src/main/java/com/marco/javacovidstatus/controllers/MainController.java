@@ -12,9 +12,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.marco.javacovidstatus.model.dto.CovidDataType;
+import com.marco.javacovidstatus.model.rest.GetRefreshStatusResp;
 import com.marco.javacovidstatus.services.interfaces.CovidDataService;
+import com.marco.javacovidstatus.services.interfaces.CovidScheduler;
 import com.marco.javacovidstatus.services.interfaces.downloaders.RegionMapDownloader;
 import com.marco.javacovidstatus.utils.CovidUtils;
 
@@ -35,12 +38,12 @@ public class MainController {
 	
 	@Autowired
 	private CovidUtils covidUtils;
-
 	@Autowired
 	private CovidDataService service;
-
 	@Autowired
 	private RegionMapDownloader regionMapDownloader;
+	@Autowired
+	private CovidScheduler scheduler;
 
 	/**
 	 * Home page Endpoint. It will return the html file to load and the initial set
@@ -83,6 +86,17 @@ public class MainController {
 		model.addAttribute("appVersion", appVersion);
 
 		return "index";
+	}
+	
+	@GetMapping(value = CovidUtils.MAPPING_REFRESH_STATUS)
+	@ResponseBody
+    @ApiOperation(value = "It returns a flag indicating sync data process is currently running")
+	public GetRefreshStatusResp isRefreshing() {
+	    GetRefreshStatusResp resp = new GetRefreshStatusResp();
+	    resp.setRefreshingData(scheduler.isRefreshing());
+	    resp.setLastUpdate(scheduler.getLastUpdateTime());
+	    resp.setStatus(true);
+	    return resp;
 	}
 
 }

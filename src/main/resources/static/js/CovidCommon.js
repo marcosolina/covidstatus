@@ -156,7 +156,29 @@ var CovidCommon = (function(CovidCommon) {
 				charts[chartProp].fetchData(fromToQueryParam);
 			}
 		}
+		CovidCommon.checkSyncStatus();
 	}
+	
+	CovidCommon.checkSyncStatus = function (){
+		let url = __URLS.UTILS.REFRESH_STATUS;
+		MarcoUtils.executeAjax({type: "GET", url: url})
+			.then(function(resp){
+				if(resp.status){
+					if(resp.refreshingData){
+						let html = '<div class="alert alert-warning" role="alert">' +
+									'Aggiornament dati in corso' +
+									'&nbsp;<i class="fa fa-refresh fa-spin"></i>' +
+								  '</div>'; 									
+						$("#divLastUpdate").html(html);
+					} else {
+						let html = '<label>Ultimo Aggiornamento: ' + 
+									resp.lastUpdate + '</label>'; 
+						
+						$("#divLastUpdate").html(html);
+					}
+				}
+			});
+	}	
 
 	/**
 	* Switching the Themes

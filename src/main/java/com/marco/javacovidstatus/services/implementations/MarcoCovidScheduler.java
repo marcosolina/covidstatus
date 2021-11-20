@@ -1,7 +1,11 @@
 package com.marco.javacovidstatus.services.implementations;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +31,10 @@ import com.marco.javacovidstatus.services.interfaces.downloaders.CovidDataDownlo
 @EnableScheduling
 public class MarcoCovidScheduler implements CovidScheduler {
     private static final Logger logger = LoggerFactory.getLogger(MarcoCovidScheduler.class);
+    private static final AtomicBoolean refreshVirusDataInProgress = new AtomicBoolean(false);
+    private static final AtomicBoolean refreshPopulationDataInProgress = new AtomicBoolean(false);
+    private static final ZoneId zoneId = ZoneId.of("Europe/Rome");
+    private static LocalDateTime lastUpdate = null;
 
     @Autowired
     @Qualifier("National")
@@ -60,6 +68,14 @@ public class MarcoCovidScheduler implements CovidScheduler {
     @Qualifier("GovernmentPopulation")
     private CovidDataDownloader govDownloader;
     
+    @Autowired
+    @Qualifier("AdditionalDosePopulation")
+    private CovidDataDownloader additionalDoseDownloader;
+    
+    @Autowired
+    @Qualifier("BoosterDosePopulation")
+    private CovidDataDownloader boosterDoseDownloader;
+    
     @Value("${covidstatus.populationdownloader.implementation}")
     private PopulationSource populationDownloader;
 
@@ -72,9 +88,11 @@ public class MarcoCovidScheduler implements CovidScheduler {
     public synchronized void downloadNewData() {
 
         logger.info("Updating Covid Data");
-
+        refreshVirusDataInProgress.set(true);
         try {
             List<CovidDataDownloader> downloaders = new ArrayList<>();
+            downloaders.add(additionalDoseDownloader);
+            downloaders.add(boosterDoseDownloader);
             downloaders.add(nationalDownloader);
             downloaders.add(regionDownloader);
             downloaders.add(provinceDownloader);
@@ -85,7 +103,10 @@ public class MarcoCovidScheduler implements CovidScheduler {
             logger.error(e.getMessage());
             notificationService.sendEmailMessage("marcosolina@gmail.com", "Marco Solina - Covid Status", e.getMessage());
         }
-
+        
+        lastUpdate = LocalDateTime.now(zoneId);
+        
+        refreshVirusDataInProgress.set(false);
         logger.info("Update Covid data complete");
     }
 
@@ -93,7 +114,7 @@ public class MarcoCovidScheduler implements CovidScheduler {
     @Override
     public synchronized void downloadIstatData() {
         logger.info("Updating Population Data");
-
+        refreshPopulationDataInProgress.set(true);
         try {
         	if(populationDownloader == PopulationSource.GOVERNMENT) {
         		govDownloader.downloadData();
@@ -107,7 +128,21 @@ public class MarcoCovidScheduler implements CovidScheduler {
         }
 
         logger.info("Update Population complete");
+        refreshPopulationDataInProgress.set(false);
+    }
 
+    @Override
+    public boolean isRefreshing() {
+        return refreshPopulationDataInProgress.get() || refreshVirusDataInProgress.get();
+    }
+
+    @Override
+    public String getLastUpdateTime() {
+        if(lastUpdate == null) {
+            return "Mai aggiornato";
+        }
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+        return dtf.format(lastUpdate);
     }
 
 }

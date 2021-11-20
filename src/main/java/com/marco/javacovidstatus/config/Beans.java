@@ -13,37 +13,10 @@ import org.springframework.core.Ordered;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
-import org.springframework.web.reactive.function.client.ExchangeStrategies;
-import org.springframework.web.reactive.function.client.WebClient;
 
 import com.fasterxml.classmate.TypeResolver;
-import com.marco.javacovidstatus.repositories.implementations.DataRepositoryImpPostgres;
-import com.marco.javacovidstatus.repositories.implementations.VaccinesGivenRepoImpPostgres;
-import com.marco.javacovidstatus.repositories.implementations.PopulationRepoImpPostgres;
-import com.marco.javacovidstatus.repositories.implementations.VeccinesDeliveredRepoImpPostgres;
-import com.marco.javacovidstatus.repositories.interfaces.DataRepository;
-import com.marco.javacovidstatus.repositories.interfaces.VaccinesGivenRepo;
-import com.marco.javacovidstatus.repositories.interfaces.PopulationRepo;
-import com.marco.javacovidstatus.repositories.interfaces.VeccinesDeliveredRepo;
 import com.marco.javacovidstatus.services.implementations.EmailNotificationSender;
-import com.marco.javacovidstatus.services.implementations.MarcoNationalDataService;
-import com.marco.javacovidstatus.services.implementations.PopulationDataServiceMarco;
-import com.marco.javacovidstatus.services.implementations.VaccineDataServiceMarco;
-import com.marco.javacovidstatus.services.implementations.downloaders.NationalCovidDataDownloader;
-import com.marco.javacovidstatus.services.implementations.downloaders.ProvinceCoviddataDownloader;
-import com.marco.javacovidstatus.services.implementations.downloaders.RegionCovidDataDownloader;
-import com.marco.javacovidstatus.services.implementations.downloaders.RegionMapDownloaderFromNationalWebSite;
-import com.marco.javacovidstatus.services.implementations.downloaders.VaccinesDeliveredDownloader;
-import com.marco.javacovidstatus.services.implementations.downloaders.VaccinesGivenDownloader;
-import com.marco.javacovidstatus.services.implementations.downloaders.population.PopulationIstatDownloader;
-import com.marco.javacovidstatus.services.implementations.downloaders.population.PopulationDownloaderExcel;
-import com.marco.javacovidstatus.services.implementations.downloaders.population.PopulationGovernmentDownloader;
-import com.marco.javacovidstatus.services.interfaces.CovidDataService;
 import com.marco.javacovidstatus.services.interfaces.NotificationSenderInterface;
-import com.marco.javacovidstatus.services.interfaces.PopulationDataService;
-import com.marco.javacovidstatus.services.interfaces.VaccineDataService;
-import com.marco.javacovidstatus.services.interfaces.downloaders.CovidDataDownloader;
-import com.marco.javacovidstatus.services.interfaces.downloaders.RegionMapDownloader;
 import com.marco.javacovidstatus.utils.CovidUtils;
 
 import springfox.documentation.builders.ApiInfoBuilder;
@@ -71,26 +44,6 @@ public class Beans {
     @Value("${spring.mail.password}")
     private String emailPassw;
 
-    @Bean
-    public WebClient getWebClient() {
-        // @formatter:off
-    	int megaByteNumber = 50;
-        return WebClient.builder()
-        		.exchangeStrategies(
-        			ExchangeStrategies.builder()
-        				.codecs(configurer -> 
-        					configurer.defaultCodecs().maxInMemorySize(megaByteNumber * 1024 *1024)
-        				).build()
-        		)
-        		.build();
-        // @formatter:on
-    }
-
-    @Bean
-    public CovidDataService getNationalDataService() {
-        return new MarcoNationalDataService();
-    }
-
     @Bean()
     public ThreadPoolTaskScheduler taskScheduler() {
         /*
@@ -100,37 +53,7 @@ public class Beans {
         taskScheduler.setPoolSize(20);
         return taskScheduler;
     }
-
-    @Bean
-    public DataRepository getCovidRepository() {
-        return new DataRepositoryImpPostgres();
-    }
-
-    @Bean
-    public VeccinesDeliveredRepo getVeccinesDeliveredRepo() {
-        return new VeccinesDeliveredRepoImpPostgres();
-    }
-
-    @Bean
-    public VaccinesGivenRepo getGivenVaccinesRepo() {
-        return new VaccinesGivenRepoImpPostgres();
-    }
-
-    @Bean
-    public PopulationRepo getPopulationRepo() {
-        return new PopulationRepoImpPostgres();
-    }
     
-    @Bean
-    public PopulationDataService getPopulationDataService() {
-        return new PopulationDataServiceMarco();
-    }
-
-    @Bean
-    public VaccineDataService getVaccineDateService() {
-        return new VaccineDataServiceMarco();
-    }
-
     @Bean
     public JavaMailSender getJavaMailSender() {
         /*
@@ -155,51 +78,6 @@ public class Beans {
     @Bean
     public NotificationSenderInterface getNotificationSenderInterface() {
         return new EmailNotificationSender();
-    }
-
-    @Bean(name = "National")
-    public CovidDataDownloader getNationalCovidDataDownloader() {
-        return new NationalCovidDataDownloader(getWebClient());
-    }
-
-    @Bean(name = "Province")
-    public CovidDataDownloader getProvinceCoviddataDownloader() {
-        return new ProvinceCoviddataDownloader(getWebClient());
-    }
-
-    @Bean(name = "Region")
-    public CovidDataDownloader getRegionCovidDataDownloader() {
-        return new RegionCovidDataDownloader(getWebClient());
-    }
-
-    @Bean(name = "GivenVaccines")
-    public CovidDataDownloader getGivenVaccinesDownloader() {
-        return new VaccinesGivenDownloader(getWebClient());
-    }
-
-    @Bean(name = "DeliveredVaccines")
-    public CovidDataDownloader getDeliveredVaccinesDownloader() {
-        return new VaccinesDeliveredDownloader(getWebClient());
-    }
-
-    @Bean(name = "IstatPopulation")
-    public CovidDataDownloader getPopulationDownloader() {
-        return new PopulationIstatDownloader(getWebClient());
-    }
-    
-    @Bean(name = "CsvPopulation")
-    public CovidDataDownloader getPopulationLoader() {
-        return new PopulationDownloaderExcel(getWebClient());
-    }
-    
-    @Bean(name = "GovernmentPopulation")
-    public CovidDataDownloader getGovernmentPopulation() {
-        return new PopulationGovernmentDownloader(getWebClient());
-    }
-
-    @Bean
-    public RegionMapDownloader getRegionMapDownloader() {
-        return new RegionMapDownloaderFromNationalWebSite();
     }
 
     @Bean

@@ -13,6 +13,7 @@ public class CovidUtils {
 	 * Main controller paths
 	 */
 	public static final String MAPPING_HOME = "/";
+	public static final String MAPPING_REFRESH_STATUS = "/refreshStatus";
 	public static final String MAPPING_REGION_DATA = "/data/regions";
 	public static final String MAPPING_NATIONAL_DATA = "/data/national";
 	public static final String MAPPING_PROVINCE_DATA = "/data/provinces";
@@ -40,6 +41,10 @@ public class CovidUtils {
 	public Map<String, Map<String, String>> getEndPoints() {
 		Map<String, Map<String, String>> map = new HashMap<>();
 
+		Map<String, String> utilsEndPoints = new HashMap<>();
+		utilsEndPoints.put("REFRESH_STATUS", contextPath + MAPPING_REFRESH_STATUS);
+		map.put("UTILS", utilsEndPoints);
+		
 		Map<String, String> infectionEndPoints = new HashMap<>();
 		infectionEndPoints.put("REGION_DATA", contextPath + MAPPING_REGION_DATA);
 		infectionEndPoints.put("NATIONAL_DATA", contextPath + MAPPING_NATIONAL_DATA);
