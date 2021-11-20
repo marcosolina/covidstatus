@@ -61,7 +61,7 @@ class TotalGivenVeccinesPerAge {
         
         const datasetFirstDose = new CovidChartDataset("% 1a dose");
         const datasetVaccinated = new CovidChartDataset("% 2a Dose o Mono Dose");
-		const datasetThirdDose = new CovidChartDataset("% dose addizionale / booster");
+		const datasetThirdDose = new CovidChartDataset("% 3a Dose (Addizionale / Booster)");
         
         datasetFirstDose.setColor(this.colorPalette[1]);
         datasetVaccinated.setColor(this.colorPalette[2]);
@@ -110,7 +110,7 @@ class TotalGivenVeccinesPerAge {
 		const datasetPopulation = new CovidChartDataset("Popolazione");
         const datasetFirstDose = new CovidChartDataset("Prima Dose");
         const datasetVaccinated = new CovidChartDataset("Vaccinati (Seconda Dose o Mono Dose)");
-		const datasetThirdDose = new CovidChartDataset("Dose addizionale o booster");
+		const datasetThirdDose = new CovidChartDataset("Terza Dose (Addizionale / Booster)");
         
 		datasetPopulation.setColor(this.colorPalette[0]);
         datasetFirstDose.setColor(this.colorPalette[1]);

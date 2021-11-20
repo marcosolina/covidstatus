@@ -41,24 +41,30 @@ class TotalGivenVeccinesPerRegion {
         let arrLabels = [];
         let valuesFirstDose = [];
         let valuesVaccinated = [];
+		let valuesThirdDose = [];
         
         const datasetFirstDose = new CovidChartDataset("% 1a dose");
         const datasetVaccinated = new CovidChartDataset("% 2a Dose o Mono Dose");
+		const datasetThirdDose = new CovidChartDataset("% 3a Dose (Addizionale / Booster)");
         
         datasetFirstDose.setColor(this.colorPalette[1]);
         datasetVaccinated.setColor(this.colorPalette[2]);
+		datasetThirdDose.setColor(this.colorPalette[3]);
         
 		$.each(__REGIONS_LIST, function(i, el){
 			arrLabels.push(el.desc);
 			valuesFirstDose.push(data[el.code].firstDosePerc);
             valuesVaccinated.push(data[el.code].vaccinatedPerc);
+			valuesThirdDose.push(data[el.code].thirdDosePerc)
 		});
         
         datasetFirstDose.setData(valuesFirstDose);
         datasetVaccinated.setData(valuesVaccinated);
+		datasetThirdDose.setData(valuesThirdDose);
         
         this.chart.addCovidChartDataset(datasetFirstDose);
         this.chart.addCovidChartDataset(datasetVaccinated);
+		this.chart.addCovidChartDataset(datasetThirdDose);
         
         this.chart.setLabels(arrLabels);
         this.chart.drawChart(this.darkModeOn, "bar", true);

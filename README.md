@@ -66,6 +66,7 @@ Once the containers are up and runnig open the following links:
 
 ## History
 
+- **20/11/2021 v2.0.3**: Adding third dose & booster data
 - **19/11/2021 v2.0.2**: Small UI changes
 - **25/10/2021 v2.0.1**: Managing new government data structure
 - **07/09/2021 v0.2.00**: Small Refactoring
