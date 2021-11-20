@@ -41,7 +41,7 @@ class DoughnutChart {
 	/**
 		It draws the chart
 	 */
-	drawChart(darkModeOn){
+	drawChart(darkModeOn, displayLegend){
 		var arrData = [];
 		var labels = [];
 		var colors = [];
@@ -70,6 +70,7 @@ class DoughnutChart {
 					fontColor: fontColor
 				},
 				legend:{
+					display: displayLegend == undefined ? true : displayLegend,
 					labels:{
 						fontColor: fontColor
 					}

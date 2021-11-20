@@ -68,6 +68,6 @@ class TotalDeliveredUsedVaccinesPerRegionChart {
 		this.chart.addCovidChartDataset(giveDataSet);
 		
 		this.chart.setLabels(arrLabels);
-		this.chart.drawChart(this.darkModeOn, "bar", true);
+		this.chart.drawChart(this.darkModeOn, "bar", true, false);
 	}
 }

@@ -83,7 +83,7 @@ class TotalGivenVeccinesPerAge {
 		this.chart2.addCovidChartDataset(datasetThirdDose);
         
         this.chart2.setLabels(arrLabels);
-        this.chart2.drawChart(this.darkModeOn, "bar", true);
+        this.chart2.drawChart(this.darkModeOn, "bar", true, false);
     }
 
 	drawChart() {
@@ -136,7 +136,7 @@ class TotalGivenVeccinesPerAge {
 		this.chart.addCovidChartDataset(datasetThirdDose);
         
 		this.chart.setLabels(arrLabels);
-		this.chart.drawChart(this.darkModeOn, "horizontalBar", true);
+		this.chart.drawChart(this.darkModeOn, "horizontalBar", true, false);
         
         this.drawPercChart();
 	}

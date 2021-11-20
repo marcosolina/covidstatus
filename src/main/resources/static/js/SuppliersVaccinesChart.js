@@ -10,8 +10,7 @@ class SuppliersVaccinesChart {
 		this.darkModeOn = false;
 		this.lastResponse = {};
 
-		this.chart = new DoughnutChart(document.getElementById(this.canvasId));
-
+		this.chart = new CovidChart(document.getElementById(this.canvasId));
 		this.chart.setTitle("Dosi fornite");
 	}
 	
@@ -37,14 +36,22 @@ class SuppliersVaccinesChart {
 
 		var i = 0;
 		var arrLabels = [];
+        let data = [];
+        let arrColors = [];
+
 		for (let supplier in this.lastResponse.deliveredPerSupplier) {
-			const dataset = new CovidChartDataset(supplier);
-			dataset.setData(this.lastResponse.deliveredPerSupplier[supplier]);
-			dataset.setColor(this.colorPalette[i++]);
-			this.chart.addCovidChartDataset(dataset);
+			
+			data.push(this.lastResponse.deliveredPerSupplier[supplier]);
 			arrLabels.push(supplier);
+            arrColors.push(this.colorPalette[i++]);
 		}
+		
+		const dataset = new CovidChartDataset("");
+		dataset.setData(data);
+		dataset.setColor(arrColors);
+		
+		this.chart.addCovidChartDataset(dataset);
 		this.chart.setLabels(arrLabels);
-		this.chart.drawChart(this.darkModeOn);
+		this.chart.drawChart(this.darkModeOn, "horizontalBar", undefined, false);
 	}
 }
