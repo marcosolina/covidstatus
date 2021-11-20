@@ -3,16 +3,16 @@
  */
 class TotalDeliveredUsedVaccinesChart {
 	
-	constructor(canvasId, colorPalette) {
+	constructor(canvasId, labelsContainerId, colorPalette) {
 		this.canvasId = canvasId;
 		this.colorPalette = colorPalette;
+		this.labelsContainerId = labelsContainerId;
 		
 
 		this.darkModeOn = false;
 		this.lastResponse = {};
 		
 		this.chart = new DoughnutChart(document.getElementById(this.canvasId));
-		this.chart.setTitle("Totale Vaccini Consegnati / Usati a livello Nazionale");
 	}
 	
 	setDarkMode(darkModeOn){
@@ -37,15 +37,29 @@ class TotalDeliveredUsedVaccinesChart {
 		let arrLabels = ["Totale Vaccini Ricevuti", "Totale Vaccini Utilizzati"];
 		let arrData = [this.lastResponse.totalDeliveredVaccines, this.lastResponse.totalUsedVaccines];
 		
+		let template = '<div class="col-12 col-sm-5 col-md-4 col-lg-5 col-xl-4">' +
+							'<label style="color: %color%" >%label%</label>' +
+						'</div>';
+		let jContainer = $("#" + this.labelsContainerId);
+		jContainer.empty();
+		
 		arrLabels.forEach(function(key, index) {
 			const dataset = new CovidChartDataset(key);
 			dataset.setData(arrData[index]);
-			dataset.setColor(this.colorPalette[index]);
+			
+			let color = this.colorPalette[index];
+			
+			jContainer.append(MarcoUtils.template(template, {
+				label: key,
+				color: color
+			}));
+			
+			dataset.setColor(color);
 			this.chart.addCovidChartDataset(dataset);
 			arrLabels.push(key);
 		}.bind(this));
 		
 		this.chart.setLabels(arrLabels);
-		this.chart.drawChart(this.darkModeOn);
+		this.chart.drawChart(this.darkModeOn, false);
 	}
 }

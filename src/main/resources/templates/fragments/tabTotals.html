@@ -28,10 +28,44 @@
 				<canvas id="chartTotalsVaccinesUsedDeliveredPerRegion"></canvas>
 			</div>
 			<div class="col-md-12 col-lg-6 col-xl-6">
-				<canvas id="chartTotalsVaccinesUsedDelivered"></canvas>
+				<div class="col-12">
+					<div th:replace="fragments/generic.html::emptyBootstrapRow"></div>
+					<div class="row">
+						<div class="col-12 d-flex justify-content-center">
+							<b>Totale Vaccini Consegnati / Usati a livello Nazionale</b>
+						</div>
+					</div>
+					<div th:replace="fragments/generic.html::emptyBootstrapRow"></div>
+					<div class="row">
+						<div class="col-12">
+							<div class="row" id="chartTotalsVaccinesUsedDeliveredLabels">
+							</div>
+						</div>
+						<div class="col-12">
+							<canvas id="chartTotalsVaccinesUsedDelivered"></canvas>
+						</div>
+					</div>
+				</div>
 			</div>
 			<div class="col-md-12 col-lg-6 col-xl-6">
-				<canvas id="chartTotalsVaccinesDeliveredPerSupplier"></canvas>
+				<div class="col-12">
+					<div th:replace="fragments/generic.html::emptyBootstrapRow"></div>
+					<div class="row">
+						<div class="col-12 d-flex justify-content-center">
+							<b>Totale Forniture Vaccini</b>
+						</div>
+					</div>
+					<div th:replace="fragments/generic.html::emptyBootstrapRow"></div>
+					<div class="row">
+						<div class="col-12">
+							<div class="row" id="chartTotalsVaccinesDeliveredPerSupplierLabels">
+							</div>
+						</div>
+						<div class="col-12">
+							<canvas id="chartTotalsVaccinesDeliveredPerSupplier"></canvas>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>

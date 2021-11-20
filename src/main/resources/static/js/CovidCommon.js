@@ -115,14 +115,14 @@ var CovidCommon = (function(CovidCommon) {
 		charts.vaccinesPerAge = new VaccinesPerAgeChart("chartVaccinesPerAge", colorPalette);
 		charts.vaxTotalPerAge = new TotalGivenVeccinesPerAge("chartTotalsVaccinesGivenPerAge", "firstDosePerc", colorPalette);
 		charts.vaxTotalPerRegion = new TotalGivenVeccinesPerRegion("vaccinatedPerRegion", colorPalette);
-		charts.vaccinesDeliveredUsed = new TotalDeliveredUsedVaccinesChart("chartTotalsVaccinesUsedDelivered", colorPalette);
+		charts.vaccinesDeliveredUsed = new TotalDeliveredUsedVaccinesChart("chartTotalsVaccinesUsedDelivered", "chartTotalsVaccinesUsedDeliveredLabels", colorPalette);
 		charts.vaxDeliveredUsedPerReg = new TotalDeliveredUsedVaccinesPerRegionChart("chartTotalsVaccinesUsedDeliveredPerRegion", colorPalette);
         /*
         These data are not available anymore in the goverment repo. I will keep the code here just for reference, or in case they
         change their mind and restore these info
 		charts.vaccinesPerPersonChart = new VaccinesPerPersonChart("chartVaccinesGiven", "vaccinesGivenCheckboxes", colorPalette);
         */
-		charts.vaxTotalDeliveredPerSupplier = new TotalDeliveredVaccinesPerSupplier("chartTotalsVaccinesDeliveredPerSupplier", colorPalette);		
+		charts.vaxTotalDeliveredPerSupplier = new TotalDeliveredVaccinesPerSupplier("chartTotalsVaccinesDeliveredPerSupplier", "chartTotalsVaccinesDeliveredPerSupplierLabels", colorPalette);		
 	}
 
 	/**
