@@ -192,22 +192,46 @@ public class InfectionsController {
 			LocalDate to) throws MarcoException {
 		// @formatter:on
 		LOGGER.trace("Inside InfectionsController.getNationalData");
-		RespGetNationalData resp = new RespGetNationalData();
 		List<NationalDailyDataDto> listData = service.getListNationalDailyDataBetweenDatesOrderByDateAscending(from, to);
-		// @formatter:off
-		resp.setArrDates(				listData.stream().map(NationalDailyDataDto::getDate)				.collect(Collectors.toList()));
-		resp.setArrNewCasualties(		listData.stream().map(NationalDailyDataDto::getNewCasualties)		.collect(Collectors.toList()));
-		resp.setArrNewHospitalized(		listData.stream().map(NationalDailyDataDto::getNewHospitalized)		.collect(Collectors.toList()));
-		resp.setArrNewInfections(		listData.stream().map(NationalDailyDataDto::getNewInfections)		.collect(Collectors.toList()));
-		resp.setArrNewIntensiveTherapy(	listData.stream().map(NationalDailyDataDto::getNewIntensiveTherapy)	.collect(Collectors.toList()));
-		resp.setArrNewRecovered(		listData.stream().map(NationalDailyDataDto::getNewRecovered)		.collect(Collectors.toList()));
-		resp.setArrNewTests(			listData.stream().map(NationalDailyDataDto::getNewTests)			.collect(Collectors.toList()));
-		resp.setArrPercCasualties(		listData.stream().map(NationalDailyDataDto::getCasualtiesPercentage).collect(Collectors.toList()));
-		resp.setArrPercInfections(		listData.stream().map(NationalDailyDataDto::getInfectionPercentage)	.collect(Collectors.toList()));
-		// @formatter:on
-
-		resp.setStatus(true);
+		RespGetNationalData resp = fromListNationaDailyDataDtoToRespGetNationalData(listData);
+        resp.setStatus(true);
 		
 		return resp;
 	}
+	
+	/**
+     * It returns the National data
+     * 
+     * @param request
+     * @return
+     * @throws MarcoException 
+     */
+    @GetMapping(value = CovidUtils.MAPPING_NATIONAL_DATA_ALL)
+    @ApiOperation(value = "It returns the National situation from the beginning of the C-19")
+    @ResponseBody
+    // @formatter:off
+    public RespGetNationalData getAllNationalData() {
+        // @formatter:on
+        LOGGER.trace("Inside InfectionsController.getAllNationalData");
+        List<NationalDailyDataDto> listData = service.getListAllNationalDailyDataOrderByDateAscending();
+        RespGetNationalData resp = fromListNationaDailyDataDtoToRespGetNationalData(listData);
+        resp.setStatus(true);
+        return resp;
+    }
+    
+    private RespGetNationalData fromListNationaDailyDataDtoToRespGetNationalData(List<NationalDailyDataDto> listData) {
+        RespGetNationalData resp = new RespGetNationalData();
+        // @formatter:off
+        resp.setArrDates(               listData.stream().map(NationalDailyDataDto::getDate)                .collect(Collectors.toList()));
+        resp.setArrNewCasualties(       listData.stream().map(NationalDailyDataDto::getNewCasualties)       .collect(Collectors.toList()));
+        resp.setArrNewHospitalized(     listData.stream().map(NationalDailyDataDto::getNewHospitalized)     .collect(Collectors.toList()));
+        resp.setArrNewInfections(       listData.stream().map(NationalDailyDataDto::getNewInfections)       .collect(Collectors.toList()));
+        resp.setArrNewIntensiveTherapy( listData.stream().map(NationalDailyDataDto::getNewIntensiveTherapy) .collect(Collectors.toList()));
+        resp.setArrNewRecovered(        listData.stream().map(NationalDailyDataDto::getNewRecovered)        .collect(Collectors.toList()));
+        resp.setArrNewTests(            listData.stream().map(NationalDailyDataDto::getNewTests)            .collect(Collectors.toList()));
+        resp.setArrPercCasualties(      listData.stream().map(NationalDailyDataDto::getCasualtiesPercentage).collect(Collectors.toList()));
+        resp.setArrPercInfections(      listData.stream().map(NationalDailyDataDto::getInfectionPercentage) .collect(Collectors.toList()));
+        // @formatter:on
+        return resp;
+    }
 }

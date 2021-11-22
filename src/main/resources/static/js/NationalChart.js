@@ -3,10 +3,11 @@
  */
 class NationalChart {
 
-	constructor(canvasId, checkBoxesContainerId, colorPalette) {
+	constructor(canvasId, checkBoxesContainerId, colorPalette, totals) {
 		this.canvasId = canvasId;
 		this.checkBoxesContainerId = checkBoxesContainerId;
 		this.colorPalette = colorPalette;
+		this.totals = totals === true;
 		
 		this.darkModeOn = false;
 		this.lastResponse = {};
@@ -43,9 +44,10 @@ class NationalChart {
 						'</div>';
 		let jContainer = $("#" + this.checkBoxesContainerId);
 		let index = 0;
+		let prefix = this.totals ? "tot" : "";
 		for (let dataType in this.descData) {
 			jContainer.append(MarcoUtils.template(template, {
-				checkBoxId: dataType,
+				checkBoxId: prefix + dataType,
 				label: this.descData[dataType],
 				color: this.colorPalette[index++]
 			}));
@@ -53,11 +55,18 @@ class NationalChart {
 
 		jContainer.find("input").change(this.drawChart.bind(this));
 		$(jContainer.find("input").get(0)).prop("checked", true);
-		$(jContainer.find("input").get(1)).prop("checked", true);
+		if(!this.totals){
+			$(jContainer.find("input").get(1)).prop("checked", true);
+		}
 	}
 
 	fetchData(fromToQueryParam) {
-		let url = __URLS.INFECTIONS.NATIONAL_DATA + "?" + fromToQueryParam;
+		let url;
+		if(this.totals){
+			url = __URLS.TOTALS.TOTALS_INFECTIONS_DATA;
+		}else{
+			url = __URLS.INFECTIONS.NATIONAL_DATA + "?" + fromToQueryParam;
+		}
 		MarcoUtils.executeAjax({type: "GET", url: url}).then(this.dataRetrieved.bind(this));
 	}
 
@@ -72,12 +81,13 @@ class NationalChart {
 		this.chart.clearDataSets();
 		this.chart.setLabels(this.lastResponse.arrDates);
 		
+		let prefix = this.totals ? "tot" : "";
 		for (let dataType in this.descData) {
-			if($("#" + dataType).prop("checked")){
+			if($("#" + prefix + dataType).prop("checked")){
 				var arr = this.lastResponse[dataType];
 				const dataset = new CovidChartDataset(this.descData[dataType]);
 				dataset.setData(arr);
-				dataset.setColor($("#label" + dataType).css("color"));
+				dataset.setColor($("#label" + prefix + dataType).css("color"));
 				this.chart.addCovidChartDataset(dataset);
 			}
 		}

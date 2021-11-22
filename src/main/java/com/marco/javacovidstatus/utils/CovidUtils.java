@@ -16,6 +16,7 @@ public class CovidUtils {
 	public static final String MAPPING_REFRESH_STATUS = "/refreshStatus";
 	public static final String MAPPING_REGION_DATA = "/data/regions";
 	public static final String MAPPING_NATIONAL_DATA = "/data/national";
+	public static final String MAPPING_NATIONAL_DATA_ALL = "/data/national/all";
 	public static final String MAPPING_PROVINCE_DATA = "/data/provinces";
 
 	/*
@@ -65,6 +66,7 @@ public class CovidUtils {
 		totals.put("TOTALS_AGE", contextPath + MAPPING_VACCINE_TOTAL_DATA_PER_AGE);
 		totals.put("TOTALS_VACCINATED_PER_REGION", contextPath + MAPPING_VACCINE_VACCINATED_PER_REGION);
 		totals.put("TOTALS_DELIVERED", contextPath + MAPPING_VACCINE_TOTAL_DELIVERED_PER_SUPPLIER);
+		totals.put("TOTALS_INFECTIONS_DATA", contextPath + MAPPING_NATIONAL_DATA_ALL);
 		map.put("TOTALS", totals);
 		
 

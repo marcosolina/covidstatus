@@ -109,6 +109,7 @@ var CovidCommon = (function(CovidCommon) {
 		charts.regionsChart = new RegionsChart("chartRegions", "rowRegionsCheckboxes", "covidData", colorPalette);
 		charts.provinceChart = new ProvinceChart("chartProvince", "rowProvince", "region", colorPalette);
 		charts.nationalChart = new NationalChart("chartNational", "nationalDataCheckboxesWrapper", colorPalette);
+		charts.nationalAllData = new NationalChart("totalInfectionsChart", "totalInfectionsCheckBoxes", colorPalette, true);
 		charts.suppliersChart = new SuppliersVaccinesChart("chartVaccinesSuppliers", colorPalette);
 		charts.deliveredVaccines = new DeliveredVaccinesChart("chartVaccinesDelivered", "rowRegionVaccines", colorPalette);
 		charts.vaccinesDoses = new VaccinesDoseChart("chartVaccinesDoses", colorPalette);
