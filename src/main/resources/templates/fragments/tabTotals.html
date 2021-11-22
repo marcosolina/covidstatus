@@ -10,13 +10,22 @@
 		<div th:replace="fragments/generic.html::emptyBootstrapRow"></div>
 		<div class="row">
 			<div class="col-12 d-flex justify-content-center">
-				<h5>Totale dei dati disponibili</h5>
+				<h5>Totali da inizio pandemia</h5>
 			</div>
 		</div>
 		<div th:replace="fragments/generic.html::emptyBootstrapRow"></div>
 		<div class="row">
 		    <div class="col-md-12 col-lg-12 col-xl-6 chart-min-height">
                 <canvas id="firstDosePerc"></canvas>
+            </div>
+            <div class="col-md-12 col-lg-12 col-xl-6">
+            	<div class="row" id="totalInfectionsCheckBoxes">
+            	</div>
+            	<div class="row">
+            		<div class="col-12">
+		                <canvas id="totalInfectionsChart"></canvas>
+            		</div>
+            	</div>
             </div>
 			<div class="col-md-12 col-lg-12 col-xl-6 chart-min-height">
                 <canvas id="vaccinatedPerRegion"></canvas>

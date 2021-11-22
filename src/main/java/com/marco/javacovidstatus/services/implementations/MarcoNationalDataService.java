@@ -82,7 +82,7 @@ public class MarcoNationalDataService implements CovidDataService {
         List<EntityNationalData> listEntity = repoNationalData.findByDateBetweenOrderByDateAsc(from, to);
         return listEntity.stream().map(this::fromEntityNationalDataToDailyData).collect(Collectors.toList());
     }
-
+    
     @Override
     public boolean storeProvinceDailyData(ProvinceDailyDataDto data) {
         repoProvince.save(fromProvinceDailyDataToEntityProvinceData(data));
