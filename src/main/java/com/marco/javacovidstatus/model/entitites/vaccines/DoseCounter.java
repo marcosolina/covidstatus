@@ -12,16 +12,14 @@ public class DoseCounter {
     private Long monoDoseCounter;
     private Long doseAfterInfectCounter;
     private Long thirdDoseCounter;
-    private Long boosterDoseCounter;
 
-    public DoseCounter(Long firstDoseCounter, Long secondDoseCounter, Long monoDoseCounter, Long doseAfterInfectCounter, Long thirdDoseCounter, Long boosterDoseCounter) {
+    public DoseCounter(Long firstDoseCounter, Long secondDoseCounter, Long monoDoseCounter, Long doseAfterInfectCounter, Long thirdDoseCounter) {
         super();
         this.firstDoseCounter = firstDoseCounter;
         this.secondDoseCounter = secondDoseCounter;
         this.monoDoseCounter = monoDoseCounter;
         this.doseAfterInfectCounter = doseAfterInfectCounter;
         this.thirdDoseCounter = thirdDoseCounter;
-        this.boosterDoseCounter = boosterDoseCounter;
     }
 
     public Long getFirstDoseCounter() {
@@ -62,14 +60,6 @@ public class DoseCounter {
 
     public void setThirdDoseCounter(Long thirdDoseCounter) {
         this.thirdDoseCounter = thirdDoseCounter;
-    }
-
-    public Long getBoosterDoseCounter() {
-        return boosterDoseCounter;
-    }
-
-    public void setBoosterDoseCounter(Long boosterDoseCounter) {
-        this.boosterDoseCounter = boosterDoseCounter;
     }
 
 }

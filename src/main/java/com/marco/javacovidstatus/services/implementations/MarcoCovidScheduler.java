@@ -68,14 +68,6 @@ public class MarcoCovidScheduler implements CovidScheduler {
     @Qualifier("GovernmentPopulation")
     private CovidDataDownloader govDownloader;
     
-    @Autowired
-    @Qualifier("AdditionalDosePopulation")
-    private CovidDataDownloader additionalDoseDownloader;
-    
-    @Autowired
-    @Qualifier("BoosterDosePopulation")
-    private CovidDataDownloader boosterDoseDownloader;
-    
     @Value("${covidstatus.populationdownloader.implementation}")
     private PopulationSource populationDownloader;
 
@@ -91,8 +83,6 @@ public class MarcoCovidScheduler implements CovidScheduler {
         refreshVirusDataInProgress.set(true);
         try {
             List<CovidDataDownloader> downloaders = new ArrayList<>();
-            downloaders.add(additionalDoseDownloader);
-            downloaders.add(boosterDoseDownloader);
             downloaders.add(nationalDownloader);
             downloaders.add(regionDownloader);
             downloaders.add(provinceDownloader);

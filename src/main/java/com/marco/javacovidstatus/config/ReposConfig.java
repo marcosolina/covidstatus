@@ -3,14 +3,10 @@ package com.marco.javacovidstatus.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.marco.javacovidstatus.repositories.implementations.AdditionalDosePopulationPostgres;
-import com.marco.javacovidstatus.repositories.implementations.BoosterPopulationPostgres;
 import com.marco.javacovidstatus.repositories.implementations.DataRepositoryImpPostgres;
 import com.marco.javacovidstatus.repositories.implementations.PopulationRepoImpPostgres;
 import com.marco.javacovidstatus.repositories.implementations.VaccinesGivenRepoImpPostgres;
 import com.marco.javacovidstatus.repositories.implementations.VeccinesDeliveredRepoImpPostgres;
-import com.marco.javacovidstatus.repositories.interfaces.AdditionalDosePopulationRepo;
-import com.marco.javacovidstatus.repositories.interfaces.BoosterPopulationRepo;
 import com.marco.javacovidstatus.repositories.interfaces.DataRepository;
 import com.marco.javacovidstatus.repositories.interfaces.PopulationRepo;
 import com.marco.javacovidstatus.repositories.interfaces.VaccinesGivenRepo;
@@ -37,15 +33,5 @@ public class ReposConfig {
     @Bean
     public PopulationRepo getPopulationRepo() {
         return new PopulationRepoImpPostgres();
-    }
-    
-    @Bean
-    public BoosterPopulationRepo getBoosterPopulationRepo() {
-        return new BoosterPopulationPostgres();
-    }
-    
-    @Bean
-    public AdditionalDosePopulationRepo getAdditionalDosePopulationRepo() {
-        return new AdditionalDosePopulationPostgres();
     }
 }

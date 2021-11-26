@@ -11,8 +11,6 @@ import com.marco.javacovidstatus.services.implementations.downloaders.RegionCovi
 import com.marco.javacovidstatus.services.implementations.downloaders.RegionMapDownloaderFromNationalWebSite;
 import com.marco.javacovidstatus.services.implementations.downloaders.VaccinesDeliveredDownloader;
 import com.marco.javacovidstatus.services.implementations.downloaders.VaccinesGivenDownloader;
-import com.marco.javacovidstatus.services.implementations.downloaders.population.PopulationAdditionalDoseDownloader;
-import com.marco.javacovidstatus.services.implementations.downloaders.population.PopulationBoosterDoseDownloader;
 import com.marco.javacovidstatus.services.implementations.downloaders.population.PopulationDownloaderExcel;
 import com.marco.javacovidstatus.services.implementations.downloaders.population.PopulationGovernmentDownloader;
 import com.marco.javacovidstatus.services.implementations.downloaders.population.PopulationIstatDownloader;
@@ -80,15 +78,5 @@ public class DownloadersConfig {
     @Bean(name = "GovernmentPopulation")
     public CovidDataDownloader getGovernmentPopulation() {
         return new PopulationGovernmentDownloader(getWebClient());
-    }
-    
-    @Bean(name = "AdditionalDosePopulation")
-    public CovidDataDownloader getPopulationAdditionalDoseDownloader() {
-        return new PopulationAdditionalDoseDownloader(getWebClient());
-    }
-    
-    @Bean(name = "BoosterDosePopulation")
-    public CovidDataDownloader getPopulationBoosterDoseDownloader() {
-        return new PopulationBoosterDoseDownloader(getWebClient());
     }
 }
