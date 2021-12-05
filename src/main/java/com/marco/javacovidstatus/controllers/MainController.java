@@ -75,8 +75,8 @@ public class MainController {
 
 		/*
 		 * Adding the SVG map
-		 */
 		model.addAttribute("svgmap", regionMapDownloader.createHtmlMap());
+		 */
 
 		/*
 		 * Passing to the front end the map of available end points
