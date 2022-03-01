@@ -32,6 +32,7 @@ public class VaccinatedPeopleDto implements Serializable {
     private int monoDoseCounter;
     private int doseAfterInfectCounter;
     private int thirdDoseCounter;
+    private int fourthDoseCounter;
 
     public String getRegionCode() {
         return regionCode;
@@ -199,6 +200,14 @@ public class VaccinatedPeopleDto implements Serializable {
 
     public void setThirdDoseCounter(int thirdDoseCounter) {
         this.thirdDoseCounter = thirdDoseCounter;
+    }
+
+    public int getFourthDoseCounter() {
+        return fourthDoseCounter;
+    }
+
+    public void setFourthDoseCounter(int fourthDoseCounter) {
+        this.fourthDoseCounter = fourthDoseCounter;
     }
 
     public static long getSerialversionuid() {

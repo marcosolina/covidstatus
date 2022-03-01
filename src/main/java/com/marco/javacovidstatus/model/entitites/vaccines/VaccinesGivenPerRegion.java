@@ -13,8 +13,9 @@ public class VaccinesGivenPerRegion {
     private Long monoDose;
     private Long doseAfterInfection;
     private Long thirdDoseCounter;
+    private Long fourthDoseCounter;
 
-    public VaccinesGivenPerRegion(String regionCode, Long firstDose, Long secondDose, Long monoDose, Long doseAfterInfection, Long thirdDoseCounter) {
+    public VaccinesGivenPerRegion(String regionCode, Long firstDose, Long secondDose, Long monoDose, Long doseAfterInfection, Long thirdDoseCounter, Long fourthDoseCounter) {
         super();
         this.regionCode = regionCode;
         this.firstDose = firstDose;
@@ -22,6 +23,7 @@ public class VaccinesGivenPerRegion {
         this.monoDose = monoDose;
         this.doseAfterInfection = doseAfterInfection;
         this.thirdDoseCounter = thirdDoseCounter;
+        this.fourthDoseCounter = fourthDoseCounter;
     }
 
     public String getRegionCode() {
@@ -70,6 +72,14 @@ public class VaccinesGivenPerRegion {
 
     public void setThirdDoseCounter(Long thirdDoseCounter) {
         this.thirdDoseCounter = thirdDoseCounter;
+    }
+
+    public Long getFourthDoseCounter() {
+        return fourthDoseCounter;
+    }
+
+    public void setFourthDoseCounter(Long fourthDoseCounter) {
+        this.fourthDoseCounter = fourthDoseCounter;
     }
 
 }

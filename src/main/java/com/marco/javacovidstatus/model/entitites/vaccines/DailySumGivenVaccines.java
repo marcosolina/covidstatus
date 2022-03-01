@@ -29,12 +29,12 @@ public class DailySumGivenVaccines implements Serializable {
     private long secondDoseCounter;
     private long monoDoseCounter;
     private long doseAfterInfectCounter;
+    private long thirdDoseCounter;
+    private long fourthDoseCounter;
 
-    public DailySumGivenVaccines(LocalDate date, long menCounter, long womenCounter, long nhsPeopleCounter,
-            long nonNhsPeopleCounter, long nursingHomeCounter, long age6069counter, long age7079counter,
-            long over80Counter, long publicOrderCounter, long schoolStaffCounter, long fragilePeopleCounter,
-            long otherPeopleCounter, long firstDoseCounter, long secondDoseCounter, long monoDoseCounter,
-            long doseAfterInfectCounter) {
+    public DailySumGivenVaccines(LocalDate date, long menCounter, long womenCounter, long nhsPeopleCounter, long nonNhsPeopleCounter, long nursingHomeCounter, long age6069counter, long age7079counter, long over80Counter,
+            long publicOrderCounter, long schoolStaffCounter, long fragilePeopleCounter, long otherPeopleCounter, long firstDoseCounter, long secondDoseCounter, long monoDoseCounter, long doseAfterInfectCounter, long thirdDoseCounter,
+            long fourthDoseCounter) {
         super();
         this.date = date;
         this.menCounter = menCounter;
@@ -53,6 +53,8 @@ public class DailySumGivenVaccines implements Serializable {
         this.secondDoseCounter = secondDoseCounter;
         this.monoDoseCounter = monoDoseCounter;
         this.doseAfterInfectCounter = doseAfterInfectCounter;
+        this.thirdDoseCounter = thirdDoseCounter;
+        this.fourthDoseCounter = fourthDoseCounter;
     }
 
     public LocalDate getDate() {
@@ -193,6 +195,22 @@ public class DailySumGivenVaccines implements Serializable {
 
     public void setDoseAfterInfectCounter(long doseAfterInfectCounter) {
         this.doseAfterInfectCounter = doseAfterInfectCounter;
+    }
+
+    public long getThirdDoseCounter() {
+        return thirdDoseCounter;
+    }
+
+    public void setThirdDoseCounter(long thirdDoseCounter) {
+        this.thirdDoseCounter = thirdDoseCounter;
+    }
+
+    public long getFourthDoseCounter() {
+        return fourthDoseCounter;
+    }
+
+    public void setFourthDoseCounter(long fourthDoseCounter) {
+        this.fourthDoseCounter = fourthDoseCounter;
     }
 
 }

@@ -152,6 +152,7 @@ public class VaccineDataServiceMarco implements VaccineDataService {
         map.put(Constants.VACCINES_GIVEN_MONO_SHOT, list.get(0).getMonoDoseCounter());
         map.put(Constants.VACCINES_GIVEN_AFTER_INFECTION, list.get(0).getDoseAfterInfectCounter());
         map.put(Constants.VACCINES_GIVEN_THIRD_SHOT, list.get(0).getThirdDoseCounter());
+        map.put(Constants.VACCINES_GIVEN_FOURTH_SHOT, list.get(0).getFourthDoseCounter());
 
         return map;
     }
@@ -302,6 +303,7 @@ public class VaccineDataServiceMarco implements VaccineDataService {
         entity.setMonoDoseCounter(dto.getMonoDoseCounter());
         entity.setDoseAfterInfectCounter(dto.getDoseAfterInfectCounter());
         entity.setThirdDoseCounter(dto.getThirdDoseCounter());
+        entity.setFourthDoseCounter(dto.getFourthDoseCounter());
 
         return entity;
     }
@@ -353,11 +355,13 @@ public class VaccineDataServiceMarco implements VaccineDataService {
             dto.setMonoDose(argv.getMonoDose());
             dto.setDoseAfterInfection(argv.getDoseAfterInfection());
             dto.setThirdDose(argv.getThirdDoseCounter());
+            dto.setFourthDose(argv.getFourthDoseCounter());
             
             // @formatter:off
             BigDecimal first = BigDecimal.ZERO;
             BigDecimal vaccinadted = BigDecimal.ZERO;
             BigDecimal third = BigDecimal.ZERO;
+            BigDecimal fourth = BigDecimal.ZERO;
             
             if(men + women > 0) {
                 first = BigDecimal.valueOf(dto.getFirstDose())
@@ -371,12 +375,16 @@ public class VaccineDataServiceMarco implements VaccineDataService {
                 third = BigDecimal.valueOf(argv.getThirdDoseCounter())
                         .divide(BigDecimal.valueOf(dto.getPopulation()), 4, RoundingMode.DOWN)
                         .multiply(BigDecimal.valueOf(100)).setScale(2, RoundingMode.DOWN);
+                fourth = BigDecimal.valueOf(argv.getFourthDoseCounter())
+                        .divide(BigDecimal.valueOf(dto.getPopulation()), 4, RoundingMode.DOWN)
+                        .multiply(BigDecimal.valueOf(100)).setScale(2, RoundingMode.DOWN);
             }
             // @formatter:on
             
             dto.setFirstDosePerc(first);
             dto.setVaccinatedPerc(vaccinadted);
             dto.setThirdDosePerc(third);
+            dto.setFourthDosePerc(fourth);
 
             map.put(dto.getAgeRange(), dto);
         });
@@ -395,6 +403,7 @@ public class VaccineDataServiceMarco implements VaccineDataService {
         	    dto.setMonoDose(dto.getMonoDose() + dto2.getMonoDose());
         	    dto.setDoseAfterInfection(dto.getDoseAfterInfection() + dto2.getDoseAfterInfection());
         	    dto.setThirdDose(dto.getThirdDose() + dto2.getThirdDose());
+        	    dto.setFourthDose(dto.getFourthDose() + dto2.getFourthDose());
         	    
         	    if(dto.getPopulation() > 0) {
         	        BigDecimal first = BigDecimal.valueOf(dto.getFirstDose())
@@ -408,10 +417,14 @@ public class VaccineDataServiceMarco implements VaccineDataService {
         	        BigDecimal third = BigDecimal.valueOf(dto.getThirdDose())
         	                .divide(BigDecimal.valueOf(dto.getPopulation()), 4, RoundingMode.DOWN)
         	                .multiply(BigDecimal.valueOf(100)).setScale(2, RoundingMode.DOWN);
+        	        BigDecimal fourth = BigDecimal.valueOf(dto.getFourthDose())
+                            .divide(BigDecimal.valueOf(dto.getPopulation()), 4, RoundingMode.DOWN)
+                            .multiply(BigDecimal.valueOf(100)).setScale(2, RoundingMode.DOWN);
         	        
         	        dto.setFirstDosePerc(first);
         	        dto.setVaccinatedPerc(vaccinadted);
         	        dto.setThirdDosePerc(third);
+        	        dto.setFourthDosePerc(fourth);
         	    }
         	    
         	    map.remove(f1);
@@ -458,11 +471,13 @@ public class VaccineDataServiceMarco implements VaccineDataService {
             dto.setMonoDose(entity.getMonoDose());
             dto.setDoseAfterInfection(entity.getDoseAfterInfection());
             dto.setThirdDose(entity.getThirdDoseCounter());
+            dto.setFourthDose(entity.getFourthDoseCounter());
             
             // @formatter:off
             BigDecimal first = BigDecimal.ZERO;
             BigDecimal vaccinadted = BigDecimal.ZERO;
             BigDecimal third = BigDecimal.ZERO;
+            BigDecimal fourth = BigDecimal.ZERO;
             
             if(men + women > 0) {
                 first = BigDecimal.valueOf(dto.getFirstDose())
@@ -476,12 +491,16 @@ public class VaccineDataServiceMarco implements VaccineDataService {
                 third = BigDecimal.valueOf(dto.getThirdDose())
                         .divide(BigDecimal.valueOf(dto.getPopulation()), 4, RoundingMode.DOWN)
                         .multiply(BigDecimal.valueOf(100)).setScale(2, RoundingMode.DOWN);
+                fourth = BigDecimal.valueOf(dto.getFourthDose())
+                        .divide(BigDecimal.valueOf(dto.getPopulation()), 4, RoundingMode.DOWN)
+                        .multiply(BigDecimal.valueOf(100)).setScale(2, RoundingMode.DOWN);
             }
             // @formatter:on
             
             dto.setFirstDosePerc(first);
             dto.setVaccinatedPerc(vaccinadted);
             dto.setThirdDosePerc(third);
+            dto.setFourthDosePerc(fourth);
             map.put(dto.getRegionCode(), dto);
 		});
 		

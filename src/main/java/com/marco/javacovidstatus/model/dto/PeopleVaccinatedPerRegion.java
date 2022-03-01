@@ -10,9 +10,11 @@ public class PeopleVaccinatedPerRegion {
     private Long monoDose;
     private Long doseAfterInfection;
     private Long thirdDose;
+    private Long fourthDose;
     private BigDecimal firstDosePerc;
     private BigDecimal vaccinatedPerc;
     private BigDecimal thirdDosePerc;
+    private BigDecimal fourthDosePerc;
 
     public String getRegionCode() {
         return regionCode;
@@ -92,6 +94,22 @@ public class PeopleVaccinatedPerRegion {
 
     public void setThirdDosePerc(BigDecimal thirdDosePerc) {
         this.thirdDosePerc = thirdDosePerc;
+    }
+
+    public Long getFourthDose() {
+        return fourthDose;
+    }
+
+    public void setFourthDose(Long fourthDose) {
+        this.fourthDose = fourthDose;
+    }
+
+    public BigDecimal getFourthDosePerc() {
+        return fourthDosePerc;
+    }
+
+    public void setFourthDosePerc(BigDecimal fourthDosePerc) {
+        this.fourthDosePerc = fourthDosePerc;
     }
 
 }

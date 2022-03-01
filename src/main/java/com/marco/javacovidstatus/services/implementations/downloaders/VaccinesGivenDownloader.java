@@ -64,6 +64,7 @@ public class VaccinesGivenDownloader extends CovidDataDownloader {
     public static final String COL_SECOND_DOSE_COUNTER      = "seconda_dose";
     public static final String COL_VACCINE_AFTER_INFECT     = "pregressa_infezione";
     public static final String COL_THIRD_DOSE_COUNTER       = "dose_addizionale_booster";
+    public static final String COL_FOURTH_DOSE_COUNTER      = "booster_immuno";
     // @formatter:on
 
     public VaccinesGivenDownloader(WebClient webClient) {
@@ -81,7 +82,7 @@ public class VaccinesGivenDownloader extends CovidDataDownloader {
             return false;
         }
 
-        if (rows.get(0).split(",").length != 14) {
+        if (rows.get(0).split(",").length != 15) {
             notificationService.sendEmailMessage("marcosolina@gmail.com", "Marco Solina - Covid Status", "La struttura dei dati vaccini somministrati e' stata modificata...");
             return false;
         }
@@ -146,8 +147,9 @@ public class VaccinesGivenDownloader extends CovidDataDownloader {
                 }else {
                     data.setFirstDoseCounter(Integer.parseInt(columns[columnsPositions.get(COL_FIRST_DOSE_COUNTER)]));
                     data.setSecondDoseCounter(Integer.parseInt(columns[columnsPositions.get(COL_SECOND_DOSE_COUNTER)]));
-                    data.setThirdDoseCounter(Integer.parseInt(columns[columnsPositions.get(COL_THIRD_DOSE_COUNTER)]));
                 }
+                data.setThirdDoseCounter(Integer.parseInt(columns[columnsPositions.get(COL_THIRD_DOSE_COUNTER)]));
+                data.setFourthDoseCounter(Integer.parseInt(columns[columnsPositions.get(COL_FOURTH_DOSE_COUNTER)]));
                 data.setDoseAfterInfectCounter(Integer.parseInt(columns[columnsPositions.get(COL_VACCINE_AFTER_INFECT)]));
                 
 
