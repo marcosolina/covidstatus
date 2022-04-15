@@ -66,6 +66,7 @@ Once the containers are up and runnig open the following links:
 
 ## History
 
+- **15/04/2022 v2.0.9**: Adding fourth dose data bis
 - **01/03/2022 v2.0.8**: Adding fourth dose data
 - **11/02/2022 v2.0.7**: Restoring regions map
 - **26/11/2021 v2.0.6**: Using the new government model
