@@ -86,7 +86,7 @@ public class VaccinesGivenDownloader extends CovidDataDownloader {
         Map<String, Integer> columnsPositions = CovidUtils.getColumnsIndex(rows.get(0));
         rows.remove(0);
         
-        if (columnsPositions.size() != 13) {
+        if (columnsPositions.size() != 16) {
             notificationService.sendEmailMessage("marcosolina@gmail.com", "Marco Solina - Covid Status", "La struttura dei dati vaccini somministrati e' stata modificata...");
             return false;
         }

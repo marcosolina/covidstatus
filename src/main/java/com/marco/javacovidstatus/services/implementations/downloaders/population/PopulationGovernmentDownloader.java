@@ -51,7 +51,7 @@ public class PopulationGovernmentDownloader extends CovidDataDownloader {
 			Map<String, Integer> columnsPositions = CovidUtils.getColumnsIndex(listRows.get(0));
 			listRows.remove(0);
 			
-			if(columnsPositions.size() != 3) {
+			if(columnsPositions.size() != 4) {
 	            notificationService.sendEmailMessage("marcosolina@gmail.com", "Marco Solina - Covid Status", "La struttura dei dati della platea dei vaccini e' stata modificata...");
 	            return false;
 	        }
