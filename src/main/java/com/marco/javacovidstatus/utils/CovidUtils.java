@@ -72,5 +72,16 @@ public class CovidUtils {
 
 		return map;
 	}
+	
+	public static Map<String, Integer> getColumnsIndex(String columnsRow){
+        Map<String, Integer> map = new HashMap<>();
+        String [] columnsNames = columnsRow.split(",");
+        
+        for(int i = 0; i < columnsNames.length; i++) {
+            map.put(columnsNames[i], i);
+        }
+        
+        return map;
+    }
 
 }

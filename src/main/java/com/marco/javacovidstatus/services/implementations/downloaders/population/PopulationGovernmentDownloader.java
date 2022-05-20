@@ -17,13 +17,14 @@ import com.marco.javacovidstatus.services.interfaces.CovidDataService;
 import com.marco.javacovidstatus.services.interfaces.NotificationSenderInterface;
 import com.marco.javacovidstatus.services.interfaces.PopulationDataService;
 import com.marco.javacovidstatus.services.interfaces.downloaders.CovidDataDownloader;
+import com.marco.javacovidstatus.utils.CovidUtils;
 import com.marco.utils.MarcoException;
 
 public class PopulationGovernmentDownloader extends CovidDataDownloader {
 	private static final Logger _LOGGER = LoggerFactory.getLogger(PopulationGovernmentDownloader.class);
-	private static final int COL_COUNT = 3;
-	private static final int COL_AGE = 2;
-	private static final int AREA = 0;
+	private static final String COL_COUNT = "totale_popolazione";
+	private static final String COL_AGE = "eta";
+	private static final String AREA = "area";
 
 	private String url = "https://raw.githubusercontent.com/italia/covid19-opendata-vaccini/master/dati/platea.csv";
 
@@ -46,7 +47,14 @@ public class PopulationGovernmentDownloader extends CovidDataDownloader {
 		try {
 			service.deleteAll();
 
-			List<String> listRows = getCsvRows(url);
+			List<String> listRows = getCsvRows(url, null, false);
+			Map<String, Integer> columnsPositions = CovidUtils.getColumnsIndex(listRows.get(0));
+			listRows.remove(0);
+			
+			if(columnsPositions.size() != 4) {
+	            notificationService.sendEmailMessage("marcosolina@gmail.com", "Marco Solina - Covid Status", "La struttura dei dati della platea dei vaccini e' stata modificata...");
+	            return false;
+	        }
 
 			Map<String, String> regionsCodes = new HashMap<>();
 
@@ -57,9 +65,9 @@ public class PopulationGovernmentDownloader extends CovidDataDownloader {
 				String[] cols = csvRow.split(",");
 
 				PopulationDto dto = new PopulationDto();
-				dto.setRegionCode(regionsCodes.get(cols[AREA]));
-				dto.setAge(Integer.parseInt(cols[COL_AGE].substring(0, 2)));
-				dto.setCounter(Integer.parseInt(cols[COL_COUNT]));
+				dto.setRegionCode(regionsCodes.get(cols[columnsPositions.get(AREA)]));
+				dto.setAge(Integer.parseInt(cols[columnsPositions.get(COL_AGE)].substring(0, 2)));
+				dto.setCounter(Integer.parseInt(cols[columnsPositions.get(COL_COUNT)]));
 				dto.setYear(LocalDate.now().getYear());
 				dto.setGender(Gender.MEN);
 

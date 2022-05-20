@@ -2,6 +2,7 @@ package com.marco.javacovidstatus.services.implementations.downloaders;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.slf4j.Logger;
@@ -13,6 +14,7 @@ import com.marco.javacovidstatus.model.dto.VaccinesDeliveredDto;
 import com.marco.javacovidstatus.services.interfaces.NotificationSenderInterface;
 import com.marco.javacovidstatus.services.interfaces.VaccineDataService;
 import com.marco.javacovidstatus.services.interfaces.downloaders.CovidDataDownloader;
+import com.marco.javacovidstatus.utils.CovidUtils;
 import com.marco.utils.DateUtils;
 import com.marco.utils.enums.DateFormats;
 
@@ -31,11 +33,11 @@ public class VaccinesDeliveredDownloader extends CovidDataDownloader {
 	private static final Logger _LOGGER = LoggerFactory.getLogger(VaccinesDeliveredDownloader.class);
 
 	private static final String CVS_URL = "https://raw.githubusercontent.com/italia/covid19-opendata-vaccini/master/dati/consegne-vaccini-latest.csv";
-	public static final int COL_DATE = 3;
-	public static final int COL_DELIVERED_DOSES = 2;
-	public static final int COL_AREA_CODE = 0;
-	public static final int COL_REGION_CODE = 6;
-	public static final int COL_SUPPLIER = 1;
+	public static final String COL_DATE = "data_consegna";
+	public static final String COL_DELIVERED_DOSES = "numero_dosi";
+	public static final String COL_AREA_CODE = "area";
+	public static final String COL_REGION_CODE = "ISTAT";
+	public static final String COL_SUPPLIER = "forn";
 
 	public VaccinesDeliveredDownloader(WebClient webClient) {
 		super(webClient);
@@ -45,17 +47,21 @@ public class VaccinesDeliveredDownloader extends CovidDataDownloader {
 	public boolean downloadData() {
 		_LOGGER.info("Downloading delivered vaccines data");
 		
-		List<String> rows = this.getCsvRows(CVS_URL);
+		List<String> rows = this.getCsvRows(CVS_URL, null, false);
 		
 		if(rows.isEmpty()) {
 			notificationService.sendEmailMessage("marcosolina@gmail.com", "Marco Solina - Covid Status", "Non ci sono più i dati nel repository");
 			return false;
 		}
 		
-		if(rows.get(0).split(",").length != 8) {
+		Map<String, Integer> columnsPositions = CovidUtils.getColumnsIndex(rows.get(0));
+		rows.remove(0);
+		
+		if(columnsPositions.size() != 8) {
 			notificationService.sendEmailMessage("marcosolina@gmail.com", "Marco Solina - Covid Status", "La struttura dei dati delle consegne dei vaccini e' stata modificata...");
 			return false;
 		}
+		
 
 		/*
 		 * Forcing the re-loading of all the data. I notice that the government updates
@@ -71,24 +77,24 @@ public class VaccinesDeliveredDownloader extends CovidDataDownloader {
 			try {
 				String[] columns = row.split(",");
 
-				String regionCode = columns[COL_REGION_CODE];
-				String areaCode = columns[COL_AREA_CODE];
+				String regionCode = columns[columnsPositions.get(COL_REGION_CODE)];
+				String areaCode = columns[columnsPositions.get(COL_AREA_CODE)];
 				if (areaCode.equals("PAB")) {
 					regionCode = "21";
 				} else if (areaCode.equals("PAT")) {
 					regionCode = "22";
 				}
 
-				LocalDate date = DateUtils.fromStringToLocalDate(columns[COL_DATE], DateFormats.DB_DATE);
+				LocalDate date = DateUtils.fromStringToLocalDate(columns[columnsPositions.get(COL_DATE)], DateFormats.DB_DATE);
 				if (!date.isAfter(startDate)) {
 					return;
 				}
 
 				VaccinesDeliveredDto data = new VaccinesDeliveredDto();
 				data.setDate(date);
-				data.setDosesDelivered(Integer.parseInt(columns[COL_DELIVERED_DOSES]));
+				data.setDosesDelivered(Integer.parseInt(columns[columnsPositions.get(COL_DELIVERED_DOSES)]));
 				data.setRegionCode(("00" + regionCode).substring(regionCode.length()));
-				data.setSupplier(columns[COL_SUPPLIER]);
+				data.setSupplier(columns[columnsPositions.get(COL_SUPPLIER)]);
 
 				_LOGGER.trace(String.format("Storing Delivered date for Date: %s Region: %s Supplier: %s",
 						data.getDate(), data.getRegionCode(), data.getSupplier()));
@@ -119,5 +125,7 @@ public class VaccinesDeliveredDownloader extends CovidDataDownloader {
 		}
 		return date;
 	}
+	
+	
 
 }

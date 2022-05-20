@@ -1,7 +1,6 @@
 package com.marco.javacovidstatus.services.implementations.downloaders;
 
 import java.time.LocalDate;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -16,6 +15,7 @@ import com.marco.javacovidstatus.model.dto.VaccinatedPeopleDto;
 import com.marco.javacovidstatus.services.interfaces.NotificationSenderInterface;
 import com.marco.javacovidstatus.services.interfaces.VaccineDataService;
 import com.marco.javacovidstatus.services.interfaces.downloaders.CovidDataDownloader;
+import com.marco.javacovidstatus.utils.CovidUtils;
 import com.marco.utils.DateUtils;
 import com.marco.utils.enums.DateFormats;
 
@@ -39,13 +39,13 @@ public class VaccinesGivenDownloader extends CovidDataDownloader {
     private static final String CSV_URL = "https://raw.githubusercontent.com/italia/covid19-opendata-vaccini/master/dati/somministrazioni-vaccini-latest.csv";
     
     // @formatter:off
-    public static final String COL_DATE                     = "data_somministrazione";
-    public static final String COL_REGION_CODE              = "codice_regione_ISTAT";
+    public static final String COL_DATE                     = "data";
+    public static final String COL_REGION_CODE              = "ISTAT";
     public static final String COL_AREA_CODE                = "area";
-    public static final String COL_SUPPLIER                 = "fornitore";
-    public static final String COL_AGE_RANGE                = "fascia_anagrafica";
-    public static final String COL_MEN_COUNTER              = "sesso_maschile";
-    public static final String COL_WOMEN_COUNTER            = "sesso_femminile";
+    public static final String COL_SUPPLIER                 = "forn";
+    public static final String COL_AGE_RANGE                = "eta";
+    public static final String COL_MEN_COUNTER              = "m";
+    public static final String COL_WOMEN_COUNTER            = "f";
     /*
      * They have removed these columns from the CSV file. I will comment them out
      * but keep them just for reference... Just in case they restore them...
@@ -60,12 +60,12 @@ public class VaccinesGivenDownloader extends CovidDataDownloader {
     public static final String COL_FRAGILE_COUNTER          = "categoria_soggetti_fragili";
     public static final String COL_OTHER_PEOPLE_COUNTER     = "categoria_altro";
     */
-    public static final String COL_FIRST_DOSE_COUNTER       = "prima_dose";
-    public static final String COL_SECOND_DOSE_COUNTER      = "seconda_dose";
-    public static final String COL_VACCINE_AFTER_INFECT     = "pregressa_infezione";
-    public static final String COL_THIRD_DOSE_COUNTER       = "dose_addizionale_booster";
-    public static final String COL_FOURTH_DOSE_COUNTER      = "booster_immuno";
-    public static final String COL_FOURTH_DOSE_COUNTER2     = "d2_booster";
+    public static final String COL_FIRST_DOSE_COUNTER       = "d1";
+    public static final String COL_SECOND_DOSE_COUNTER      = "d2";
+    public static final String COL_VACCINE_AFTER_INFECT     = "dpi";
+    public static final String COL_THIRD_DOSE_COUNTER       = "db1";
+    public static final String COL_FOURTH_DOSE_COUNTER      = "dbi";
+    public static final String COL_FOURTH_DOSE_COUNTER2     = "db2";
     // @formatter:on
 
     public VaccinesGivenDownloader(WebClient webClient) {
@@ -83,13 +83,14 @@ public class VaccinesGivenDownloader extends CovidDataDownloader {
             return false;
         }
 
-        if (rows.get(0).split(",").length != 16) {
+        Map<String, Integer> columnsPositions = CovidUtils.getColumnsIndex(rows.get(0));
+        rows.remove(0);
+        
+        if (columnsPositions.size() != 16) {
             notificationService.sendEmailMessage("marcosolina@gmail.com", "Marco Solina - Covid Status", "La struttura dei dati vaccini somministrati e' stata modificata...");
             return false;
         }
         
-        Map<String, Integer> columnsPositions = getColumnsIndex(rows.get(0));
-        rows.remove(0);
 
         /*
          * Forcing the re-loading of all the data. I notice that the government updates
@@ -183,16 +184,4 @@ public class VaccinesGivenDownloader extends CovidDataDownloader {
         }
         return date;
     }
-    
-    private Map<String, Integer> getColumnsIndex(String columnsRow){
-        Map<String, Integer> map = new HashMap<>();
-        String [] columnsNames = columnsRow.split(",");
-        
-        for(int i = 0; i < columnsNames.length; i++) {
-            map.put(columnsNames[i], i);
-        }
-        
-        return map;
-    }
-
 }
