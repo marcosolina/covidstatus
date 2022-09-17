@@ -29,6 +29,7 @@ public class EmailNotificationSender implements NotificationSenderInterface {
     public void sendEmailMessage(String to, String title, String message) {
         if (!notificationEnabled) {
             logger.info("Notification not enabled");
+            logger.error(message);
             return;
         }
         SimpleMailMessage email = new SimpleMailMessage();

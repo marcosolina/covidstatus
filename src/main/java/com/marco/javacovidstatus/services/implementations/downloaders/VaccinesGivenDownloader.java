@@ -64,7 +64,7 @@ public class VaccinesGivenDownloader extends CovidDataDownloader {
     public static final String COL_SECOND_DOSE_COUNTER      = "d2";
     public static final String COL_VACCINE_AFTER_INFECT     = "dpi";
     public static final String COL_THIRD_DOSE_COUNTER       = "db1";
-    public static final String COL_FOURTH_DOSE_COUNTER      = "dbi";
+    //public static final String COL_FOURTH_DOSE_COUNTER      = "dbi";
     public static final String COL_FOURTH_DOSE_COUNTER2     = "db2";
     // @formatter:on
 
@@ -86,7 +86,7 @@ public class VaccinesGivenDownloader extends CovidDataDownloader {
         Map<String, Integer> columnsPositions = CovidUtils.getColumnsIndex(rows.get(0));
         rows.remove(0);
         
-        if (columnsPositions.size() != 16) {
+        if (columnsPositions.size() != 15) {
             notificationService.sendEmailMessage("marcosolina@gmail.com", "Marco Solina - Covid Status", "La struttura dei dati vaccini somministrati e' stata modificata...");
             return false;
         }
@@ -127,18 +127,6 @@ public class VaccinesGivenDownloader extends CovidDataDownloader {
                 data.setAgeRange(columns[columnsPositions.get(COL_AGE_RANGE)]);
                 data.setMenCounter(Integer.parseInt(columns[columnsPositions.get(COL_MEN_COUNTER)]));
                 data.setWomenCounter(Integer.parseInt(columns[columnsPositions.get(COL_WOMEN_COUNTER)]));
-                /*
-                data.setNhsPeopleCounter(Integer.parseInt(columns[columnsPositions.get(COL_NHS_COUNTER)]));
-                data.setNonNhsPeopleCounter(Integer.parseInt(columns[columnsPositions.get(COL_NON_NHS_COUNTER)]));
-                data.setNursingHomeCounter(Integer.parseInt(columns[columnsPositions.get(COL_NURSING_COUNTER)]));
-                data.setAge6069counter(Integer.parseInt(columns[columnsPositions.get(COL_AGE_60_69_COUNTER)]));
-                data.setAge7079counter(Integer.parseInt(columns[columnsPositions.get(COL_AGE_70_79_COUNTER)]));
-                data.setOver80Counter(Integer.parseInt(columns[columnsPositions.get(COL_OVER_80_COUNTER)]));
-                data.setPublicOrderCounter(Integer.parseInt(columns[columnsPositions.get(COL_PUBLIC_ORDER_COUNTER)]));
-                data.setSchoolStaffCounter(Integer.parseInt(columns[columnsPositions.get(COL_SCHOOL_STAFF_COUNTER)]));
-                data.setFragilePeopleCounter(Integer.parseInt(columns[columnsPositions.get(COL_FRAGILE_COUNTER)]));
-                data.setOtherPeopleCounter(Integer.parseInt(columns[columnsPositions.get(COL_OTHER_PEOPLE_COUNTER)]));
-                */
                 
                 /**
                  * The goverment put the vaccines which requires just one shot into the "first"
@@ -151,7 +139,7 @@ public class VaccinesGivenDownloader extends CovidDataDownloader {
                     data.setSecondDoseCounter(Integer.parseInt(columns[columnsPositions.get(COL_SECOND_DOSE_COUNTER)]));
                 }
                 data.setThirdDoseCounter(Integer.parseInt(columns[columnsPositions.get(COL_THIRD_DOSE_COUNTER)]));
-                data.setFourthDoseCounter(Integer.parseInt(columns[columnsPositions.get(COL_FOURTH_DOSE_COUNTER)]) + Integer.parseInt(columns[columnsPositions.get(COL_FOURTH_DOSE_COUNTER2)]));
+                data.setFourthDoseCounter(/*Integer.parseInt(columns[columnsPositions.get(COL_FOURTH_DOSE_COUNTER)]) + */Integer.parseInt(columns[columnsPositions.get(COL_FOURTH_DOSE_COUNTER2)]));
                 data.setDoseAfterInfectCounter(Integer.parseInt(columns[columnsPositions.get(COL_VACCINE_AFTER_INFECT)]));
                 
 

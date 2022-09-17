@@ -66,6 +66,7 @@ Once the containers are up and runnig open the following links:
 
 ## History
 
+- **17/09/2022 v2.0.11**: Using the new government data structure
 - **11/05/2022 v2.0.10**: Using the new government model
 - **15/04/2022 v2.0.9**: Adding fourth dose data bis
 - **01/03/2022 v2.0.8**: Adding fourth dose data
