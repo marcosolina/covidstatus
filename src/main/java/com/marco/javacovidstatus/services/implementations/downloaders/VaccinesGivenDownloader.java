@@ -66,6 +66,7 @@ public class VaccinesGivenDownloader extends CovidDataDownloader {
     public static final String COL_THIRD_DOSE_COUNTER       = "db1";
     //public static final String COL_FOURTH_DOSE_COUNTER      = "dbi";
     public static final String COL_FOURTH_DOSE_COUNTER2     = "db2";
+    public static final String COL_FIFTH_DOSE_COUNTER     = "db3";
     // @formatter:on
 
     public VaccinesGivenDownloader(WebClient webClient) {
@@ -86,7 +87,7 @@ public class VaccinesGivenDownloader extends CovidDataDownloader {
         Map<String, Integer> columnsPositions = CovidUtils.getColumnsIndex(rows.get(0));
         rows.remove(0);
         
-        if (columnsPositions.size() != 15) {
+        if (columnsPositions.size() != 16) {
             notificationService.sendEmailMessage("marcosolina@gmail.com", "Marco Solina - Covid Status", "La struttura dei dati vaccini somministrati e' stata modificata...");
             return false;
         }
@@ -102,7 +103,8 @@ public class VaccinesGivenDownloader extends CovidDataDownloader {
         LocalDate startDate = getStartDate();
         AtomicBoolean error = new AtomicBoolean();
 
-        rows.stream().forEach(row -> {
+        _LOGGER.debug(String.format("Saving %d rows", rows.size()));
+        rows.parallelStream().forEach(row -> {
             try {
                 String[] columns = row.split(",");
 
@@ -140,6 +142,7 @@ public class VaccinesGivenDownloader extends CovidDataDownloader {
                 }
                 data.setThirdDoseCounter(Integer.parseInt(columns[columnsPositions.get(COL_THIRD_DOSE_COUNTER)]));
                 data.setFourthDoseCounter(/*Integer.parseInt(columns[columnsPositions.get(COL_FOURTH_DOSE_COUNTER)]) + */Integer.parseInt(columns[columnsPositions.get(COL_FOURTH_DOSE_COUNTER2)]));
+                data.setFifthDoseCounter(Integer.parseInt(columns[columnsPositions.get(COL_FIFTH_DOSE_COUNTER)]));
                 data.setDoseAfterInfectCounter(Integer.parseInt(columns[columnsPositions.get(COL_VACCINE_AFTER_INFECT)]));
                 
 

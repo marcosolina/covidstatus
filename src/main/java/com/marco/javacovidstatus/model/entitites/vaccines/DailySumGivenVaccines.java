@@ -31,10 +31,11 @@ public class DailySumGivenVaccines implements Serializable {
     private long doseAfterInfectCounter;
     private long thirdDoseCounter;
     private long fourthDoseCounter;
+    private long fifthDoseCounter;
 
     public DailySumGivenVaccines(LocalDate date, long menCounter, long womenCounter, long nhsPeopleCounter, long nonNhsPeopleCounter, long nursingHomeCounter, long age6069counter, long age7079counter, long over80Counter,
             long publicOrderCounter, long schoolStaffCounter, long fragilePeopleCounter, long otherPeopleCounter, long firstDoseCounter, long secondDoseCounter, long monoDoseCounter, long doseAfterInfectCounter, long thirdDoseCounter,
-            long fourthDoseCounter) {
+            long fourthDoseCounter,long fifthDoseCounter) {
         super();
         this.date = date;
         this.menCounter = menCounter;
@@ -55,6 +56,7 @@ public class DailySumGivenVaccines implements Serializable {
         this.doseAfterInfectCounter = doseAfterInfectCounter;
         this.thirdDoseCounter = thirdDoseCounter;
         this.fourthDoseCounter = fourthDoseCounter;
+        this.fifthDoseCounter = fifthDoseCounter;
     }
 
     public LocalDate getDate() {
@@ -212,5 +214,13 @@ public class DailySumGivenVaccines implements Serializable {
     public void setFourthDoseCounter(long fourthDoseCounter) {
         this.fourthDoseCounter = fourthDoseCounter;
     }
+
+	public long getFifthDoseCounter() {
+		return fifthDoseCounter;
+	}
+
+	public void setFifthDoseCounter(long fifthDoseCounter) {
+		this.fifthDoseCounter = fifthDoseCounter;
+	}
 
 }

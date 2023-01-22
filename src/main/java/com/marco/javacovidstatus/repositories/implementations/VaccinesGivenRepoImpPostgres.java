@@ -95,7 +95,8 @@ public class VaccinesGivenRepoImpPostgres implements VaccinesGivenRepo {
                 cb.sum(root.get(EntitySomministrazioneVaccini_.MONO_DOSE_COUNTER)),
                 cb.sum(root.get(EntitySomministrazioneVaccini_.DOSE_AFTER_INFECT_COUNTER)),
                 cb.sum(root.get(EntitySomministrazioneVaccini_.THIRD_DOSE_COUNTER)),
-                cb.sum(root.get(EntitySomministrazioneVaccini_.FOURTH_DOSE_COUNTER))
+                cb.sum(root.get(EntitySomministrazioneVaccini_.FOURTH_DOSE_COUNTER)),
+                cb.sum(root.get(EntitySomministrazioneVaccini_.FIFTH_DOSE_COUNTER))
 				)
 			.where(
 				cb.between(root.get(EntitySomministrazioneVaccini_.ID).get(EntitySomministrazioneVacciniPk_.DATE), start, end)
@@ -145,7 +146,8 @@ public class VaccinesGivenRepoImpPostgres implements VaccinesGivenRepo {
 		sql.append("b.mono_dose_counter, ");
 		sql.append("b.dose_after_infect_counter, ");
 		sql.append("b.third_dose_counter, ");
-		sql.append("b.fourth_dose_counter ");
+		sql.append("b.fourth_dose_counter, ");
+		sql.append("b.fifth_dose_counter ");
 		sql.append("from cartesian_table as a ");
 		sql.append(String.format("left join %s as b ", tableName));
 		sql.append("on a.date_data = b.date_data and ");
@@ -174,7 +176,8 @@ public class VaccinesGivenRepoImpPostgres implements VaccinesGivenRepo {
 		sql.append("mono_dose_counter = 0, ");
 		sql.append("dose_after_infect_counter = 0, ");
 		sql.append("third_dose_counter = 0, ");
-		sql.append("fourth_dose_counter = 0 ");
+		sql.append("fourth_dose_counter = 0, ");
+		sql.append("fifth_dose_counter = 0 ");
 		sql.append("where men_counter is null");
 
 		sqls.add(sql);
@@ -190,8 +193,10 @@ public class VaccinesGivenRepoImpPostgres implements VaccinesGivenRepo {
 		// @formatter:on
 
 		sqls.forEach(sb -> {
+			_LOGGER.debug("Executing query: " + sb.toString());
 			Query query = em.createNativeQuery(sb.toString());
 			query.executeUpdate();
+			_LOGGER.debug("Query executed");
 		});
 		
 		_LOGGER.debug("Finish adding mepty rows: addMissingRowsForNoVaccinationDays");
@@ -215,7 +220,8 @@ public class VaccinesGivenRepoImpPostgres implements VaccinesGivenRepo {
                 cb.sum(root.get(EntitySomministrazioneVaccini_.MONO_DOSE_COUNTER)),
                 cb.sum(root.get(EntitySomministrazioneVaccini_.DOSE_AFTER_INFECT_COUNTER)),
                 cb.sum(root.get(EntitySomministrazioneVaccini_.THIRD_DOSE_COUNTER)),
-                cb.sum(root.get(EntitySomministrazioneVaccini_.FOURTH_DOSE_COUNTER))
+                cb.sum(root.get(EntitySomministrazioneVaccini_.FOURTH_DOSE_COUNTER)),
+                cb.sum(root.get(EntitySomministrazioneVaccini_.FIFTH_DOSE_COUNTER))
 			)
 		.where(
 				cb.between(root.get(EntitySomministrazioneVaccini_.ID).get(EntitySomministrazioneVacciniPk_.DATE), start, end)
@@ -247,7 +253,8 @@ public class VaccinesGivenRepoImpPostgres implements VaccinesGivenRepo {
                 cb.sum(root.get(EntitySomministrazioneVaccini_.MONO_DOSE_COUNTER)),
                 cb.sum(root.get(EntitySomministrazioneVaccini_.DOSE_AFTER_INFECT_COUNTER)),
                 cb.sum(root.get(EntitySomministrazioneVaccini_.THIRD_DOSE_COUNTER)),
-                cb.sum(root.get(EntitySomministrazioneVaccini_.FOURTH_DOSE_COUNTER))
+                cb.sum(root.get(EntitySomministrazioneVaccini_.FOURTH_DOSE_COUNTER)),
+                cb.sum(root.get(EntitySomministrazioneVaccini_.FIFTH_DOSE_COUNTER))
 			)
 		.where(
 				cb.between(root.get(EntitySomministrazioneVaccini_.ID).get(EntitySomministrazioneVacciniPk_.DATE), start, end)
@@ -304,7 +311,8 @@ public class VaccinesGivenRepoImpPostgres implements VaccinesGivenRepo {
 				cb.coalesce(cb.sum(root.get(EntitySomministrazioneVaccini_.MONO_DOSE_COUNTER)), 0L),
                 cb.coalesce(cb.sum(root.get(EntitySomministrazioneVaccini_.DOSE_AFTER_INFECT_COUNTER)), 0L),
                 cb.coalesce(cb.sum(root.get(EntitySomministrazioneVaccini_.THIRD_DOSE_COUNTER)), 0L),
-                cb.coalesce(cb.sum(root.get(EntitySomministrazioneVaccini_.FOURTH_DOSE_COUNTER)), 0L)
+                cb.coalesce(cb.sum(root.get(EntitySomministrazioneVaccini_.FOURTH_DOSE_COUNTER)), 0L),
+                cb.coalesce(cb.sum(root.get(EntitySomministrazioneVaccini_.FIFTH_DOSE_COUNTER)), 0L)
 			);
 		
 		// @formatter:on
@@ -319,6 +327,7 @@ public class VaccinesGivenRepoImpPostgres implements VaccinesGivenRepo {
 		    counter += dc.getDoseAfterInfectCounter();
 		    counter += dc.getThirdDoseCounter();
 		    counter += dc.getFourthDoseCounter();
+		    counter += dc.getFifthDoseCounter();
 			return counter;
 		}
 		return 0L;
@@ -351,8 +360,11 @@ public class VaccinesGivenRepoImpPostgres implements VaccinesGivenRepo {
 				                    )
 		            ),
                     cb.sum(
-                            cb.sum(root.get(EntitySomministrazioneVaccini_.THIRD_DOSE_COUNTER)),
-                            cb.sum(root.get(EntitySomministrazioneVaccini_.FOURTH_DOSE_COUNTER))
+                    		cb.sum(
+                    				cb.sum(root.get(EntitySomministrazioneVaccini_.THIRD_DOSE_COUNTER)),
+                    				cb.sum(root.get(EntitySomministrazioneVaccini_.FOURTH_DOSE_COUNTER))
+                            ),
+                            cb.sum(root.get(EntitySomministrazioneVaccini_.FIFTH_DOSE_COUNTER))
                         )
 				)
 			)
@@ -406,7 +418,8 @@ public class VaccinesGivenRepoImpPostgres implements VaccinesGivenRepo {
                 cb.sum(root.get(EntitySomministrazioneVaccini_.MONO_DOSE_COUNTER)),
                 cb.sum(root.get(EntitySomministrazioneVaccini_.DOSE_AFTER_INFECT_COUNTER)),
                 cb.sum(root.get(EntitySomministrazioneVaccini_.THIRD_DOSE_COUNTER)),
-                cb.sum(root.get(EntitySomministrazioneVaccini_.FOURTH_DOSE_COUNTER))
+                cb.sum(root.get(EntitySomministrazioneVaccini_.FOURTH_DOSE_COUNTER)),
+                cb.sum(root.get(EntitySomministrazioneVaccini_.FIFTH_DOSE_COUNTER))
 			)
 		.groupBy(
 				root.get(EntitySomministrazioneVaccini_.ID).get(EntitySomministrazioneVacciniPk_.AGE_RANGE)
@@ -439,7 +452,8 @@ public class VaccinesGivenRepoImpPostgres implements VaccinesGivenRepo {
                 cb.coalesce(cb.sum(root.get(EntitySomministrazioneVaccini_.MONO_DOSE_COUNTER)), 0L),
                 cb.coalesce(cb.sum(root.get(EntitySomministrazioneVaccini_.DOSE_AFTER_INFECT_COUNTER)), 0L),
                 cb.coalesce(cb.sum(root.get(EntitySomministrazioneVaccini_.THIRD_DOSE_COUNTER)), 0L),
-                cb.coalesce(cb.sum(root.get(EntitySomministrazioneVaccini_.FOURTH_DOSE_COUNTER)), 0L)
+                cb.coalesce(cb.sum(root.get(EntitySomministrazioneVaccini_.FOURTH_DOSE_COUNTER)), 0L),
+                cb.coalesce(cb.sum(root.get(EntitySomministrazioneVaccini_.FIFTH_DOSE_COUNTER)), 0L)
             );
         
         // @formatter:on
@@ -456,9 +470,10 @@ public class VaccinesGivenRepoImpPostgres implements VaccinesGivenRepo {
                     dc.getMonoDoseCounter(),
                     dc.getDoseAfterInfectCounter(),
                     dc.getThirdDoseCounter(),
-                    dc.getFourthDoseCounter());
+                    dc.getFourthDoseCounter(),
+                    dc.getFifthDoseCounter());
         }
-        return new AgeRangeGivenVaccines(Constants.LABEL_VACCINES_GIVEN_TOTAL, 0L, 0L, 0L, 0L, 0L, 0L);
+        return new AgeRangeGivenVaccines(Constants.LABEL_VACCINES_GIVEN_TOTAL, 0L, 0L, 0L, 0L, 0L, 0L, 0L);
     }
 
 	@Override
@@ -481,7 +496,8 @@ public class VaccinesGivenRepoImpPostgres implements VaccinesGivenRepo {
                 cb.sum(root.get(EntitySomministrazioneVaccini_.MONO_DOSE_COUNTER)),
                 cb.sum(root.get(EntitySomministrazioneVaccini_.DOSE_AFTER_INFECT_COUNTER)),
                 cb.sum(root.get(EntitySomministrazioneVaccini_.THIRD_DOSE_COUNTER)),
-		        cb.sum(root.get(EntitySomministrazioneVaccini_.FOURTH_DOSE_COUNTER)))
+		        cb.sum(root.get(EntitySomministrazioneVaccini_.FOURTH_DOSE_COUNTER)),
+		        cb.sum(root.get(EntitySomministrazioneVaccini_.FIFTH_DOSE_COUNTER)))
 		.groupBy(
 				root.get(EntitySomministrazioneVaccini_.ID).get(EntitySomministrazioneVacciniPk_.REGION_CODE)
 		);

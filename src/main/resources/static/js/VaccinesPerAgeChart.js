@@ -53,18 +53,21 @@ class VaccinesPerAgeChart {
         let valuesVaccinated = [];
 		let valuesThirdDose = [];
 		let valuesFourthDose = [];
+		let valuesFifthDose = [];
         
         const datasetPopulation = new CovidChartDataset("Popolazione");
         const datasetFirstDose = new CovidChartDataset("Prima Dose");
         const datasetVaccinated = new CovidChartDataset("Vaccinati (Seconda Dose o Mono Dose)");
 		const datasetThirdDose = new CovidChartDataset("Terza Dose (Addizionale / Booster)");
 		const datasetFourthDose = new CovidChartDataset("Quarta Dose");
+		const datasetFifthDose = new CovidChartDataset("Quinta Dose");
         
         datasetPopulation.setColor(this.colorPalette[0]);
         datasetFirstDose.setColor(this.colorPalette[1]);
         datasetVaccinated.setColor(this.colorPalette[2]);
 		datasetThirdDose.setColor(this.colorPalette[3]);
 		datasetFourthDose.setColor(this.colorPalette[4]);
+		datasetFifthDose.setColor(this.colorPalette[5]);
         
         keysSorted.forEach(function(key){
             arrLabels.push(key);
@@ -73,6 +76,7 @@ class VaccinesPerAgeChart {
             valuesVaccinated.push(data[key].secondDose + data[key].monoDose + data[key].doseAfterInfection);
 			valuesThirdDose.push(data[key].thirdDose);
 			valuesFourthDose.push(data[key].fourthDose);
+			valuesFifthDose.push(data[key].fifthDose);
         }.bind(this));
         
         datasetPopulation.setData(valuesPopulation);
@@ -80,12 +84,14 @@ class VaccinesPerAgeChart {
         datasetVaccinated.setData(valuesVaccinated);
 		datasetThirdDose.setData(valuesThirdDose);
 		datasetFourthDose.setData(valuesFourthDose);
+		datasetFifthDose.setData(valuesFifthDose);
         
         this.chart.addCovidChartDataset(datasetPopulation);
         this.chart.addCovidChartDataset(datasetFirstDose);
         this.chart.addCovidChartDataset(datasetVaccinated);
 		this.chart.addCovidChartDataset(datasetThirdDose);
 		this.chart.addCovidChartDataset(datasetFourthDose);
+		this.chart.addCovidChartDataset(datasetFifthDose);
         
         this.chart.setLabels(arrLabels);
         this.chart.drawChart(this.darkModeOn, "horizontalBar", true, false);

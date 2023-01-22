@@ -53,6 +53,8 @@ public class EntitySomministrazioneVaccini {
     private int thirdDoseCounter;
     @Column(name = "FOURTH_DOSE_COUNTER")
     private int fourthDoseCounter;
+    @Column(name = "FIFTH_DOSE_COUNTER")
+    private int fifthDoseCounter;
 
     public EntitySomministrazioneVacciniPk getId() {
         return id;
@@ -205,5 +207,13 @@ public class EntitySomministrazioneVaccini {
     public void setFourthDoseCounter(int fourthDoseCounter) {
         this.fourthDoseCounter = fourthDoseCounter;
     }
+
+	public int getFifthDoseCounter() {
+		return fifthDoseCounter;
+	}
+
+	public void setFifthDoseCounter(int fifthDoseCounter) {
+		this.fifthDoseCounter = fifthDoseCounter;
+	}
 
 }

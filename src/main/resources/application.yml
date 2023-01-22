@@ -13,8 +13,8 @@ logging:
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/coviditaly
-    username: ${POSTGRES_USER:REPLACE_ME} # Replace the value
-    password: ${POSTGRES_PASSW:REPLACE_ME} # Replace the value
+    username: ${POSTGRES_USER:postgres} # Replace the value
+    password: ${POSTGRES_PASSW:postgres} # Replace the value
   #autoconfigure:
     #exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration, org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
   mail:    host: smtp.gmail.com
@@ -40,7 +40,7 @@ covidstatus:
     implementation: GOVERNMENT # GOVERNMENT, ISTAT
     istat:
       population:
-        year: 2022
+        year: 2023
   scheduled:
     downloadnewdata:
       cron:
