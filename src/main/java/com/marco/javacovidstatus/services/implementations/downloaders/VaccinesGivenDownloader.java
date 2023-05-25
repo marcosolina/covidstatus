@@ -92,7 +92,7 @@ public class VaccinesGivenDownloader extends CovidDataDownloader {
         
         var listToDownload = listOfCsvsToDownload();
         
-        listToDownload.parallelStream().forEach( url -> {
+        listToDownload.stream().forEach( url -> {
         	List<String> rows = this.getCsvRows(url, null, false);
         	
         	if (rows.isEmpty()) {
