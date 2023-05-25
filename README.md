@@ -66,6 +66,7 @@ Once the containers are up and runnig open the following links:
 
 ## History
 
+- **25/05/2023 v2.0.13**: Using new git files
 - **22/01/2023 v2.0.12**: Added fifth dose info
 - **17/09/2022 v2.0.11**: Using the new government data structure
 - **11/05/2022 v2.0.10**: Using the new government model

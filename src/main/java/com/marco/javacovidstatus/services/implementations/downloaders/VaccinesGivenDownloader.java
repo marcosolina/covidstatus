@@ -1,9 +1,12 @@
 package com.marco.javacovidstatus.services.implementations.downloaders;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,7 +39,7 @@ public class VaccinesGivenDownloader extends CovidDataDownloader {
 
     private static final Logger _LOGGER = LoggerFactory.getLogger(VaccinesGivenDownloader.class);
 
-    private static final String CSV_URL = "https://raw.githubusercontent.com/italia/covid19-opendata-vaccini/master/dati/somministrazioni-vaccini-latest.csv";
+    private static final String CSV_URL = "https://raw.githubusercontent.com/italia/covid19-opendata-vaccini/master/dati/somministrazioni-vaccini-latest-%s.csv";
     
     // @formatter:off
     public static final String COL_DATE                     = "data";
@@ -77,84 +80,91 @@ public class VaccinesGivenDownloader extends CovidDataDownloader {
     public boolean downloadData() {
         _LOGGER.info("Downloading Given vaccines data");
 
-        List<String> rows = this.getCsvRows(CSV_URL, null, false);
-
-        if (rows.isEmpty()) {
-            notificationService.sendEmailMessage("marcosolina@gmail.com", "Marco Solina - Covid Status", "Non ci sono più i dati nel repository");
-            return false;
-        }
-
-        Map<String, Integer> columnsPositions = CovidUtils.getColumnsIndex(rows.get(0));
-        rows.remove(0);
+        LocalDate startDate = getStartDate();
+        AtomicBoolean error = new AtomicBoolean();
         
-        if (columnsPositions.size() != 16) {
-            notificationService.sendEmailMessage("marcosolina@gmail.com", "Marco Solina - Covid Status", "La struttura dei dati vaccini somministrati e' stata modificata...");
-            return false;
-        }
-        
-
         /*
          * Forcing the re-loading of all the data. I notice that the government updates
          * the data of the previous days. There is no way for me to understand
          * "how much back" they go... so I decided to clear the table at every scan
          */
         dataService.deleteAllGivenVaccineData();
-
-        LocalDate startDate = getStartDate();
-        AtomicBoolean error = new AtomicBoolean();
-
-        _LOGGER.debug(String.format("Saving %d rows", rows.size()));
-        rows.parallelStream().forEach(row -> {
-            try {
-                String[] columns = row.split(",");
-
-                String regionCode = columns[columnsPositions.get(COL_REGION_CODE)];
-                String areaCode = columns[columnsPositions.get(COL_AREA_CODE)];
-                if (areaCode.equals("PAB")) {
-                    regionCode = "21";
-                } else if (areaCode.equals("PAT")) {
-                    regionCode = "22";
-                }
-
-                LocalDate date = DateUtils.fromStringToLocalDate(columns[columnsPositions.get(COL_DATE)], DateFormats.DB_DATE);
-
-                if (!date.isAfter(startDate)) {
-                    return;
-                }
-
-                VaccinatedPeopleDto data = new VaccinatedPeopleDto();
-                data.setDate(date);
-                data.setRegionCode(("00" + regionCode).substring(regionCode.length()));
-                data.setSupplier(columns[columnsPositions.get(COL_SUPPLIER)]);
-                data.setAgeRange(columns[columnsPositions.get(COL_AGE_RANGE)]);
-                data.setMenCounter(Integer.parseInt(columns[columnsPositions.get(COL_MEN_COUNTER)]));
-                data.setWomenCounter(Integer.parseInt(columns[columnsPositions.get(COL_WOMEN_COUNTER)]));
-                
-                /**
-                 * The goverment put the vaccines which requires just one shot into the "first"
-                 * dose. I decided to move these into the mono dose column
-                 */
-                if(monodoseSuppliers.contains(data.getSupplier())) {
-                    data.setMonoDoseCounter(Integer.parseInt(columns[columnsPositions.get(COL_FIRST_DOSE_COUNTER)]));
-                }else {
-                    data.setFirstDoseCounter(Integer.parseInt(columns[columnsPositions.get(COL_FIRST_DOSE_COUNTER)]));
-                    data.setSecondDoseCounter(Integer.parseInt(columns[columnsPositions.get(COL_SECOND_DOSE_COUNTER)]));
-                }
-                data.setThirdDoseCounter(Integer.parseInt(columns[columnsPositions.get(COL_THIRD_DOSE_COUNTER)]));
-                data.setFourthDoseCounter(/*Integer.parseInt(columns[columnsPositions.get(COL_FOURTH_DOSE_COUNTER)]) + */Integer.parseInt(columns[columnsPositions.get(COL_FOURTH_DOSE_COUNTER2)]));
-                data.setFifthDoseCounter(Integer.parseInt(columns[columnsPositions.get(COL_FIFTH_DOSE_COUNTER)]));
-                data.setDoseAfterInfectCounter(Integer.parseInt(columns[columnsPositions.get(COL_VACCINE_AFTER_INFECT)]));
-                
-
-                _LOGGER.trace(String.format("Storing Given vaccine data date: %s Region: %s AgeRange: %s Supplier: %s",
-                        data.getDate(), data.getRegionCode(), data.getAgeRange(), data.getSupplier()));
-                dataService.saveGivenVaccinesData(data);
-            } catch (Exception e) {
-                String message = String.format("Error while saving: %s", row);
-                _LOGGER.error(message);
-                error.set(true);
-            }
+        
+        var listToDownload = listOfCsvsToDownload();
+        
+        listToDownload.parallelStream().forEach( url -> {
+        	List<String> rows = this.getCsvRows(url, null, false);
+        	
+        	if (rows.isEmpty()) {
+        		notificationService.sendEmailMessage("marcosolina@gmail.com", "Marco Solina - Covid Status", "Non ci sono più i dati nel repository");
+        		return;
+        	}
+        	
+        	Map<String, Integer> columnsPositions = CovidUtils.getColumnsIndex(rows.get(0));
+        	rows.remove(0);
+        	
+        	if (columnsPositions.size() != 16) {
+        		notificationService.sendEmailMessage("marcosolina@gmail.com", "Marco Solina - Covid Status", "La struttura dei dati vaccini somministrati e' stata modificata...");
+        		return;
+        	}
+        	
+        	
+        	_LOGGER.debug(String.format("Saving %d rows", rows.size()));
+        	rows.parallelStream().forEach(row -> {
+        		try {
+        			String[] columns = row.split(",");
+        			
+        			String regionCode = String.valueOf(getIntValue(columnsPositions, columns, COL_REGION_CODE));
+        			String areaCode = columns[columnsPositions.get(COL_AREA_CODE)];
+        			if (areaCode.equals("PAB")) {
+        				regionCode = "21";
+        			} else if (areaCode.equals("PAT")) {
+        				regionCode = "22";
+        			}
+        			
+        			LocalDate date = DateUtils.fromStringToLocalDate(columns[columnsPositions.get(COL_DATE)], DateFormats.DB_DATE);
+        			
+        			if (!date.isAfter(startDate)) {
+        				return;
+        			}
+        			
+        			
+        			VaccinatedPeopleDto data = new VaccinatedPeopleDto();
+        			data.setDate(date);
+        			data.setRegionCode(("00" + regionCode).substring(regionCode.length()));
+        			data.setSupplier(columns[columnsPositions.get(COL_SUPPLIER)]);
+        			data.setAgeRange(columns[columnsPositions.get(COL_AGE_RANGE)]);
+        			data.setMenCounter(getIntValue(columnsPositions, columns, COL_MEN_COUNTER));
+        			data.setWomenCounter(getIntValue(columnsPositions, columns, COL_WOMEN_COUNTER));
+        			
+        			/**
+        			 * The goverment put the vaccines which requires just one shot into the "first"
+        			 * dose. I decided to move these into the mono dose column
+        			 */
+        			if(monodoseSuppliers.contains(data.getSupplier())) {
+        				data.setMonoDoseCounter(getIntValue(columnsPositions, columns, COL_FIRST_DOSE_COUNTER));
+        			}else {
+        				data.setFirstDoseCounter(getIntValue(columnsPositions, columns, COL_FIRST_DOSE_COUNTER));
+        				data.setSecondDoseCounter(getIntValue(columnsPositions, columns, COL_SECOND_DOSE_COUNTER));
+        			}
+        			data.setThirdDoseCounter(getIntValue(columnsPositions, columns, COL_THIRD_DOSE_COUNTER));
+        			data.setFourthDoseCounter(/*getIntValue(columnsPositions, columns, COL_FOURTH_DOSE_COUNTER) + */getIntValue(columnsPositions, columns, COL_FOURTH_DOSE_COUNTER2));
+        			data.setFifthDoseCounter(getIntValue(columnsPositions, columns, COL_FIFTH_DOSE_COUNTER));
+        			data.setDoseAfterInfectCounter(getIntValue(columnsPositions, columns, COL_VACCINE_AFTER_INFECT));
+        			
+        			
+        			_LOGGER.trace(String.format("Storing Given vaccine data date: %s Region: %s AgeRange: %s Supplier: %s",
+        					data.getDate(), data.getRegionCode(), data.getAgeRange(), data.getSupplier()));
+        			dataService.saveGivenVaccinesData(data);
+        		} catch (Exception e) {
+        			String message = String.format("Error while saving: %s", row);
+        			_LOGGER.error(message);
+        			error.set(true);
+        		}
+        	});
+        	
         });
+        
 
         if (error.get()) {
             String message = "There was an error with the data, cleaning everything and retrying at the next cron tick";
@@ -174,5 +184,14 @@ public class VaccinesGivenDownloader extends CovidDataDownloader {
             date = this.defaultStartData;
         }
         return date;
+    }
+    
+    private List<String> listOfCsvsToDownload(){
+    	List<String> years = Arrays.asList("2020","2021","2022","2023");
+    	return years.stream().map(y -> String.format(CSV_URL, y)).collect(Collectors.toList());
+    }
+    
+    private int getIntValue(Map<String, Integer> columnsPositions, String[] columns, String colName) {
+    	return new BigDecimal(columns[columnsPositions.get(colName)]).intValue();
     }
 }

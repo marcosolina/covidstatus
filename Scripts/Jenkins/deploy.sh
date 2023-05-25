@@ -1,18 +1,29 @@
 #!/bin/bash
 
-APP_FOLDER=/opt/covid
-START_STOP_SCR=$APP_FOLDER/startStop.sh
-WORK_SPACE_FOLDER=$1
 
-mkdir -p $APP_FOLDER
-cp $WORK_SPACE_FOLDER/Scripts/startStop.sh $APP_FOLDER
-chmod +x $START_STOP_SCR
-$START_STOP_SCR stop
+WORKSPACE_FOLDER=$1
+APP_NAME=covidstatus
+DEPLOY_APP_FOLDER=/opt/$APP_NAME
+USR=marco
+RASP_1=ixigoservices.lan
 
-sleep 20
+SSH_ADDRESS_1=$USR@$RASP_1
 
-psql -w -U postgres -f $WORK_SPACE_FOLDER/Scripts/Docker/PostgreSQL/initCovidDb.sql
+mvn clean package -f $WORKSPACE_FOLDER/pom.xml
+
+ssh $SSH_ADDRESS_1 mkdir -p $DEPLOY_APP_FOLDER
+
+scp $WORKSPACE_FOLDER/$APP_NAME/Scripts/startStop.sh $SSH_ADDRESS_1:$DEPLOY_APP_FOLDER
+ssh $SSH_ADDRESS_1 chmod +x $DEPLOY_APP_FOLDER/startStop.sh
+ssh $SSH_ADDRESS_1 $DEPLOY_APP_FOLDER/startStop.sh stop
+
+sleep 5
+
+#psql -w -U postgres -f $WORK_SPACE_FOLDER/Scripts/Docker/PostgreSQL/initCovidDb.sql
 
 mv target/covidstatus*.jar $APP_FOLDER/Covidstatus.jar
-echo "" > $APP_FOLDER/covid.log
-$START_STOP_SCR start
+scp $WORKSPACE_FOLDER/$APP_NAME/target/$APP_NAME*.jar $SSH_ADDRESS_1:$DEPLOY_APP_FOLDER/$APP_NAME.jar
+
+ssh -t -t $SSH_ADDRESS_1 << EOF
+export BASH_ENV=/etc/bash.bashrc && echo "" > $DEPLOY_APP_FOLDER/$APP_NAME.log && $DEPLOY_APP_FOLDER/startStop.sh start && exit
+EOF
