@@ -21,7 +21,6 @@ sleep 5
 
 #psql -w -U postgres -f $WORK_SPACE_FOLDER/Scripts/Docker/PostgreSQL/initCovidDb.sql
 
-mv target/covidstatus*.jar $APP_FOLDER/Covidstatus.jar
 scp $WORKSPACE_FOLDER/target/$APP_NAME*.jar $SSH_ADDRESS_1:$DEPLOY_APP_FOLDER/$APP_NAME.jar
 
 ssh -t -t $SSH_ADDRESS_1 << EOF

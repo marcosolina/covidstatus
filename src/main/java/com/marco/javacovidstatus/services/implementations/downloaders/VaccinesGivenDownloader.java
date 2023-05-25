@@ -108,7 +108,7 @@ public class VaccinesGivenDownloader extends CovidDataDownloader {
         		return;
         	}
         	
-        	
+        	_LOGGER.debug(String.format("Saving rows from: $s", url));
         	_LOGGER.debug(String.format("Saving %d rows", rows.size()));
         	rows.parallelStream().forEach(row -> {
         		try {
